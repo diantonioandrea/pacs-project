@@ -28,11 +28,6 @@
 // Math.
 #include <cmath>
 
-// Zero tolerance.
-#ifndef TOLERANCE_PACS
-#define TOLERANCE_PACS 1E-10
-#endif
-
 namespace pacs {
     
     /**
