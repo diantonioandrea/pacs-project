@@ -176,7 +176,7 @@ namespace pacs {
              */
             T operator ()(const std::size_t &j, const std::size_t &k) const {
                 #ifndef NDEBUG // Out-of-bound check.
-                assert((j < rows) && (k < columns));
+                assert((j < this->rows) && (k < this->columns));
                 #endif
 
                 // Checks for the value inside elements, otherwise returns static_cast<T>(0).
