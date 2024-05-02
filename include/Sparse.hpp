@@ -14,6 +14,25 @@
 // Type.
 #include <Type.hpp>
 
+// Containers.
+#include <vector>
+#include <array>
+#include <map>
+
+// Output.
+#include <iostream>
+
+// Assertions.
+#include <cassert>
+
+// Math.
+#include <cmath>
+
+// Zero tolerance.
+#ifndef TOLERANCE_PACS
+#define TOLERANCE_PACS 1E-10
+#endif
+
 namespace pacs {
     
     /**
@@ -23,11 +42,7 @@ namespace pacs {
      */
     template<NumericType T>
     class Sparse {
-        private:
-
-            // Shape.
-            const std::size_t rows;
-            const std::size_t columns;
+        protected:
 
             // Compression flag.
             bool compressed = false;
@@ -41,6 +56,10 @@ namespace pacs {
             std::vector<T> values;
 
         public:
+
+            // Shape.
+            const std::size_t rows;
+            const std::size_t columns;
 
             // CONSTRUCTORS.
 
@@ -144,6 +163,194 @@ namespace pacs {
                 }
 
                 return *this;
+            }
+
+            // READ AND WRITE.
+
+            /**
+             * @brief Const call operator, returns the (i, j)-th element if present.
+             *
+             * @param j
+             * @param k
+             * @return T
+             */
+            T operator ()(const std::size_t &j, const std::size_t &k) const {
+                #ifndef NDEBUG // Out-of-bound check.
+                assert((j < rows) && (k < columns));
+                #endif
+
+                // Checks for the value inside elements, otherwise returns static_cast<T>(0).
+                if(!(this->compressed))
+                    return this->elements.contains({j, k}) ? this->elements[{j, k}] : static_cast<T>(0);
+
+                // Looks for the value on compressed Matrix.
+                for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
+                    if(k == this->outer[i])
+                        return this->values[i];
+                }
+
+                // Default return.
+                return static_cast<T>(0);
+            }
+
+            /**
+             * @brief Insert a new element.
+             * 
+             * @param j 
+             * @param k 
+             * @param element 
+             */
+            void insert(const std::size_t &j, const std::size_t &k, const T &element) {
+                #ifndef NDEBUG // Out-of-bound and uncompression check.
+                assert((j < rpws) && (k < columns));
+                assert(!(this->compressed));
+                
+                if(std::abs(element) > TOLERANCE_PACS)
+                    this->elements[{j, k}] = element;
+                #else
+                this->elements[{j, k}] = element;
+                #endif
+            }
+
+            // SHAPE
+
+            /**
+             * @brief Returns the reshaped Sparse matrix.
+             * 
+             * @param rows 
+             * @param columns 
+             * @return Sparse 
+             */
+            Sparse reshape(const std::size_t &rows, const std::size_t &columns) const {
+                if(!(this->compressed))
+                    return Sparse{rows, columns, this->elements};
+
+                return Sparse{rows, columns, this->inner, this->outer, this->values};
+            }
+
+            // COMPRESSION.
+
+            /**
+             * @brief Compresses an uncompressed Sparse matrix.
+             *
+             */
+            void compress() {
+                if(this->compressed)
+                    return;
+
+                std::size_t index = 0;
+                std::array<std::size_t, 2> current{0, 0};
+                std::array<std::size_t, 2> next{1, 0};
+
+                this->inner.resize(this->rows + 1);
+                this->inner[0] = index;
+
+                // Compression.
+                for(std::size_t j = 1; j < this->rows + 1; ++j) {
+                    for(auto it = this->elements.lower_bound(current); (*it).rows < (*(this->elements.lower_bound(next))).rows; ++it) {
+                        auto [key, value] = (*it);
+
+                        #ifndef NDEBUG
+                        if(std::abs(value) > TOLERANCE_PACS) {
+                            this->outer.emplace_back(key[1]);
+                            this->values.emplace_back(value);
+                            ++index;
+                        }
+                        #else
+                        this->outer.emplace_back(key[1]);
+                        this->values.emplace_back(value);
+                        ++index;
+                        #endif
+
+                    }
+
+                    this->inner[j] = index;
+                    ++current[0];
+                    ++next[0];
+                }
+
+                this->compressed = true;
+                this->elements.clear();
+            }
+
+            /**
+             * @brief Uncompresses a compressed Sparse matrix.
+             *
+             */
+            void uncompress() {
+                if(!(this->compressed))
+                    return;
+
+                // Uncompression.
+                for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
+                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
+
+                        #ifndef NDEBUG
+                        if(std::abs(this->values[k]) > TOLERANCE_PACS)
+                            this->elements[{j, this->outer[k]}] = this->values[k];
+                        #else
+                        this->elements[{j, this->outer[k]}] = this->values[k];
+                        #endif
+
+                    }
+                }
+
+                this->compressed = false;
+                this->inner.clear();
+                this->outer.clear();
+                this->values.clear();
+            }
+
+            /**
+             * @brief Returns the compressed state.
+             *
+             * @return true
+             * @return false
+             */
+            inline bool is_compressed() const {
+                return this->compressed;
+            }
+
+            // OPERATORS.
+
+            // ...
+
+            // OUTPUT.
+
+            /**
+             * @brief Sparse matrix output.
+             * 
+             * @param ost 
+             * @param sparse 
+             * @return std::ostream& 
+             */
+            friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {
+                if(!(sparse.compressed)) {
+                    for(const auto &[key, value]: sparse.elements) {
+                        ost << "(" << key[0] << ", " << key[1] << "): " << value;
+
+                        if(key != (*--sparse.elements.end()).first)
+                            ost << std::endl;
+                    }
+
+                } else {
+                    ost << "Inner: ";
+
+                    for(const auto &value: sparse.inner)
+                        ost << value << " ";
+
+                    ost << std::endl << "Outer: ";
+
+                    for(const auto &value: sparse.outer)
+                        ost << value << " ";
+
+                    ost << std::endl <<  "Values: ";
+
+                    for(const auto &value: sparse.values)
+                        ost << value << " ";
+                }
+
+                return ost;
             }
     };
 
