@@ -6,4 +6,4 @@ report/output
 
 # C++
 **/*.o
-main
+**/*.out
