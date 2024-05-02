@@ -11,7 +11,7 @@
 // Output.
 #include<iostream>
 
-// Testing Matrix.
+// Testing Vector.
 #include <Vector.hpp>
 
 int main() {
