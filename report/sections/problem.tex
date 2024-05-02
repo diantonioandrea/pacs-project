@@ -1,0 +1,22 @@
+Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$, the following hold:
+
+\begin{gather}
+    \begin{cases} \label{strong_stokes}
+        - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
+        u = 0 & \Forall \Vector{x} \in \partial \Omega.
+    \end{cases}
+\end{gather}
+
+\subsection{Weak formulation}
+
+Now, seeking $u \in \HO_0(\Omega) = V$ such that, given $f \in V^*$, the following equation is satisfied:
+
+\begin{gather} \label{weak_stokes}
+    \boa{u}{v} = \langle f, v \rangle \quad \Forall v \in V,
+\end{gather}
+
+where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is defined as follows:
+
+\begin{gather}
+    \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v ~ d \omega. \label{a}
+\end{gather}
