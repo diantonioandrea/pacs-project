@@ -125,10 +125,35 @@ namespace pacs {
                 return this->elements[j * this->rows + k];
             }
 
-            // SHAPE
+            // SHAPE.
 
             Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
                 return Matrix{rows, columns, this->elements};
+            }
+
+            // OPERATORS.
+
+            // ...
+
+            // OUTPUT.
+
+            /**
+             * @brief Matrix output.
+             * 
+             * @param ost 
+             * @param matrix 
+             * @return std::ostream& 
+             */
+            friend std::ostream &operator <<(std::ostream &ost, const Matrix &matrix) {
+                for(std::size_t j = 0; j < matrix.rows; ++j) {
+                    for(std::size_t k = 0; k < matrix.columns; ++k)
+                        ost << matrix.elements[j * matrix.rows + k] << " ";
+
+                    if(j < matrix.columns - 1)
+                        std::cout << std::endl;
+                }
+
+                return ost;
             }
     };
 

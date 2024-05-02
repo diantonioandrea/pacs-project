@@ -18,4 +18,7 @@ int main() {
 
     // Constructing a matrix.
     pacs::Matrix<double> matrix{2, 2};
+
+    // Output.
+    std::cout << matrix << std::endl;
 }

@@ -207,7 +207,7 @@ namespace pacs {
                 #endif
             }
 
-            // SHAPE
+            // SHAPE.
 
             /**
              * @brief Returns the reshaped Sparse matrix.
@@ -306,7 +306,7 @@ namespace pacs {
                 return this->compressed;
             }
 
-            // OPERATORS.
+            // OPERATORS
 
             // ...
 
