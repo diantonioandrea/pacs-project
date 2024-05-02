@@ -44,7 +44,7 @@ namespace pacs {
             // CONSTRUCTORS.
 
             /**
-             * @brief Construct a new empty Matrix.
+             * @brief Constructs a new empty Matrix.
              * 
              * @param rows 
              * @param columns 
@@ -53,6 +53,44 @@ namespace pacs {
                 #ifndef NDEBUG // Integrity check.
                 assert((rows > 0) && (columns > 0));
                 #endif
+
+                this->elements.resize(rows * columns, static_cast<T>(0));
+            }
+
+            /**
+             * @brief Constructs a new Matrix from a given std::vector.
+             * 
+             * @param rows 
+             * @param columns 
+             * @param elements 
+             */
+            Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements{elements} {
+                #ifndef NDEBUG // Integrity check.
+                assert((rows > 0) && (columns > 0));
+                assert(elements.size() == rows * columns);
+                #endif
+            }
+
+            /**
+             * @brief Copy constructor.
+             * 
+             * @param matrix 
+             */
+            Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements{matrix.elements} {}
+            
+            /**
+             * @brief Copy operator.
+             * 
+             * @param matrix 
+             * @return Matrix& 
+             */
+            Matrix &operator =(const Matrix &matrix) {
+                #ifndef NDEBUG
+                assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
+                #endif
+
+                this->elements = matrix.elements;
+                return *this;
             }
 
             // READ AND WRITE.

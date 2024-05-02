@@ -59,7 +59,7 @@ namespace pacs {
             // CONSTRUCTORS.
 
             /**
-             * @brief Construct a new empty Sparse matrix.
+             * @brief Constructs a new empty Sparse matrix.
              * 
              * @param rows 
              * @param columns 
@@ -71,7 +71,7 @@ namespace pacs {
             }
 
             /**
-             * @brief Construct a new Sparse matrix from a given std::map.
+             * @brief Constructs a new Sparse matrix from a given std::map.
              * 
              * @param rows 
              * @param columns 
@@ -88,7 +88,7 @@ namespace pacs {
             }
 
             /**
-             * @brief Construct a new Sparse matrix from given inner, outer and values vectors.
+             * @brief Constructs a new Sparse matrix from given inner, outer and values vectors.
              *
              * @param rows
              * @param columns
