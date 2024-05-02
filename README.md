@@ -1,4 +1,4 @@
-# Advanced Programming for Scientific Computing
+# Advanced Programming for Scientific Computing - Project
 
 Codes for the examination of the **Advanced Programming for Scientific Computing** course at **PoliMi**.
 
