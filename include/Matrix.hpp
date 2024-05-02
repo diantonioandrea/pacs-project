@@ -43,7 +43,17 @@ namespace pacs {
 
             // CONSTRUCTORS.
 
-            // ...
+            /**
+             * @brief Construct a new empty Matrix.
+             * 
+             * @param rows 
+             * @param columns 
+             */
+            Matrix(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns} {
+                #ifndef NDEBUG // Integrity check.
+                assert((rows > 0) && (columns > 0));
+                #endif
+            }
 
             // READ AND WRITE.
             
@@ -80,7 +90,7 @@ namespace pacs {
             // SHAPE
 
             Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
-                return Matrix{rows, colums, this->elements};
+                return Matrix{rows, columns, this->elements};
             }
     };
 
