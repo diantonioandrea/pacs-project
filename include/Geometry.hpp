@@ -90,14 +90,14 @@ namespace pacs {
             Line(const Line &);
             Line &operator =(const Line &);
 
-            // METHODS.
-
-            friend Line bisector(const Point &, const Point &);
-
             // OUTPUT.
 
             friend std::ostream &operator <<(std::ostream &, const Line &);
     };
+
+    // METHODS.
+
+    Line bisector(const Point &, const Point &);
 
 }
 

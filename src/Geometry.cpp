@@ -192,6 +192,20 @@ namespace pacs {
         return *this;
     }
 
+    // OUTPUT.
+
+    /**
+     * @brief Line output.
+     * 
+     * @param ost 
+     * @param line 
+     * @return std::ostream& 
+     */
+    std::ostream &operator <<(std::ostream &ost, const Line &line) {
+        return ost << "(" << line.a << ") x + " << "(" << line.b << ") y = " << "(" << line.c << ")";
+    }
+
+
     // METHODS
 
     /**
@@ -223,20 +237,7 @@ namespace pacs {
             return Line{1.0, 0.0, mx};
 
         // Default.
-        return Line{(px - qx) / (py - qy), 1.0, (px - qx) / (py - qy) * px + py};
-    }
-
-    // OUTPUT.
-
-    /**
-     * @brief Line output.
-     * 
-     * @param ost 
-     * @param line 
-     * @return std::ostream& 
-     */
-    std::ostream &operator <<(std::ostream &ost, const Line &line) {
-        return ost << "(" << line.a << ") x + " << "(" << line.b << ") y = " << "(" << line.c << ")";
+        return Line{(px - qx) / (py - qy), 1.0, (px - qx) / (py - qy) * mx + my};
     }
 
 }
