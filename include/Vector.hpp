@@ -207,6 +207,12 @@ namespace pacs {
                 return *this;
             }
 
+            /**
+             * @brief Vector dot product.
+             * 
+             * @param vector 
+             * @return T 
+             */
             T operator *(const Vector &vector) const {
                 #ifndef NDEBUG // Integrity check.
                 assert(this->length == vector.length);
