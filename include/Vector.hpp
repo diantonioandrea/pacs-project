@@ -55,11 +55,32 @@ namespace pacs {
                 this->elements.resize(length, static_cast<T>(0));
             }
 
+            /**
+             * @brief Constructs a new Vector from a given std::vector.
+             * 
+             * @param length 
+             * @param elements 
+             */
             Vector(const std::size_t &length, const std::vector<T> &elements): length{length}, elements{elements} {
                 #ifndef NDEBUG // Integrity check.
                 assert(length > 0);
                 assert(elements.size() == length);
                 #endif
+            }
+
+            /**
+             * @brief Copy constructor.
+             * 
+             * @param vector 
+             */
+            Vector(const Vector &vector): length{vector.length}, elements{vector.elements} {}
+            
+            Vector &operator =(const Vector &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                this->elements = vector.elements;
             }
 
             // OUTPUT.
