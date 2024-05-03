@@ -14,7 +14,7 @@
 // Type.
 #include <Type.hpp>
 
-// Vectors.
+// Vector.
 #include <Vector.hpp>
 
 // OpenMP.
@@ -280,6 +280,29 @@ namespace pacs {
                     this->elements[j] -= matrix.elements[j];
 
                 return *this;
+            }
+
+            /**
+             * @brief Matrix * Vector product.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> operator *(const Vector<T> &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->colums == vector.length);
+                #endif
+
+                std::vector<T> result(this->rows, static_cast<T>(0));
+                std::vector<T> elements = vector;
+                
+                #pragma omp parallel for collapse(2) reduction(+: result)
+                for(std::size_t j = 0; j < this->rows; ++j) {
+                    for(std::size_t k = 0; k < this->columns; ++k)
+                        result[j] += this->elements[j * this->rows + k] * elements[k];
+                }
+
+                return Vector<T>{this->rows, result};
             }
 
             // OUTPUT.

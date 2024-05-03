@@ -14,6 +14,9 @@
 // Type.
 #include <Type.hpp>
 
+// Vector.
+#include <Vector.hpp>
+
 // Containers.
 #include <vector>
 #include <array>
