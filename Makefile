@@ -23,6 +23,7 @@ TEST_OBJECTS = $(TEST_SOURCES:test/%.cpp=%.o)
 TEST_EXECS = $(TEST_SOURCES:test/%.cpp=%.out)
 
 test: $(TEST_EXECS)
+	@echo "Done!"
 
 $(TEST_EXECS): $(TEST_OBJECTS)
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $< to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
@@ -34,7 +35,8 @@ $(TEST_OBJECTS): $(TEST_SOURCES) $(HEADERS)
 
 # Clean.
 clean:
-	$(RM) $(TEST_OBJECTS)
+	@echo "Cleaning the repo."
+	@$(RM) $(TEST_OBJECTS)
 
 distclean: clean
-	$(RM) $(TEST_EXECS)
+	@$(RM) $(TEST_EXECS)
