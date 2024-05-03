@@ -102,8 +102,8 @@ namespace pacs {
         private:
 
             // Extremes.
-            const Point b;
             const Point a;
+            const Point b;
 
         public:
 
