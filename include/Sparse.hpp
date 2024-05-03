@@ -17,6 +17,11 @@
 // Vector.
 #include <Vector.hpp>
 
+// OpenMP.
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Containers.
 #include <vector>
 #include <array>
