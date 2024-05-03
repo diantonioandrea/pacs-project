@@ -311,7 +311,6 @@ namespace pacs {
 
                 if(!(this->compressed)) {
                     
-                    #pragma omp parallel for
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
                     
@@ -335,7 +334,6 @@ namespace pacs {
             Sparse &operator *=(const T &scalar) {
                 if(!(this->compressed)) {
                     
-                    #pragma omp parallel for
                     for(auto &[key, element]: this->elements)
                         element *= scalar;
                     
