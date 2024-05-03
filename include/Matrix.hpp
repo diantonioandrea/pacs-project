@@ -290,16 +290,20 @@ namespace pacs {
              */
             Vector<T> operator *(const Vector<T> &vector) const {
                 #ifndef NDEBUG // Integrity check.
-                assert(this->colums == vector.length);
+                assert(this->columns == vector.length);
                 #endif
 
                 std::vector<T> result(this->rows, static_cast<T>(0));
                 std::vector<T> elements = vector;
                 
-                #pragma omp parallel for collapse(2) reduction(+: result)
                 for(std::size_t j = 0; j < this->rows; ++j) {
+                    T product = static_cast<T>(0);
+
+                    #pragma omp parallel for reduction(+: product)
                     for(std::size_t k = 0; k < this->columns; ++k)
-                        result[j] += this->elements[j * this->rows + k] * elements[k];
+                        product += this->elements[j * this->rows + k] * elements[k];
+
+                    result[j] = product;
                 }
 
                 return Vector<T>{this->rows, result};
