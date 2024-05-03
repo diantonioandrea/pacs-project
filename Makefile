@@ -14,21 +14,25 @@ LDFLAGS += -L$(OpenMP)/lib
 LDLIBS += -lomp
 endif
 
-# Headers, recompiling purposes.
+OBJECTS = $(subst .cpp,.o,$(shell ls ./src))
 HEADERS = ./include/*.hpp
 
-# Test.
 TEST_EXECS = $(subst .cpp,.out,$(shell ls ./test))
 TEST_OBJECTS = $(subst .cpp,.o,$(shell ls ./test))
 
+# Test.
 test: $(TEST_EXECS)
 	@echo "Done!"
 
-$(TEST_EXECS): %.out: %.o
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $< to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
-	@$(CXX) $(LDFLAGS) $(LDLIBS) $< -o $@
+$(TEST_EXECS): %.out: %.o $(OBJECTS)
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
+	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(TEST_OBJECTS): %.o: test/%.cpp $(HEADERS)
+$(TEST_OBJECTS): %.o: test/%.cpp
+	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJECTS): %.o: src/%.cpp $(patsubst %.o,include/%.hpp,$(OBJECTS))
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
