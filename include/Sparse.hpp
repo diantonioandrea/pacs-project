@@ -197,7 +197,7 @@ namespace pacs {
              */
             void insert(const std::size_t &j, const std::size_t &k, const T &element) {
                 #ifndef NDEBUG // Out-of-bound and uncompression check.
-                assert((j < rpws) && (k < columns));
+                assert((j < this->rows) && (k < this->columns));
                 assert(!(this->compressed));
                 
                 if(std::abs(element) > TOLERANCE)
@@ -242,7 +242,7 @@ namespace pacs {
 
                 // Compression.
                 for(std::size_t j = 1; j < this->rows + 1; ++j) {
-                    for(auto it = this->elements.lower_bound(current); (*it).rows < (*(this->elements.lower_bound(next))).rows; ++it) {
+                    for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                         auto [key, value] = (*it);
 
                         #ifndef NDEBUG
@@ -300,7 +300,55 @@ namespace pacs {
 
             // OPERATORS
 
-            // ...
+            /**
+             * @brief Sparse matrix scalar product.
+             * 
+             * @param scalar 
+             * @return Sparse 
+             */
+            Sparse operator *(const T &scalar) const {
+                Sparse result{*this};
+
+                if(!(this->compressed)) {
+                    
+                    #pragma omp parallel for
+                    for(auto &[key, element]: result.elements)
+                        element *= scalar;
+                    
+                } else {
+                    
+                    #pragma omp parallel for
+                    for(auto &value: result.values)
+                        value *= scalar;
+
+                }
+
+                return result;
+            }
+
+            /**
+             * @brief Sparse matrix scalar product and assignation.
+             * 
+             * @param scalar 
+             * @return Sparse& 
+             */
+            Sparse &operator *=(const T &scalar) {
+                if(!(this->compressed)) {
+                    
+                    #pragma omp parallel for
+                    for(auto &[key, element]: this->elements)
+                        element *= scalar;
+                    
+                } else {
+                    
+                    #pragma omp parallel for
+                    for(std::size_t j = 0; j < this->values.size(); ++j)
+                        this->values[j] *= scalar;
+
+                }
+
+                return *this;
+            }
 
             // OUTPUT.
 
@@ -313,8 +361,8 @@ namespace pacs {
              */
             friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {
                 if(!(sparse.compressed)) {
-                    for(const auto &[key, value]: sparse.elements) {
-                        ost << "(" << key[0] << ", " << key[1] << "): " << value;
+                    for(const auto &[key, element]: sparse.elements) {
+                        ost << "(" << key[0] << ", " << key[1] << "): " << element;
 
                         if(key != (*--sparse.elements.end()).first)
                             ost << std::endl;
