@@ -169,8 +169,8 @@ namespace pacs {
                 Matrix result{*this};
 
                 #pragma omp parallel for
-                for(std::size_t j = 0; j < this->size(); ++j)
-                    result.elements[j] *= scalar;
+                for(auto &element: result.elements)
+                    element *= scalar;
 
                 return result;
             }
@@ -183,8 +183,8 @@ namespace pacs {
              */
             Matrix &operator *=(const T scalar) {
                 #pragma omp parallel for
-                for(std::size_t j = 0; j < this->size(); ++j)
-                    this->elements[j] *= scalar;
+                for(auto &element: this->elements)
+                    element *= scalar;
 
                 return *this;
             }
