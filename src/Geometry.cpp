@@ -99,14 +99,33 @@ namespace pacs {
 
     // OPERATORS.
 
+    /**
+     * @brief Point scalar product.
+     * 
+     * @param scalar 
+     * @return Point 
+     */
     Point Point::operator *(const double &scalar) const {
         return Point{this->x * scalar, this->y * scalar};
     }
 
+    /**
+     * @brief Friend Point scalar product.
+     * 
+     * @param scalar 
+     * @param point 
+     * @return Point 
+     */
     Point operator *(const double &scalar, const Point &point) {
         return Point{point.x * scalar, point.y * scalar};
     }
 
+    /**
+     * @brief Point scalar product and assignation.
+     * 
+     * @param scalar 
+     * @return Point& 
+     */
     Point &Point::operator *=(const double &scalar) {
         this->x *= scalar;
         this->y *= scalar;
@@ -114,10 +133,22 @@ namespace pacs {
         return *this;
     }
 
+    /**
+     * @brief Point sum.
+     * 
+     * @param point 
+     * @return Point 
+     */
     Point Point::operator +(const Point &point) const {
         return Point{this->x + point.x, this->y + point.y};
     }
 
+    /**
+     * @brief Point sum and assignation.
+     * 
+     * @param point 
+     * @return Point& 
+     */
     Point &Point::operator +=(const Point &point) {
         this->x += point.x;
         this->y += point.y;
@@ -125,17 +156,28 @@ namespace pacs {
         return *this;
     }
 
+    /**
+     * @brief Point difference.
+     * 
+     * @param point 
+     * @return Point 
+     */
     Point Point::operator -(const Point &point) const {
         return Point{this->x - point.x, this->y - point.y};
     }
 
+    /**
+     * @brief Point difference and assignation.
+     * 
+     * @param point 
+     * @return Point& 
+     */
     Point &Point::operator -=(const Point &point) {
         this->x -= point.x;
         this->y -= point.y;
 
         return *this;
     }
-
 
     // OUTPUT.
 
@@ -178,20 +220,6 @@ namespace pacs {
      */
     Line::Line(const Line &line): a{line.a}, b{line.b}, c{line.c} {}
 
-    /**
-     * @brief Copy operator.
-     * 
-     * @param line 
-     * @return Line& 
-     */
-    Line &Line::operator =(const Line &line) {
-        this->a = line.a;
-        this->b = line.b;
-        this->c = line.c;
-
-        return *this;
-    }
-
     // OUTPUT.
 
     /**
@@ -216,14 +244,22 @@ namespace pacs {
      * @param a 
      * @param b 
      */
-    Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {}
+    Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {
+        #ifndef NDEBUG // Integrity check.
+        assert(!(a - b).is_origin());
+        #endif
+    }
 
     /**
      * @brief Constructs a new Segment from a given array of points.
      * 
      * @param ab 
      */
-    Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {}
+    Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {
+        #ifndef NDEBUG // Integrity check.
+        assert(!(ab[0] - ab[0]).is_origin());
+        #endif
+    }
 
     /**
      * @brief Copy constructor.
@@ -232,17 +268,29 @@ namespace pacs {
      */
     Segment::Segment(const Segment &segment): a{segment.a}, b{segment.b} {}
 
-    /**
-     * @brief Copy operator.
-     * 
-     * @param segment 
-     * @return Segment& 
-     */
-    Segment &Segment::operator =(const Segment &segment) {
-        this->a = segment.a;
-        this->b = segment.b;
+    // METHODS.
 
-        return *this;
+    /**
+     * @brief Returs the line passing through the Segment's extremes.
+     * 
+     * @return Line 
+     */
+    Line Segment::line() const {
+        double ax = this->a[0], bx = this->b[0];
+        double ay = this->a[1], by = this->b[1];
+
+        // Evaluation by cases.
+
+        // Ax = Bx.
+        if(std::abs(ax - bx) <= GEOMETRY_TOLERANCE)
+            return Line{1.0, 0.0, ax};
+
+        // Ay = By.
+        if(std::abs(ay - by) <= GEOMETRY_TOLERANCE)
+            return Line{0.0, 1.0, ay};
+
+        // Default.
+        return Line{(ay - by) / (bx - ax), 1.0, (ay - by) / (bx - ax) * ax + ay};
     }
 
     // OUTPUT.
@@ -255,7 +303,7 @@ namespace pacs {
     // METHODS
 
     /**
-     * @brief Finds the bisector given two points.
+     * @brief Finds the bisector given two Points.
      * 
      * @param p 
      * @param q 

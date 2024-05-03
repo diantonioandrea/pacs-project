@@ -77,9 +77,9 @@ namespace pacs {
         private:
 
             // Parameters.
-            double a;
-            double b;
-            double c;
+            const double a;
+            const double b;
+            const double c;
 
         public:
 
@@ -88,7 +88,6 @@ namespace pacs {
             Line(const double &, const double &, const double &);
             Line(const std::array<double, 3> &);
             Line(const Line &);
-            Line &operator =(const Line &);
 
             // OUTPUT.
 
@@ -103,8 +102,8 @@ namespace pacs {
         private:
 
             // Extremes.
-            Point a;
-            Point b;
+            const Point b;
+            const Point a;
 
         public:
 
@@ -113,7 +112,10 @@ namespace pacs {
             Segment(const Point &, const Point &);
             Segment(const std::array<Point, 2> &);
             Segment(const Segment &);
-            Segment &operator =(const Segment &);
+
+            // METHODS.
+
+            Line line() const;
 
             // OUTPUT.
 
