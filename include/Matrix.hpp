@@ -14,6 +14,14 @@
 // Type.
 #include <Type.hpp>
 
+// Vectors.
+#include <Vector.hpp>
+
+// OpenMP.
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Containers.
 #include <vector>
 
@@ -125,15 +133,137 @@ namespace pacs {
                 return this->elements[j * this->rows + k];
             }
 
+            // SIZE.
+
+            /**
+             * @brief Returns the Matrix size.
+             * 
+             * @return std::size_t 
+             */
+            inline std::size_t size() const {
+                return this->rows * this->columns;
+            }
+
             // SHAPE.
 
+            /**
+             * @brief Returns the reshaped Matrix.
+             * 
+             * @param rows 
+             * @param columns 
+             * @return Matrix 
+             */
             Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
                 return Matrix{rows, columns, this->elements};
             }
 
             // OPERATORS.
 
-            // ...
+            /**
+             * @brief Matrix scalar product.
+             * 
+             * @param scalar 
+             * @return Matrix 
+             */
+            Matrix operator *(const T &scalar) const {
+                Matrix result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    result.elements[j] *= scalar;
+
+                return result;
+            }
+
+            /**
+             * @brief Matrix scalar product and assignation.
+             * 
+             * @param scalar 
+             * @return Matrix& 
+             */
+            Matrix &operator *=(const T scalar) {
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    this->elements[j] *= scalar;
+
+                return *this;
+            }
+
+            /**
+             * @brief Matrix sum.
+             * 
+             * @param matrix 
+             * @return Matrix 
+             */
+            Matrix operator +(const Matrix &matrix) const {
+                #ifndef NDEBUG // Integrity check.
+                assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
+                #endif
+
+                Matrix result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    result.elements[j] += matrix.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Matrix sum and assignation.
+             * 
+             * @param matrix 
+             * @return Matrix& 
+             */
+            Matrix &operator +=(const Matrix &matrix) {
+                #ifndef NDEBUG // Integrity check.
+                assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    this->elements[j] += matrix.elements[j];
+
+                return *this;
+            }
+
+            /**
+             * @brief Matrix difference.
+             * 
+             * @param matrix 
+             * @return Matrix 
+             */
+            Matrix operator -(const Matrix &matrix) const {
+                #ifndef NDEBUG // Integrity check.
+                assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
+                #endif
+
+                Matrix result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    result.elements[j] -= matrix.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Matrix difference and assignation.
+             * 
+             * @param matrix 
+             * @return Matrix& 
+             */
+            Matrix &operator -=(const Matrix &matrix) {
+                #ifndef NDEBUG // Integrity check.
+                assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->size(); ++j)
+                    this->elements[j] -= matrix.elements[j];
+
+                return *this;
+            }
 
             // OUTPUT.
 
