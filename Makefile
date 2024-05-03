@@ -1,19 +1,17 @@
 .PHONY: tests clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
-ifneq ($(PACS_ROOT),)
-LDFLAGS += -L$(PACS_ROOT)/lib
-LDLIBS += -lpacs
-endif
-
 # Further optimization.
 # CXXFLAGS += -DNDEBUG
 
-# Parallel computing.
-ifneq ($(mkTbbLib),)
-CXXFLAGS += -DPARALLEL_PACS
-LDFLAGS += -L$(mkTbbLib)
-LDLIBS += -ltbb
+# Parallel computing using OpenMP.
+ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
+ifeq ($(shell uname),Darwin) # Apple's clang.
+CXXFLAGS += -Xclang
+endif
+CXXFLAGS += -fopenmp -I$(OpenMP)/include
+LDFLAGS += -L$(OpenMP)/lib
+LDLIBS += -lomp
 endif
 
 # Headers, recompiling purposes.
