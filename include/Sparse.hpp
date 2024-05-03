@@ -200,7 +200,7 @@ namespace pacs {
                 assert((j < rpws) && (k < columns));
                 assert(!(this->compressed));
                 
-                if(std::abs(element) > TOLERANCE_PACS)
+                if(std::abs(element) > TOLERANCE)
                     this->elements[{j, k}] = element;
                 #else
                 this->elements[{j, k}] = element;
@@ -246,7 +246,7 @@ namespace pacs {
                         auto [key, value] = (*it);
 
                         #ifndef NDEBUG
-                        if(std::abs(value) > TOLERANCE_PACS) {
+                        if(std::abs(value) > TOLERANCE) {
                             this->outer.emplace_back(key[1]);
                             this->values.emplace_back(value);
                             ++index;
@@ -278,16 +278,8 @@ namespace pacs {
 
                 // Uncompression.
                 for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
-                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k) {
-
-                        #ifndef NDEBUG
-                        if(std::abs(this->values[k]) > TOLERANCE_PACS)
-                            this->elements[{j, this->outer[k]}] = this->values[k];
-                        #else
+                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
                         this->elements[{j, this->outer[k]}] = this->values[k];
-                        #endif
-
-                    }
                 }
 
                 this->compressed = false;
