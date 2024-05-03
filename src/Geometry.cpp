@@ -233,6 +233,7 @@ namespace pacs {
         return ost << "(" << line.a << ") x + " << "(" << line.b << ") y = " << "(" << line.c << ")";
     }
 
+
     // SEGMENT.
 
     // CONSTRUCTORS.
