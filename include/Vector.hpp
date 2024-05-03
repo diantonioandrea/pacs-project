@@ -118,6 +118,23 @@ namespace pacs {
             }
 
             /**
+             * @brief Friend Vector scalar product.
+             * 
+             * @param scalar 
+             * @param vector 
+             * @return Vector 
+             */
+            friend Vector operator *(const T &scalar, const Vector &vector) {
+                Vector result{vector};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element *= scalar;
+
+                return result;
+            }
+
+            /**
              * @brief Vector scalar product and assignation.
              * 
              * @param scalar 

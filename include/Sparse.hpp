@@ -310,7 +310,31 @@ namespace pacs {
                 Sparse result{*this};
 
                 if(!(this->compressed)) {
+                    for(auto &[key, element]: result.elements)
+                        element *= scalar;
                     
+                } else {
+                    
+                    #pragma omp parallel for
+                    for(auto &value: result.values)
+                        value *= scalar;
+
+                }
+
+                return result;
+            }
+
+            /**
+             * @brief Friend Sparse matrix scalar product.
+             * 
+             * @param scalar 
+             * @param sparse 
+             * @return Sparse 
+             */
+            friend Sparse operator *(const T &scalar, const Sparse &sparse) {
+                Sparse result{sparse};
+
+                if(!(sparse.compressed)) {
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
                     
@@ -333,7 +357,6 @@ namespace pacs {
              */
             Sparse &operator *=(const T &scalar) {
                 if(!(this->compressed)) {
-                    
                     for(auto &[key, element]: this->elements)
                         element *= scalar;
                     

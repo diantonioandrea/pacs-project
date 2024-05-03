@@ -176,6 +176,23 @@ namespace pacs {
             }
 
             /**
+             * @brief Friend Matrix scalar product.
+             * 
+             * @param scalar 
+             * @param matrix 
+             * @return Matrix 
+             */
+            friend Matrix operator *(const T &scalar, const Matrix &matrix) {
+                Matrix result{matrix};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element *= scalar;
+
+                return result;
+            }
+
+            /**
              * @brief Matrix scalar product and assignation.
              * 
              * @param scalar 
