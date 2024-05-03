@@ -425,20 +425,15 @@ namespace pacs {
                     }
 
                 } else {
-                    ost << "Inner: ";
+                    for(std::size_t j = 0; j < sparse.rows; ++j) {
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            ost << "(" << j << ", " << sparse.outer[k] << "): " << sparse.values[k];
 
-                    for(const auto &value: sparse.inner)
-                        ost << value << " ";
+                            if(k < sparse.inner[sparse.rows] - 1)
+                                ost << std::endl;
+                        }
 
-                    ost << std::endl << "Outer: ";
-
-                    for(const auto &value: sparse.outer)
-                        ost << value << " ";
-
-                    ost << std::endl <<  "Values: ";
-
-                    for(const auto &value: sparse.values)
-                        ost << value << " ";
+                    }
                 }
 
                 return ost;
