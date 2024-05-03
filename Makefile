@@ -18,25 +18,24 @@ endif
 HEADERS = ./include/*.hpp
 
 # Test.
-TEST_SOURCES = $(shell find test -name "*.cpp")
-TEST_OBJECTS = $(TEST_SOURCES:test/%.cpp=%.o)
-TEST_EXECS = $(TEST_SOURCES:test/%.cpp=%.out)
+TEST_EXECS = $(subst .cpp,.out,$(shell ls ./test))
+TEST_OBJECTS = $(subst .cpp,.o,$(shell ls ./test))
 
 test: $(TEST_EXECS)
 	@echo "Done!"
 
-$(TEST_EXECS): $(TEST_OBJECTS)
+$(TEST_EXECS): %.out: %.o
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $< to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $< -o $@
 
-$(TEST_OBJECTS): $(TEST_SOURCES) $(HEADERS)
+$(TEST_OBJECTS): %.o: test/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean.
 clean:
 	@echo "Cleaning the repo."
-	@$(RM) $(TEST_OBJECTS)
+	@$(RM) ./*.o
 
 distclean: clean
-	@$(RM) $(TEST_EXECS)
+	@$(RM) ./*.out
