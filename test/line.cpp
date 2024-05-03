@@ -20,7 +20,7 @@ int main() {
     pacs::Point p{0.0, 1.0};
     pacs::Point q{1.0, 0.0};
 
-    // Bisector.
+    // Bisector output.
     std::cout << pacs::bisector(p, q) << std::endl;
     
 }
