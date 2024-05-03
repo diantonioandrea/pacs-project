@@ -205,6 +205,52 @@ namespace pacs {
         return ost << "(" << line.a << ") x + " << "(" << line.b << ") y = " << "(" << line.c << ")";
     }
 
+    // SEGMENT.
+
+    // CONSTRUCTORS.
+
+
+    /**
+     * @brief Constructs a new Segment from a given a and b.
+     * 
+     * @param a 
+     * @param b 
+     */
+    Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {}
+
+    /**
+     * @brief Constructs a new Segment from a given array of points.
+     * 
+     * @param ab 
+     */
+    Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {}
+
+    /**
+     * @brief Copy constructor.
+     * 
+     * @param segment 
+     */
+    Segment::Segment(const Segment &segment): a{segment.a}, b{segment.b} {}
+
+    /**
+     * @brief Copy operator.
+     * 
+     * @param segment 
+     * @return Segment& 
+     */
+    Segment &Segment::operator =(const Segment &segment) {
+        this->a = segment.a;
+        this->b = segment.b;
+
+        return *this;
+    }
+
+    // OUTPUT.
+
+    std::ostream &operator <<(std::ostream &ost, const Segment &segment) {
+        return ost << "[" << segment.a << ", " << segment.b << "]";
+    }
+
 
     // METHODS
 

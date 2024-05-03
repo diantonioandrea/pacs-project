@@ -95,6 +95,31 @@ namespace pacs {
             friend std::ostream &operator <<(std::ostream &, const Line &);
     };
 
+    /**
+     * @brief 2D Segment class.
+     * 
+     */
+    class Segment {
+        private:
+
+            // Extremes.
+            Point a;
+            Point b;
+
+        public:
+
+            // CONSTRUCTORS.
+
+            Segment(const Point &, const Point &);
+            Segment(const std::array<Point, 2> &);
+            Segment(const Segment &);
+            Segment &operator =(const Segment &);
+
+            // OUTPUT.
+
+            friend std::ostream &operator <<(std::ostream &, const Segment &);
+    };
+
     // METHODS.
 
     Line bisector(const Point &, const Point &);
