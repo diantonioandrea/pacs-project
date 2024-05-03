@@ -107,7 +107,7 @@ namespace pacs {
              * @param j 
              * @return T 
              */
-            T operator [](const std::size_t &j) const {
+            inline T operator [](const std::size_t &j) const {
                 #ifndef NDEBUG // Integrity check.
                 assert(j < this->length);
                 #endif
@@ -121,7 +121,7 @@ namespace pacs {
              * @param j 
              * @return T& 
              */
-            T &operator [](const std::size_t &j) {
+            inline T &operator [](const std::size_t &j) {
                 #ifndef NDEBUG // Integrity check.
                 assert(j < this->length);
                 #endif

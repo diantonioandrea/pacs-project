@@ -293,20 +293,19 @@ namespace pacs {
                 assert(this->columns == vector.length);
                 #endif
 
-                std::vector<T> result(this->rows, static_cast<T>(0));
-                std::vector<T> elements = vector;
+                Vector<T> result{this->rows};
                 
                 for(std::size_t j = 0; j < this->rows; ++j) {
                     T product = static_cast<T>(0);
 
                     #pragma omp parallel for reduction(+: product)
                     for(std::size_t k = 0; k < this->columns; ++k)
-                        product += this->elements[j * this->rows + k] * elements[k];
+                        product += this->elements[j * this->rows + k] * vector[k];
 
                     result[j] = product;
                 }
 
-                return Vector<T>{this->rows, result};
+                return result;
             }
 
             // OUTPUT.
