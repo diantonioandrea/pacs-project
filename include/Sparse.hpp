@@ -374,6 +374,38 @@ namespace pacs {
                 return *this;
             }
 
+            /**
+             * @brief Sparse matrix * Vector product.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> operator *(const Vector<T> &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->columns == vector.length);
+                #endif
+
+                Vector<T> result{this->rows};
+
+                if(!(this->compressed)) {
+                    for(const auto &[key, element]: this->elements)
+                        result[key[0]] += element * vector[key[1]];
+
+                } else {
+                    for(std::size_t j = 0; j < this->rows; ++j) {
+                        T product = static_cast<T>(0);
+
+                        #pragma omp parallel for reduction(+: product)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            product += this->values[k] * vector[this->outer[k]];
+
+                        result[j] = product;
+                    }
+                }
+
+                return result;
+            }
+
             // OUTPUT.
 
             /**

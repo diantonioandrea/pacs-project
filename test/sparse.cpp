@@ -28,4 +28,13 @@ int main() {
 
     // Output.
     std::cout << sparse << std::endl;
+
+    // Vector product.
+    pacs::Vector<double> vector{2};
+    
+    vector[0] = 1;
+    vector[1] = -1;
+
+    // Vector product output.
+    std::cout << (sparse * vector) << std::endl;
 }
