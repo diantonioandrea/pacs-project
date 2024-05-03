@@ -1,4 +1,4 @@
-.PHONY: tests clean distclean
+.PHONY: test clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 
 # Further optimization.
@@ -17,12 +17,12 @@ endif
 # Headers, recompiling purposes.
 HEADERS = ./include/*.hpp
 
-# Tests.
-TEST_SOURCES = $(shell find tests -name "*.cpp")
-TEST_OBJECTS = $(TEST_SOURCES:tests/%.cpp=%.o)
-TEST_EXECS = $(TEST_SOURCES:tests/%.cpp=%.out)
+# Test.
+TEST_SOURCES = $(shell find test -name "*.cpp")
+TEST_OBJECTS = $(TEST_SOURCES:test/%.cpp=%.o)
+TEST_EXECS = $(TEST_SOURCES:test/%.cpp=%.out)
 
-tests: $(TEST_EXECS)
+test: $(TEST_EXECS)
 
 $(TEST_EXECS): $(TEST_OBJECTS)
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $< to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
