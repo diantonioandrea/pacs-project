@@ -14,6 +14,11 @@
 // Type.
 #include <Type.hpp>
 
+// OpenMP.
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 // Containers.
 #include <vector>
 
@@ -81,6 +86,139 @@ namespace pacs {
                 #endif
 
                 this->elements = vector.elements;
+            }
+
+            // CONVERSION
+
+            /**
+             * @brief Converts the Vector into a std::vector<T>.
+             * 
+             * @return std::vector<T> 
+             */
+            operator std::vector<T>() const {
+                return this->elements;
+            }
+
+            // OPERATORS.
+
+            /**
+             * @brief Vector scalar product.
+             * 
+             * @param scalar 
+             * @return Vector 
+             */
+            Vector operator *(const T &scalar) const {
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    result.elements[j] *= scalar;
+
+                return result;
+            }
+
+            /**
+             * @brief Vector scalar product and assignation.
+             * 
+             * @param scalar 
+             * @return Vector& 
+             */
+            Vector &operator *(const T &scalar) {
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    this->elements[j] *= scalar;
+
+                return *this;
+            }
+
+            /**
+             * @brief Vector sum.
+             * 
+             * @param vector 
+             * @return Vector 
+             */
+            Vector operator +(const Vector &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    result.elements[j] += vector.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Vector sum and assignation.
+             * 
+             * @param vector 
+             * @return Vector& 
+             */
+            Vector &operator +=(const Vector &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    this->elements[j] += vector.elements[j];
+
+                return *this;
+            }
+
+            /**
+             * @brief Vector difference.
+             * 
+             * @param vector 
+             * @return Vector 
+             */
+            Vector operator -(const Vector &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    result.elements[j] -= vector.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Vector difference and assignation.
+             * 
+             * @param vector 
+             * @return Vector& 
+             */
+            Vector &operator -=(const Vector &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->length; ++j)
+                    this->elements[j] -= vector.elements[j];
+
+                return *this;
+            }
+
+            T operator *(const Vector &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                T result = static_cast<T>(0);
+
+                #pragma omp parallel for reduction(+: result)
+                for(std::size_t j = 0; j < this->length; ++j)
+                    result += this->elements[j] * vector.elements[j];
+
+                return result;
             }
 
             // OUTPUT.
