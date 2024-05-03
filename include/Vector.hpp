@@ -66,7 +66,7 @@ namespace pacs {
              * @param length 
              * @param elements 
              */
-            Vector(const std::size_t &length, const std::vector<T> &elements): length{length}, elements{elements} {
+            Vector(const std::size_t &length, const std::vector<T> &elements): elements{elements}, length{length} {
                 #ifndef NDEBUG // Integrity check.
                 assert(length > 0);
                 assert(elements.size() == length);
@@ -78,7 +78,7 @@ namespace pacs {
              * 
              * @param vector 
              */
-            Vector(const Vector &vector): length{vector.length}, elements{vector.elements} {}
+            Vector(const Vector &vector): elements{vector.elements}, length{vector.length} {}
             
             Vector &operator =(const Vector &vector) {
                 #ifndef NDEBUG // Integrity check.
@@ -97,6 +97,36 @@ namespace pacs {
              */
             operator std::vector<T>() const {
                 return this->elements;
+            }
+
+            // READ AND WRITE.
+
+            /**
+             * @brief Const subscript operator, returns the j-th element.
+             * 
+             * @param j 
+             * @return T 
+             */
+            T operator [](const std::size_t &j) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->length);
+                #endif
+
+                return this->elements[j];
+            }
+
+            /**
+             * @brief Subscript operator, returns a reference to the j-th element.
+             * 
+             * @param j 
+             * @return T& 
+             */
+            T &operator [](const std::size_t &j) {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->length);
+                #endif
+
+                return this->elements[j];
             }
 
             // OPERATORS.
