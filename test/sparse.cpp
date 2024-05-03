@@ -20,8 +20,8 @@ int main() {
     pacs::Sparse<double> sparse{2, 2};
     
     // Insert.
-    sparse.insert(0, 0, 1.0);
-    sparse.insert(1, 1, 1.0);
+    sparse.insert(0, 0, 1);
+    sparse.insert(1, 1, -1);
 
     // Compression.
     sparse.compress();
@@ -33,7 +33,7 @@ int main() {
     pacs::Vector<double> vector{2};
     
     vector[0] = 1;
-    vector[1] = -1;
+    vector[1] = 2;
 
     // Vector product output.
     std::cout << (sparse * vector) << std::endl;
