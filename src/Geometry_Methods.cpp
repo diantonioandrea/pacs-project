@@ -134,10 +134,10 @@ namespace pacs {
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert((points.size() == 0) || (points.size() == 2));
+        assert(points.size() <= 2);
         #endif
 
-        if(points.size() == 0)
+        if(points.size() <= 1)
             return polygon;
         
         // Convexity assumption.
