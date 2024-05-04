@@ -15,6 +15,7 @@
 #include <iostream>
 
 // Containers.
+#include <vector>
 #include <array>
 
 // Geomtry tolerance.
@@ -120,6 +121,28 @@ namespace pacs {
             // OUTPUT.
 
             friend std::ostream &operator <<(std::ostream &, const Segment &);
+    };
+
+    class Polygon {
+        private:
+
+            // Points.
+            const std::vector<Point> points;
+
+        public:
+
+            // CONSTRUCTORS.
+
+            Polygon(const std::vector<Point> &);
+            Polygon(const Polygon &);
+
+            // METHODS.
+
+            std::vector<Segment> segments() const;
+
+            // OUTPUT.
+
+            friend std::ostream &operator <<(std::ostream &, const Polygon &);
     };
 
     // METHODS.

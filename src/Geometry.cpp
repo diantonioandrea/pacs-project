@@ -301,6 +301,65 @@ namespace pacs {
     }
 
 
+    // POLYGON.
+
+    // CONSTRUCTORS.
+    
+    /**
+     * @brief Constructs a new Polygon from a given vector of points.
+     * 
+     * @param points 
+     */
+    Polygon::Polygon(const std::vector<Point> &points): points{points} {}
+
+    /**
+     * @brief Copy constructor.
+     * 
+     * @param polygon 
+     */
+    Polygon::Polygon(const Polygon &polygon): points{polygon.points} {}
+
+    // METHODS.
+    
+    /**
+     * @brief Returns the vector of segments.
+     * 
+     * @return std::vector<Segment> 
+     */
+    std::vector<Segment> Polygon::segments() const {
+        std::vector<Segment> segments;
+
+        for(std::size_t j = 0; j < this->points.size() - 1; ++j)
+            segments.emplace_back(this->points[j], this->points[j + 1]);
+
+        segments.emplace_back(*--(this->points.end()), this->points[0]);
+
+        return segments;
+    }
+
+    // OUTPUT.
+
+    /**
+     * @brief Polygon output.
+     * 
+     * @param ost 
+     * @param polygon 
+     * @return std::ostream& 
+     */
+    std::ostream &operator <<(std::ostream &ost, const Polygon &polygon) {
+        ost << "{";
+
+        for(std::size_t j = 0; j < polygon.points.size(); ++j) {
+            ost << polygon.points[j];
+
+            if(j < polygon.points.size() - 1)
+                ost << ", ";
+        }
+
+        return ost;
+    }
+
+
     // METHODS
 
     /**
