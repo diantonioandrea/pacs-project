@@ -21,4 +21,5 @@ int main() {
 
     // Output.
     std::cout << vector << std::endl;
+    
 }

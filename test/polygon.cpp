@@ -21,6 +21,8 @@ int main() {
     pacs::Point b{1.0, 0.0};
     pacs::Point c{1.0, 1.0};
     pacs::Point d{0.0, 1.0};
+    pacs::Point e{0.5, 0.5};
+    pacs::Point f{2.5, 2.5};
 
     // Constructing a Polygon.
     pacs::Polygon polygon{{a, b, c, d}};
@@ -31,4 +33,9 @@ int main() {
     // Segments output.
     for(const auto &segment: polygon.segments())
         std::cout << segment << std::endl;
+    
+    // Point checks.
+    std::cout << polygon.contains(e) << std::endl;
+    std::cout << polygon.contains(f) << std::endl;
+    
 }

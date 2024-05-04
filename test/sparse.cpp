@@ -37,4 +37,5 @@ int main() {
 
     // Vector product output.
     std::cout << (sparse * vector) << std::endl;
+    
 }

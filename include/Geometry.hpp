@@ -90,6 +90,17 @@ namespace pacs {
             Line(const std::array<double, 3> &);
             Line(const Line &);
 
+            // READ.
+
+            double operator [](const std::size_t &) const;
+            double x(const double &) const;
+            double y(const double &) const;
+
+            // METHODS.
+
+            bool contains(const Point &) const;
+            bool is_parallel(const Line &) const;
+
             // OUTPUT.
 
             friend std::ostream &operator <<(std::ostream &, const Line &);
@@ -117,6 +128,7 @@ namespace pacs {
             // METHODS.
 
             Line line() const;
+            bool contains(const Point &) const;
 
             // OUTPUT.
 
@@ -139,6 +151,7 @@ namespace pacs {
             // METHODS.
 
             std::vector<Segment> segments() const;
+            bool contains(const Point &) const;
 
             // OUTPUT.
 
@@ -148,6 +161,10 @@ namespace pacs {
     // METHODS.
 
     Line bisector(const Point &, const Point &);
+    
+    std::vector<Point> intersections(const Line &, const Line &);
+    std::vector<Point> intersections(const Line &, const Segment &);
+    std::vector<Point> intersections(const Line &, const Polygon &);
 
 }
 

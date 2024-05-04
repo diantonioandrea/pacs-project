@@ -20,7 +20,11 @@ int main() {
     pacs::Point p{0.0, 1.0};
     pacs::Point q{1.0, 0.0};
 
-    // Bisector output.
-    std::cout << pacs::bisector(p, q) << std::endl;
+    // Constructing two lines.
+    pacs::Line bisector = pacs::bisector(p, q);
+    pacs::Line line{1.0, 1.0, 1.0};
+
+    // Intersection output.
+    std::cout << pacs::intersections(line, bisector)[0] << std::endl;
     
 }

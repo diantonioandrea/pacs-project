@@ -34,4 +34,5 @@ int main() {
 
     // Vector product output.
     std::cout << (matrix * vector) << std::endl;
+    
 }

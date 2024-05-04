@@ -220,6 +220,74 @@ namespace pacs {
      */
     Line::Line(const Line &line): a{line.a}, b{line.b}, c{line.c} {}
 
+    // READ.
+
+    /**
+     * @brief Returns the j-th parameter.
+     * 
+     * @param j 
+     * @return double 
+     */
+    double Line::operator [](const std::size_t &j) const {
+        #ifndef NDEBUG // Integrity check.
+        assert(j <= 2);
+        #endif
+
+        return (j == 0) ? this->a : ((j == 1) ? this->b : this->c);
+    }
+
+    /**
+     * @brief Returns the first coordinate of a Line's point given the second one.
+     * 
+     * @param y 
+     * @return double 
+     */
+    double Line::x(const double &y) const {
+        #ifndef NDEBUG // Integrity check.
+        assert(std::abs(this->a) > GEOMETRY_TOLERANCE);
+        #endif
+
+        return (this->c - this->b * y) / this->a;
+    }
+
+    /**
+     * @brief Returns the second coordinate of a Line's point given the first one.
+     * 
+     * @param x 
+     * @return double 
+     */
+    double Line::y(const double &x) const {
+        #ifndef NDEBUG // Integrity check.
+        assert(std::abs(this->b) > GEOMETRY_TOLERANCE);
+        #endif
+
+        return (this->c - this->a * x) / this->b;
+    }
+
+    // METHODS.
+
+    /**
+     * @brief Checks whether a Point is contained inside the Line.
+     * 
+     * @param point 
+     * @return true 
+     * @return false 
+     */
+    bool Line::contains(const Point &point) const {
+        return std::abs(this->a * point[0] + this->b * point[1] - this->c) <= GEOMETRY_TOLERANCE;
+    }
+
+    /**
+     * @brief Checks whether two Lines are parallel.
+     * 
+     * @param line 
+     * @return true 
+     * @return false 
+     */
+    bool Line::is_parallel(const Line &line) const {
+        return (std::abs(this->a - line.a) <= GEOMETRY_TOLERANCE) && (std::abs(this->b - line.b) <= GEOMETRY_TOLERANCE);
+    }
+
     // OUTPUT.
 
     /**
@@ -272,7 +340,7 @@ namespace pacs {
     // METHODS.
 
     /**
-     * @brief Returs the line passing through the Segment's extremes.
+     * @brief Returs the Line passing through the Segment's extremes.
      * 
      * @return Line 
      */
@@ -292,6 +360,26 @@ namespace pacs {
 
         // Default.
         return Line{(ay - by) / (bx - ax), 1.0, (ay - by) / (bx - ax) * ax + ay};
+    }
+
+    /**
+     * @brief Checks whether a Point is contained inside the Segment.
+     * 
+     * @param point 
+     * @return true 
+     * @return false 
+     */
+    bool Segment::contains(const Point &point) const {
+        if((this->a - point).is_origin() || (this->b - point).is_origin())
+            return true;
+
+        if(!(this->line().contains(point)))
+            return false;
+
+        bool x = ((this->a[0] <= point[0]) && (point[0] <= this->b[0])) || ((this->b[0] <= point[0]) && (point[0] <= this->a[0]));
+        bool y = ((this->a[1] <= point[1]) && (point[1] <= this->b[1])) || ((this->b[1] <= point[1]) && (point[1] <= this->a[1]));
+
+        return x && y;
     }
 
     // OUTPUT.
@@ -322,7 +410,7 @@ namespace pacs {
     // METHODS.
     
     /**
-     * @brief Returns the vector of segments.
+     * @brief Returns the vector of Segments.
      * 
      * @return std::vector<Segment> 
      */
@@ -335,6 +423,31 @@ namespace pacs {
         segments.emplace_back(*--(this->points.end()), this->points[0]);
 
         return segments;
+    }
+
+    /**
+     * @brief Checks whether a point is contained inside the Polygon. Does not count Points over the perimeter.
+     * 
+     * @param point 
+     * @return true 
+     * @return false 
+     */
+    bool Polygon::contains(const Point &point) const {
+        for(const auto &segment: this->segments()) {
+            if(segment.contains(point))
+                return false;
+        }
+
+        // Horizontal line.
+        Line horizonal{0.0, 1.0, point[1]};
+        std::vector<Point> points;
+
+        for(const auto &intersection: intersections(horizonal, *this)) {
+            if(intersection[0] > point[0])
+                points.emplace_back(intersection);
+        }
+
+        return points.size() % 2 == 1;
     }
 
     // OUTPUT.
@@ -392,6 +505,78 @@ namespace pacs {
 
         // Default.
         return Line{(px - qx) / (py - qy), 1.0, (px - qx) / (py - qy) * mx + my};
+    }
+
+    /**
+     * @brief Returns the intersection between two Lines.
+     * 
+     * @param s 
+     * @param r 
+     * @return std::vector<Point> 
+     */
+    std::vector<Point> intersections(const Line &s, const Line &r) {
+        std::vector<Point> points;
+
+        // Evaluation by cases.
+
+        // No (or infinite) intersections.
+        if(s.is_parallel(r))
+            return points;
+
+        // S is vertical.
+        if(std::abs(s[1]) <= GEOMETRY_TOLERANCE) {
+            points.emplace_back(s[2] / s[0], r.y(s[2] / s[0]));
+            return points;
+        }
+
+        // R is vertical.
+        if(std::abs(r[1]) <= GEOMETRY_TOLERANCE) {
+            points.emplace_back(r[2] / r[0], s.y(r[2] / r[0]));
+            return points;
+        }
+
+        // Default case.
+        double x = (s[2] / s[1] - r[2] / r[1]) / (s[0] / s[1] - r[0] / r[1]);
+        double y = s[2] / s[1] - s[0] / s[1] * x;
+
+        points.emplace_back(x, y);
+        return points;
+    }
+
+    /**
+     * @brief Returns the intersection between a Line and a Segment.
+     * 
+     * @param line 
+     * @param segment 
+     * @return std::vector<Point> 
+     */
+    std::vector<Point> intersections(const Line &line, const Segment &segment) {
+        std::vector<Point> points;
+
+        for(const auto &point: intersections(line, segment.line())) {
+            if(segment.contains(point))
+                points.emplace_back(point);
+        }
+
+        return points;
+    }
+
+    /**
+     * @brief Returns the intersection(s) between a line and a Polygon.
+     * 
+     * @param line 
+     * @param polygon 
+     * @return std::vector<Point> 
+     */
+    std::vector<Point> intersections(const Line &line, const Polygon &polygon) {
+        std::vector<Point> points;
+
+        for(const auto &segment: polygon.segments()) {
+            for(const auto &point: intersections(line, segment))
+                points.emplace_back(point);
+        }
+
+        return points;
     }
 
 }
