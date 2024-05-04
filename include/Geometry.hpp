@@ -96,6 +96,18 @@ namespace pacs {
             double x(const double &) const;
             double y(const double &) const;
 
+            // COMPARISONS.
+
+            bool operator <(const Point &) const;
+            bool operator <=(const Point &) const;
+            bool operator >(const Point &) const;
+            bool operator >=(const Point &) const;
+
+            friend bool operator <(const Point &, const Line &);
+            friend bool operator <=(const Point &, const Line &);
+            friend bool operator >(const Point &, const Line &);
+            friend bool operator >=(const Point &, const Line &);
+
             // METHODS.
 
             bool contains(const Point &) const;
@@ -129,6 +141,7 @@ namespace pacs {
 
             Line line() const;
             bool contains(const Point &) const;
+            double orientation() const;
 
             // OUTPUT.
 
@@ -139,7 +152,7 @@ namespace pacs {
         private:
 
             // Points (Counterwise ordered).
-            const std::vector<Point> points;
+            std::vector<Point> points;
 
         public:
 
@@ -147,11 +160,15 @@ namespace pacs {
 
             Polygon(const std::vector<Point> &);
             Polygon(const Polygon &);
+            Polygon &operator =(const Polygon &);
 
             // METHODS.
 
-            std::vector<Segment> segments() const;
+            std::vector<Point> vertices() const;
+            std::vector<Segment> edges() const;
+
             bool contains(const Point &) const;
+            Point centroid() const;
 
             // OUTPUT.
 
@@ -165,6 +182,8 @@ namespace pacs {
     std::vector<Point> intersections(const Line &, const Line &);
     std::vector<Point> intersections(const Line &, const Segment &);
     std::vector<Point> intersections(const Line &, const Polygon &);
+
+    Polygon reduce(const Polygon &, const Line &, const Point &);
 
 }
 

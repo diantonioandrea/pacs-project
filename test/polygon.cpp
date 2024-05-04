@@ -31,11 +31,15 @@ int main() {
     std::cout << polygon << std::endl;
 
     // Segments output.
-    for(const auto &segment: polygon.segments())
+    for(const auto &segment: polygon.edges())
         std::cout << segment << std::endl;
     
     // Point checks.
     std::cout << polygon.contains(e) << std::endl;
     std::cout << polygon.contains(f) << std::endl;
+
+    // Reduction.
+    pacs::Line reduction{-1.0, 1.0, -0.5};
+    std::cout << pacs::reduce(polygon, reduction, e) << std::endl;
     
 }

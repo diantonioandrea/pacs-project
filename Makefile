@@ -32,7 +32,7 @@ $(TEST_OBJECTS): %.o: test/%.cpp
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OBJECTS): %.o: src/%.cpp $(patsubst %.o,include/%.hpp,$(OBJECTS))
+$(OBJECTS): %.o: src/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
