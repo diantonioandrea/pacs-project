@@ -126,7 +126,7 @@ namespace pacs {
     class Polygon {
         private:
 
-            // Points.
+            // Points (Counterwise ordered).
             const std::vector<Point> points;
 
         public:
