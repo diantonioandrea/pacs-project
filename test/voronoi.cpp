@@ -27,9 +27,5 @@ int main() {
     pacs::Point d{-1.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-
-    // Cells output.
-    for(const auto &cell: pacs::voronoi(domain, 10))
-        std::cout << cell << std::endl;
     
 }

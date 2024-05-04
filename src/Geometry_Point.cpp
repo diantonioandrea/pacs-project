@@ -91,7 +91,7 @@ namespace pacs {
         return std::sqrt(this->x * this->x + this->y * this->y);
     }
 
-    bool Point::is_origin() const {
+    bool Point::is_zero() const {
         return this->norm() <= GEOMETRY_TOLERANCE;
     }
 

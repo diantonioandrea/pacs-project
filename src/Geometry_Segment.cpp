@@ -31,7 +31,7 @@ namespace pacs {
      */
     Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {
         #ifndef NDEBUG // Integrity check.
-        assert(!(a - b).is_origin());
+        assert(!(a - b).is_zero());
         #endif
     }
 
@@ -42,7 +42,7 @@ namespace pacs {
      */
     Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {
         #ifndef NDEBUG // Integrity check.
-        assert(!(ab[0] - ab[0]).is_origin());
+        assert(!(ab[0] - ab[0]).is_zero());
         #endif
     }
 
@@ -52,6 +52,22 @@ namespace pacs {
      * @param segment 
      */
     Segment::Segment(const Segment &segment): a{segment.a}, b{segment.b} {}
+
+    // READ.
+
+    /**
+     * @brief Returns the j-th extreme.
+     * 
+     * @param j 
+     * @return Point 
+     */
+    Point Segment::operator [](const std::size_t &j) const {
+        #ifndef NDEBUG // Integrity check.
+        assert(j <= 1);
+        #endif
+
+        return (j == 0) ? this->a : this->b;
+    }
 
     // METHODS.
 
@@ -86,14 +102,26 @@ namespace pacs {
      * @return false 
      */
     bool Segment::contains(const Point &point) const {
-        if((this->a - point).is_origin() || (this->b - point).is_origin())
+        if((this->a - point).is_zero() || (this->b - point).is_zero())
             return true;
 
         if(!(this->line().contains(point)))
             return false;
 
-        bool x = ((this->a[0] <= point[0]) && (point[0] <= this->b[0])) || ((this->b[0] <= point[0]) && (point[0] <= this->a[0]));
-        bool y = ((this->a[1] <= point[1]) && (point[1] <= this->b[1])) || ((this->b[1] <= point[1]) && (point[1] <= this->a[1]));
+        double min_x = this->a[0] <= this->b[0] ? this->a[0] : this->b[0];
+        double max_x = this->a[0] >= this->b[0] ? this->a[0] : this->b[0];
+
+        double min_y = this->a[1] <= this->b[1] ? this->a[1] : this->b[1];
+        double max_y = this->a[1] >= this->b[1] ? this->a[1] : this->b[1];
+
+        bool x = (min_x <= point[0]) && (point[0] <= max_x);
+        bool y = (min_y <= point[1]) && (point[1] <= max_y);
+
+        if(std::abs(this->a[0] - this->b[0]) <= GEOMETRY_TOLERANCE)
+            x = std::abs(this->a[0] - point[0]) <= GEOMETRY_TOLERANCE;
+
+        if(std::abs(this->a[1] - this->b[1]) <= GEOMETRY_TOLERANCE)
+            y = std::abs(this->a[1] - point[1]) <= GEOMETRY_TOLERANCE;
 
         return x && y;
     }

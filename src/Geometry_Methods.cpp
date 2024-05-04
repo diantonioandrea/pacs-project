@@ -27,7 +27,7 @@ namespace pacs {
      */
     Line bisector(const Point &p, const Point &q) {
         #ifndef NDEBUG // Checks.
-        assert(!(p - q).is_origin());
+        assert(!(p - q).is_zero());
         #endif
 
         double px = p[0], qx = q[0];
@@ -45,8 +45,10 @@ namespace pacs {
             return Line{1.0, 0.0, mx};
 
         // Default.
-        double m = (px - qx) / (py - qy);
-        return Line{m, 1.0, m * mx + my};
+        double a = qx - px;
+        double b = qy - py;
+        double c = a * mx + b * my;
+        return Line{a, b, c};
     }
 
     /**
@@ -78,8 +80,17 @@ namespace pacs {
         }
 
         // Default case.
-        double x = (s[2] / s[1] - r[2] / r[1]) / (s[0] / s[1] - r[0] / r[1]);
-        double y = s[2] / s[1] - s[0] / s[1] * x;
+
+        // s: y = ax + c.
+        double a = - s[0] / s[1];
+        double c = s[2] / s[1];
+
+        // r: y = bx + d.
+        double b = -r[0] / r[1];
+        double d = r[2] / r[1];
+
+        double x = (d - c) / (a - b);
+        double y = a * x + c;
 
         points.emplace_back(x, y);
         return points;
@@ -134,52 +145,16 @@ namespace pacs {
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert(points.size() <= 2);
+        assert(points.size() <= 2); // Convex domain.
+
+        if(points.size() == 1)
+            std::cout << "!" << std::endl;
         #endif
 
         if(points.size() <= 1)
             return polygon;
-        
-        // Convexity assumption.
-        std::vector<Point> lower{points}, upper{points};
 
-        for(const auto &point: polygon.vertices()) {
-            if(point < line) {
-                lower.emplace_back(point);
-            } else {
-                upper.emplace_back(point);
-            }
-        }
-
-        // Convexity sorting.
-        Point lower_centroid = Polygon{lower}.centroid();
-        Point upper_centroid = Polygon{upper}.centroid();
-
-        for(std::size_t j = 0; j < lower.size(); ++j) {
-            for(std::size_t k = 0; k < lower.size() - j - 1; ++k) {
-                if(Segment{lower_centroid, lower[k]}.orientation() > Segment{lower_centroid, lower[k + 1]}.orientation()) {
-                    Point temp = lower[k];
-                    lower[k] = lower[k + 1]; 
-                    lower[k + 1] = temp;
-                }
-            }
-        }
-
-        for(std::size_t j = 0; j < upper.size(); ++j) {
-            for(std::size_t k = 0; k < upper.size() - j - 1; ++k) {
-                if(Segment{upper_centroid, upper[k]}.orientation() > Segment{upper_centroid, upper[k + 1]}.orientation()) {
-                    Point temp = upper[k];
-                    upper[k] = upper[k + 1]; 
-                    upper[k + 1] = temp;
-                }
-            }
-        }
-
-        // Interior check.
-        if(Polygon{lower}.contains(point))
-            return Polygon{lower};
-
-        return Polygon{upper};
+        // ...
     }
 
 }

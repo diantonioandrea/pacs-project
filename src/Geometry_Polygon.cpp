@@ -87,28 +87,44 @@ namespace pacs {
 
         // Horizontal line.
         Line horizonal{0.0, 1.0, point[1]};
-        std::vector<Point> points;
+        std::size_t points = 0;
 
         for(const auto &intersection: intersections(horizonal, *this)) {
             if(intersection[0] > point[0])
-                points.emplace_back(intersection);
+                points += 1;
         }
 
-        return points.size() % 2 == 1;
+        return points % 2;
     }
 
     /**
-     * @brief Returns the polygon's centroid.
+     * @brief Returns the Polygon's area.
+     * 
+     * @return double 
+     */
+    double Polygon::area() const {
+        double area = 0.0;
+
+        for(const auto &edge: this->edges())
+            area += edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1];
+
+        return 0.5 * area;
+    }
+
+    /**
+     * @brief Returns the Polygon's centroid.
      * 
      * @return Point 
      */
     Point Polygon::centroid() const {
-        Point sum{0.0, 0.0};
+        Point centroid{0.0, 0.0};
 
-        for(const auto &point: this->points)
-            sum += point;
+        for(const auto &edge: this->edges()) {
+            centroid[0] += (edge[0][0] + edge[1][0]) * (edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1]);
+            centroid[1] += (edge[0][1] + edge[1][1]) * (edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1]);
+        }
 
-        return sum *= (1.0 / this->points.size());
+        return centroid * (1 / 6 * this->area());
     }
 
     // OUTPUT.

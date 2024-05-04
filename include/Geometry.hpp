@@ -53,7 +53,7 @@ namespace pacs {
             // METHODS.
 
             double norm() const;
-            bool is_origin() const;
+            bool is_zero() const;
 
             // OPERATORS.
 
@@ -137,6 +137,10 @@ namespace pacs {
             Segment(const std::array<Point, 2> &);
             Segment(const Segment &);
 
+            // READ.
+
+            Point operator [](const std::size_t &) const;
+
             // METHODS.
 
             Line line() const;
@@ -168,6 +172,8 @@ namespace pacs {
             std::vector<Segment> edges() const;
 
             bool contains(const Point &) const;
+
+            double area() const;
             Point centroid() const;
 
             // OUTPUT.

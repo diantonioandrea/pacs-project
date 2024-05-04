@@ -22,11 +22,10 @@ namespace pacs {
     // VORONOI.
 
     std::vector<Polygon> voronoi(const Polygon &, const std::vector<Point> &);
-    std::vector<Polygon> voronoi(const Polygon &, const std::size_t &);
 
     // LLOYD.
 
-    std::vector<Polygon> lloyd(const Polygon &, const std::vector<Polygon> &, const std::size_t &);
+    std::vector<Polygon> lloyd(const Polygon &, const std::vector<Polygon> &);
 
 }
 
