@@ -30,11 +30,9 @@ namespace pacs {
         assert(!(p - q).is_origin());
         #endif
 
-        Point mid = (p + q) * 0.5;
-
-        double mx = mid[0], my = mid[1];
         double px = p[0], qx = q[0];
         double py = p[1], qy = q[1];
+        double mx = (px + qx) / 2, my = (py + qy) / 2;
 
         // Evaluation by cases.
 
@@ -47,7 +45,8 @@ namespace pacs {
             return Line{1.0, 0.0, mx};
 
         // Default.
-        return Line{(px - qx) / (py - qy), 1.0, (px - qx) / (py - qy) * mx + my};
+        double m = (px - qx) / (py - qy);
+        return Line{m, 1.0, m * mx + my};
     }
 
     /**
@@ -157,7 +156,7 @@ namespace pacs {
         Point upper_centroid = Polygon{upper}.centroid();
 
         for(std::size_t j = 0; j < lower.size(); ++j) {
-            for(std::size_t k = j; k < lower.size() - 1; ++k) {
+            for(std::size_t k = 0; k < lower.size() - j - 1; ++k) {
                 if(Segment{lower_centroid, lower[k]}.orientation() > Segment{lower_centroid, lower[k + 1]}.orientation()) {
                     Point temp = lower[k];
                     lower[k] = lower[k + 1]; 
@@ -167,7 +166,7 @@ namespace pacs {
         }
 
         for(std::size_t j = 0; j < upper.size(); ++j) {
-            for(std::size_t k = j; k < upper.size() - 1; ++k) {
+            for(std::size_t k = 0; k < upper.size() - j - 1; ++k) {
                 if(Segment{upper_centroid, upper[k]}.orientation() > Segment{upper_centroid, upper[k + 1]}.orientation()) {
                     Point temp = upper[k];
                     upper[k] = upper[k + 1]; 

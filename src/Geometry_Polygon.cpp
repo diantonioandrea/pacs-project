@@ -121,7 +121,7 @@ namespace pacs {
      * @return std::ostream& 
      */
     std::ostream &operator <<(std::ostream &ost, const Polygon &polygon) {
-        ost << "{";
+        ost << "[";
 
         for(std::size_t j = 0; j < polygon.points.size(); ++j) {
             ost << polygon.points[j];
@@ -130,7 +130,7 @@ namespace pacs {
                 ost << ", ";
         }
 
-        return ost;
+        return ost << "]";
     }
 
 }

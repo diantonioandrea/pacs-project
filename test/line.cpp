@@ -20,9 +20,14 @@ int main() {
     pacs::Point p{0.0, 1.0};
     pacs::Point q{1.0, 0.0};
 
-    // Constructing two lines.
+    // Constructing some Lines.
     pacs::Line bisector = pacs::bisector(p, q);
+    pacs::Line bisector_symmetric = pacs::bisector(q, p);
     pacs::Line line{1.0, 1.0, 1.0};
+
+    // Bisector output test.
+    std::cout << bisector << std::endl;
+    std::cout << bisector_symmetric << std::endl;
 
     // Intersection output.
     std::cout << pacs::intersections(line, bisector)[0] << std::endl;
