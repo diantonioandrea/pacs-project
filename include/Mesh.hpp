@@ -17,16 +17,24 @@
 // Voronoi.
 #include <Voronoi.hpp>
 
+// Containers.
+#include <vector>
+
 namespace pacs {
 
     /**
-     * @brief Element class.
+     * @brief Element struct.
      * 
      */
-    class Element {
-        protected:
+    struct Element {
+            
+        // Indices.
+        std::vector<std::size_t> nodes;
+        std::vector<std::size_t> edges;
 
-        public:
+        // CONSTRUCTORS.
+
+        Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &);
 
     };
 
@@ -37,8 +45,34 @@ namespace pacs {
     class Mesh {
         protected:
 
+            // Geometry.
+            std::vector<Point> nodes;
+            std::vector<Segment> edges;
+
         public:
+
+            // Elements.
+            std::vector<Element> elements;
+
+            // Indices.
+            std::vector<std::size_t> boundary_nodes;
+            std::vector<std::size_t> boundary_edges;
+
+            // CONSTRUCTORS.
+
+            Mesh(const Polygon &, const std::size_t &);
+            Mesh(const Mesh &);
+
+            // READ.
         
+            Point node(const std::size_t &) const;
+            Segment edge(const std::size_t &) const;
+
+            // STATS.
+
+            std::size_t nodes_number() const;
+            std::size_t edges_number() const;
+            std::size_t elements_number() const;
     };
 
 }

@@ -85,6 +85,19 @@ namespace pacs {
         return (j == 0) ? this->x : this->y;
     }
 
+    // COMPARISONS.
+
+    /**
+     * @brief Point == Point.
+     * 
+     * @param point 
+     * @return true 
+     * @return false 
+     */
+    bool Point::operator ==(const Point &point) const {
+        return (*this - point).is_zero();
+    }
+
     // METHODS.
 
     double Point::norm() const {

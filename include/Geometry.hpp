@@ -50,6 +50,10 @@ namespace pacs {
             double operator [](const std::size_t &) const;
             double &operator [](const std::size_t &);
 
+            // COMPARISONS.
+
+            bool operator ==(const Point &) const;
+
             // METHODS.
 
             double norm() const;
@@ -98,6 +102,8 @@ namespace pacs {
 
             // COMPARISONS.
 
+            bool operator ==(const Line &) const;
+
             bool operator <(const Point &) const;
             bool operator <=(const Point &) const;
             bool operator >(const Point &) const;
@@ -142,11 +148,16 @@ namespace pacs {
 
             Point operator [](const std::size_t &) const;
 
+            // COMPARISONS
+
+            bool operator ==(const Segment &) const;
+
             // METHODS.
 
             Line line() const;
+
             bool contains(const Point &) const;
-            double orientation() const;
+            bool contains(const Segment &) const;
 
             // OUTPUT.
 

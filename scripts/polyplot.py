@@ -36,8 +36,6 @@ for line in lines:
     x: list[float] = []
     y: list[float] = []
 
-    print(line)
-
     data: list[str] = line.split(",")
     
     try:

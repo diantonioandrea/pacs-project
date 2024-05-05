@@ -69,6 +69,13 @@ namespace pacs {
         return (j == 0) ? this->a : this->b;
     }
 
+    // COMPARISONS
+
+
+    bool Segment::operator ==(const Segment &segment) const {
+        return ((this->a == segment.a) && (this->b == segment.b)) || ((this->a == segment.b) && (this->b == segment.a));
+    }
+
     // METHODS.
 
     /**
@@ -126,31 +133,8 @@ namespace pacs {
         return x && y;
     }
 
-    /**
-     * @brief Returns the Segment's orientation.
-     * 
-     * @return double 
-     */
-    double Segment::orientation() const {
-        Point vector = this->b - this->a;
-
-        // Vertical vector.
-        if(std::abs(vector[0]) <= GEOMETRY_TOLERANCE)
-            return (vector[1] >= 0) ? M_PI_2 : 1.5 * M_PI;
-
-        double angle = std::atan(vector[1] / vector[0]);
-
-        if(vector[1] >= 0) {
-            if(vector[0] < 0)
-                angle += M_PI;
-        } else {
-            if(vector[0] >= 0)
-                angle += 2.0 * M_PI;
-            else
-                angle += M_PI;
-        }
-
-        return angle;
+    bool Segment::contains(const Segment &segment) const {
+        return this->contains(segment.a) && this->contains(segment.b);
     }
 
     // OUTPUT.

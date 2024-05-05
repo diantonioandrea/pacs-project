@@ -90,6 +90,21 @@ namespace pacs {
     // COMPARISONS.
 
     /**
+     * @brief Line == Line.
+     * 
+     * @param line 
+     * @return true 
+     * @return false 
+     */
+    bool Line::operator ==(const Line &line) const {
+        bool a = std::abs(this->a - line.a) <= GEOMETRY_TOLERANCE;
+        bool b = std::abs(this->b - line.b) <= GEOMETRY_TOLERANCE;
+        bool c = std::abs(this->c - line.c) <= GEOMETRY_TOLERANCE;
+
+        return a && b && c;
+    }
+
+    /**
      * @brief Line < Point.
      * 
      * @param point 
