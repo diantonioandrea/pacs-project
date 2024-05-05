@@ -19,7 +19,27 @@
 
 namespace pacs {
 
+    /**
+     * @brief Element class.
+     * 
+     */
+    class Element {
+        protected:
 
+        public:
+
+    };
+
+    /**
+     * @brief Mesh class.
+     * 
+     */
+    class Mesh {
+        protected:
+
+        public:
+        
+    };
 
 }
 

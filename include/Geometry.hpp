@@ -30,7 +30,7 @@ namespace pacs {
      * 
      */
     class Point {
-        private:
+        protected:
 
             // Coordinates.
             double x;
@@ -75,7 +75,7 @@ namespace pacs {
      * 
      */
     class Line {
-        private:
+        protected:
 
             // Parameters.
             const double a;
@@ -124,7 +124,7 @@ namespace pacs {
      * 
      */
     class Segment {
-        private:
+        protected:
 
             // Extremes.
             const Point a;
@@ -154,7 +154,7 @@ namespace pacs {
     };
 
     class Polygon {
-        private:
+        protected:
 
             // Points (Counterwise ordered).
             std::vector<Point> points;
