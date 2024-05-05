@@ -193,6 +193,22 @@ namespace pacs {
     // METHODS.
 
     /**
+     * @brief Returns the Line's angular coefficient.
+     * 
+     * @return double 
+     */
+    double Line::angular() const {
+        #ifndef NDEBUG // Integrity check.
+        assert(std::abs(this->b) > GEOMETRY_TOLERANCE);
+        #endif
+
+        if(std::abs(this->a) <= GEOMETRY_TOLERANCE)
+            return 0.0;
+
+        return -this->a / this->b;
+    }
+
+    /**
      * @brief Checks whether a Point is contained inside the Line.
      * 
      * @param point 

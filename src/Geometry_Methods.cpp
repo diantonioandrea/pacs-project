@@ -16,6 +16,9 @@
 // Math.
 #include <cmath>
 
+// Swap.
+#include <algorithm>
+
 namespace pacs {
 
     /**
@@ -142,19 +145,115 @@ namespace pacs {
      */
     Polygon reduce(const Polygon &polygon, const Line &line, const Point &point) {
         std::vector<Point> points = intersections(line, polygon);
+        std::vector<Point> new_vertices;
+
+        if(points.size() > 2) {
+            std::cout << polygon << std::endl;
+            std::cout << point << std::endl;
+            std::cout << line << std::endl;
+        }
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert(points.size() <= 2); // Convex domain.
+        assert(points.size() <= 2); // Convex domain assumption.
 
-        if(points.size() == 1)
+        if(points.size() == 1) // Shouldn't happen.
             std::cout << "!" << std::endl;
         #endif
 
         if(points.size() <= 1)
             return polygon;
 
-        // ...
+        // Building.
+        std::vector<Point> vertices = polygon.vertices();
+        std::vector<Segment> edges = polygon.edges();
+        std::size_t index = 0;
+
+        if(line > point) { // Point under the Line.
+
+            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0])) {
+                std::swap(points[0], points[1]);
+            } else if((line.angular() > 0.0) && (points[0][1] < points[1][1])) {
+                std::swap(points[0], points[1]);
+            } else if((line.angular() < 0.0) && (points[0][1] > points[1][1])) {
+                std::swap(points[0], points[1]);
+            }
+
+            new_vertices.emplace_back(points[0]);
+            new_vertices.emplace_back(points[1]);
+
+            for(std::size_t j = 0; j < edges.size(); ++j) {
+                if(edges[j].contains(points[1])) {
+                    index = j;
+                    break;
+                }
+            }
+
+            if(index < vertices.size()) {
+
+                for(std::size_t j = index; j < vertices.size(); ++j) {
+                    if(line > vertices[j])
+                        new_vertices.emplace_back(vertices[j]);
+                }
+
+                for(std::size_t j = 0; j < index; ++j) {
+                    if(line > vertices[j])
+                        new_vertices.emplace_back(vertices[j]);
+                }
+
+            } else {
+                
+                for(const auto &vertex: vertices) {
+                    if(line > vertex)
+                        new_vertices.emplace_back(vertex);
+                }
+
+            }
+
+        } else { // Point above the Line.
+
+            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0])) {
+                std::swap(points[0], points[1]);
+            } else if((line.angular() > 0.0) && (points[0][1] > points[1][1])) {
+                std::swap(points[0], points[1]);
+            } else if((line.angular() < 0.0) && (points[0][1] < points[1][1])) {
+                std::swap(points[0], points[1]);
+            }
+
+            new_vertices.emplace_back(points[0]);
+            new_vertices.emplace_back(points[1]);
+
+            for(std::size_t j = 0; j < edges.size(); ++j) {
+                if(edges[j].contains(points[1])) {
+                    index = j;
+                    break;
+                }
+            }
+
+            if(index < vertices.size()) {
+
+                for(std::size_t j = index; j < vertices.size(); ++j) {
+                    if(line <= vertices[j])
+                        new_vertices.emplace_back(vertices[j]);
+                }
+
+                for(std::size_t j = 0; j < index; ++j) {
+                    if(line <= vertices[j])
+                        new_vertices.emplace_back(vertices[j]);
+                }
+
+            } else {
+                
+                for(const auto &vertex: vertices) {
+                    if(line <= vertex)
+                        new_vertices.emplace_back(vertex);
+                }
+
+            }
+
+        }
+
+        return Polygon{new_vertices};
     }
 
 }

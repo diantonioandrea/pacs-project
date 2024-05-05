@@ -110,6 +110,7 @@ namespace pacs {
 
             // METHODS.
 
+            double angular() const;
             bool contains(const Point &) const;
             bool is_parallel(const Line &) const;
 

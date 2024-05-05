@@ -27,5 +27,19 @@ int main() {
     pacs::Point d{-1.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
+
+    // Some points.
+    pacs::Point e{0.5, 0.5};
+    pacs::Point f{-0.4, 0.25};
+    pacs::Point g{0.0, -0.65};
+    pacs::Point o{0.0, 0.0};
     
+    // Voronoi diagram.
+    std::vector<pacs::Polygon> diagram = pacs::voronoi(domain, {e, f, g});
+
+    for(const auto &cell: diagram)
+        std::cout << cell << std::endl;
+
+    // pacs::Line line{-1.0, 1.0, -1.0};
+    // std::cout << pacs::reduce(domain, line, o) << std::endl;
 }
