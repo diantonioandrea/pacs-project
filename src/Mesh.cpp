@@ -10,6 +10,10 @@
 
 #include <Mesh.hpp>
 
+// Random.
+#include <cstdlib>
+#include <ctime>
+
 namespace pacs {
 
     // VORONOI.
@@ -40,6 +44,40 @@ namespace pacs {
         }
 
         return cells;
+    }
+
+    /**
+     * @brief Returns the Voronoi diagram of a random number of points inside a bounded domain.
+     * 
+     * @param domain 
+     * @param cells 
+     * @return std::vector<Polygon> 
+     */
+    std::vector<Polygon> voronoi(const Polygon &domain, const std::size_t &cells) {
+        // Seeding.
+        std::srand(time(0));
+
+        std::vector<Point> points;
+        std::size_t counter = 0;
+
+        do {
+            Point random = domain.random();
+            bool check = true;
+
+            for(const auto &point: points)
+                if((point - random).is_zero()) {
+                    check = false;
+                    break;
+                }
+
+            if(check) {
+                points.emplace_back(random);
+                ++counter;
+            }
+
+        } while(counter < cells);
+
+        return voronoi(domain, points);
     }
 
     // LLOYD.

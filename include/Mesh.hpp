@@ -22,6 +22,7 @@ namespace pacs {
     // VORONOI.
 
     std::vector<Polygon> voronoi(const Polygon &, const std::vector<Point> &);
+    std::vector<Polygon> voronoi(const Polygon &, const std::size_t &);
 
     // LLOYD.
 

@@ -110,7 +110,7 @@ namespace pacs {
         double area = 0.0;
 
         for(const auto &edge: this->edges())
-            area += edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1];
+            area += (edge[0][1] + edge[1][1]) * (edge[0][0] - edge[1][0]);
 
         return 0.5 * area;
     }
@@ -128,7 +128,7 @@ namespace pacs {
             centroid[1] += (edge[0][1] + edge[1][1]) * (edge[0][0] * edge[1][1] - edge[1][0] * edge[0][1]);
         }
 
-        return centroid * (1 / 6 * this->area());
+        return centroid * (1 / (6 * this->area()));
     }
 
     /**
@@ -137,9 +137,6 @@ namespace pacs {
      * @return Point 
      */
     Point Polygon::random() const {
-        // Seeding.
-        std::srand(time(0));
-
         // Boundaries.
         double x_min = this->points[0][0], x_max = this->points[0][0];
         double y_min = this->points[0][1], y_max = this->points[0][1];
