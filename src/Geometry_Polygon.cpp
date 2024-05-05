@@ -16,6 +16,10 @@
 // Math.
 #include <cmath>
 
+// Random.
+#include <cstdlib>
+#include <ctime>
+
 namespace pacs {
 
     // CONSTRUCTORS.
@@ -125,6 +129,36 @@ namespace pacs {
         }
 
         return centroid * (1 / 6 * this->area());
+    }
+
+    /**
+     * @brief Returns a random point inside the Polygon.
+     * 
+     * @return Point 
+     */
+    Point Polygon::random() const {
+        // Seeding.
+        std::srand(time(0));
+
+        // Boundaries.
+        double x_min = this->points[0][0], x_max = this->points[0][0];
+        double y_min = this->points[0][1], y_max = this->points[0][1];
+        double x, y;
+
+        for(std::size_t j = 1; j < this->points.size(); ++j) {
+            x_min = (points[j][0] < x_min) ? points[j][0] : x_min;
+            x_max = (points[j][0] > x_max) ? points[j][0] : x_max;
+            y_min = (points[j][1] < y_min) ? points[j][1] : y_min;
+            y_max = (points[j][1] > y_max) ? points[j][1] : y_max;
+        }
+
+        // Generation.
+        do {
+            x = x_min + (x_max - x_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
+            y = y_min + (y_max - y_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
+        } while(!this->contains({x, y}));
+
+        return Point{x, y};
     }
 
     // OUTPUT.

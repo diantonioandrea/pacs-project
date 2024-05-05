@@ -177,6 +177,8 @@ namespace pacs {
             double area() const;
             Point centroid() const;
 
+            Point random() const;
+
             // OUTPUT.
 
             friend std::ostream &operator <<(std::ostream &, const Polygon &);
