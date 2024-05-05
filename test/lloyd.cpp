@@ -29,7 +29,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
     
     // Voronoi diagram.
-    std::vector<pacs::Polygon> diagram = pacs::voronoi(domain, 30);
+    std::vector<pacs::Polygon> diagram = pacs::voronoi(domain, 75);
 
     // Relaxation.
     for(std::size_t j = 0; j < 50; ++j)

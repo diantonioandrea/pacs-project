@@ -14,6 +14,11 @@
 #include <cstdlib>
 #include <ctime>
 
+// Safe distance.
+#ifndef GEOMETRY_SAFE
+#define GEOMETRY_SAFE 0.05
+#endif
+
 namespace pacs {
 
     // VORONOI.
@@ -36,7 +41,8 @@ namespace pacs {
                 if(k == j)
                     continue;
 
-                if(!cell.contains(point)) // Random diagram error.
+                // Failure.
+                if(!cell.contains(point))
                     return std::vector<Polygon>{};
 
                 Line line = bisector(point, points[k]);
@@ -68,7 +74,7 @@ namespace pacs {
             bool check = true;
 
             for(const auto &point: points)
-                if((point - random).is_zero()) {
+                if((point - random).norm() <= GEOMETRY_SAFE) {
                     check = false;
                     break;
                 }
