@@ -147,12 +147,6 @@ namespace pacs {
         std::vector<Point> points = intersections(line, polygon);
         std::vector<Point> new_vertices;
 
-        if(points.size() > 2) {
-            std::cout << polygon << std::endl;
-            std::cout << point << std::endl;
-            std::cout << line << std::endl;
-        }
-
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
         assert(points.size() <= 2); // Convex domain assumption.
