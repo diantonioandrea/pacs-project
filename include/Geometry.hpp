@@ -18,7 +18,7 @@
 #include <vector>
 #include <array>
 
-// Geomtry tolerance.
+// Geometry tolerance.
 #ifndef GEOMETRY_TOLERANCE
 #define GEOMETRY_TOLERANCE 1E-14
 #endif

@@ -128,7 +128,7 @@ namespace pacs {
              *
              * @param sparse
              */
-            Sparse(const Sparse &sparse): rows{sparse.rows}, columns{sparse.columns}, compressed{sparse.compressed} {
+            Sparse(const Sparse &sparse): compressed{sparse.compressed}, rows{sparse.rows}, columns{sparse.columns} {
                 if(!(sparse.compressed)) {
                     this->elements = sparse.elements;
                 } else {

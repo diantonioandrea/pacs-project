@@ -86,6 +86,8 @@ namespace pacs {
                 #endif
 
                 this->elements = vector.elements;
+
+                return *this;
             }
 
             // CONVERSION
@@ -138,11 +140,11 @@ namespace pacs {
              * @return Vector 
              */
             Vector operator *(const T &scalar) const {
-                Vector result{*this};
+                Vector result{this->length};
 
                 #pragma omp parallel for
-                for(auto &element: result.elements)
-                    element *= scalar;
+                for(std::size_t j = 0; j < this->length; ++j)
+                    result[j] = this->elements[j] * scalar;
 
                 return result;
             }
@@ -155,11 +157,11 @@ namespace pacs {
              * @return Vector 
              */
             friend Vector operator *(const T &scalar, const Vector &vector) {
-                Vector result{vector};
+                Vector result{vector.length};
 
                 #pragma omp parallel for
-                for(auto &element: result.elements)
-                    element *= scalar;
+                for(std::size_t j = 0; j < vector.length; ++j)
+                    result[j] = vector.elements[j] * scalar;
 
                 return result;
             }
@@ -170,7 +172,7 @@ namespace pacs {
              * @param scalar 
              * @return Vector& 
              */
-            Vector &operator *(const T &scalar) {
+            Vector &operator *=(const T &scalar) {
                 #pragma omp parallel for
                 for(auto &element: this->elements)
                     element *= scalar;

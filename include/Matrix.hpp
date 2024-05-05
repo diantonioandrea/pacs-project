@@ -84,7 +84,7 @@ namespace pacs {
              * 
              * @param matrix 
              */
-            Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements{matrix.elements} {}
+            Matrix(const Matrix &matrix): elements{matrix.elements}, rows{matrix.rows}, columns{matrix.columns} {}
             
             /**
              * @brief Copy operator.
