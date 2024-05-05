@@ -103,14 +103,14 @@ namespace pacs {
         std::size_t iterations = 0;
 
         do {
-            // Base residual.
+            // Residual.
             rk = rkk;
 
             // New guess point.
             ak = (rk * rk) / (pk * (A * pk));
             xk = xk + ak * pk;
 
-            // Residual.
+            // New residual.
             rkk = rk - ak * A * pk;
 
             // bk and pk.
