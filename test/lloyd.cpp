@@ -16,7 +16,7 @@
 
 // Testing Voronoi.
 #include <Geometry.hpp>
-#include <Mesh.hpp>
+#include <Voronoi.hpp>
 
 int main() {
 
