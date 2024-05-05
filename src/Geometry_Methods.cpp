@@ -150,9 +150,6 @@ namespace pacs {
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
         assert(points.size() <= 2); // Convex domain assumption.
-
-        if(points.size() == 1) // Shouldn't happen.
-            std::cout << "!" << std::endl;
         #endif
 
         if(points.size() <= 1)
