@@ -121,7 +121,13 @@ namespace pacs {
     }
 
     // READ.
-        
+    
+    /**
+     * @brief Returns the j-th node.
+     * 
+     * @param j 
+     * @return Point 
+     */
     Point Mesh::node(const std::size_t &j) const {
         #ifndef NDEBUG // Integrity check.
         assert(j < this->nodes.size());
@@ -130,12 +136,49 @@ namespace pacs {
         return this->nodes[j];
     }
 
+    /**
+     * @brief Returns the j-th edge.
+     * 
+     * @param j 
+     * @return Segment 
+     */
     Segment Mesh::edge(const std::size_t &j) const {
         #ifndef NDEBUG // Integrity check.
         assert(j < this->edges.size());
         #endif
 
         return this->edges[j];
+    }
+
+
+    /**
+     * @brief Returns the j-th element.
+     * 
+     * @param j 
+     * @return Polygon 
+     */
+    Polygon Mesh::element(const std::size_t &j) const {
+        std::vector<Point> nodes;
+
+        for(const auto &index: this->elements[j].nodes)
+            nodes.emplace_back(this->nodes[index]);
+
+        return Polygon{nodes};
+    }
+
+    /**
+     * @brief Returns an element.
+     * 
+     * @param element 
+     * @return Polygon 
+     */
+    Polygon Mesh::element(const Element &element) const {
+        std::vector<Point> nodes;
+
+        for(const auto &index: element.nodes)
+            nodes.emplace_back(this->nodes[index]);
+
+        return Polygon{nodes};
     }
 
     /**

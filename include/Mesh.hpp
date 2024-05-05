@@ -67,6 +67,8 @@ namespace pacs {
         
             Point node(const std::size_t &) const;
             Segment edge(const std::size_t &) const;
+            Polygon element(const std::size_t &) const;
+            Polygon element(const Element &) const;
 
             // STATS.
 
