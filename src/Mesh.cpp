@@ -36,6 +36,9 @@ namespace pacs {
                 if(k == j)
                     continue;
 
+                if(!cell.contains(point)) // Random diagram error.
+                    return std::vector<Polygon>{};
+
                 Line line = bisector(point, points[k]);
                 cell = reduce(cell, line, point);
             }
@@ -77,7 +80,13 @@ namespace pacs {
 
         } while(counter < cells);
 
-        return voronoi(domain, points);
+        std::vector<Polygon> diagram = voronoi(domain, points);
+
+        if(diagram.size())
+            return diagram;
+
+        // Retries.
+        return voronoi(domain, cells);
     }
 
     // LLOYD.
@@ -95,7 +104,13 @@ namespace pacs {
         for(const auto &cell: cells)
             centroids.emplace_back(cell.centroid());
 
-        return voronoi(domain, centroids);
+        std::vector<Polygon> diagram = voronoi(domain, centroids);
+
+        if(diagram.size())
+            return diagram;
+
+        // Failure.
+        return cells;
     }
 
 }
