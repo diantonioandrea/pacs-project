@@ -16,6 +16,7 @@
 
 // Testing Polygon triangulation.
 #include <Geometry.hpp>
+#include <Voronoi.hpp>
 
 int main() {
 
