@@ -136,6 +136,59 @@ namespace pacs {
     }
 
     /**
+     * @brief Polygon collapse over a vertex.
+     * 
+     * @param polygon 
+     * @param point 
+     * @return Polygon 
+     */
+    Polygon collapse(const Polygon &polygon, const Point &point) {
+        #ifndef NDEBUG // Integrity check.
+        assert(polygon.vertices().size() > 3);
+        #endif
+
+        std::vector<Point> vertices;
+
+        for(const auto &vertex: polygon.vertices()) {
+            if(point == vertex)
+                continue;
+
+            vertices.emplace_back(vertex);
+        }
+
+        return Polygon{vertices};
+    }
+
+    /**
+     * @brief Polygon collapes over an edge.
+     * 
+     * @param polygon 
+     * @param segment 
+     * @return Polygon 
+     */
+    Polygon collapse(const Polygon &polygon, const Segment &segment) {
+        #ifndef NDEBUG // Integrity check.
+        assert(polygon.vertices().size() > 3);
+        #endif
+
+        std::vector<Point> points{polygon.vertices()};
+        points.emplace_back(points[0]);
+
+        std::vector<Point> vertices;
+
+        for(std::size_t j = 0; j < polygon.vertices().size(); ++j) {
+            if(segment == Segment{points[j], points[j + 1]}) {
+                vertices.emplace_back((points[j] + points[j + 1]) * 0.5);
+                ++j;
+            } else {
+                vertices.emplace_back(points[j]);
+            }
+        }
+
+        return Polygon{vertices};
+    }
+
+    /**
      * @brief Reduce a Polygon cutted by a Line. Picks the part which contains the argument Point.
      * 
      * @param polygon 

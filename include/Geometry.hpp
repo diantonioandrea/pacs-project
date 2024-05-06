@@ -184,9 +184,6 @@ namespace pacs {
             std::vector<Point> vertices() const;
             std::vector<Segment> edges() const;
 
-            Polygon collapse(const Point &) const;
-            Polygon collapse(const Segment &) const;
-
             bool contains(const Point &) const;
 
             double area() const;
@@ -206,6 +203,9 @@ namespace pacs {
     std::vector<Point> intersections(const Line &, const Line &);
     std::vector<Point> intersections(const Line &, const Segment &);
     std::vector<Point> intersections(const Line &, const Polygon &);
+
+    Polygon collapse(const Polygon &, const Point &);
+    Polygon collapse(const Polygon &, const Segment &);
 
     Polygon reduce(const Polygon &, const Line &, const Point &);
 

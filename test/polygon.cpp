@@ -43,7 +43,7 @@ int main() {
     std::cout << pacs::reduce(polygon, reduction, e) << std::endl;
 
     // Collapse.
-    std::cout << polygon.collapse(a) << std::endl; // Vertex collapse.
-    std::cout << polygon.collapse({a, b}) << std::endl; // Edge collapse.
+    std::cout << pacs::collapse(polygon, a) << std::endl; // Vertex collapse.
+    std::cout << pacs::collapse(polygon, {a, b}) << std::endl; // Edge collapse.
     
 }

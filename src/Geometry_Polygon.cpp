@@ -75,45 +75,6 @@ namespace pacs {
 
         return edges;
     }
-
-    Polygon Polygon::collapse(const Point &point) const {
-        #ifndef NDEBUG // Integrity check.
-        assert(this->points.size() > 3);
-        #endif
-
-        std::vector<Point> vertices;
-
-        for(const auto &vertex: this->points) {
-            if(point == vertex)
-                continue;
-
-            vertices.emplace_back(vertex);
-        }
-
-        return Polygon{vertices};
-    }
-
-    Polygon Polygon::collapse(const Segment &segment) const {
-        #ifndef NDEBUG // Integrity check.
-        assert(this->points.size() > 3);
-        #endif
-
-        std::vector<Point> points{this->points};
-        points.emplace_back(points[0]);
-
-        std::vector<Point> vertices;
-
-        for(std::size_t j = 0; j < this->points.size(); ++j) {
-            if(segment == Segment{points[j], points[j + 1]}) {
-                vertices.emplace_back((points[j] + points[j + 1]) * 0.5);
-                ++j;
-            } else {
-                vertices.emplace_back(points[j]);
-            }
-        }
-
-        return Polygon{vertices};
-    }
     
     /**
      * @brief Checks whether a point is contained inside the Polygon. Does not count Points over the perimeter.
