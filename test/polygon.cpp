@@ -41,5 +41,9 @@ int main() {
     // Reduction.
     pacs::Line reduction{-1.0, 1.0, -0.5};
     std::cout << pacs::reduce(polygon, reduction, e) << std::endl;
+
+    // Collapse.
+    std::cout << polygon.collapse(a) << std::endl; // Vertex collapse.
+    std::cout << polygon.collapse({a, b}) << std::endl; // Edge collapse.
     
 }

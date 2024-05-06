@@ -98,6 +98,17 @@ namespace pacs {
         return (*this - point).is_zero();
     }
 
+    /**
+     * @brief Point != Point.
+     * 
+     * @param point 
+     * @return true 
+     * @return false 
+     */
+    bool Point::operator !=(const Point &point) const {
+        return !(*this == point);
+    }
+
     // METHODS.
 
     double Point::norm() const {

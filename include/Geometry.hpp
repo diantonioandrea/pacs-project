@@ -53,6 +53,7 @@ namespace pacs {
             // COMPARISONS.
 
             bool operator ==(const Point &) const;
+            bool operator !=(const Point &) const;
 
             // METHODS.
 
@@ -182,6 +183,9 @@ namespace pacs {
 
             std::vector<Point> vertices() const;
             std::vector<Segment> edges() const;
+
+            Polygon collapse(const Point &) const;
+            Polygon collapse(const Segment &) const;
 
             bool contains(const Point &) const;
 
