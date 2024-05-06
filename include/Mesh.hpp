@@ -32,9 +32,14 @@ namespace pacs {
         std::vector<std::size_t> nodes;
         std::vector<std::size_t> edges;
 
+        // Polynomial degree.
+        std::size_t degree;
+
         // CONSTRUCTORS.
 
         Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &);
+
+        Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &, const std::size_t &);
 
     };
 
