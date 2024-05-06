@@ -8,3 +8,6 @@ report/output
 
 # Python
 **/__pycache__
+
+# polyplot.py
+**/*.poly

@@ -20,6 +20,9 @@
 // Containers.
 #include <vector>
 
+// Output.
+#include <string>
+
 namespace pacs {
 
     /**
@@ -38,8 +41,11 @@ namespace pacs {
         // CONSTRUCTORS.
 
         Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &);
-
         Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &, const std::size_t &);
+
+        // METHODS.
+
+        inline std::size_t dofs() const;
 
     };
 
@@ -77,9 +83,14 @@ namespace pacs {
 
             // STATS.
 
-            std::size_t nodes_number() const;
-            std::size_t edges_number() const;
-            std::size_t elements_number() const;
+            inline std::size_t nodes_number() const;
+            inline std::size_t edges_number() const;
+            inline std::size_t elements_number() const;
+            inline std::size_t dofs() const;
+
+            // OUTPUT.
+
+            void write(const std::string &);
     };
 
 }

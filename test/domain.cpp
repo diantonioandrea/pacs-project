@@ -31,4 +31,7 @@ int main() {
     // Constructing a mesh.
     pacs::Mesh mesh{domain, 15};
 
+    // Mesh output.
+    mesh.write("mesh.poly");
+
 }

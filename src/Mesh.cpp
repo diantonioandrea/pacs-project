@@ -13,6 +13,19 @@
 // Assertions.
 #include <cassert>
 
+// OpenMP.
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+// IO handling.
+#include <string>
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+
 // Voronoi.
 #include <Voronoi.hpp>
 
@@ -38,6 +51,17 @@ namespace pacs {
      * @param degree 
      */
     Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges, const std::size_t &degree): nodes{nodes}, edges{edges}, degree{degree} {}
+
+    // METHODS.
+
+    /**
+     * @brief Returns the number of local degrees of freedom.
+     * 
+     * @return std::size_t 
+     */
+    inline std::size_t Element::dofs() const {
+        return (this->degree + 1) * (this->degree + 2) / 2;
+    }
 
     // MESH.
 
@@ -159,7 +183,6 @@ namespace pacs {
         return this->edges[j];
     }
 
-
     /**
      * @brief Returns the j-th element.
      * 
@@ -205,20 +228,60 @@ namespace pacs {
      * 
      * @return std::size_t 
      */
-    std::size_t Mesh::nodes_number() const { return this->nodes.size(); }
+    inline std::size_t Mesh::nodes_number() const { return this->nodes.size(); }
 
     /**
      * @brief Returns the number of edges.
      * 
      * @return std::size_t 
      */
-    std::size_t Mesh::edges_number() const { return this->edges.size(); }
+    inline std::size_t Mesh::edges_number() const { return this->edges.size(); }
 
     /**
      * @brief Returns the number of elements.
      * 
      * @return std::size_t 
      */
-    std::size_t Mesh::elements_number() const { return this->elements.size(); }
+    inline std::size_t Mesh::elements_number() const { return this->elements.size(); }
+
+    /**
+     * @brief Returns the number of degrees of freedom.
+     * 
+     * @return std::size_t 
+     */
+    inline std::size_t Mesh::dofs() const {
+        std::size_t dofs = 0;
+
+        #pragma omp parallel for reduction(+: dofs)
+        for(const auto &element: this->elements)
+            dofs += element.dofs();
+
+        return dofs;
+    }
+
+    // OUTPUT.
+
+    /**
+     * @brief Outputs the mesh to a polyplot.py readable file.
+     * 
+     * @param filename 
+     */
+    void Mesh::write(const std::string &filename) {
+        // File loading.
+        std::ofstream file{filename};
+
+        file << "@ polyplot.py readable mesh\n";
+
+        // Stats.
+        file << "@ Elements: " << this->elements_number() << "\n";
+        file << "@ Nodes: " << this->elements_number() << "\n";
+        file << "@ Edges: " << this->elements_number() << "\n";
+
+        // Polygons.
+        file << "@ Elements\' coordinates: \n";
+
+        for(const auto &element: this->elements)
+            file << this->element(element) << "\n";
+    }
 
 }

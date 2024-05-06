@@ -12,16 +12,23 @@ import matplotlib.pyplot as plt
 import sys
 
 if len(sys.argv) <= 1:
-    print(f"Usage: {sys.argv[0]} /path/to/file.")
+    print(f"Usage: {sys.argv[0]} /path/to/file.poly.")
     sys.exit(0)
 
 try:
+    if sys.argv[1].split(".")[-1] != "poly":
+        raise
+
     file = open(sys.argv[1], "r+")
     lines: list[str] = file.read().split("\n")
     file.close()
 
     # Postprocessing.
     for j in range(len(lines)):
+        if lines[j]:
+            if lines[j][0] == "@":
+                continue
+
         lines[j] = lines[j].replace("[", "").replace("]", "")
         lines[j] = lines[j].replace("(", "").replace(")", "")
         lines[j] = lines[j].replace(" ", "")
@@ -30,9 +37,18 @@ except FileNotFoundError:
     print("File not found.")
     sys.exit(-1)
 
+except:
+    print("Load a .poly file.")
+    sys.exit(-1)
+
+
 plt.figure()
 
 for line in lines:
+    if line:
+        if line[0] == "@":
+            continue
+
     x: list[float] = []
     y: list[float] = []
 
