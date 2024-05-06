@@ -102,6 +102,21 @@ namespace pacs {
     }
 
     /**
+     * @brief Checks whether a segment is contained inside the Polygon's perimeter.
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool Polygon::contains(const Segment &segment) const {
+        for(const auto &edge: this->edges()) {
+            if(edge == segment)
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @brief Returns the Polygon's area.
      * 
      * @return double 

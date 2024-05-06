@@ -185,6 +185,7 @@ namespace pacs {
             std::vector<Segment> edges() const;
 
             bool contains(const Point &) const;
+            bool contains(const Segment &) const;
 
             double area() const;
             Point centroid() const;
