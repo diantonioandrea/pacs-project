@@ -61,6 +61,20 @@ namespace pacs {
             }
 
             /**
+             * @brief Constructs a new homogeneous Vector.
+             * 
+             * @param length 
+             * @param value 
+             */
+            Vector(const std::size_t &length, const T &value): length{length} {
+                #ifndef NDEBUG // Integrity check.
+                assert(length > 0);
+                #endif
+
+                this->elements.resize(length, value);
+            }
+
+            /**
              * @brief Constructs a new Vector from a given std::vector.
              * 
              * @param length 
@@ -292,6 +306,64 @@ namespace pacs {
                 return ost;
             }
     };
+
+    // METHODS.
+
+    /**
+     * @brief Maximum value of a Vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return T 
+     */
+    template<NumericType T>
+    T max(const Vector<T> &vector) {
+        T max = vector[0];
+
+        for(std::size_t j = 1; j < vector.length; ++j)
+            max = (vector[j] > max) ? vector[j] : max;
+
+        return max;
+    }
+
+    /**
+     * @brief Minimum value of a Vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return T 
+     */
+    template<NumericType T>
+    T min(const Vector<T> &vector) {
+        T min = vector[0];
+
+        for(std::size_t j = 1; j < vector.length; ++j)
+            min = (vector[j] < min) ? vector[j] : min;
+
+        return min;
+    }
+
+}
+
+namespace std {
+
+    /**
+     * @brief std::abs overload for Vectors.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return pacs::Vector<T> 
+     */
+    template<pacs::NumericType T>
+    pacs::Vector<T> abs(const pacs::Vector<T> vector) {
+        pacs::Vector<T> result{vector.length};
+
+        #pragma omp parallel for
+        for(std::size_t j = 0; j < vector.length; ++j)
+            result[j] = std::abs(vector[j]);
+
+        return result;
+    }
 
 }
 

@@ -322,7 +322,7 @@ namespace pacs {
                     for(std::size_t k = 0; k < matrix.columns; ++k)
                         ost << matrix.elements[j * matrix.rows + k] << " ";
 
-                    if(j < matrix.columns - 1)
+                    if(j < matrix.rows - 1)
                         std::cout << std::endl;
                 }
 
