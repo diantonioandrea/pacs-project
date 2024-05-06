@@ -46,7 +46,7 @@ namespace pacs {
 
         // METHODS.
 
-        inline std::size_t dofs() const;
+        inline std::size_t dofs() const { return (this->degree + 1) * (this->degree + 2) / 2; }
 
     };
 
@@ -88,10 +88,10 @@ namespace pacs {
 
             // STATS.
 
-            inline std::size_t nodes_number() const;
-            inline std::size_t edges_number() const;
-            inline std::size_t elements_number() const;
-            inline std::size_t dofs() const;
+            inline std::size_t nodes_number() const { return this->nodes.size(); }
+            inline std::size_t edges_number() const { return this->edges.size(); }
+            inline std::size_t elements_number() const { return this->elements.size(); }
+            std::size_t dofs() const;
 
             // OUTPUT.
 

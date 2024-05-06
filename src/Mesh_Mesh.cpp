@@ -135,32 +135,11 @@ namespace pacs {
     // STATS.
 
     /**
-     * @brief Returns the number of nodes.
-     * 
-     * @return std::size_t 
-     */
-    inline std::size_t Mesh::nodes_number() const { return this->nodes.size(); }
-
-    /**
-     * @brief Returns the number of edges.
-     * 
-     * @return std::size_t 
-     */
-    inline std::size_t Mesh::edges_number() const { return this->edges.size(); }
-
-    /**
-     * @brief Returns the number of elements.
-     * 
-     * @return std::size_t 
-     */
-    inline std::size_t Mesh::elements_number() const { return this->elements.size(); }
-
-    /**
      * @brief Returns the number of degrees of freedom.
      * 
      * @return std::size_t 
      */
-    inline std::size_t Mesh::dofs() const {
+    std::size_t Mesh::dofs() const {
         std::size_t dofs = 0;
 
         #pragma omp parallel for reduction(+: dofs)

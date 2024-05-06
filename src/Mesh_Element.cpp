@@ -34,15 +34,4 @@ namespace pacs {
      */
     Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges, const std::size_t &degree): nodes{nodes}, edges{edges}, degree{degree} {}
 
-    // METHODS.
-
-    /**
-     * @brief Returns the number of local degrees of freedom.
-     * 
-     * @return std::size_t 
-     */
-    inline std::size_t Element::dofs() const {
-        return (this->degree + 1) * (this->degree + 2) / 2;
-    }
-
 }
