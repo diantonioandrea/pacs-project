@@ -41,27 +41,6 @@
 
 namespace pacs {
 
-    // CONCEPTS.
-
-    /**
-     * @brief Row x Column object.
-     * 
-     * @tparam T 
-     */
-    template<typename T>
-    concept RowsColumns = requires(T matrix) {
-        {matrix.rows} -> std::convertible_to<std::size_t>;
-        {matrix.columns} -> std::convertible_to<std::size_t>;
-    };
-
-    /**
-     * @brief Matrix-like object.
-     * 
-     * @tparam T 
-     */
-    template<typename T>
-    concept MatrixLike = RowsColumns<T>;
-
     // METHODS.
 
     /**
