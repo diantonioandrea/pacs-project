@@ -40,6 +40,7 @@ $(OBJECTS): %.o: src/%.cpp $(HEADERS)
 clean:
 	@echo "Cleaning the repo."
 	@$(RM) ./*.o
+	@$(RM) ./*.poly
 
 distclean: clean
 	@$(RM) ./*.out
