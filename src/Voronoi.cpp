@@ -119,4 +119,29 @@ namespace pacs {
         return cells;
     }
 
+    // TRIANGLES.
+
+    std::vector<Polygon> triangulate(const Polygon &polygon) {
+        std::vector<Polygon> triangles;
+        Point centroid = polygon.centroid();
+
+        for(const auto &edge: polygon.edges()) {
+            std::vector<Point> vertices{edge[0], edge[1], centroid};
+            triangles.emplace_back(vertices);
+        }
+
+        return triangles;
+    }
+
+    std::vector<Polygon> triangulate(const std::vector<Polygon> &polygons) {
+        std::vector<Polygon> triangles;
+
+        for(const auto &polygon: polygons) {
+            for(const auto &triangle: triangulate(polygon))
+                triangles.emplace_back(triangle);
+        }
+
+        return triangles;
+    }
+
 }

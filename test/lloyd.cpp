@@ -1,5 +1,5 @@
 /**
- * @file voronoi.cpp
+ * @file lloyd.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-05-04

@@ -28,6 +28,11 @@ namespace pacs {
 
     std::vector<Polygon> lloyd(const Polygon &, const std::vector<Polygon> &);
 
+    // TRIANGLES.
+
+    std::vector<Polygon> triangulate(const Polygon &);
+    std::vector<Polygon> triangulate(const std::vector<Polygon> &);
+
 }
 
 #endif
