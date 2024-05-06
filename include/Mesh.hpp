@@ -19,6 +19,7 @@
 
 // Containers.
 #include <vector>
+#include <array>
 
 // Output.
 #include <string>
@@ -57,6 +58,7 @@ namespace pacs {
         protected:
 
             // Geometry.
+            Polygon domain;
             std::vector<Point> nodes;
             std::vector<Segment> edges;
 
@@ -69,10 +71,13 @@ namespace pacs {
             std::vector<std::size_t> boundary_nodes;
             std::vector<std::size_t> boundary_edges;
 
+            // Neighbours.
+            std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
+
             // CONSTRUCTORS.
 
             Mesh(const Polygon &, const std::size_t &);
-            Mesh(const Mesh &);
+            Mesh(const Polygon &, const std::vector<Polygon> &);
 
             // READ.
         
@@ -92,6 +97,14 @@ namespace pacs {
 
             void write(const std::string &);
     };
+
+    // METHODS.
+
+    std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
+    std::vector<Segment> mesh_edges(const std::vector<Polygon> &);
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &);
+    std::vector<std::size_t> mesh_boundary_nodes(const Polygon &, const std::vector<Point> &);
+    std::vector<std::size_t> mesh_boundary_edges(const Polygon &, const std::vector<Segment> &);
 
 }
 

@@ -1,8 +1,8 @@
 /**
- * @file Mesh.cpp
+ * @file Mesh_Mesh.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
- * @date 2024-05-04
+ * @date 2024-05-06
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -20,10 +20,8 @@
 
 // IO handling.
 #include <string>
-#include <cstring>
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <iomanip>
 
 // Voronoi.
@@ -31,48 +29,15 @@
 
 namespace pacs {
 
-    // ELEMENT.
-
     // CONSTRUCTORS.
 
     /**
-     * @brief Constructs a new Element from given nodes and edges.
+     * @brief Constructs a new Mesh from a Voronoi diagram of a given number of cells.
      * 
-     * @param nodes 
-     * @param edges 
+     * @param domain 
+     * @param cells 
      */
-    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges): nodes{nodes}, edges{edges}, degree{1} {}
-
-    /**
-     * @brief Construct a new Element:: Element object
-     * 
-     * @param nodes 
-     * @param edges 
-     * @param degree 
-     */
-    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges, const std::size_t &degree): nodes{nodes}, edges{edges}, degree{degree} {}
-
-    // METHODS.
-
-    /**
-     * @brief Returns the number of local degrees of freedom.
-     * 
-     * @return std::size_t 
-     */
-    inline std::size_t Element::dofs() const {
-        return (this->degree + 1) * (this->degree + 2) / 2;
-    }
-
-    // MESH.
-
-    // CONSTRUCTORS.
-
-    /**
-     * @brief Construct a new Mesh from a Voronoi diagram.
-     * 
-     * @param mesh 
-     */
-    Mesh::Mesh(const Polygon &domain, const std::size_t &cells) {
+    Mesh::Mesh(const Polygon &domain, const std::size_t &cells): domain{domain} {
         
         // Diagram.
         std::vector<Polygon> mesh = voronoi(domain, cells);
@@ -82,75 +47,29 @@ namespace pacs {
             mesh = lloyd(domain, mesh);
 
         // Building nodes and edges.
-        for(const auto &cell: mesh) {
-            for(const auto &node: cell.vertices()) {
-                bool flag = true;
-
-                for(const auto &point: this->nodes) {
-                    if(point == node) {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if(flag)
-                    this->nodes.emplace_back(node);
-            }
-
-            for(const auto &edge: cell.edges()) {
-                bool flag = true;
-
-                for(const auto &segment: this->edges) {
-                    if(segment == edge) {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if(flag)
-                    this->edges.emplace_back(edge);
-            }
-        }
+        this->nodes = mesh_nodes(mesh);
+        this->edges = mesh_edges(mesh);
 
         // Elements.
-        for(const auto &cell: mesh) {
-            std::vector<std::size_t> nodes;
-            std::vector<std::size_t> edges;
-
-            for(const auto &node: cell.vertices()) {
-                for(std::size_t j = 0; j < this->nodes.size(); ++j) {
-                    if(node == this->nodes[j]) {
-                        nodes.emplace_back(j);
-                        break;
-                    }
-                }
-            }
-
-            for(const auto &edge: cell.edges()) {
-                for(std::size_t j = 0; j < this->edges.size(); ++j) {
-                    if(edge == this->edges[j]) {
-                        edges.emplace_back(j);
-                        break;
-                    }
-                }
-            }
-
-            this->elements.emplace_back(nodes, edges);
-        }
+        this->elements = mesh_elements(mesh, this->nodes, this->edges);
         
         // Boundary nodes and edges.
-        for(const auto &bound: domain.edges()) {
-            for(std::size_t j = 0; j < this->nodes.size(); ++j) {
-                if(bound.contains(this->nodes[j]))
-                    this->boundary_nodes.emplace_back(j);
-            }
+        this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
+        this->boundary_edges = mesh_boundary_edges(domain, this->edges);
+    }
 
-            for(std::size_t j = 0; j < this->edges.size(); ++j) {
-                if(bound.contains(this->edges[j]))
-                    this->boundary_edges.emplace_back(j);
-            }
-        }
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh): domain{domain} {
 
+        // Building nodes and edges.
+        this->nodes = mesh_nodes(mesh);
+        this->edges = mesh_edges(mesh);
+
+        // Elements.
+        this->elements = mesh_elements(mesh, this->nodes, this->edges);
+        
+        // Boundary nodes and edges.
+        this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
+        this->boundary_edges = mesh_boundary_edges(domain, this->edges);
     }
 
     // READ.
@@ -212,14 +131,6 @@ namespace pacs {
 
         return Polygon{nodes};
     }
-
-    /**
-     * @brief Copy constructor.
-     * 
-     * @param mesh 
-     */
-    Mesh::Mesh(const Mesh &mesh):
-    nodes{mesh.nodes}, edges{mesh.edges}, elements{mesh.elements}, boundary_nodes{mesh.boundary_nodes}, boundary_edges{mesh.boundary_edges} {}
 
     // STATS.
 
