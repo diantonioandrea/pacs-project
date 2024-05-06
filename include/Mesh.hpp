@@ -105,6 +105,7 @@ namespace pacs {
     std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &);
     std::vector<std::size_t> mesh_boundary_nodes(const Polygon &, const std::vector<Point> &);
     std::vector<std::size_t> mesh_boundary_edges(const Polygon &, const std::vector<Segment> &);
+    std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &, const std::vector<std::size_t> &);
 
 }
 

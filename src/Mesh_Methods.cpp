@@ -149,4 +149,51 @@ namespace pacs {
         return boundary_edges;
     }
 
+    std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
+        std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
+
+        for(std::size_t j = 0; j < elements.size(); ++j) {
+            std::vector<std::pair<std::size_t, int>> element_neighbours;
+
+            for(std::size_t k = 0; k < elements[j].edges.size(); ++k) {
+                bool boundary = false;
+
+                for(const auto &edge: boundary_edges) {
+                    if(edge == elements[j].edges[k]) {
+                        std::pair<std::size_t, int> pair{k, -1};
+                        element_neighbours.emplace_back(pair);
+                        boundary = true;
+                        break;
+                    }
+                }
+
+                if(boundary)
+                    continue;
+
+                for(std::size_t h = 0; h < elements.size(); ++h) {
+                    if(j == h)
+                        continue;
+
+                    bool connection = false;
+
+                    for(const auto &edge: elements[h].edges) {
+                        if(edge == elements[j].edges[k]) {
+                            std::pair<std::size_t, int> pair{k, h};
+                            element_neighbours.emplace_back(pair);
+                            connection = true;
+                            break;
+                        }
+                    }
+
+                    if(connection)
+                        break;
+                }
+            }
+
+            neighbours.emplace_back(element_neighbours);
+        }
+
+        return neighbours;
+    }
+
 }

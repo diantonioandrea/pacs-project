@@ -56,6 +56,9 @@ namespace pacs {
         // Boundary nodes and edges.
         this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
         this->boundary_edges = mesh_boundary_edges(domain, this->edges);
+
+        // Neighbours.
+        this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
     }
 
     Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh): domain{domain} {
@@ -70,6 +73,9 @@ namespace pacs {
         // Boundary nodes and edges.
         this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
         this->boundary_edges = mesh_boundary_edges(domain, this->edges);
+
+        // Neighbours.
+        this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
     }
 
     // READ.
