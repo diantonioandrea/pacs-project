@@ -36,6 +36,9 @@
 // Math.
 #include <cmath>
 
+// Copy.
+#include <ranges>
+
 namespace pacs {
     
     /**
@@ -130,11 +133,15 @@ namespace pacs {
              */
             Sparse(const Sparse &sparse): compressed{sparse.compressed}, rows{sparse.rows}, columns{sparse.columns} {
                 if(!(sparse.compressed)) {
-                    this->elements = sparse.elements;
+                    std::ranges::copy(sparse.elements, this->elements);
                 } else {
-                    this->inner = sparse.inner;
-                    this->outer = sparse.outer;
-                    this->values = sparse.values;
+                    this->inner.resize(sparse.inner);
+                    this->outer.resize(sparse.outer);
+                    this->values.resize(sparse.values);
+
+                    std::ranges::copy(sparse.inner.begin(), sparse.inner.end(), this->inner.begin());
+                    std::ranges::copy(sparse.outer.begin(), sparse.outer.end(), this->outer.begin());
+                    std::ranges::copy(sparse.values.begin(), sparse.values.end(), this->values.begin());
                 }
             }
 
@@ -151,18 +158,21 @@ namespace pacs {
 
                 this->compressed = sparse.compressed;
 
+                this->elements.clear();
+                this->inner.clear();
+                this->outer.clear();
+                this->values.clear();
+
                 if(!(sparse.compressed)) {
-                    this->elements = sparse.elements;
-
-                    this->inner.clear();
-                    this->outer.clear();
-                    this->values.clear();
+                    std::ranges::copy(sparse.elements.begin(), sparse.elements.end(), this->elements.begin());
                 } else {
-                    this->elements.clear();
+                    this->inner.resize(sparse.inner);
+                    this->outer.resize(sparse.outer);
+                    this->values.resize(sparse.values);
 
-                    this->inner = sparse.inner;
-                    this->outer = sparse.outer;
-                    this->values = sparse.values;
+                    std::ranges::copy(sparse.inner.begin(), sparse.inner.end(), this->inner.begin());
+                    std::ranges::copy(sparse.outer.begin(), sparse.outer.end(), this->outer.begin());
+                    std::ranges::copy(sparse.values.begin(), sparse.values.end(), this->values.begin());
                 }
 
                 return *this;

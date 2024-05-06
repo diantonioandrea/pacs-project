@@ -34,6 +34,9 @@
 // Math.
 #include <cmath>
 
+// Copy.
+#include <ranges>
+
 namespace pacs {
 
     template<NumericType T>
@@ -84,7 +87,10 @@ namespace pacs {
              * 
              * @param matrix 
              */
-            Matrix(const Matrix &matrix): elements{matrix.elements}, rows{matrix.rows}, columns{matrix.columns} {}
+            Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns} {
+                this->elements.resize(this->rows * this->columns);
+                std::ranges::copy(matrix.elements, this->elements);
+            }
             
             /**
              * @brief Copy operator.
@@ -97,7 +103,7 @@ namespace pacs {
                 assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
                 #endif
 
-                this->elements = matrix.elements;
+                std::ranges::copy(matrix.elements, this->elements);
                 return *this;
             }
 

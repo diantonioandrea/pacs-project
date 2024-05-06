@@ -31,6 +31,9 @@
 // Math.
 #include <cmath>
 
+// Copy.
+#include <ranges>
+
 namespace pacs {
 
     template<NumericType T>
@@ -92,14 +95,18 @@ namespace pacs {
              * 
              * @param vector 
              */
-            Vector(const Vector &vector): elements{vector.elements}, length{vector.length} {}
+            Vector(const Vector &vector): length{vector.length} {
+                this->elements.resize(length);
+                std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
+            }
             
             Vector &operator =(const Vector &vector) {
                 #ifndef NDEBUG // Integrity check.
                 assert(this->length == vector.length);
                 #endif
 
-                this->elements = vector.elements;
+                this->elements.resize(length);
+                std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
 
                 return *this;
             }
