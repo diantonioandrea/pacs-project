@@ -117,8 +117,8 @@ namespace pacs {
              * @return T 
              */
             T operator ()(const std::size_t &j, const std::size_t &k) const {
-                #ifndef NDEBUG // Out-of-bound check.
-                assert((j < rows) && (k < columns));
+                #ifndef NDEBUG // Integrity check.
+                assert((j < this->rows) && (k < this->columns));
                 #endif
 
                 return this->elements[j * this->rows + k];
@@ -132,11 +132,111 @@ namespace pacs {
              * @return T& 
              */
             T &operator ()(const std::size_t &j, const std::size_t &k) {
-                #ifndef NDEBUG // Out-of-bound check.
-                assert((j < rows) && (k < columns));
+                #ifndef NDEBUG // Integrity check.
+                assert((j < this->rows) && (k < this->columns));
                 #endif
 
                 return this->elements[j * this->rows + k];
+            }
+
+            /**
+             * @brief Returns the j-th row as a Vector.
+             * 
+             * @param j 
+             * @return Vector<T> 
+             */
+            Vector<T> row(const std::size_t j) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                #endif
+
+                Vector<T> row{this->columns};
+
+                for(std::size_t k = 0; k < this->columns; ++k)
+                    row[k] = this->elements[j * this->rows + k];
+
+                return row;
+            }
+
+            /**
+             * @brief Sets the j-th row to the given scalar.
+             * 
+             * @param j 
+             * @param scalar 
+             */
+            void row(const std::size_t j, const T &scalar) {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                #endif
+
+                for(std::size_t k = 0; k < this->columns; ++k)
+                    this->elements[j * this->rows + k] = scalar;
+            }
+
+            /**
+             * @brief Sets the j-th row to the given vector.
+             * 
+             * @param j 
+             * @param vector 
+             */
+            void row(const std::size_t j, const Vector<T> &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                assert(vector.length == this->columns);
+                #endif
+
+                for(std::size_t k = 0; k < this->columns; ++k)
+                    this->elements[j * this->rows + k] = vector[k];
+            }
+
+            /**
+             * @brief Returns the k-th column as a Vector.
+             * 
+             * @param jk
+             * @return Vector<T> 
+             */
+            Vector<T> column(const std::size_t k) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                #endif
+
+                Vector<T> column{this->rows};
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    column[j] = this->elements[j * this->rows + k];
+
+                return column;
+            }
+
+            /**
+             * @brief Sets the k-th column to the given scalar.
+             * 
+             * @param k 
+             * @param scalar 
+             */
+            void column(const std::size_t k, const T &scalar) {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                #endif
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    this->elements[j * this->rows + k] = scalar;
+            }
+
+            /**
+             * @brief Sets the k-th column to the given vector.
+             * 
+             * @param k 
+             * @param vector 
+             */
+            void column(const std::size_t k, const Vector<T> &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                assert(vector.length == this->rows);
+                #endif
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    this->elements[j * this->rows + k] = vector[j];
             }
 
             // SIZE.

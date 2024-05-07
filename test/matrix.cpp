@@ -34,5 +34,10 @@ int main() {
 
     // Vector product output.
     std::cout << (matrix * vector) << std::endl;
+
+    // .row() and .column().
+    std::cout << matrix.row(0) << std::endl;
+    matrix.column(0, 3.0);
+    std::cout << matrix << std::endl;
     
 }
