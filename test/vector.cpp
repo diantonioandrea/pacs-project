@@ -16,10 +16,32 @@
 
 int main() {
 
-    // Constructing a vector.
-    pacs::Vector<double> vector{4};
+    // Constructing two vectors.
+    pacs::Vector<double> first{4, 1.0};
+    pacs::Vector<double> second{4};
 
-    // Output.
-    std::cout << vector << std::endl;
-    
+    second[1] = 2.0;
+    second[2] = -2.0;
+
+    // Operations output.
+    std::cout << first << std::endl;
+    std::cout << second << std::endl;
+
+    std::cout << first + second << std::endl;
+    std::cout << first - second << std::endl;
+
+    std::cout << (first += 2.0) << std::endl;
+    std::cout << (second -= 2.0) << std::endl;
+
+    std::cout << (first * 3.0) << std::endl;
+    std::cout << (second * 3.0) << std::endl;
+
+    std::cout << first << std::endl;
+    std::cout << second << std::endl;
+
+    std::cout << first * second << std::endl;
+
+    std::cout << first << std::endl;
+    std::cout << second << std::endl;
+
 }

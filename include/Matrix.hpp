@@ -89,7 +89,7 @@ namespace pacs {
              */
             Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns} {
                 this->elements.resize(this->rows * this->columns);
-                std::ranges::copy(matrix.elements, this->elements);
+                std::ranges::copy(matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
             }
             
             /**

@@ -100,6 +100,12 @@ namespace pacs {
                 std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
             }
             
+            /**
+             * @brief Copy operator.
+             * 
+             * @param vector 
+             * @return Vector& 
+             */
             Vector &operator =(const Vector &vector) {
                 #ifndef NDEBUG // Integrity check.
                 assert(this->length == vector.length);
@@ -107,6 +113,19 @@ namespace pacs {
 
                 this->elements.resize(length);
                 std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
+
+                return *this;
+            }
+
+            /**
+             * @brief Scalar copy operator.
+             * 
+             * @param scalar 
+             * @return Vector& 
+             */
+            Vector &operator =(const T &scalar) {
+                for(auto &element: this->elements)
+                    element = scalar;
 
                 return *this;
             }
@@ -155,40 +174,64 @@ namespace pacs {
             // OPERATORS.
 
             /**
-             * @brief Vector scalar product.
+             * @brief Vector unary +.
              * 
-             * @param scalar 
              * @return Vector 
              */
-            Vector operator *(const T &scalar) const {
-                Vector result{this->length};
+            Vector operator +() const {
+                return *this;
+            }
+
+            /**
+             * @brief Vector unary -.
+             * 
+             * @return Vector 
+             */
+            Vector operator -() const {
+                Vector result{*this};
 
                 #pragma omp parallel for
-                for(std::size_t j = 0; j < this->length; ++j)
-                    result[j] = this->elements[j] * scalar;
+                for(auto &element: result.elements)
+                    element = -element;
 
                 return result;
             }
 
             /**
-             * @brief Friend Vector scalar product.
+             * @brief Scalar product.
+             * 
+             * @param scalar 
+             * @return Vector 
+             */
+            Vector operator *(const T &scalar) const {
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element *= scalar;
+
+                return result;
+            }
+
+            /**
+             * @brief Friend scalar product.
              * 
              * @param scalar 
              * @param vector 
              * @return Vector 
              */
             friend Vector operator *(const T &scalar, const Vector &vector) {
-                Vector result{vector.length};
+                Vector result{vector};
 
                 #pragma omp parallel for
-                for(std::size_t j = 0; j < vector.length; ++j)
-                    result[j] = vector.elements[j] * scalar;
+                for(auto &element: result.elements)
+                    element *= scalar;
 
                 return result;
             }
 
             /**
-             * @brief Vector scalar product and assignation.
+             * @brief Scalar product and assignation.
              * 
              * @param scalar 
              * @return Vector& 
@@ -197,6 +240,53 @@ namespace pacs {
                 #pragma omp parallel for
                 for(auto &element: this->elements)
                     element *= scalar;
+
+                return *this;
+            }
+
+            /**
+             * @brief Scalar division.
+             * 
+             * @param scalar 
+             * @return Vector 
+             */
+            Vector operator /(const T &scalar) const {
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element /= scalar;
+
+                return result;
+            }
+
+            /**
+             * @brief Friend scalar division.
+             * 
+             * @param scalar 
+             * @param vector 
+             * @return Vector 
+             */
+            friend Vector operator /(const T &scalar, const Vector &vector) {
+                Vector result{vector.length, scalar};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < result.length; ++j)
+                    result.elements[j] /= vector.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Scalar division and assignation.
+             * 
+             * @param scalar 
+             * @return Vector& 
+             */
+            Vector &operator /=(const T &scalar) {
+                #pragma omp parallel for
+                for(auto &element: this->elements)
+                    element /= scalar;
 
                 return *this;
             }
@@ -240,6 +330,53 @@ namespace pacs {
             }
 
             /**
+             * @brief Scalar "sum".
+             * 
+             * @param scalar 
+             * @return Vector 
+             */
+            Vector operator +(const T &scalar) const {
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element += scalar;
+                
+                return result;
+            }
+
+            /**
+             * @brief Friend scalar "sum".
+             * 
+             * @param scalar 
+             * @param vector 
+             * @return Vector 
+             */
+            friend Vector operator +(const T &scalar, const Vector &vector) {
+                Vector result{vector};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element += scalar;
+                
+                return result;
+            }
+
+            /**
+             * @brief Scalar "sum" and assignation.
+             * 
+             * @param scalar 
+             * @return Vector& 
+             */
+            Vector &operator +=(const T &scalar) {
+                #pragma omp parallel for
+                for(auto &element: this->elements)
+                    element += scalar;
+                
+                return *this;
+            }
+
+            /**
              * @brief Vector difference.
              * 
              * @param vector 
@@ -278,21 +415,88 @@ namespace pacs {
             }
 
             /**
-             * @brief Vector dot product.
+             * @brief Scalar "difference".
+             * 
+             * @param scalar 
+             * @return Vector 
+             */
+            Vector operator -(const T &scalar) const {
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element -= scalar;
+                
+                return result;
+            }
+
+            /**
+             * @brief Friend scalar "difference".
+             * 
+             * @param scalar 
+             * @param vector 
+             * @return Vector 
+             */
+            friend Vector operator -(const T &scalar, const Vector &vector) {
+                Vector result{vector};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element = scalar - element;
+                
+                return result;
+            }
+
+            /**
+             * @brief Scalar "difference" and assignation.
+             * 
+             * @param scalar 
+             * @return Vector& 
+             */
+            Vector &operator -=(const T &scalar) {
+                #pragma omp parallel for
+                for(auto &element: this->elements)
+                    element -= scalar;
+                
+                return *this;
+            }
+
+            /**
+             * @brief Vector element-wise product.
              * 
              * @param vector 
              * @return T 
              */
-            T operator *(const Vector &vector) const {
+            Vector operator *(const Vector &vector) const {
                 #ifndef NDEBUG // Integrity check.
                 assert(this->length == vector.length);
                 #endif
 
-                T result = static_cast<T>(0);
+                Vector result{*this};
 
-                #pragma omp parallel for reduction(+: result)
-                for(std::size_t j = 0; j < this->length; ++j)
-                    result += this->elements[j] * vector.elements[j];
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < result.length; ++j)
+                    result.elements[j] *= vector.elements[j];
+
+                return result;
+            }
+
+            /**
+             * @brief Vector element-wise division.
+             * 
+             * @param vector 
+             * @return T 
+             */
+            Vector operator /(const Vector &vector) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->length == vector.length);
+                #endif
+
+                Vector result{*this};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < result.length; ++j)
+                    result.elements[j] /= vector.elements[j];
 
                 return result;
             }
@@ -348,6 +552,29 @@ namespace pacs {
             min = (vector[j] < min) ? vector[j] : min;
 
         return min;
+    }
+
+    /**
+     * @brief Dot product.
+     * 
+     * @tparam T 
+     * @param first 
+     * @param second 
+     * @return T 
+     */
+    template<NumericType T>
+    T dot(const Vector<T> &first, const Vector<T> &second) {
+        #ifndef NDEBUG
+        assert(first.length == second.length);
+        #endif
+    
+        T result = static_cast<T>(0);
+
+        #pragma omp parallel for reduction(+: result)
+        for(std::size_t j = 0; j < first.length; ++j)
+            result += first[j] * second[j];
+
+        return result;
     }
 
 }
