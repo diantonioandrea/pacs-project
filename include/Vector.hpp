@@ -83,11 +83,14 @@ namespace pacs {
              * @param length 
              * @param elements 
              */
-            Vector(const std::size_t &length, const std::vector<T> &elements): elements{elements}, length{length} {
+            Vector(const std::size_t &length, const std::vector<T> &elements): length{length} {
                 #ifndef NDEBUG // Integrity check.
                 assert(length > 0);
                 assert(elements.size() == length);
                 #endif
+
+                this->elements.resize(elements.size());
+                std::ranges::copy(elements.begin(), elements.end(), this->elements.begin());
             }
 
             /**
@@ -96,7 +99,7 @@ namespace pacs {
              * @param vector 
              */
             Vector(const Vector &vector): length{vector.length} {
-                this->elements.resize(length);
+                this->elements.resize(vector.length);
                 std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
             }
             
@@ -111,7 +114,7 @@ namespace pacs {
                 assert(this->length == vector.length);
                 #endif
 
-                this->elements.resize(length);
+                this->elements.resize(vector.length);
                 std::ranges::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin());
 
                 return *this;
@@ -124,9 +127,7 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator =(const T &scalar) {
-                for(auto &element: this->elements)
-                    element = scalar;
-
+                this->elements.resize(this->length, scalar);
                 return *this;
             }
 
@@ -169,6 +170,54 @@ namespace pacs {
                 #endif
 
                 return this->elements[j];
+            }
+
+            /**
+             * @brief Returns the [j, k) range.
+             * 
+             * @param j 
+             * @param k 
+             * @return Vector 
+             */
+            Vector operator ()(const std::size_t &j, const std::size_t &k) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j != k);
+                assert((j < this->length) && (k < this->length + 1));
+                #endif
+
+                Vector result{(j < k) ? k - j : j - k};
+
+                if(j < k) {
+                    #pragma omp parallel for
+                    for(std::size_t h = j; h < k; ++h)
+                        result[h - j] = this->elements[h];
+                } else {
+                    #pragma omp parallel for
+                    for(std::size_t h = k; h > j; h--)
+                        result[h - k] = this->elements[h];
+                }
+
+                return result;
+            }
+
+            /**
+             * @brief Returns the [j, end) range.
+             * 
+             * @param j 
+             * @return Vector 
+             */
+            Vector operator ()(const std::size_t &j) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->length);
+                #endif
+
+                Vector result{this->length - j};
+                
+                #pragma omp parallel for
+                for(std::size_t h = j; h < this->length; ++h)
+                    result[h - j] = this->elements[h];
+
+                return result;
             }
 
             // OPERATORS.
@@ -573,6 +622,50 @@ namespace pacs {
         #pragma omp parallel for reduction(+: result)
         for(std::size_t j = 0; j < first.length; ++j)
             result += first[j] * second[j];
+
+        return result;
+    }
+
+    /**
+     * @brief Stacks two vectors.
+     * 
+     * @tparam T 
+     * @param first 
+     * @param second 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> stack(const Vector<T> &first, const Vector<T> &second) {
+        Vector<T> result{first.length + second.length};
+
+        #pragma omp parallel
+        {
+            #pragma omp for
+            for(std::size_t j = 0; j < first.length; ++j)
+                result[j] = first[j];
+
+            #pragma omp for
+            for(std::size_t j = first.length; j < first.length + second.length; ++j)
+                result[j] = second[j - first.length];
+        }
+
+        return result;
+    }
+
+    /**
+     * @brief Flips a vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> flip(const Vector<T> &vector) {
+        Vector<T> result{vector.length};
+
+        #pragma omp parallel for
+        for(std::size_t j = 0; j < result.length; ++j)
+            result[j] = vector[vector.length - j - 1];
 
         return result;
     }
