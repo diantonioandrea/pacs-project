@@ -40,11 +40,7 @@ namespace pacs {
     Mesh::Mesh(const Polygon &domain, const std::size_t &cells): domain{domain} {
         
         // Diagram.
-        std::vector<Polygon> mesh = voronoi(domain, cells);
-
-        // Relaxation.
-        for(std::size_t j = 0; j < 25; ++j)
-            mesh = lloyd(domain, mesh);
+        std::vector<Polygon> mesh = mesh_diagram(domain, cells);
 
         // Building nodes and edges.
         this->nodes = mesh_nodes(mesh);
@@ -170,8 +166,8 @@ namespace pacs {
 
         // Stats.
         file << "@ Elements: " << this->elements_number() << "\n";
-        file << "@ Nodes: " << this->elements_number() << "\n";
-        file << "@ Edges: " << this->elements_number() << "\n";
+        file << "@ Nodes: " << this->nodes_number() << "\n";
+        file << "@ Edges: " << this->edges_number() << "\n";
 
         // Polygons.
         file << "@ Elements\' coordinates: \n";

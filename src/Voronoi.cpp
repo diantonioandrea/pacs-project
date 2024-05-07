@@ -16,7 +16,7 @@
 
 // Safe distance.
 #ifndef GEOMETRY_SAFE
-#define GEOMETRY_SAFE 0.05
+#define GEOMETRY_SAFE 1E-2
 #endif
 
 namespace pacs {
@@ -40,10 +40,6 @@ namespace pacs {
             for(std::size_t k = 0; k < points.size(); ++k) {
                 if(k == j)
                     continue;
-
-                // Failure.
-                if(!cell.contains(point))
-                    return std::vector<Polygon>{};
 
                 Line line = bisector(point, points[k]);
                 cell = reduce(cell, line, point);
@@ -73,11 +69,12 @@ namespace pacs {
             Point random = domain.random();
             bool check = true;
 
-            for(const auto &point: points)
+            for(const auto &point: points) {
                 if(std::abs(point - random) <= GEOMETRY_SAFE) {
                     check = false;
                     break;
                 }
+            }
 
             if(check) {
                 points.emplace_back(random);
@@ -86,13 +83,7 @@ namespace pacs {
 
         } while(counter < cells);
 
-        std::vector<Polygon> diagram = voronoi(domain, points);
-
-        if(diagram.size())
-            return diagram;
-
-        // Retries.
-        return voronoi(domain, cells);
+        return voronoi(domain, points);
     }
 
     // LLOYD.
@@ -110,13 +101,7 @@ namespace pacs {
         for(const auto &cell: cells)
             centroids.emplace_back(cell.centroid());
 
-        std::vector<Polygon> diagram = voronoi(domain, centroids);
-
-        if(diagram.size())
-            return diagram;
-
-        // Failure.
-        return cells;
+        return voronoi(domain, centroids);
     }
 
     // TRIANGLES.

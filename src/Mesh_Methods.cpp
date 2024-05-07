@@ -14,6 +14,18 @@ namespace pacs {
 
     // METHODS.
 
+    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells) {
+        
+        // Diagram.
+        std::vector<Polygon> mesh = voronoi(domain, cells);
+
+        // Relaxation.
+        for(std::size_t j = 0; j < 80; ++j)
+            mesh = lloyd(domain, mesh);
+
+        return mesh;
+    }
+
     /**
      * @brief Returns the vector of unique nodes inside a mesh.
      * 
