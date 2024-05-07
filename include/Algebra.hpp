@@ -88,14 +88,14 @@ namespace pacs {
             rk = rkk;
 
             // New guess point.
-            ak = (rk * rk) / (pk * (A * pk));
+            ak = dot(rk, rk) / dot(pk, A * pk);
             xk += ak * pk;
 
             // New residual.
             rkk -= ak * A * pk;
 
             // bk and pk.
-            bk = (rkk * rkk) / (rk * rk);
+            bk = dot(rkk, rkk) / dot(rk, rk);
             pk = rkk + bk * pk;
 
             ++iterations;
