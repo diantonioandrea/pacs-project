@@ -101,7 +101,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Returns the Gauss-Legendre quadrature nodes and wights of a given order over the reference interval [0, 1].
+     * @brief Returns the Gauss-Legendre quadrature nodes and weights of a given order over the reference interval [0, 1].
      * 
      * @param order 
      * @return std::vector<Vector<double>> 
@@ -112,7 +112,12 @@ namespace pacs {
         return gauss_legendre(0.0, 1.0, order);
     }
 
-
+    /**
+     * @brief Returns the Gauss-Legendre quadrature nodes and weights of a given order over the reference set [-1, 1] x [-1, 1].
+     * 
+     * @param order 
+     * @return std::array<Vector<double>, 3> 
+     */
     std::array<Vector<double>, 3> quadrature_2d(const std::size_t &order) {
 
         // Gauss-Legendre nodes over [-1, 1].
