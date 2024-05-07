@@ -75,11 +75,14 @@ namespace pacs {
              * @param columns 
              * @param elements 
              */
-            Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements{elements} {
+            Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns} {
                 #ifndef NDEBUG // Integrity check.
                 assert((rows > 0) && (columns > 0));
                 assert(elements.size() == rows * columns);
                 #endif
+
+                this->elements.resize(rows * columns);
+                std::ranges::copy(elements.begin(), elements.end(), this->elements.begin());
             }
 
             /**
@@ -103,7 +106,8 @@ namespace pacs {
                 assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
                 #endif
 
-                std::ranges::copy(matrix.elements, this->elements);
+                this->elements.resize(matrix.elements.size());
+                std::ranges::copy(matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
                 return *this;
             }
 
@@ -121,7 +125,7 @@ namespace pacs {
                 assert((j < this->rows) && (k < this->columns));
                 #endif
 
-                return this->elements[j * this->rows + k];
+                return this->elements[j * this->columns + k];
             }
             
             /**
@@ -136,7 +140,7 @@ namespace pacs {
                 assert((j < this->rows) && (k < this->columns));
                 #endif
 
-                return this->elements[j * this->rows + k];
+                return this->elements[j * this->columns + k];
             }
 
             /**
@@ -153,7 +157,7 @@ namespace pacs {
                 Vector<T> row{this->columns};
 
                 for(std::size_t k = 0; k < this->columns; ++k)
-                    row[k] = this->elements[j * this->rows + k];
+                    row[k] = this->elements[j * this->columns + k];
 
                 return row;
             }
@@ -170,7 +174,7 @@ namespace pacs {
                 #endif
 
                 for(std::size_t k = 0; k < this->columns; ++k)
-                    this->elements[j * this->rows + k] = scalar;
+                    this->elements[j * this->columns + k] = scalar;
             }
 
             /**
@@ -186,7 +190,7 @@ namespace pacs {
                 #endif
 
                 for(std::size_t k = 0; k < this->columns; ++k)
-                    this->elements[j * this->rows + k] = vector[k];
+                    this->elements[j * this->columns + k] = vector[k];
             }
 
             /**
@@ -195,7 +199,7 @@ namespace pacs {
              * @param jk
              * @return Vector<T> 
              */
-            Vector<T> column(const std::size_t k) const {
+            Vector<T> column(const std::size_t &k) const {
                 #ifndef NDEBUG // Integrity check.
                 assert(k < this->columns);
                 #endif
@@ -203,7 +207,7 @@ namespace pacs {
                 Vector<T> column{this->rows};
 
                 for(std::size_t j = 0; j < this->rows; ++j)
-                    column[j] = this->elements[j * this->rows + k];
+                    column[j] = this->elements[j * this->columns + k];
 
                 return column;
             }
@@ -214,13 +218,13 @@ namespace pacs {
              * @param k 
              * @param scalar 
              */
-            void column(const std::size_t k, const T &scalar) {
+            void column(const std::size_t &k, const T &scalar) {
                 #ifndef NDEBUG // Integrity check.
                 assert(k < this->columns);
                 #endif
 
                 for(std::size_t j = 0; j < this->rows; ++j)
-                    this->elements[j * this->rows + k] = scalar;
+                    this->elements[j * this->columns + k] = scalar;
             }
 
             /**
@@ -229,14 +233,14 @@ namespace pacs {
              * @param k 
              * @param vector 
              */
-            void column(const std::size_t k, const Vector<T> &vector) {
+            void column(const std::size_t &k, const Vector<T> &vector) {
                 #ifndef NDEBUG // Integrity check.
                 assert(k < this->columns);
                 assert(vector.length == this->rows);
                 #endif
 
                 for(std::size_t j = 0; j < this->rows; ++j)
-                    this->elements[j * this->rows + k] = vector[j];
+                    this->elements[j * this->columns + k] = vector[j];
             }
 
             // SIZE.
@@ -406,7 +410,7 @@ namespace pacs {
 
                     #pragma omp parallel for reduction(+: product)
                     for(std::size_t k = 0; k < this->columns; ++k)
-                        product += this->elements[j * this->rows + k] * vector[k];
+                        product += this->elements[j * this->columns + k] * vector[k];
 
                     result[j] = product;
                 }
@@ -426,7 +430,7 @@ namespace pacs {
             friend std::ostream &operator <<(std::ostream &ost, const Matrix &matrix) {
                 for(std::size_t j = 0; j < matrix.rows; ++j) {
                     for(std::size_t k = 0; k < matrix.columns; ++k)
-                        ost << matrix.elements[j * matrix.rows + k] << " ";
+                        ost << matrix.elements[j * matrix.columns + k] << " ";
 
                     if(j < matrix.rows - 1)
                         std::cout << std::endl;
