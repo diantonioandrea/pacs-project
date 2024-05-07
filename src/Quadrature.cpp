@@ -81,7 +81,7 @@ namespace pacs {
             for(std::size_t j = 0; j < compute; ++j) {
                 vector[j] = order * (evaluation[j] * matrix(j, 0) - matrix(j, 1)) / (evaluation[j] * evaluation[j] - 1.0);
             }
-
+            
             old_evaluation = evaluation;
 
             for(std::size_t j = 0; j < compute; ++j) {
@@ -109,13 +109,8 @@ namespace pacs {
             long_vector[compute + j - 1] = vector[compute - j - 1];
         }
 
-        // Nodes computation.
-        for(std::size_t j = 0; j < order; ++j)
-            nodes[j] = ((b + a) / 2) - ((b - a) / 2) * long_flipped_evaluation[j];
-
-        // Weights evaluation.
-        for(std::size_t j = 0; j < order; ++j)
-            weights[j] = (b - a) / ((1 - long_evaluation[j] * long_evaluation[j]) * (long_vector[j] * long_vector[j]));
+        nodes = ((b + a) / 2) - ((b - a) / 2) * long_flipped_evaluation;
+        weights = (b - a) / ((1 - long_evaluation * long_evaluation) * (long_vector * long_vector));
 
         return {nodes, weights};
     }
