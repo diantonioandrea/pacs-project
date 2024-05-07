@@ -20,7 +20,7 @@ int main() {
     std::vector<pacs::Vector<double>> gauss_legendre = pacs::gauss_legendre(0, 1, 11);
 
     // Output
-    std::cout << gauss_legendre[0] << std::endl;
-    std::cout << gauss_legendre[1] << std::endl;
+    std::cout << gauss_legendre[0] << std::endl; // Nodes.
+    std::cout << gauss_legendre[1] << std::endl; // Weights.
     
 }

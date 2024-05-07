@@ -1,11 +1,11 @@
 /**
  * @file Quadrature.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief
  * @date 2024-05-06
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
 
 #include <Quadrature.hpp>
@@ -24,7 +24,8 @@ namespace pacs {
     /**
      * @brief Returns the Gauss-Legendre nodes and weights of a given order over a given interval [a, b].
      * 
-     * @param interval 
+     * @param a 
+     * @param b 
      * @param order 
      * @return std::vector<Vector<double>> 
      */
@@ -41,10 +42,12 @@ namespace pacs {
         std::size_t compute = (order + 1) / 2;
 
         // Function evaluation.
-        Vector<double> evaluation{compute}, old_evaluation{compute};
+        Vector<double> evaluation{compute};
 
         for(std::size_t j = 0; j < compute; ++j)
             evaluation[j] = std::cos(M_PI * (static_cast<double>(j) + 0.75) / (static_cast<double>(order) + 0.5));
+
+        // std::cout << evaluation << std::endl;
 
         // Error.
         Vector<double> error_vector{compute, 1.0 + QUADRATURE_TOLERANCE};
@@ -56,33 +59,24 @@ namespace pacs {
 
         // Algorithm.
         while(error > QUADRATURE_TOLERANCE) {
-            
+
             // Iteration matrix.
-            for(std::size_t j = 0; j < compute; ++j)
-                matrix(j, 0) = 1.0;
+            matrix.column(0, 1.0);
 
             // Iteration.
-            for(std::size_t j = 0; j < order; ++j) {
-                double first = static_cast<double>(2 * (j + 1) - 1) / static_cast<double>(j + 1);
-                double second = static_cast<double>(j) / static_cast<double>(j + 1);
+            for(std::size_t j = 1; j <= order; ++j) {
+                double first = static_cast<double>(2 * j - 1) / static_cast<double>(j);
+                double second = static_cast<double>(j - 1) / static_cast<double>(j);
 
-                // Matrix update.
-                for(std::size_t k = 0; k < compute; ++k) {
-                    matrix(k, 2) = matrix(k, 1);
-                    matrix(k, 1) = matrix(k, 0);
-                }
+                matrix.column(2, matrix.column(1));
+                matrix.column(1, matrix.column(0));
 
-                for(std::size_t k = 0; k < compute; ++k) {
-                    matrix(k, 0) = first * evaluation[k] * matrix(k, 1) - second * matrix(k, 2);
-                }
+                matrix.column(0, first * evaluation * matrix.column(1) - second * matrix.column(2));
             }
 
             // Step evaluation.
-            for(std::size_t j = 0; j < compute; ++j) {
-                vector[j] = order * (evaluation[j] * matrix(j, 0) - matrix(j, 1)) / (evaluation[j] * evaluation[j] - 1.0);
-            }
-            
-            old_evaluation = evaluation;
+            vector = order * (evaluation * matrix.column(0) - matrix.column(1) / (evaluation * evaluation - 1.0));
+            Vector<double> old_evaluation{evaluation};
 
             for(std::size_t j = 0; j < compute; ++j) {
                 double coefficient = (error_vector[j] > QUADRATURE_TOLERANCE) ? matrix(j, 0) / vector[j] : 0.0;
@@ -95,24 +89,15 @@ namespace pacs {
         }
 
         // Enlarges evaluation and vector.
-        Vector<double> long_evaluation{order}, long_flipped_evaluation{order}, long_vector{order};
+        Vector<double> full_evaluation = stack(evaluation(0, compute - 1), flip(evaluation));
+        Vector<double> full_evaluation_minus = stack(evaluation(0, compute - 1), -flip(evaluation));
+        Vector<double> full_vector = stack(vector(0, compute - 1), flip(vector));
 
-        for(std::size_t j = 0; j < compute - 1; ++j) {
-            long_evaluation[j] = evaluation[j];
-            long_flipped_evaluation[j] = evaluation[j];
-            long_vector[j] = vector[j];
-        }
+        // Evaluates nodes and weights.
+        nodes = ((b + a) / 2) - ((b - a) / 2) * full_evaluation_minus;
+        weights = (b - a) / ((1 - (full_evaluation * full_evaluation)) * (full_vector * full_vector));
 
-        for(std::size_t j = 0; j < compute; ++j) {
-            long_evaluation[compute + j - 1] = evaluation[compute - j - 1];
-            long_flipped_evaluation[compute + j - 1] = -evaluation[compute - j - 1];
-            long_vector[compute + j - 1] = vector[compute - j - 1];
-        }
-
-        nodes = ((b + a) / 2) - ((b - a) / 2) * long_flipped_evaluation;
-        weights = (b - a) / ((1 - long_evaluation * long_evaluation) * (long_vector * long_vector));
-
-        return {nodes, weights};
+        return std::vector<Vector<double>>{nodes, weights};
     }
 
 }

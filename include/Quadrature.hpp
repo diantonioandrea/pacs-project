@@ -22,7 +22,7 @@
 
 // Quadrature tolerance.
 #ifndef QUADRATURE_TOLERANCE
-#define QUADRATURE_TOLERANCE 1E-12
+#define QUADRATURE_TOLERANCE 1E-10
 #endif
 
 namespace pacs {
@@ -30,6 +30,9 @@ namespace pacs {
     // Gauss-Legendre quadrature nodes.
 
     std::vector<Vector<double>> gauss_legendre(const double &, const double &, const std::size_t &);
+
+    // Reference interval and square quadrature nodes.
+    std::vector<Vector<double>> reference_quadrature(const std::size_t &);
 
 }
 
