@@ -10,6 +10,10 @@
 
 #include <Mesh.hpp>
 
+#ifndef COLLAPSE_TOLERANCE
+#define COLLAPSE_TOLERANCE 5E-2
+#endif
+
 namespace pacs {
 
     // METHODS.
@@ -22,6 +26,55 @@ namespace pacs {
         // Relaxation.
         for(std::size_t j = 0; j < 80; ++j)
             mesh = lloyd(domain, mesh);
+
+        // Small edges collapse.
+        std::size_t index = 0;
+        while(index < mesh.size()) {
+            bool flag = true;
+
+            if(mesh[index].edges().size() > 3) {
+
+                for(auto &edge: mesh[index].edges()) {
+                    if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE)
+                        continue;
+
+                    if(domain.contains(edge))
+                        continue;
+
+                    for(std::size_t k = 0; k < mesh.size(); ++k) {
+                        if(index == k)
+                            continue;
+
+                        if(mesh[k].contains(edge)) {
+                            mesh[index] = collapse(mesh[index], edge);
+                            mesh[k] = collapse(mesh[k], edge);
+                            flag = false;
+
+                            bool flag_0 = false, flag_1 = false;
+
+                            for(std::size_t h = 0; h < mesh.size(); ++h) {
+                                if((index  == h) || (k == h))
+                                    continue;
+
+                                if(flag_0 && flag_1)
+                                    break;
+
+                                
+                            }
+
+                            break;
+                        }
+                    }
+
+                    if(!flag)
+                        break;
+                }
+
+            }
+
+            if(flag)
+                ++index;
+        }
 
         return mesh;
     }

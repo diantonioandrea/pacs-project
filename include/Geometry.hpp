@@ -164,36 +164,37 @@ namespace pacs {
             friend std::ostream &operator <<(std::ostream &, const Segment &);
     };
 
-    class Polygon {
-        protected:
+    /**
+     * @brief 2D Polygon struct.
+     * 
+     */
+    struct Polygon {
 
-            // Points (Counterwise ordered).
-            std::vector<Point> points;
+        // Points (Counterwise ordered).
+        std::vector<Point> points;
 
-        public:
+        // CONSTRUCTORS.
 
-            // CONSTRUCTORS.
+        Polygon(const std::vector<Point> &);
+        Polygon(const Polygon &);
+        Polygon &operator =(const Polygon &);
 
-            Polygon(const std::vector<Point> &);
-            Polygon(const Polygon &);
-            Polygon &operator =(const Polygon &);
+        // METHODS.
 
-            // METHODS.
+        std::vector<Point> vertices() const;
+        std::vector<Segment> edges() const;
 
-            std::vector<Point> vertices() const;
-            std::vector<Segment> edges() const;
+        bool contains(const Point &) const;
+        bool contains(const Segment &) const;
 
-            bool contains(const Point &) const;
-            bool contains(const Segment &) const;
+        double area() const;
+        Point centroid() const;
 
-            double area() const;
-            Point centroid() const;
+        Point random() const;
 
-            Point random() const;
+        // OUTPUT.
 
-            // OUTPUT.
-
-            friend std::ostream &operator <<(std::ostream &, const Polygon &);
+        friend std::ostream &operator <<(std::ostream &, const Polygon &);
     };
 
     // METHODS.
