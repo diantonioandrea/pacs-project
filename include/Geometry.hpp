@@ -181,7 +181,6 @@ namespace pacs {
 
         // METHODS.
 
-        std::vector<Point> vertices() const;
         std::vector<Segment> edges() const;
 
         bool contains(const Point &) const;

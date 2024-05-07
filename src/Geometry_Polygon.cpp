@@ -55,10 +55,6 @@ namespace pacs {
     }
 
     // METHODS.
-
-    std::vector<Point> Polygon::vertices() const {
-        return this->points;
-    }
     
     /**
      * @brief Returns the vector of Segments.

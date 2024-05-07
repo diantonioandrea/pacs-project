@@ -10,8 +10,14 @@
 
 #include <Mesh.hpp>
 
+// Small edges tolerance.
 #ifndef COLLAPSE_TOLERANCE
-#define COLLAPSE_TOLERANCE 5E-2
+#define COLLAPSE_TOLERANCE 1E-1
+#endif
+
+// Maximum number of iterations for the Lloyd's algorithm.
+#ifndef LLOYD_MAX_ITER
+#define LLOYD_MAX_ITER 256
 #endif
 
 namespace pacs {
@@ -24,52 +30,60 @@ namespace pacs {
         std::vector<Polygon> mesh = voronoi(domain, cells);
 
         // Relaxation.
-        for(std::size_t j = 0; j < 80; ++j)
+        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j)
             mesh = lloyd(domain, mesh);
 
         // Small edges collapse.
+        double size = 0.0;
+
+        for(std::size_t j = 0; j < mesh.size(); ++j) {
+            for(const auto &edge: mesh[j].edges())
+                size = (std::abs(edge[1] - edge[0]) > size) ? std::abs(edge[1] - edge[0]) : size;
+        }
+
         std::size_t index = 0;
         while(index < mesh.size()) {
             bool flag = true;
 
-            if(mesh[index].edges().size() > 3) {
+            // Cannot collapse triangles.
+            if(mesh[index].edges().size() == 3)
+                continue;
 
-                for(auto &edge: mesh[index].edges()) {
-                    if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE)
+            // Looks for small edges.
+            for(auto &edge: mesh[index].edges()) {
+                if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * size)
+                    continue;
+
+                for(std::size_t k = 0; k < mesh.size(); ++k) {
+                    if(index == k)
                         continue;
 
                     if(domain.contains(edge))
-                        continue;
+                        break;
 
-                    for(std::size_t k = 0; k < mesh.size(); ++k) {
-                        if(index == k)
-                            continue;
+                    // Collapses small edges.
+                    if(mesh[k].contains(edge)) {
+                        mesh[index] = collapse(mesh[index], edge);
+                        mesh[k] = collapse(mesh[k], edge);
+                        flag = false;
 
-                        if(mesh[k].contains(edge)) {
-                            mesh[index] = collapse(mesh[index], edge);
-                            mesh[k] = collapse(mesh[k], edge);
-                            flag = false;
+                        Point mid = (edge[0] + edge[1]) * 0.5;
 
-                            bool flag_0 = false, flag_1 = false;
+                        // Moves vertices.
+                        for(std::size_t h = 0; h < mesh.size(); ++h) {
+                            if((index  == h) || (k == h))
+                                continue;
 
-                            for(std::size_t h = 0; h < mesh.size(); ++h) {
-                                if((index  == h) || (k == h))
-                                    continue;
-
-                                if(flag_0 && flag_1)
-                                    break;
-
-                                
+                            for(std::size_t l = 0; l < mesh[h].points.size(); ++l) {
+                                if((mesh[h].points[l] == edge[0]) || (mesh[h].points[l] == edge[1]))
+                                    mesh[h].points[l] = mid;
                             }
-
-                            break;
                         }
                     }
-
-                    if(!flag)
-                        break;
                 }
 
+                if(!flag)
+                    break;
             }
 
             if(flag)
@@ -89,7 +103,7 @@ namespace pacs {
         std::vector<Point> nodes;
 
         for(const auto &cell: mesh) {
-            for(const auto &candidate: cell.vertices()) {
+            for(const auto &candidate: cell.points) {
                 bool flag = true;
 
                 for(const auto &node: nodes) {
@@ -150,7 +164,7 @@ namespace pacs {
             std::vector<std::size_t> element_nodes;
             std::vector<std::size_t> element_edges;
 
-            for(const auto &node: cell.vertices()) {
+            for(const auto &node: cell.points) {
                 for(std::size_t j = 0; j < nodes.size(); ++j) {
                     if(node == nodes[j]) {
                         element_nodes.emplace_back(j);

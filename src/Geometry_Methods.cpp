@@ -144,12 +144,12 @@ namespace pacs {
      */
     Polygon collapse(const Polygon &polygon, const Point &point) {
         #ifndef NDEBUG // Integrity check.
-        assert(polygon.vertices().size() > 3);
+        assert(polygon.points.size() > 3);
         #endif
 
         std::vector<Point> vertices;
 
-        for(const auto &vertex: polygon.vertices()) {
+        for(const auto &vertex: polygon.points) {
             if(point == vertex)
                 continue;
 
@@ -160,7 +160,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Polygon collapes over an edge.
+     * @brief Polygon collape over an edge.
      * 
      * @param polygon 
      * @param segment 
@@ -168,21 +168,34 @@ namespace pacs {
      */
     Polygon collapse(const Polygon &polygon, const Segment &segment) {
         #ifndef NDEBUG // Integrity check.
-        assert(polygon.vertices().size() > 3);
+        assert(polygon.points.size() > 3);
+
+        std::size_t counter = 0;
+
+        for(const auto &vertex: polygon.points) {
+            if(vertex == segment[0])
+                ++counter;
+
+            if(vertex == segment[1])
+                ++counter;
+        }
+
+        assert(counter = 2);
         #endif
 
-        std::vector<Point> points{polygon.vertices()};
-        points.emplace_back(points[0]);
-
         std::vector<Point> vertices;
+        Point mid = (segment[0] + segment[1]) * 0.5;
 
-        for(std::size_t j = 0; j < polygon.vertices().size(); ++j) {
-            if(segment == Segment{points[j], points[j + 1]}) {
-                vertices.emplace_back((points[j] + points[j + 1]) * 0.5);
-                ++j;
-            } else {
-                vertices.emplace_back(points[j]);
+        for(const auto &vertex: polygon.points) {
+            if(vertex == segment[0])
+                continue;
+
+            if(vertex == segment[1]) {
+                vertices.emplace_back(mid);
+                continue;
             }
+
+            vertices.emplace_back(vertex);
         }
 
         return Polygon{vertices};
@@ -209,7 +222,7 @@ namespace pacs {
             return polygon;
 
         // Building.
-        std::vector<Point> vertices = polygon.vertices();
+        std::vector<Point> vertices = polygon.points;
         std::vector<Segment> edges = polygon.edges();
         std::size_t index = 0;
 
