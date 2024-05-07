@@ -57,7 +57,6 @@ namespace pacs {
 
             // METHODS.
 
-            double norm() const;
             bool is_zero() const;
 
             // OPERATORS.
@@ -209,6 +208,12 @@ namespace pacs {
     Polygon collapse(const Polygon &, const Segment &);
 
     Polygon reduce(const Polygon &, const Line &, const Point &);
+
+}
+
+namespace std {
+
+    double abs(const pacs::Point &);
 
 }
 

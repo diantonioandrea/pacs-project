@@ -168,7 +168,7 @@ namespace pacs {
         do {
             x = x_min + (x_max - x_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
             y = y_min + (y_max - y_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
-        } while(!this->contains({x, y}));
+        } while(!this->contains(Point{x, y}));
 
         return Point{x, y};
     }

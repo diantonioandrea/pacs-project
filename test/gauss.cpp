@@ -17,10 +17,11 @@
 int main() {
 
     // Some Gauss-Legendre nodes and weights over [0, 1].
-    std::vector<pacs::Vector<double>> gauss_legendre = pacs::gauss_legendre(0, 1, 11);
+    auto [nodes_x, nodes_y, weights] = pacs::quadrature_2d(3);
 
     // Output
-    std::cout << gauss_legendre[0] << std::endl; // Nodes.
-    std::cout << gauss_legendre[1] << std::endl; // Weights.
+    std::cout << nodes_x << std::endl; // Nodes_x.
+    std::cout << nodes_y << std::endl; // Nodes_y.
+    std::cout << weights << std::endl; // Weights.
     
 }

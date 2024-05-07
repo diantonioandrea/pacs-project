@@ -111,12 +111,8 @@ namespace pacs {
 
     // METHODS.
 
-    double Point::norm() const {
-        return std::sqrt(this->x * this->x + this->y * this->y);
-    }
-
     bool Point::is_zero() const {
-        return this->norm() <= GEOMETRY_TOLERANCE;
+        return std::abs(*this) <= GEOMETRY_TOLERANCE;
     }
 
     // OPERATORS.

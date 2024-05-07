@@ -301,3 +301,17 @@ namespace pacs {
     }
 
 }
+
+namespace std {
+
+    /**
+     * @brief Return the norm of a point.
+     * 
+     * @param point 
+     * @return double 
+     */
+    double abs(const pacs::Point &point) {
+        return std::sqrt(point[0] * point[0] + point[1] * point[1]);
+    }
+
+}

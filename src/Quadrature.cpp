@@ -29,7 +29,7 @@ namespace pacs {
      * @param order 
      * @return std::vector<Vector<double>> 
      */
-    std::vector<Vector<double>> gauss_legendre(const double &a, const double &b, const std::size_t &order) {
+    std::pair<Vector<double>, Vector<double>> gauss_legendre(const double &a, const double &b, const std::size_t &order) {
         #ifndef NDEBUG // Integrity check.
         assert(b > a);
         assert(order % 2);
@@ -97,7 +97,47 @@ namespace pacs {
         nodes = ((b + a) / 2) - ((b - a) / 2) * full_evaluation_minus;
         weights = (b - a) / ((1 - (full_evaluation * full_evaluation)) * (full_vector * full_vector));
 
-        return std::vector<Vector<double>>{nodes, weights};
+        return {nodes, weights};
     }
 
+    /**
+     * @brief Returns the Gauss-Legendre quadrature nodes and wights of a given order over the reference interval [0, 1].
+     * 
+     * @param order 
+     * @return std::vector<Vector<double>> 
+     */
+    std::pair<Vector<double>, Vector<double>> quadrature_1d(const std::size_t &order) {
+
+        // Gauss-Legendre nodes over [0, 1].
+        return gauss_legendre(0.0, 1.0, order);
+    }
+
+
+    std::array<Vector<double>, 3> quadrature_2d(const std::size_t &order) {
+
+        // Gauss-Legendre nodes over [-1, 1].
+        auto [partial_nodes, partial_weights] = gauss_legendre(-1.0, 1.0, order);
+
+        Matrix<double> row_nodes{order, order}, column_nodes{order, order}, row_weights{order, order}, column_weights{order, order};
+
+        for(std::size_t j = 0; j < order; ++j) {
+            row_nodes.row(j, partial_nodes);
+            column_nodes.column(j, partial_nodes);
+            row_weights.row(j, partial_weights);
+            column_weights.column(j, partial_weights);
+        }
+
+        Vector<double> squashed_row_nodes{squash(row_nodes)}, squashed_column_nodes{squash(column_nodes)};
+        Vector<double> squashed_row_weights{squash(row_weights)}, squashed_column_weights{squash(column_weights)};
+
+        // Nodes.
+        Vector<double> nodes_x = (1 + squashed_column_nodes) / 2;
+        Vector<double> nodes_y = (1 - squashed_column_nodes) * (1 + squashed_row_nodes) / 4;
+
+        // Weights.
+        Vector<double> weights = (1 - squashed_column_nodes) * squashed_column_weights * squashed_row_weights / 8;
+
+        return {nodes_x, nodes_y, weights};
+    }
+    
 }

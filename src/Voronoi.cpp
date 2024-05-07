@@ -74,7 +74,7 @@ namespace pacs {
             bool check = true;
 
             for(const auto &point: points)
-                if((point - random).norm() <= GEOMETRY_SAFE) {
+                if(std::abs(point - random) <= GEOMETRY_SAFE) {
                     check = false;
                     break;
                 }

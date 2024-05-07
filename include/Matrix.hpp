@@ -440,6 +440,29 @@ namespace pacs {
             }
     };
 
+    // METHODS.
+
+    /**
+     * @brief Squashes a matrix to a vector.
+     * 
+     * @tparam T 
+     * @param matrix 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> squash(const Matrix<T> &matrix) {
+        Vector<T> result{matrix.rows * matrix.columns};
+
+        #pragma omp parallel for collapse(2)
+        for(std::size_t j = 0; j < matrix.rows; ++j) {
+            for(std::size_t k = 0; k < matrix.columns; ++k) {
+                result[j * matrix.columns + k] = matrix(j, k);
+            }
+        }
+
+        return result;
+    }
+
 }
 
 #endif
