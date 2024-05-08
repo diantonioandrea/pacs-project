@@ -38,6 +38,12 @@ int main() {
     // .row() and .column().
     std::cout << matrix.row(0) << std::endl;
     matrix.column(0, 3.0);
-    std::cout << matrix << std::endl;
+    std::cout << matrix << std::endl << std::endl;
+
+    // Product output.
+    std::cout << matrix * matrix << std::endl << std::endl;
+
+    // Transpose output.
+    std::cout << matrix.transpose() << std::endl;
     
 }

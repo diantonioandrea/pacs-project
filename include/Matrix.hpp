@@ -267,6 +267,21 @@ namespace pacs {
                 return Matrix{rows, columns, this->elements};
             }
 
+            /**
+             * @brief Returns the transpose matrix.
+             * 
+             * @return Matrix 
+             */
+            Matrix transpose() const {
+                Matrix transpose{this->columns, this->rows};
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = 0; k < this->columns; ++k)
+                        transpose.elements[k * this->rows + j] = this->elements[j * this->columns + k];
+
+                return transpose;
+            }
+
             // OPERATORS.
 
             /**
@@ -414,6 +429,34 @@ namespace pacs {
 
                     result[j] = product;
                 }
+
+                return result;
+            }
+
+            /**
+             * @brief Matrix * Matrix product.
+             * 
+             * @param matrix 
+             * @return Matrix 
+             */
+            Matrix operator *(const Matrix &matrix) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->columns == matrix.rows);
+                #endif
+
+                Matrix result{this->rows, matrix.columns};
+                
+                #pragma omp parallel for collapse(2)
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = 0; k < matrix.columns; ++k) {
+                        T product = static_cast<T>(0);
+
+                        #pragma omp parallel for reduction (+: product)
+                        for(std::size_t h = 0; h < this->columns; ++h)
+                            product += this->elements[j * this->columns + h] * matrix.elements[h * matrix.columns + k];
+
+                        result.elements[j * matrix.columns + k] = product;
+                    }
 
                 return result;
             }
