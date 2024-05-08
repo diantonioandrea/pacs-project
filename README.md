@@ -12,7 +12,7 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
 
 ## Introduction
 
-This repository presents an implementation of an adaptive HP Discontinuos Galërkin method.
+This repository presents an implementation of an adaptive HP Discontinuous Galërkin method.
 
 ## Overview
 
@@ -47,11 +47,11 @@ All tests can be compiled with:
 
     make test
 
-Some meaningful tests may be:
+Some meaningful tests may include:
 
 - `domain`: Creates a mesh over `[-1, 1] x [-1, 1]` and dumps it in `mesh.poly`, readable by `polyplot.py`.
-- `gauss`: Evaluates and print some **Gauss-Legendre** quadrature nodes and weights over `[-1, 1] x [-1, 1]`.
-- `alegbra`: Solves a simple linear system using the _Conjugate Gradient Method_.
+- `gauss`: Evaluates and prints some **Gauss-Legendre** quadrature nodes and weights over `[-1, 1] x [-1, 1]`.
+- `algebra`: Solves a simple linear system using the _Conjugate Gradient Method_.
 
 Tests can be run by:
 
