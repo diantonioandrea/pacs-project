@@ -1,5 +1,5 @@
 /**
- * @file Geometry_Line.cpp
+ * @file Line.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-05-04

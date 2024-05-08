@@ -1,5 +1,5 @@
 /**
- * @file Geometry_Point.cpp
+ * @file Point.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-05-04

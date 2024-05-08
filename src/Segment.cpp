@@ -1,5 +1,5 @@
 /**
- * @file Geometry_Segment.cpp
+ * @file Segment.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-05-04

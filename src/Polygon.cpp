@@ -1,5 +1,5 @@
 /**
- * @file Geometry_Polygon.cpp
+ * @file Polygon.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-05-04
