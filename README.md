@@ -28,6 +28,8 @@ Key components include:
     - `Voronoi.hpp`: Definitions of methods for evaluating the Voronoi diagram 
     - `Mesh.hpp`: Definitions of mesh class and methods.
     - `Quadrature.hpp`: Definitions of quadrature methods and algorithms.
+    - `Basis.hpp`: Definitions of basis functions methods.
+    - `Legendre.hpp`: Definitions of Legendre polynomials methods.
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
