@@ -20,7 +20,7 @@
 
 // Geometry tolerance.
 #ifndef GEOMETRY_TOLERANCE
-#define GEOMETRY_TOLERANCE 1E-10
+#define GEOMETRY_TOLERANCE 1E-8
 #endif
 
 namespace pacs {
