@@ -11,3 +11,7 @@ report/output
 
 # polyplot.py
 **/*.poly
+
+# Others
+**/*.DS_Store
+**/.DS_Store
