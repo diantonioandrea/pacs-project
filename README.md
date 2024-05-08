@@ -30,6 +30,7 @@ Key components include:
     - `Quadrature.hpp`: Definitions of quadrature methods and algorithms.
     - `Basis.hpp`: Definitions of basis functions methods.
     - `Legendre.hpp`: Definitions of Legendre polynomials methods.
+    - `Laplacian.hpp`: Definitions of methods for the laplacian matrix.
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
