@@ -36,6 +36,9 @@
 // Math.
 #include <cmath>
 
+// Matrices.
+#include <Matrix.hpp>
+
 // Copy.
 #include <algorithm>
 
@@ -222,6 +225,26 @@ namespace pacs {
                 #else
                 this->elements[{j, k}] = element;
                 #endif
+            }
+
+            /**
+             * @brief Insert a new matrix of elements.
+             * 
+             * @param j 
+             * @param k 
+             * @param elements 
+             */
+            void insert(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
+                #ifndef NDEBUG // Integrity checks.
+                assert(J.size() == K.size());
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    assert((J[j] < this->rows) && (K[j] < this->columns));
+                #endif
+
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    for(std::size_t k = 0; k < K.size(); ++k)
+                        if(std::abs(elements(j, k)) > TOLERANCE)
+                            this->elements[{J[j], K[k]}] =  elements(j, k);
             }
 
             // SHAPE.
