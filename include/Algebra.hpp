@@ -83,7 +83,7 @@ namespace pacs {
 
         // *k: k-th value.
         // *kk: (k + 1)-th value
-        do {
+        while((norm(rkk) > ALGEBRA_TOLERANCE) && (iterations < ALGEBRA_ITER_MAX)) {
             // Residual.
             rk = rkk;
 
@@ -99,7 +99,7 @@ namespace pacs {
             pk = rkk + bk * pk;
 
             ++iterations;
-        } while((norm(rkk) > ALGEBRA_TOLERANCE) && (iterations < ALGEBRA_ITER_MAX));
+        }
 
         return xk;
     }

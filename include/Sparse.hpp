@@ -132,9 +132,9 @@ namespace pacs {
              * @param sparse
              */
             Sparse(const Sparse &sparse): compressed{sparse.compressed}, rows{sparse.rows}, columns{sparse.columns} {
-                if(!(sparse.compressed)) {
+                if(!(sparse.compressed))
                     std::ranges::copy(sparse.elements, this->elements);
-                } else {
+                else {
                     this->inner.resize(sparse.inner.size());
                     this->outer.resize(sparse.outer.size());
                     this->values.resize(sparse.values.size());
@@ -163,9 +163,9 @@ namespace pacs {
                 this->outer.clear();
                 this->values.clear();
 
-                if(!(sparse.compressed)) {
+                if(!(sparse.compressed))
                     std::ranges::copy(sparse.elements.begin(), sparse.elements.end(), this->elements.begin());
-                } else {
+                else {
                     this->inner.resize(sparse.inner.size());
                     this->outer.resize(sparse.outer.size());
                     this->values.resize(sparse.values.size());
@@ -197,10 +197,9 @@ namespace pacs {
                     return this->elements.contains({j, k}) ? this->elements[{j, k}] : static_cast<T>(0);
 
                 // Looks for the value on compressed Matrix.
-                for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i) {
+                for(std::size_t i = this->inner[j]; i < this->inner[j + 1]; ++i)
                     if(k == this->outer[i])
                         return this->values[i];
-                }
 
                 // Default return.
                 return static_cast<T>(0);
@@ -295,10 +294,9 @@ namespace pacs {
                     return;
 
                 // Uncompression.
-                for(std::size_t j = 0; j < this->inner.size() - 1; ++j) {
+                for(std::size_t j = 0; j < this->inner.size() - 1; ++j)
                     for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
                         this->elements[{j, this->outer[k]}] = this->values[k];
-                }
 
                 this->compressed = false;
                 this->inner.clear();
@@ -327,11 +325,10 @@ namespace pacs {
             Sparse operator *(const T &scalar) const {
                 Sparse result{*this};
 
-                if(!(this->compressed)) {
+                if(!(this->compressed)) 
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
-                    
-                } else {
+                else {
                     
                     #pragma omp parallel for
                     for(auto &value: result.values)
@@ -352,11 +349,10 @@ namespace pacs {
             friend Sparse operator *(const T &scalar, const Sparse &sparse) {
                 Sparse result{sparse};
 
-                if(!(sparse.compressed)) {
+                if(!(sparse.compressed))
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
-                    
-                } else {
+                else {
                     
                     #pragma omp parallel for
                     for(auto &value: result.values)
@@ -374,11 +370,10 @@ namespace pacs {
              * @return Sparse& 
              */
             Sparse &operator *=(const T &scalar) {
-                if(!(this->compressed)) {
+                if(!(this->compressed))
                     for(auto &[key, element]: this->elements)
                         element *= scalar;
-                    
-                } else {
+                else {
                     
                     #pragma omp parallel for
                     for(std::size_t j = 0; j < this->values.size(); ++j)
@@ -402,11 +397,10 @@ namespace pacs {
 
                 Vector<T> result{this->rows};
 
-                if(!(this->compressed)) {
+                if(!(this->compressed))
                     for(const auto &[key, element]: this->elements)
                         result[key[0]] += element * vector[key[1]];
-
-                } else {
+                else {
                     for(std::size_t j = 0; j < this->rows; ++j) {
                         T product = static_cast<T>(0);
 
@@ -431,24 +425,21 @@ namespace pacs {
              * @return std::ostream& 
              */
             friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {
-                if(!(sparse.compressed)) {
+                if(!(sparse.compressed))
                     for(const auto &[key, element]: sparse.elements) {
                         ost << "(" << key[0] << ", " << key[1] << "): " << element;
 
                         if(key != (*--sparse.elements.end()).first)
                             ost << std::endl;
                     }
-
-                } else {
-                    for(std::size_t j = 0; j < sparse.rows; ++j) {
+                else {
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
                         for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
                             ost << "(" << j << ", " << sparse.outer[k] << "): " << sparse.values[k];
 
                             if(k < sparse.inner[sparse.rows] - 1)
                                 ost << std::endl;
                         }
-
-                    }
                 }
 
                 return ost;
