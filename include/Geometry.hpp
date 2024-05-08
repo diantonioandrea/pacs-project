@@ -191,6 +191,8 @@ namespace pacs {
 
         Point random() const;
 
+        std::array<Point, 2> box() const;
+
         // OUTPUT.
 
         friend std::ostream &operator <<(std::ostream &, const Polygon &);

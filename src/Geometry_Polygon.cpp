@@ -149,16 +149,11 @@ namespace pacs {
      */
     Point Polygon::random() const {
         // Boundaries.
-        double x_min = this->points[0][0], x_max = this->points[0][0];
-        double y_min = this->points[0][1], y_max = this->points[0][1];
-        double x, y;
+        auto [xy_min, xy_max] = this->box();
 
-        for(std::size_t j = 1; j < this->points.size(); ++j) {
-            x_min = (points[j][0] < x_min) ? points[j][0] : x_min;
-            x_max = (points[j][0] > x_max) ? points[j][0] : x_max;
-            y_min = (points[j][1] < y_min) ? points[j][1] : y_min;
-            y_max = (points[j][1] > y_max) ? points[j][1] : y_max;
-        }
+        double x_min = xy_min[0], y_min = xy_min[1];
+        double x_max = xy_max[0], y_max = xy_max[1];
+        double x, y;
 
         // Generation.
         do {
@@ -167,6 +162,25 @@ namespace pacs {
         } while(!this->contains(Point{x, y}));
 
         return Point{x, y};
+    }
+
+    /**
+     * @brief Returns the Polygon's box [(x_min, y_min), (x_max, y_max)]
+     * 
+     * @return std::array<Point, 2> 
+     */
+    std::array<Point, 2> Polygon::box() const {
+        double x_min = this->points[0][0], x_max = this->points[0][0];
+        double y_min = this->points[0][1], y_max = this->points[0][1];
+
+        for(std::size_t j = 1; j < this->points.size(); ++j) {
+            x_min = (points[j][0] < x_min) ? points[j][0] : x_min;
+            x_max = (points[j][0] > x_max) ? points[j][0] : x_max;
+            y_min = (points[j][1] < y_min) ? points[j][1] : y_min;
+            y_max = (points[j][1] > y_max) ? points[j][1] : y_max;
+        }
+
+        return {Point{x_min, y_min}, Point{x_max, y_max}};
     }
 
     // OUTPUT.
