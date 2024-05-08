@@ -31,7 +31,7 @@ Key components include:
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
-- `test/`: Some tests for the code.
+- `test/`: Some tests for the code. See [Test Compilation](#test-compilation).
 
 ## Setup
 
@@ -46,3 +46,13 @@ To begin, clone the repository from [here](https://github.com/diantonioandrea/pa
 All tests can be compiled with:
 
     make test
+
+Some meaningful tests may be:
+
+- `domain`: Creates a mesh over `[-1, 1] x [-1, 1]` and dumps it in `mesh.poly`, readable by `polyplot.py`.
+- `gauss`: Evaluates and print some **Gauss-Legendre** quadrature nodes and weights over `[-1, 1] x [-1, 1]`.
+- `alegbra`: Solves a simple linear system using the _Conjugate Gradient Method_.
+
+Tests can be run by:
+
+    ./TEST
