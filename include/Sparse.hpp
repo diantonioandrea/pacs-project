@@ -133,7 +133,7 @@ namespace pacs {
              */
             Sparse(const Sparse &sparse): compressed{sparse.compressed}, rows{sparse.rows}, columns{sparse.columns} {
                 if(!(sparse.compressed))
-                    std::ranges::copy(sparse.elements, this->elements);
+                    this->elements = sparse.elements;
                 else {
                     this->inner.resize(sparse.inner.size());
                     this->outer.resize(sparse.outer.size());
@@ -164,7 +164,7 @@ namespace pacs {
                 this->values.clear();
 
                 if(!(sparse.compressed))
-                    std::ranges::copy(sparse.elements.begin(), sparse.elements.end(), this->elements.begin());
+                    this->elements = sparse.elements;
                 else {
                     this->inner.resize(sparse.inner.size());
                     this->outer.resize(sparse.outer.size());
