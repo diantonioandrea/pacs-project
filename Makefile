@@ -9,7 +9,7 @@ ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
 ifeq ($(shell uname),Darwin) # Apple's clang.
 CXXFLAGS += -Xclang
 endif
-CXXFLAGS += -fopenmp -I$(OpenMP)/include
+CPPFLAGS += -fopenmp -I$(OpenMP)/include
 LDFLAGS += -L$(OpenMP)/lib
 LDLIBS += -lomp
 else
@@ -31,12 +31,12 @@ $(TEST_EXECS): %.out: %.o $(OBJECTS)
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(TEST_OBJECTS): %.o: test/%.cpp
-	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(OBJECTS): %.o: src/%.cpp $(HEADERS)
-	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS)"
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Clean.
 clean:
