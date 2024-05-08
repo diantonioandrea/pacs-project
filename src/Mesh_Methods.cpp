@@ -24,14 +24,34 @@ namespace pacs {
 
     // METHODS.
 
+    /**
+     * @brief Returns a mesh diagram of a given domain.
+     * 
+     * @param domain 
+     * @param cells 
+     * @return std::vector<Polygon> 
+     */
     std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells) {
         
+        #ifdef VERBOSE
+        std::cout << "Generating a mesh for: " << domain << std::endl;
+        #endif
+
         // Diagram.
         std::vector<Polygon> mesh = voronoi(domain, cells);
 
+        #ifdef VERBOSE
+        std::cout << "\nGenerated the Voronoi diagram.\n" << std::endl;
+        #endif
+
         // Relaxation.
-        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j)
+        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
             mesh = lloyd(domain, mesh);
+
+            #ifdef VERBOSE
+            std::cout << "Completed step " << j + 1 << " of the Lloyd's algorithm." << std::endl;
+            #endif
+        }
 
         // Small edges collapse.
         std::vector<double> sizes;
@@ -39,11 +59,19 @@ namespace pacs {
 
         for(std::size_t j = 0; j < mesh.size(); ++j)
             for(const auto &edge: mesh[j].edges())
-                sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];    
+                sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluated elements sizes.\n" << std::endl;
+        #endif
 
         std::size_t index = 0;
         while(index < mesh.size()) {
             bool flag = true;
+
+            #ifdef VERBOSE
+            std::cout << "Collapsing element " << index << "." << std::endl;
+            #endif
 
             // Cannot collapse triangles.
             if(mesh[index].edges().size() == 3)
@@ -102,6 +130,10 @@ namespace pacs {
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &mesh) {
         std::vector<Point> nodes;
 
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh nodes." << std::endl;
+        #endif
+
         for(const auto &cell: mesh) {
             for(const auto &candidate: cell.points) {
                 bool flag = true;
@@ -129,6 +161,10 @@ namespace pacs {
      */
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &mesh) {
         std::vector<Segment> edges;
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh edges." << std::endl;
+        #endif
 
         for(const auto &cell: mesh) {
             for(const auto &candidate: cell.edges()) {
@@ -159,6 +195,10 @@ namespace pacs {
      */
     std::vector<Element> mesh_elements(const std::vector<Polygon> &mesh, const std::vector<Point> &nodes, const std::vector<Segment> &edges) {
         std::vector<Element> elements;
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh elements." << std::endl;
+        #endif
 
         for(const auto &cell: mesh) {
             std::vector<std::size_t> element_nodes;
@@ -198,6 +238,10 @@ namespace pacs {
     std::vector<std::size_t> mesh_boundary_nodes(const Polygon &domain, const std::vector<Point> &nodes) {
         std::vector<std::size_t> boundary_nodes;
 
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh boundary nodes." << std::endl;
+        #endif
+
         for(const auto &bound: domain.edges()) {
             for(std::size_t j = 0; j < nodes.size(); ++j) {
                 if(bound.contains(nodes[j]))
@@ -218,6 +262,10 @@ namespace pacs {
     std::vector<std::size_t> mesh_boundary_edges(const Polygon &domain, const std::vector<Segment> &edges) {
         std::vector<std::size_t> boundary_edges;
 
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh boundary edges." << std::endl;
+        #endif
+
         for(const auto &bound: domain.edges()) {
             for(std::size_t j = 0; j < edges.size(); ++j) {
                 if(bound.contains(edges[j]))
@@ -230,6 +278,10 @@ namespace pacs {
 
     std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
         std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating mesh neighbours." << std::endl;
+        #endif
 
         for(std::size_t j = 0; j < elements.size(); ++j) {
             std::vector<std::pair<std::size_t, int>> element_neighbours;

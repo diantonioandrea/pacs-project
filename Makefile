@@ -4,6 +4,9 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
 # Further optimization.
 # CXXFLAGS += -DNDEBUG
 
+# Verbosity.
+CXXFLAGS += -DVERBOSE
+
 # Parallel computing using OpenMP.
 ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
 ifeq ($(shell uname),Darwin) # Apple's clang.
