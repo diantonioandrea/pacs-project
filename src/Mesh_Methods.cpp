@@ -34,12 +34,12 @@ namespace pacs {
             mesh = lloyd(domain, mesh);
 
         // Small edges collapse.
-        double size = 0.0;
+        std::vector<double> sizes;
+        sizes.resize(mesh.size(), 0.0);
 
-        for(std::size_t j = 0; j < mesh.size(); ++j) {
+        for(std::size_t j = 0; j < mesh.size(); ++j)
             for(const auto &edge: mesh[j].edges())
-                size = (std::abs(edge[1] - edge[0]) > size) ? std::abs(edge[1] - edge[0]) : size;
-        }
+                sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];    
 
         std::size_t index = 0;
         while(index < mesh.size()) {
@@ -51,7 +51,7 @@ namespace pacs {
 
             // Looks for small edges.
             for(auto &edge: mesh[index].edges()) {
-                if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * size)
+                if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * sizes[index])
                     continue;
 
                 for(std::size_t k = 0; k < mesh.size(); ++k) {
