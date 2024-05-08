@@ -162,9 +162,11 @@ namespace pacs {
         // File loading.
         std::ofstream file{filename};
 
+        file << "@ " << filename << "\n";
         file << "@ polyplot.py readable mesh\n";
 
         // Stats.
+        file << "@ Domain: " << this->domain << "\n";
         file << "@ Elements: " << this->elements_number() << "\n";
         file << "@ Nodes: " << this->nodes_number() << "\n";
         file << "@ Edges: " << this->edges_number() << "\n";
