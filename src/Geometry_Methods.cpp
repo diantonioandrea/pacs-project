@@ -109,10 +109,9 @@ namespace pacs {
     std::vector<Point> intersections(const Line &line, const Segment &segment) {
         std::vector<Point> points;
 
-        for(const auto &point: intersections(line, segment.line())) {
+        for(const auto &point: intersections(line, segment.line()))
             if(segment.contains(point))
                 points.emplace_back(point);
-        }
 
         return points;
     }
@@ -127,10 +126,9 @@ namespace pacs {
     std::vector<Point> intersections(const Line &line, const Polygon &polygon) {
         std::vector<Point> points;
 
-        for(const auto &segment: polygon.edges()) {
+        for(const auto &segment: polygon.edges())
             for(const auto &point: intersections(line, segment))
                 points.emplace_back(point);
-        }
 
         return points;
     }
@@ -223,85 +221,67 @@ namespace pacs {
 
         if(line > point) { // Point under the Line.
 
-            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0])) {
+            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
                 std::swap(points[0], points[1]);
-            } else if((line.angular() > 0.0) && (points[0][1] < points[1][1])) {
+            else if((line.angular() > 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
-            } else if((line.angular() < 0.0) && (points[0][1] > points[1][1])) {
+            else if((line.angular() < 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
-            }
 
             new_vertices.emplace_back(points[0]);
             new_vertices.emplace_back(points[1]);
 
-            for(std::size_t j = 0; j < edges.size(); ++j) {
+            for(std::size_t j = 0; j < edges.size(); ++j)
                 if(edges[j].contains(points[1])) {
                     index = j;
                     break;
                 }
-            }
 
             if(index < vertices.size()) {
-
-                for(std::size_t j = index; j < vertices.size(); ++j) {
+                for(std::size_t j = index; j < vertices.size(); ++j)
                     if(line > vertices[j])
                         new_vertices.emplace_back(vertices[j]);
-                }
 
-                for(std::size_t j = 0; j < index; ++j) {
+                for(std::size_t j = 0; j < index; ++j)
                     if(line > vertices[j])
                         new_vertices.emplace_back(vertices[j]);
-                }
 
-            } else {
-                
-                for(const auto &vertex: vertices) {
+            } else
+                for(const auto &vertex: vertices)
                     if(line > vertex)
                         new_vertices.emplace_back(vertex);
-                }
-
-            }
 
         } else { // Point above the Line.
 
-            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0])) {
+            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0]))
                 std::swap(points[0], points[1]);
-            } else if((line.angular() > 0.0) && (points[0][1] > points[1][1])) {
+            else if((line.angular() > 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
-            } else if((line.angular() < 0.0) && (points[0][1] < points[1][1])) {
+            else if((line.angular() < 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
-            }
 
             new_vertices.emplace_back(points[0]);
             new_vertices.emplace_back(points[1]);
 
-            for(std::size_t j = 0; j < edges.size(); ++j) {
+            for(std::size_t j = 0; j < edges.size(); ++j)
                 if(edges[j].contains(points[1])) {
                     index = j;
                     break;
                 }
-            }
 
             if(index < vertices.size()) {
-
-                for(std::size_t j = index; j < vertices.size(); ++j) {
+                for(std::size_t j = index; j < vertices.size(); ++j)
                     if(line <= vertices[j])
                         new_vertices.emplace_back(vertices[j]);
-                }
 
-                for(std::size_t j = 0; j < index; ++j) {
+                for(std::size_t j = 0; j < index; ++j)
                     if(line <= vertices[j])
                         new_vertices.emplace_back(vertices[j]);
-                }
 
-            } else {
-                
-                for(const auto &vertex: vertices) {
+            } else
+                for(const auto &vertex: vertices)
                     if(line <= vertex)
                         new_vertices.emplace_back(vertex);
-                }
-
-            }
 
         }
 
