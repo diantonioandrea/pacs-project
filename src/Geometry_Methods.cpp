@@ -168,19 +168,14 @@ namespace pacs {
      */
     Polygon collapse(const Polygon &polygon, const Segment &segment) {
         #ifndef NDEBUG // Integrity check.
-        assert(polygon.points.size() > 3);
-
         std::size_t counter = 0;
 
-        for(const auto &vertex: polygon.points) {
-            if(vertex == segment[0])
+        for(const auto &vertex: polygon.points)
+            if((vertex == segment[0]) || (vertex == segment[1]))
                 ++counter;
 
-            if(vertex == segment[1])
-                ++counter;
-        }
-
-        assert(counter = 2);
+        assert(polygon.points.size() > 3);
+        assert(counter == 2);
         #endif
 
         std::vector<Point> vertices;

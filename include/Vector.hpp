@@ -32,7 +32,7 @@
 #include <cmath>
 
 // Copy.
-#include <ranges>
+#include <algorithm>
 
 namespace pacs {
 

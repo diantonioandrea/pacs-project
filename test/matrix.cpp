@@ -9,7 +9,7 @@
  */
 
 // Output.
-#include<iostream>
+#include <iostream>
 
 // Testing Matrix.
 #include <Matrix.hpp>

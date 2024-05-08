@@ -37,7 +37,7 @@
 #include <cmath>
 
 // Copy.
-#include <ranges>
+#include <algorithm>
 
 namespace pacs {
     
@@ -135,9 +135,9 @@ namespace pacs {
                 if(!(sparse.compressed)) {
                     std::ranges::copy(sparse.elements, this->elements);
                 } else {
-                    this->inner.resize(sparse.inner);
-                    this->outer.resize(sparse.outer);
-                    this->values.resize(sparse.values);
+                    this->inner.resize(sparse.inner.size());
+                    this->outer.resize(sparse.outer.size());
+                    this->values.resize(sparse.values.size());
 
                     std::ranges::copy(sparse.inner.begin(), sparse.inner.end(), this->inner.begin());
                     std::ranges::copy(sparse.outer.begin(), sparse.outer.end(), this->outer.begin());
@@ -166,9 +166,9 @@ namespace pacs {
                 if(!(sparse.compressed)) {
                     std::ranges::copy(sparse.elements.begin(), sparse.elements.end(), this->elements.begin());
                 } else {
-                    this->inner.resize(sparse.inner);
-                    this->outer.resize(sparse.outer);
-                    this->values.resize(sparse.values);
+                    this->inner.resize(sparse.inner.size());
+                    this->outer.resize(sparse.outer.size());
+                    this->values.resize(sparse.values.size());
 
                     std::ranges::copy(sparse.inner.begin(), sparse.inner.end(), this->inner.begin());
                     std::ranges::copy(sparse.outer.begin(), sparse.outer.end(), this->outer.begin());

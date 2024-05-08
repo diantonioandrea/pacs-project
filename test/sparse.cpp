@@ -9,7 +9,7 @@
  */
 
 // Output.
-#include<iostream>
+#include <iostream>
 
 // Testing Sparse.
 #include <Sparse.hpp>

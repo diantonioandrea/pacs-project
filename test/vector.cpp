@@ -9,7 +9,7 @@
  */
 
 // Output.
-#include<iostream>
+#include <iostream>
 
 // Testing Vector.
 #include <Vector.hpp>

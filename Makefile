@@ -12,6 +12,8 @@ endif
 CXXFLAGS += -fopenmp -I$(OpenMP)/include
 LDFLAGS += -L$(OpenMP)/lib
 LDLIBS += -lomp
+else
+CXXFLAGS += -Wno-unknown-pragmas
 endif
 
 OBJECTS = $(subst .cpp,.o,$(shell ls ./src))
