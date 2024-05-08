@@ -127,7 +127,9 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator =(const T &scalar) {
-                this->elements.resize(this->length, scalar);
+                for(std::size_t j = 0; j < this->length; ++j)
+                    this->elements[j] = scalar;
+
                 return *this;
             }
 
