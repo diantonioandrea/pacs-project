@@ -26,6 +26,8 @@
 
 namespace pacs {
 
+    // Element, implemented under Element.cpp
+
     /**
      * @brief Element struct.
      * 
@@ -49,6 +51,8 @@ namespace pacs {
         inline std::size_t dofs() const { return (this->degree + 1) * (this->degree + 2) / 2; }
 
     };
+
+    // Mesh, implemented under Mesh.cpp
 
     /**
      * @brief Mesh class.
@@ -99,6 +103,7 @@ namespace pacs {
     };
 
     // METHODS.
+    // Implemented under src/Builder.cpp
 
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &);
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);

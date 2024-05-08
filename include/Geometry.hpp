@@ -25,6 +25,8 @@
 
 namespace pacs {
     
+    // Point, implemented under src/Point.cpp
+
     /**
      * @brief 2D Point class.
      * 
@@ -73,6 +75,8 @@ namespace pacs {
 
             friend std::ostream &operator <<(std::ostream &, const Point &);
     };
+
+    // Line, implemented under src/Line.cpp
 
     /**
      * @brief 2D Line (ax + by = c) class.
@@ -125,6 +129,8 @@ namespace pacs {
             friend std::ostream &operator <<(std::ostream &, const Line &);
     };
 
+    // Segment, implemented under src/Segment.cpp
+
     /**
      * @brief 2D Segment class.
      * 
@@ -164,6 +170,8 @@ namespace pacs {
             friend std::ostream &operator <<(std::ostream &, const Segment &);
     };
 
+    // Polygon, implemented under src/Polygon.cpp
+
     /**
      * @brief 2D Polygon struct.
      * 
@@ -199,6 +207,7 @@ namespace pacs {
     };
 
     // METHODS.
+    // Implemented under src/Geometry.cpp
 
     Line bisector(const Point &, const Point &);
     
