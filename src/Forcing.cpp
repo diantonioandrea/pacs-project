@@ -88,9 +88,12 @@ namespace pacs {
      */
     Vector<Real> forcing(const Mesh &mesh, const Source &source) {
 
+        // Number of quadrature nodes.
+        std::size_t degree = (mesh.degree() % 2) ? mesh.degree() : mesh.degree() + 1;
+
         // Quadrature nodes.
-        auto [nodes_1d, weights_1d] = quadrature_1d(5);
-        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(5);
+        auto [nodes_1d, weights_1d] = quadrature_1d(degree);
+        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
 
         // Degrees of freedom.
         std::size_t dofs = mesh.dofs();

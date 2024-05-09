@@ -108,7 +108,9 @@ namespace pacs {
             inline std::size_t nodes_number() const { return this->nodes.size(); }
             inline std::size_t edges_number() const { return this->edges.size(); }
             inline std::size_t elements_number() const { return this->elements.size(); }
+
             std::size_t dofs() const;
+            std::size_t degree() const;
 
             // OUTPUT.
 

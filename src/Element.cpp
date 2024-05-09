@@ -23,7 +23,7 @@ namespace pacs {
      * @param nodes 
      * @param edges 
      */
-    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges): nodes{nodes}, edges{edges}, degree{1} {}
+    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges): nodes{nodes}, edges{edges}, degree{2} {}
 
     /**
      * @brief Construct a new Element:: Element object

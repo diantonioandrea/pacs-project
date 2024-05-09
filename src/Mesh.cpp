@@ -135,6 +135,20 @@ namespace pacs {
         return dofs;
     }
 
+    /**
+     * @brief Returns the highest degree between the mesh' elements.
+     * 
+     * @return std::size_t 
+     */
+    std::size_t Mesh::degree() const {
+        std::size_t degree = 0;
+
+        for(const auto &element: this->elements)
+            degree = (element.degree > degree) ? element.degree : degree;
+
+        return degree;
+    }
+
     // OUTPUT.
 
     /**
