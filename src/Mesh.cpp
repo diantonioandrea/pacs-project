@@ -32,35 +32,11 @@ namespace pacs {
     // CONSTRUCTORS.
 
     /**
-     * @brief Constructs a new Mesh from a Voronoi diagram of a given number of cells.
+     * @brief Constructs a new Mesh from a given domain and diagram.
      * 
      * @param domain 
-     * @param cells 
+     * @param mesh 
      */
-    Mesh::Mesh(const Polygon &domain, const std::size_t &cells): domain{domain} {
-        
-        // Diagram.
-        std::vector<Polygon> mesh = mesh_diagram(domain, cells);
-
-        // Building nodes and edges.
-        this->nodes = mesh_nodes(mesh);
-        this->edges = mesh_edges(mesh);
-
-        // Elements.
-        this->elements = mesh_elements(mesh, this->nodes, this->edges);
-        
-        // Boundary nodes and edges.
-        this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
-        this->boundary_edges = mesh_boundary_edges(domain, this->edges);
-
-        // Neighbours.
-        this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
-
-        // Areas and biggest simplices.
-        this->areas = mesh_areas(mesh);
-        this->max_simplices = mesh_max_simplices(mesh);
-    }
-
     Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh): domain{domain} {
 
         // Building nodes and edges.

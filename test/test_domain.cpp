@@ -29,7 +29,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
     
     // Constructing a mesh.
-    pacs::Mesh mesh{domain, 64};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 64)};
 
     // Mesh output.
     mesh.write("mesh.poly");
