@@ -26,14 +26,14 @@ namespace pacs {
      * @param x 
      * @param y 
      */
-    Point::Point(const double &x, const double &y): x{x}, y{y} {}
+    Point::Point(const Real &x, const Real &y): x{x}, y{y} {}
 
     /**
      * @brief Constructs a new Point from an array of coordinates.
      * 
      * @param xy 
      */
-    Point::Point(const std::array<double, 2> &xy): x{xy[0]}, y{xy[1]} {}
+    Point::Point(const std::array<Real, 2> &xy): x{xy[0]}, y{xy[1]} {}
 
     /**
      * @brief Copy constructor.
@@ -61,9 +61,9 @@ namespace pacs {
      * @brief Const subscript operator.
      * 
      * @param j 
-     * @return double 
+     * @return Real 
      */
-    double Point::operator [](const std::size_t &j) const {
+    Real Point::operator [](const std::size_t &j) const {
         #ifndef NDEBUG // Integrity check.
         assert(j <= 1);
         #endif
@@ -75,9 +75,9 @@ namespace pacs {
      * @brief Subscript operator.
      * 
      * @param j 
-     * @return double 
+     * @return Real 
      */
-    double &Point::operator [](const std::size_t &j) {
+    Real &Point::operator [](const std::size_t &j) {
         #ifndef NDEBUG // Integrity check.
         assert(j <= 1);
         #endif
@@ -123,7 +123,7 @@ namespace pacs {
      * @param scalar 
      * @return Point 
      */
-    Point Point::operator *(const double &scalar) const {
+    Point Point::operator *(const Real &scalar) const {
         return Point{this->x * scalar, this->y * scalar};
     }
 
@@ -134,7 +134,7 @@ namespace pacs {
      * @param point 
      * @return Point 
      */
-    Point operator *(const double &scalar, const Point &point) {
+    Point operator *(const Real &scalar, const Point &point) {
         return Point{point.x * scalar, point.y * scalar};
     }
 
@@ -144,7 +144,7 @@ namespace pacs {
      * @param scalar 
      * @return Point& 
      */
-    Point &Point::operator *=(const double &scalar) {
+    Point &Point::operator *=(const Real &scalar) {
         this->x *= scalar;
         this->y *= scalar;
 

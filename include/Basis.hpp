@@ -11,6 +11,9 @@
 #ifndef BASIS_PACS
 #define BASIS_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Vectors.
 #include <Vector.hpp>
 
@@ -27,7 +30,7 @@ namespace pacs {
 
     // Basis functions.
 
-    std::array<Matrix<double>, 3> basis_2d(const Mesh &, const std::size_t &, const std::array<Vector<double>, 2> &);
+    std::array<Matrix<Real>, 3> basis_2d(const Mesh &, const std::size_t &, const std::array<Vector<Real>, 2> &);
 
 }
 

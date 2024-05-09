@@ -13,12 +13,13 @@
 
 // Testing Vector.
 #include <Vector.hpp>
+using pacs::Real;
 
 int main() {
 
     // Constructing two vectors.
-    pacs::Vector<double> first{4, 1.0};
-    pacs::Vector<double> second{4};
+    pacs::Vector<Real> first{4, 1.0};
+    pacs::Vector<Real> second{4};
 
     second[1] = 2.0;
     second[2] = -2.0;

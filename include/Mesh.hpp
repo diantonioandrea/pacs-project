@@ -11,6 +11,9 @@
 #ifndef MESH_PACS
 #define MESH_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Geometry.
 #include <Geometry.hpp>
 
@@ -82,11 +85,11 @@ namespace pacs {
             std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
 
             // Areas.
-            std::vector<double> areas;
-            std::vector<Vector<double>> max_simplices;
+            std::vector<Real> areas;
+            std::vector<Vector<Real>> max_simplices;
 
             // Penalty coefficient.
-            double penalty = 10.0;
+            Real penalty = 10.0;
 
             // CONSTRUCTORS.
 
@@ -126,8 +129,8 @@ namespace pacs {
 
     std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &, const std::vector<std::size_t> &);
 
-    std::vector<double> mesh_areas(const std::vector<Polygon> &);
-    std::vector<Vector<double>> mesh_max_simplices(const std::vector<Polygon> &);
+    std::vector<Real> mesh_areas(const std::vector<Polygon> &);
+    std::vector<Vector<Real>> mesh_max_simplices(const std::vector<Polygon> &);
 
 }
 

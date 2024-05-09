@@ -48,11 +48,11 @@ namespace pacs {
      * 
      * @tparam T 
      * @param vector 
-     * @return double 
+     * @return Real 
      */
     template<NumericType T>
-    double norm(const Vector<T> &vector) {
-        double sum = 0.0;
+    Real norm(const Vector<T> &vector) {
+        Real sum = 0.0;
 
         #pragma omp parallel for reduction(+: sum)
         for(std::size_t j = 0; j < vector.length; ++j)

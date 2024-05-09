@@ -11,6 +11,9 @@
 #ifndef GEOMETRY_PACS
 #define GEOMETRY_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Output.
 #include <iostream>
 
@@ -35,22 +38,22 @@ namespace pacs {
         protected:
 
             // Coordinates.
-            double x;
-            double y;
+            Real x;
+            Real y;
 
         public:
 
             // CONSTRUCTORS.
 
-            Point(const double &, const double &);
-            Point(const std::array<double, 2> &);
+            Point(const Real &, const Real &);
+            Point(const std::array<Real, 2> &);
             Point(const Point &);
             Point &operator =(const Point &);
 
             // READ AND WRITE.
 
-            double operator [](const std::size_t &) const;
-            double &operator [](const std::size_t &);
+            Real operator [](const std::size_t &) const;
+            Real &operator [](const std::size_t &);
 
             // COMPARISONS.
 
@@ -63,9 +66,9 @@ namespace pacs {
 
             // OPERATORS.
 
-            Point operator *(const double &) const;
-            friend Point operator *(const double &, const Point &);
-            Point &operator *=(const double &);
+            Point operator *(const Real &) const;
+            friend Point operator *(const Real &, const Point &);
+            Point &operator *=(const Real &);
             Point operator +(const Point &) const;
             Point &operator +=(const Point &);
             Point operator -(const Point &) const;
@@ -86,23 +89,23 @@ namespace pacs {
         protected:
 
             // Parameters.
-            const double a;
-            const double b;
-            const double c;
+            const Real a;
+            const Real b;
+            const Real c;
 
         public:
 
             // CONSTRUCTORS.
 
-            Line(const double &, const double &, const double &);
-            Line(const std::array<double, 3> &);
+            Line(const Real &, const Real &, const Real &);
+            Line(const std::array<Real, 3> &);
             Line(const Line &);
 
             // READ.
 
-            double operator [](const std::size_t &) const;
-            double x(const double &) const;
-            double y(const double &) const;
+            Real operator [](const std::size_t &) const;
+            Real x(const Real &) const;
+            Real y(const Real &) const;
 
             // COMPARISONS.
 
@@ -120,7 +123,7 @@ namespace pacs {
 
             // METHODS.
 
-            double angular() const;
+            Real angular() const;
             bool contains(const Point &) const;
             bool is_parallel(const Line &) const;
 
@@ -194,7 +197,7 @@ namespace pacs {
         bool contains(const Point &) const;
         bool contains(const Segment &) const;
 
-        double area() const;
+        Real area() const;
         Point centroid() const;
 
         Point random() const;
@@ -224,8 +227,8 @@ namespace pacs {
 
 namespace std {
 
-    double abs(const pacs::Point &);
-    double abs(const pacs::Segment &);
+    pacs::Real abs(const pacs::Point &);
+    pacs::Real abs(const pacs::Segment &);
 
 }
 

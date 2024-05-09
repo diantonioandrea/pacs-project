@@ -11,14 +11,15 @@
 // Output.
 #include <iostream>
 
-// Testing Laplacian and Forcing.
-#include <Laplacian.hpp>
-#include <Forcing.hpp>
-
 // Algebra.
 #include <Algebra.hpp>
 
-double test(const double &, const double &);
+// Testing Laplacian and Forcing.
+#include <Laplacian.hpp>
+#include <Forcing.hpp>
+using pacs::Real;
+
+Real test(const Real &, const Real &);
 
 int main() {
 
@@ -38,13 +39,13 @@ int main() {
     mesh.write("poisson.poly");
 
     // Builds the laplacian matrix.
-    pacs::Sparse<double> laplacian = pacs::laplacian(mesh)[0];
+    pacs::Sparse<Real> laplacian = pacs::laplacian(mesh)[0];
 
     // Builds the forcing term.
-    pacs::Vector<double> forcing = pacs::forcing(mesh, source);
+    pacs::Vector<Real> forcing = pacs::forcing(mesh, source);
     
     // Solution by CGM.
-    pacs::Vector<double> solution = pacs::solve(laplacian, forcing);
+    pacs::Vector<Real> solution = pacs::solve(laplacian, forcing);
 
     // Output.
     std::cout << solution << std::endl;
@@ -56,8 +57,8 @@ int main() {
  * 
  * @param x 
  * @param y 
- * @return double 
+ * @return Real 
  */
-double test(const double &x, const double &y) {
+Real test(const Real &x, const Real &y) {
     return M_PI * M_PI * std::sin(M_PI * x) * std::sin(M_PI * y);
 }

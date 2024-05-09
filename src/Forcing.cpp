@@ -50,9 +50,9 @@ namespace pacs {
      * 
      * @param x 
      * @param y 
-     * @return double 
+     * @return Real 
      */
-    double Source::operator ()(const double &x, const double &y) const {
+    Real Source::operator ()(const Real &x, const Real &y) const {
         return this->function(x, y);
     }
 
@@ -61,14 +61,14 @@ namespace pacs {
      * 
      * @param x 
      * @param y 
-     * @return Vector<double> 
+     * @return Vector<Real> 
      */
-    Vector<double> Source::operator ()(const Vector<double> &x, const Vector<double> &y) const {
+    Vector<Real> Source::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {
         #ifndef NDEBUG // Integrity check.
         assert(x.length == y.length);
         #endif
 
-        Vector<double> output{x.length};
+        Vector<Real> output{x.length};
 
         #pragma omp parallel for
         for(std::size_t j = 0; j < output.length; ++j)
@@ -84,9 +84,9 @@ namespace pacs {
      * @brief Assemblies the RHS for the Poisson problem.
      * 
      * @param mesh 
-     * @return Vector<double> 
+     * @return Vector<Real> 
      */
-    Vector<double> forcing(const Mesh &mesh, const Source &source) {
+    Vector<Real> forcing(const Mesh &mesh, const Source &source) {
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(5);
@@ -99,7 +99,7 @@ namespace pacs {
         std::vector<std::vector<std::pair<std::size_t, int>>> neighbours = mesh.neighbours;
 
         // Forcing term.
-        Vector<double> forcing{dofs};
+        Vector<Real> forcing{dofs};
 
         // Volume integrals.
 
@@ -122,7 +122,7 @@ namespace pacs {
             std::vector<Polygon> triangles = triangulate(polygon);
 
             // Local forcing term.
-            Vector<double> local_f{element_dofs};
+            Vector<Real> local_f{element_dofs};
 
             // Loop over the sub-triangulation.
             for(std::size_t k = 0; k < triangles.size(); ++k) {
@@ -131,7 +131,7 @@ namespace pacs {
                 Polygon triangle = triangles[k];
 
                 // Jacobian.
-                Matrix<double> jacobian{2, 2};
+                Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = triangle.points[1][0] - triangle.points[0][0];
                 jacobian(0, 1) = triangle.points[2][0] - triangle.points[0][0];
@@ -139,39 +139,39 @@ namespace pacs {
                 jacobian(1, 1) = triangle.points[2][1] - triangle.points[0][1];
 
                 // Jacobian's determinant.
-                double jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
+                Real jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
 
                 // Translation.
-                Vector<double> translation{2};
+                Vector<Real> translation{2};
 
                 translation[0] = triangle.points[0][0];
                 translation[1] = triangle.points[0][1];
 
                 // Physical nodes.
-                Vector<double> physical_x{nodes_x_2d.length};
-                Vector<double> physical_y{nodes_y_2d.length};
+                Vector<Real> physical_x{nodes_x_2d.length};
+                Vector<Real> physical_y{nodes_y_2d.length};
 
                 for(std::size_t l = 0; l < physical_x.length; ++l) {
-                    Vector<double> node{2};
+                    Vector<Real> node{2};
 
                     node[0] = nodes_x_2d[l];
                     node[1] = nodes_y_2d[l];
 
-                    Vector<double> transformed = jacobian * node + translation;
+                    Vector<Real> transformed = jacobian * node + translation;
 
                     physical_x[l] = transformed[0];
                     physical_y[l] = transformed[1];
                 }
 
                 // Weights scaling.
-                Vector<double> scaled = jacobian_det * weights_2d;
+                Vector<Real> scaled = jacobian_det * weights_2d;
 
                 // Local source evaluation.
-                Vector<double> local_source = source(physical_x, physical_y);
+                Vector<Real> local_source = source(physical_x, physical_y);
 
                 // Basis functions.
                 auto phi = basis_2d(mesh, j, {physical_x, physical_y})[0];
-                Matrix<double> scaled_phi = phi;
+                Matrix<Real> scaled_phi = phi;
 
                 for(std::size_t l = 0; l < scaled_phi.columns; ++l)
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);

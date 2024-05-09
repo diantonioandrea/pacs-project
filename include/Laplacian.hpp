@@ -11,6 +11,9 @@
 #ifndef LAPLACIAN_PACS
 #define LAPLACIAN_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Sparse matrices.
 #include <Sparse.hpp>
 
@@ -21,11 +24,11 @@ namespace pacs {
 
     // Laplacian matrix.
 
-    std::array<Sparse<double>, 2> laplacian(const Mesh &);
+    std::array<Sparse<Real>, 2> laplacian(const Mesh &);
 
     // Penalty coefficients.
     
-    Vector<double> penalty(const Mesh &, const std::size_t &);
+    Vector<Real> penalty(const Mesh &, const std::size_t &);
 
 }
 

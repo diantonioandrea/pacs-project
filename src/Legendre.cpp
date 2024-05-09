@@ -20,15 +20,15 @@ namespace pacs {
      * 
      * @param x 
      * @param order 
-     * @return Vector<double> 
+     * @return Vector<Real> 
      */
-    Vector<double> legendre(const Vector<double> &x, const std::size_t &order) {
+    Vector<Real> legendre(const Vector<Real> &x, const std::size_t &order) {
         #ifndef NDEBUG // Testing.
         assert(order < 7);
         #endif
 
         // Evaluation.
-        Vector<double> evaluation{x.length, 0.0};
+        Vector<Real> evaluation{x.length, 0.0};
 
         // Tabled low-order Legendre polynomials.
         switch(order) {
@@ -72,15 +72,15 @@ namespace pacs {
      * 
      * @param x 
      * @param order 
-     * @return Vector<double> 
+     * @return Vector<Real> 
      */
-    Vector<double> grad_legendre(const Vector<double> &x, const std::size_t &order) {
+    Vector<Real> grad_legendre(const Vector<Real> &x, const std::size_t &order) {
         #ifndef NDEBUG // Testing.
         assert(order < 7);
         #endif
 
         // Evaluation.
-        Vector<double> evaluation{x.length, 0.0};
+        Vector<Real> evaluation{x.length, 0.0};
 
         // Tabled low-order Legendre polynomials.
         switch(order) {

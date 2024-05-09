@@ -11,6 +11,9 @@
 #ifndef VORONOI_PACS
 #define VORONOI_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Geometry.
 #include <Geometry.hpp>
 

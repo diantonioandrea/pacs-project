@@ -28,9 +28,9 @@ namespace pacs {
      * @brief Returns the matrix for the Laplacian operator.
      * 
      * @param mesh 
-     * @return Sparse<double> 
+     * @return Sparse<Real> 
      */
-    std::array<Sparse<double>, 2> laplacian(const Mesh &mesh) {
+    std::array<Sparse<Real>, 2> laplacian(const Mesh &mesh) {
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(5);
@@ -43,11 +43,11 @@ namespace pacs {
         std::vector<std::vector<std::pair<std::size_t, int>>> neighbours = mesh.neighbours;
 
         // Matrices.
-        Sparse<double> A{dofs, dofs};
+        Sparse<Real> A{dofs, dofs};
         
         // To be added.
-        Sparse<double> IA{dofs, dofs};
-        Sparse<double> SA{dofs, dofs};
+        Sparse<Real> IA{dofs, dofs};
+        Sparse<Real> SA{dofs, dofs};
 
         // Volume integrals.
 
@@ -70,7 +70,7 @@ namespace pacs {
             std::vector<Polygon> triangles = triangulate(polygon);
 
             // Local A.
-            Matrix<double> local_A{element_dofs, element_dofs};
+            Matrix<Real> local_A{element_dofs, element_dofs};
 
             // Loop over the sub-triangulation.
             for(std::size_t k = 0; k < triangles.size(); ++k) {
@@ -79,7 +79,7 @@ namespace pacs {
                 Polygon triangle = triangles[k];
 
                 // Jacobian.
-                Matrix<double> jacobian{2, 2};
+                Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = triangle.points[1][0] - triangle.points[0][0];
                 jacobian(0, 1) = triangle.points[2][0] - triangle.points[0][0];
@@ -87,39 +87,39 @@ namespace pacs {
                 jacobian(1, 1) = triangle.points[2][1] - triangle.points[0][1];
 
                 // Jacobian's determinant.
-                double jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
+                Real jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
 
                 // Translation.
-                Vector<double> translation{2};
+                Vector<Real> translation{2};
 
                 translation[0] = triangle.points[0][0];
                 translation[1] = triangle.points[0][1];
 
                 // Physical nodes.
-                Vector<double> physical_x{nodes_x_2d.length};
-                Vector<double> physical_y{nodes_y_2d.length};
+                Vector<Real> physical_x{nodes_x_2d.length};
+                Vector<Real> physical_y{nodes_y_2d.length};
 
                 for(std::size_t l = 0; l < physical_x.length; ++l) {
-                    Vector<double> node{2};
+                    Vector<Real> node{2};
 
                     node[0] = nodes_x_2d[l];
                     node[1] = nodes_y_2d[l];
 
-                    Vector<double> transformed = jacobian * node + translation;
+                    Vector<Real> transformed = jacobian * node + translation;
 
                     physical_x[l] = transformed[0];
                     physical_y[l] = transformed[1];
                 }
 
                 // Weights scaling.
-                Vector<double> scaled = jacobian_det * weights_2d;
+                Vector<Real> scaled = jacobian_det * weights_2d;
 
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Some products.
-                Matrix<double> scaled_gradx = gradx_phi;
-                Matrix<double> scaled_grady = grady_phi;
+                Matrix<Real> scaled_gradx = gradx_phi;
+                Matrix<Real> scaled_grady = grady_phi;
 
                 for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
                     scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
@@ -136,18 +136,18 @@ namespace pacs {
             // Face integrals.
 
             // Local matrices.
-            Matrix<double> local_IA{element_dofs, element_dofs};
-            Matrix<double> local_SA{element_dofs, element_dofs};
+            Matrix<Real> local_IA{element_dofs, element_dofs};
+            Matrix<Real> local_SA{element_dofs, element_dofs};
 
             // Element's neighbours.
             std::vector<std::pair<std::size_t, int>> element_neighbours = neighbours[j];
 
             // Local matrices for neighbours.
-            std::vector<Matrix<double>> local_IAN(polygon.edges().size(), Matrix<double>{element_dofs, element_dofs});
-            std::vector<Matrix<double>> local_SAN(polygon.edges().size(), Matrix<double>{element_dofs, element_dofs});
+            std::vector<Matrix<Real>> local_IAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
+            std::vector<Matrix<Real>> local_SAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
 
             // Penalties.
-            Vector<double> penalties = penalty(mesh, j);
+            Vector<Real> penalties = penalty(mesh, j);
 
             // Loop over faces.
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
@@ -159,7 +159,7 @@ namespace pacs {
                 Segment segment{mesh.edge(edge)};
 
                 // Edge's normal.
-                Vector<double> normal{2};
+                Vector<Real> normal{2};
 
                 normal[0] = segment[1][1] - segment[0][1];
                 normal[0] = segment[0][0] - segment[1][0];
@@ -167,7 +167,7 @@ namespace pacs {
                 normal /= norm(normal);
 
                 // Jacobian.
-                Matrix<double> jacobian{2, 2};
+                Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = segment[1][0] - segment[0][0];
                 jacobian(0, 1) = 0.5 * (segment[1][0] - segment[0][0]);
@@ -175,41 +175,41 @@ namespace pacs {
                 jacobian(1, 1) = segment[1][1] - segment[0][1];
 
                 // Jacobian's determinant.
-                double jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
+                Real jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
 
                 // Translation.
-                Vector<double> translation{2};
+                Vector<Real> translation{2};
 
                 translation[0] = segment[0][0];
                 translation[1] = segment[0][1];
 
                 // Physical nodes.
-                Vector<double> nodes_x_1d = nodes_1d;
+                Vector<Real> nodes_x_1d = nodes_1d;
 
-                Vector<double> physical_x{nodes_x_1d.length};
-                Vector<double> physical_y{nodes_x_1d.length};
+                Vector<Real> physical_x{nodes_x_1d.length};
+                Vector<Real> physical_y{nodes_x_1d.length};
 
                 for(std::size_t l = 0; l < nodes_x_1d.length; ++l) {
-                    Vector<double> node{2};
+                    Vector<Real> node{2};
 
                     node[0] = nodes_x_1d[l];
 
-                    Vector<double> transformed = jacobian * node + translation;
+                    Vector<Real> transformed = jacobian * node + translation;
 
                     physical_x[l] = transformed[0];
                     physical_y[l] = transformed[1];
                 }
 
                 // Weights scaling.
-                Vector<double> scaled = jacobian_det * weights_1d;
+                Vector<Real> scaled = jacobian_det * weights_1d;
 
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Local matrix assembly.
-                Matrix<double> scaled_gradx = gradx_phi;
-                Matrix<double> scaled_grady = grady_phi;
-                Matrix<double> scaled_phi = phi;
+                Matrix<Real> scaled_gradx = gradx_phi;
+                Matrix<Real> scaled_grady = grady_phi;
+                Matrix<Real> scaled_phi = phi;
 
                 for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
                     scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
@@ -230,7 +230,7 @@ namespace pacs {
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
-                    Matrix<double> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
+                    Matrix<Real> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
 
                     // Neighbour's local matrix.
                     local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * n_phi;
@@ -263,7 +263,7 @@ namespace pacs {
         return {A + SA - IA - IA.transpose(), A + SA};
     }
 
-    Vector<double> penalty(const Mesh &mesh, const std::size_t &index) {
+    Vector<Real> penalty(const Mesh &mesh, const std::size_t &index) {
         
         // Element.
         Element element = mesh.elements[index];
@@ -272,29 +272,29 @@ namespace pacs {
         std::vector<std::pair<std::size_t, int>> neighbours = mesh.neighbours[index];
 
         // Sizes.
-        Vector<double> sizes{element.edges.size()};
+        Vector<Real> sizes{element.edges.size()};
 
         for(std::size_t j = 0; j < sizes.length; ++j)
             sizes[j] = std::abs(polygon.edges()[j]);
 
         // Element's area.
-        double area = mesh.areas[index];
+        Real area = mesh.areas[index];
 
         // Biggest simplices areas.
-        Vector<double> areas = mesh.max_simplices[index];
+        Vector<Real> areas = mesh.max_simplices[index];
 
         // Inverse constant.
-        Vector<double> inverse = area / areas;
+        Vector<Real> inverse = area / areas;
 
         // Coefficients.
-        double penalty_coefficient = mesh.penalty * (element.degree * element.degree);
-        Vector<double> penalty_dirichlet = penalty_coefficient * inverse * sizes / area;
+        Real penalty_coefficient = mesh.penalty * (element.degree * element.degree);
+        Vector<Real> penalty_dirichlet = penalty_coefficient * inverse * sizes / area;
 
         // Penalty evaluation.
-        Vector<double> penalties{neighbours.size()};
-        Vector<double> internal{neighbours.size()}; // Element.
-        Vector<double> external{neighbours.size()}; // Neighbour.
-        Vector<double> inverse_external{neighbours.size()};
+        Vector<Real> penalties{neighbours.size()};
+        Vector<Real> internal{neighbours.size()}; // Element.
+        Vector<Real> external{neighbours.size()}; // Neighbour.
+        Vector<Real> inverse_external{neighbours.size()};
 
         for(std::size_t j = 0; j < neighbours.size(); ++j) {
             if(neighbours[j].second == -1) {

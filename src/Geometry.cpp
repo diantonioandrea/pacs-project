@@ -33,9 +33,9 @@ namespace pacs {
         assert(!(p - q).is_zero());
         #endif
 
-        double px = p[0], qx = q[0];
-        double py = p[1], qy = q[1];
-        double mx = (px + qx) / 2, my = (py + qy) / 2;
+        Real px = p[0], qx = q[0];
+        Real py = p[1], qy = q[1];
+        Real mx = (px + qx) / 2, my = (py + qy) / 2;
 
         // Evaluation by cases.
 
@@ -48,9 +48,9 @@ namespace pacs {
             return Line{1.0, 0.0, mx};
 
         // Default.
-        double a = qx - px;
-        double b = qy - py;
-        double c = a * mx + b * my;
+        Real a = qx - px;
+        Real b = qy - py;
+        Real c = a * mx + b * my;
         return Line{a, b, c};
     }
 
@@ -85,15 +85,15 @@ namespace pacs {
         // Default case.
 
         // s: y = ax + c.
-        double a = - s[0] / s[1];
-        double c = s[2] / s[1];
+        Real a = - s[0] / s[1];
+        Real c = s[2] / s[1];
 
         // r: y = bx + d.
-        double b = -r[0] / r[1];
-        double d = r[2] / r[1];
+        Real b = -r[0] / r[1];
+        Real d = r[2] / r[1];
 
-        double x = (d - c) / (a - b);
-        double y = a * x + c;
+        Real x = (d - c) / (a - b);
+        Real y = a * x + c;
 
         points.emplace_back(x, y);
         return points;
@@ -296,9 +296,9 @@ namespace std {
      * @brief Return the norm of a Point.
      * 
      * @param point 
-     * @return double 
+     * @return Real 
      */
-    double abs(const pacs::Point &point) {
+    pacs::Real abs(const pacs::Point &point) {
         return std::sqrt(point[0] * point[0] + point[1] * point[1]);
     }
 
@@ -306,9 +306,9 @@ namespace std {
      * @brief Return the length of a Segment.
      * 
      * @param segment 
-     * @return double 
+     * @return Real 
      */
-    double abs(const pacs::Segment &segment) {
+    pacs::Real abs(const pacs::Segment &segment) {
         return std::abs(segment[1] - segment[0]);
     }
 

@@ -11,13 +11,16 @@
 #ifndef FORCING_PACS
 #define FORCING_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Mesh.
 #include <Mesh.hpp>
 
 namespace pacs {
 
     // Function alias.
-    using Function = double (*) (const double &, const double &);
+    using Function = Real (*) (const Real &, const Real &);
 
     /**
      * @brief Source class for the Poisson problem.
@@ -37,13 +40,13 @@ namespace pacs {
 
             // EVALUATION.
 
-            double operator ()(const double &, const double &) const;
-            Vector<double> operator ()(const Vector<double> &, const Vector<double> &) const;
+            Real operator ()(const Real &, const Real &) const;
+            Vector<Real> operator ()(const Vector<Real> &, const Vector<Real> &) const;
     };
 
     // RHS.
 
-    Vector<double> forcing(const Mesh &, const Source &);
+    Vector<Real> forcing(const Mesh &, const Source &);
 }
 
 #endif

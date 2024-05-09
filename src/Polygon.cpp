@@ -119,10 +119,10 @@ namespace pacs {
     /**
      * @brief Returns the Polygon's area.
      * 
-     * @return double 
+     * @return Real 
      */
-    double Polygon::area() const {
-        double area = 0.0;
+    Real Polygon::area() const {
+        Real area = 0.0;
 
         for(const auto &edge: this->edges())
             area += (edge[0][1] + edge[1][1]) * (edge[0][0] - edge[1][0]);
@@ -155,14 +155,14 @@ namespace pacs {
         // Boundaries.
         auto [xy_min, xy_max] = this->box();
 
-        double x_min = xy_min[0], y_min = xy_min[1];
-        double x_max = xy_max[0], y_max = xy_max[1];
-        double x, y;
+        Real x_min = xy_min[0], y_min = xy_min[1];
+        Real x_max = xy_max[0], y_max = xy_max[1];
+        Real x, y;
 
         // Generation.
         do {
-            x = x_min + (x_max - x_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
-            y = y_min + (y_max - y_min) * static_cast<double>(std::rand()) / static_cast<double>(RAND_MAX);
+            x = x_min + (x_max - x_min) * static_cast<Real>(std::rand()) / static_cast<Real>(RAND_MAX);
+            y = y_min + (y_max - y_min) * static_cast<Real>(std::rand()) / static_cast<Real>(RAND_MAX);
         } while(!this->contains(Point{x, y}));
 
         return Point{x, y};
@@ -174,8 +174,8 @@ namespace pacs {
      * @return std::array<Point, 2> 
      */
     std::array<Point, 2> Polygon::box() const {
-        double x_min = this->points[0][0], x_max = this->points[0][0];
-        double y_min = this->points[0][1], y_max = this->points[0][1];
+        Real x_min = this->points[0][0], x_max = this->points[0][0];
+        Real y_min = this->points[0][1], y_max = this->points[0][1];
 
         for(std::size_t j = 1; j < this->points.size(); ++j) {
             x_min = (points[j][0] < x_min) ? points[j][0] : x_min;

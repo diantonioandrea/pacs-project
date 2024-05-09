@@ -25,6 +25,10 @@
 
 namespace pacs {
 
+    // Real alias.
+
+    using Real = double;
+
     // Numeric type concept for Matrix and Vector.
 
     /**
@@ -56,7 +60,7 @@ namespace pacs {
      */
     template<typename T>
     concept Absolute = requires(T value) {
-        {std::abs(value)} -> std::convertible_to<double>;
+        {std::abs(value)} -> std::convertible_to<Real>;
     };
 
     /**

@@ -17,6 +17,7 @@
 // Testing Mesh.
 #include <Geometry.hpp>
 #include <Mesh.hpp>
+using pacs::Real;
 
 int main() {
 

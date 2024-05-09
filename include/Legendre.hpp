@@ -11,6 +11,9 @@
 #ifndef LEGENDRE_PACS
 #define LEGENDRE_PACS
 
+// Type.
+#include <Type.hpp>
+
 // Vectors.
 #include <Vector.hpp>
 
@@ -18,8 +21,8 @@ namespace pacs {
 
     // Legendre polynomials.
 
-    Vector<double> legendre(const Vector<double> &, const std::size_t &);
-    Vector<double> grad_legendre(const Vector<double> &, const std::size_t &);
+    Vector<Real> legendre(const Vector<Real> &, const std::size_t &);
+    Vector<Real> grad_legendre(const Vector<Real> &, const std::size_t &);
 
 }
 

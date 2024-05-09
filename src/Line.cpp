@@ -27,14 +27,14 @@ namespace pacs {
      * @param b 
      * @param c 
      */
-    Line::Line(const double &a, const double &b, const double &c): a{a}, b{b}, c{c} {}
+    Line::Line(const Real &a, const Real &b, const Real &c): a{a}, b{b}, c{c} {}
 
     /**
      * @brief Constructs a new Line from an array of parameters.
      * 
      * @param abc 
      */
-    Line::Line(const std::array<double, 3> &abc): a{abc[0]}, b{abc[1]}, c{abc[2]} {}
+    Line::Line(const std::array<Real, 3> &abc): a{abc[0]}, b{abc[1]}, c{abc[2]} {}
 
     /**
      * @brief Copy constructor.
@@ -49,9 +49,9 @@ namespace pacs {
      * @brief Returns the j-th parameter.
      * 
      * @param j 
-     * @return double 
+     * @return Real 
      */
-    double Line::operator [](const std::size_t &j) const {
+    Real Line::operator [](const std::size_t &j) const {
         #ifndef NDEBUG // Integrity check.
         assert(j <= 2);
         #endif
@@ -63,9 +63,9 @@ namespace pacs {
      * @brief Returns the first coordinate of a Line's point given the second one.
      * 
      * @param y 
-     * @return double 
+     * @return Real 
      */
-    double Line::x(const double &y) const {
+    Real Line::x(const Real &y) const {
         #ifndef NDEBUG // Integrity check.
         assert(std::abs(this->a) > GEOMETRY_TOLERANCE);
         #endif
@@ -77,9 +77,9 @@ namespace pacs {
      * @brief Returns the second coordinate of a Line's point given the first one.
      * 
      * @param x 
-     * @return double 
+     * @return Real 
      */
-    double Line::y(const double &x) const {
+    Real Line::y(const Real &x) const {
         #ifndef NDEBUG // Integrity check.
         assert(std::abs(this->b) > GEOMETRY_TOLERANCE);
         #endif
@@ -210,9 +210,9 @@ namespace pacs {
     /**
      * @brief Returns the Line's angular coefficient.
      * 
-     * @return double 
+     * @return Real 
      */
-    double Line::angular() const {
+    Real Line::angular() const {
         #ifndef NDEBUG // Integrity check.
         assert(std::abs(this->b) > GEOMETRY_TOLERANCE);
         #endif

@@ -84,8 +84,8 @@ namespace pacs {
      * @return Line 
      */
     Line Segment::line() const {
-        double ax = this->a[0], bx = this->b[0];
-        double ay = this->a[1], by = this->b[1];
+        Real ax = this->a[0], bx = this->b[0];
+        Real ay = this->a[1], by = this->b[1];
 
         // Evaluation by cases.
 
@@ -115,11 +115,11 @@ namespace pacs {
         if(!(this->line().contains(point)))
             return false;
 
-        double min_x = this->a[0] <= this->b[0] ? this->a[0] : this->b[0];
-        double max_x = this->a[0] >= this->b[0] ? this->a[0] : this->b[0];
+        Real min_x = this->a[0] <= this->b[0] ? this->a[0] : this->b[0];
+        Real max_x = this->a[0] >= this->b[0] ? this->a[0] : this->b[0];
 
-        double min_y = this->a[1] <= this->b[1] ? this->a[1] : this->b[1];
-        double max_y = this->a[1] >= this->b[1] ? this->a[1] : this->b[1];
+        Real min_y = this->a[1] <= this->b[1] ? this->a[1] : this->b[1];
+        Real max_y = this->a[1] >= this->b[1] ? this->a[1] : this->b[1];
 
         bool x = (min_x <= point[0]) && (point[0] <= max_x);
         bool y = (min_y <= point[1]) && (point[1] <= max_y);

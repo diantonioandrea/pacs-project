@@ -54,7 +54,7 @@ namespace pacs {
         }
 
         // Small edges collapse.
-        std::vector<double> sizes;
+        std::vector<Real> sizes;
         sizes.resize(mesh.size(), 0.0);
 
         for(std::size_t j = 0; j < mesh.size(); ++j)
@@ -331,10 +331,10 @@ namespace pacs {
      * @brief Returns a vector of the elements' areas.
      * 
      * @param polygons 
-     * @return std::vector<double> 
+     * @return std::vector<Real> 
      */
-    std::vector<double> mesh_areas(const std::vector<Polygon> &polygons) {
-        std::vector<double> areas;
+    std::vector<Real> mesh_areas(const std::vector<Polygon> &polygons) {
+        std::vector<Real> areas;
 
         #ifdef VERBOSE
         std::cout << "\nEvaluating elements' areas." << std::endl;
@@ -350,17 +350,17 @@ namespace pacs {
      * @brief Returns a vector of the biggest simplices area for every element's edge.
      * 
      * @param polygons 
-     * @return std::vector<Vector<double>> 
+     * @return std::vector<Vector<Real>> 
      */
-    std::vector<Vector<double>> mesh_max_simplices(const std::vector<Polygon> &polygons) {
-        std::vector<Vector<double>> max_simplices;
+    std::vector<Vector<Real>> mesh_max_simplices(const std::vector<Polygon> &polygons) {
+        std::vector<Vector<Real>> max_simplices;
 
         #ifdef VERBOSE
         std::cout << "\nEvaluating elements' biggest simplices." << std::endl;
         #endif
 
         for(const auto &polygon: polygons) {
-            Vector<double> areas{polygon.edges().size()};
+            Vector<Real> areas{polygon.edges().size()};
 
             for(std::size_t j = 0; j < areas.length; ++j) {
                 Segment edge = polygon.edges()[j];
@@ -370,7 +370,7 @@ namespace pacs {
                         continue;
 
                     Polygon triangle{{edge[0], edge[1], polygon.points[k]}};
-                    double area = triangle.area();
+                    Real area = triangle.area();
 
                     areas[j] = (area > areas[j]) ? area : areas[j];
                 }
