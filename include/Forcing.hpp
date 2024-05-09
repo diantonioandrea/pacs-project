@@ -19,9 +19,6 @@
 
 namespace pacs {
 
-    // Function alias.
-    using Function = Real (*) (const Real &, const Real &);
-
     /**
      * @brief Source class for the Poisson problem.
      * 

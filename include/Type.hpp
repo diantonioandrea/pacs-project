@@ -29,6 +29,10 @@ namespace pacs {
 
     using Real = double;
 
+    // Function alias.
+    
+    using Function = Real (*) (const Real &, const Real &);
+
     // Numeric type concept for Matrix and Vector.
 
     /**
