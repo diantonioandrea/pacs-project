@@ -114,7 +114,7 @@ namespace pacs {
                 // Weights scaling.
                 Vector<double> scaled = jacobian_det * weights_2d;
 
-                // Basis function.
+                // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Some products.
