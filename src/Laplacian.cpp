@@ -139,12 +139,12 @@ namespace pacs {
             Matrix<double> local_IA{element_dofs, element_dofs};
             Matrix<double> local_SA{element_dofs, element_dofs};
 
-            // Local matrices for neighbours.
-            Matrix<double> local_IAN{element_dofs, element_dofs};
-            Matrix<double> local_SAN{element_dofs, element_dofs};
-
             // Element's neighbours.
             std::vector<std::pair<std::size_t, int>> element_neighbours = neighbours[j];
+
+            // Local matrices for neighbours.
+            std::vector<Matrix<double>> local_IAN(polygon.edges().size(), Matrix<double>{element_dofs, element_dofs});
+            std::vector<Matrix<double>> local_SAN(polygon.edges().size(), Matrix<double>{element_dofs, element_dofs});
 
             // Penalties.
             Vector<double> penalties = penalty(mesh, j);
@@ -205,10 +205,61 @@ namespace pacs {
 
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
+
+                // Local matrix assembly.
+                Matrix<double> scaled_gradx = gradx_phi;
+                Matrix<double> scaled_grady = grady_phi;
+                Matrix<double> scaled_phi = phi;
+
+                for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
+                    scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
+                    scaled_grady.column(l, scaled_grady.column(l) * scaled);
+                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
+                }
+
+                // Local IA.
+                local_IA = local_IA + (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
+
+                if(neighbour == -1) // Boundary.
+
+                    // Local boundary SA.
+                    local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
+                else {
+
+                    // Local neighbour SA.
+                    local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
+
+                    // Neighbour's basis function.
+                    Matrix<double> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
+
+                    // Neighbour's local matrix.
+                    local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * n_phi;
+                    local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
+                }
+
+                IA.insert(indices, indices, local_IA);
+                SA.insert(indices, indices, local_SA);
             }
+
+            // Boundary DG matrices assembly.
+            for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
+                if(element_neighbours[k].second == -1)
+                    continue;
+
+                std::vector<std::size_t> n_indices;
+                std::size_t n_index = element_neighbours[k].second;
+                std::size_t n_dofs = mesh.elements[n_index].dofs();
+
+                for(std::size_t h = 0; h < n_dofs; ++h)
+                    indices.emplace_back(n_index * n_dofs + h);
+
+                IA.add(n_indices, n_indices, local_IAN[k]);
+                SA.add(n_indices, n_indices, local_SAN[k]);
+            }
+
         }
 
-        return A;
+        return A + SA - IA - IA.transpose();
     }
 
     Vector<double> penalty(const Mesh &mesh, const std::size_t &index) {

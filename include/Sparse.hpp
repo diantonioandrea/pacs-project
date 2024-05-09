@@ -209,7 +209,7 @@ namespace pacs {
             }
 
             /**
-             * @brief Insert a new element.
+             * @brief Inserts a new element.
              * 
              * @param j 
              * @param k 
@@ -228,7 +228,7 @@ namespace pacs {
             }
 
             /**
-             * @brief Insert a new matrix of elements.
+             * @brief Inserts a new matrix of elements.
              * 
              * @param j 
              * @param k 
@@ -236,15 +236,64 @@ namespace pacs {
              */
             void insert(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
                 #ifndef NDEBUG // Integrity checks.
-                assert(J.size() == K.size());
                 for(std::size_t j = 0; j < J.size(); ++j)
-                    assert((J[j] < this->rows) && (K[j] < this->columns));
+                    assert((J[j] < this->rows) && (j < elements.rows));
+                for(std::size_t k = 0; k < K.size(); ++k)
+                    assert((K[k] < this->columns) && (k < elements.columns));
                 #endif
 
                 for(std::size_t j = 0; j < J.size(); ++j)
                     for(std::size_t k = 0; k < K.size(); ++k)
                         if(std::abs(elements(j, k)) > TOLERANCE)
-                            this->elements[{J[j], K[k]}] =  elements(j, k);
+                            this->elements[{J[j], K[k]}] = elements(j, k);
+            }
+
+            /**
+             * @brief Adds a new element. Slower than an insert for simple creation.
+             * 
+             * @param j 
+             * @param k 
+             * @param element 
+             */
+            void add(const std::size_t &j, const std::size_t &k, const T &element) {
+                #ifndef NDEBUG // Out-of-bound and uncompression check.
+                assert((j < this->rows) && (k < this->columns));
+                assert(!(this->compressed));
+                
+                if(std::abs(element) > TOLERANCE) {
+                    if(this->elements.contains({j, k}))
+                        this->elements[{j, k}] += element;
+                    else
+                        this->elements[{j, k}] = element;
+                }
+                #else
+                this->elements[{j, k}] += element;
+                #endif
+            }
+
+            /**
+             * @brief Adds a new matrix of elements. Slower than an insert for simple creation.
+             * 
+             * @param j 
+             * @param k 
+             * @param elements 
+             */
+            void add(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
+                #ifndef NDEBUG // Integrity checks.
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    assert((J[j] < this->rows) && (j < elements.rows));
+                for(std::size_t k = 0; k < K.size(); ++k)
+                    assert((K[k] < this->columns) && (k < elements.columns));
+                #endif
+
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    for(std::size_t k = 0; k < K.size(); ++k)
+                        if(std::abs(elements(j, k)) > TOLERANCE) {
+                            if(this->elements.contains({J[j], K[k]}))
+                                this->elements[{J[j], K[k]}] += elements(j, k);
+                            else
+                                this->elements[{J[j], K[k]}] = elements(j, k);
+                        }
             }
 
             // SHAPE.
@@ -261,6 +310,25 @@ namespace pacs {
                     return Sparse{rows, columns, this->elements};
 
                 return Sparse{rows, columns, this->inner, this->outer, this->values};
+            }
+
+            /**
+             * @brief Returns the transpose Sparse matrix.
+             * 
+             * @return Sparse 
+             */
+            Sparse transpose() const {
+                Sparse transpose{this->columns, this->rows};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements)
+                        transpose.elements[{key[1], key[0]}] = element;
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            transpose.elements[{this->outer[k], j}] = this->values[k];
+
+                return transpose;
             }
 
             // COMPRESSION.
@@ -338,6 +406,134 @@ namespace pacs {
             }
 
             // OPERATORS
+
+            /**
+             * @brief Sparse matrix sum.
+             * 
+             * @param sparse 
+             * @return Sparse 
+             */
+            Sparse operator +(const Sparse &sparse) const {
+                #ifndef NDEBUG // Integrity checks.
+                assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
+                #endif
+
+                Sparse result{*this};
+                
+                #ifdef DYNAMIC_SPARSE
+                result.uncompress();
+                #endif
+
+                #ifndef NDEBUG // Integrity check.
+                assert(!result.compressed);
+                #endif
+
+                if(!(sparse.compressed))
+                    for(auto &[key, element]: sparse.elements)
+                        result.add(key[0], key[1], element);
+                else
+                    #pragma omp parallel for collapse(2)
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
+                            result.add(j, sparse.outer[k], sparse.values[k]);
+
+                return result;
+            }
+
+            /**
+             * @brief Sparse matrix sum and assignation.
+             * 
+             * @param sparse 
+             * @return Sparse& 
+             */
+            Sparse &operator +=(const Sparse &sparse) {
+                #ifndef NDEBUG // Integrity checks.
+                assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
+                #endif
+
+                #ifdef DYNAMIC_SPARSE
+                this->uncompress();
+                #endif
+
+                #ifndef NDEBUG // Integrity check.
+                assert(!this->compressed);
+                #endif
+
+                if(!(sparse.compressed))
+                    for(auto &[key, element]: sparse.elements)
+                        this->add(key[0], key[1], element);
+                else
+                    #pragma omp parallel for collapse(2)
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
+                            this->add(j, sparse.outer[k], sparse.values[k]);
+
+                return *this;
+            }
+
+            /**
+             * @brief Sparse matrix difference.
+             * 
+             * @param sparse 
+             * @return Sparse 
+             */
+            Sparse operator -(const Sparse &sparse) const {
+                #ifndef NDEBUG // Integrity checks.
+                assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
+                #endif
+
+                Sparse result{*this};
+                
+                #ifdef DYNAMIC_SPARSE
+                result.uncompress();
+                #endif
+
+                #ifndef NDEBUG // Integrity check.
+                assert(!result.compressed);
+                #endif
+
+                if(!(sparse.compressed))
+                    for(auto &[key, element]: sparse.elements)
+                        result.add(key[0], key[1], -element);
+                else
+                    #pragma omp parallel for collapse(2)
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
+                            result.add(j, sparse.outer[k], -sparse.values[k]);
+
+                return result;
+            }
+
+            /**
+             * @brief Sparse matrix difference and assignation.
+             * 
+             * @param sparse 
+             * @return Sparse& 
+             */
+            Sparse &operator -=(const Sparse &sparse) {
+                #ifndef NDEBUG // Integrity checks.
+                assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
+                #endif
+
+                #ifdef DYNAMIC_SPARSE
+                this->uncompress();
+                #endif
+
+                #ifndef NDEBUG // Integrity check.
+                assert(!this->compressed);
+                #endif
+
+                if(!(sparse.compressed))
+                    for(auto &[key, element]: sparse.elements)
+                        this->add(key[0], key[1], -element);
+                else
+                    #pragma omp parallel for collapse(2)
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
+                            this->add(j, sparse.outer[k], -sparse.values[k]);
+
+                return *this;
+            }
 
             /**
              * @brief Sparse matrix scalar product.
