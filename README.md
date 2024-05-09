@@ -57,6 +57,10 @@ Some meaningful tests may include:
 - `test_gauss`: Evaluates and prints some **Gauss-Legendre** quadrature nodes and weights over `[-1, 1] x [-1, 1]`.
 - `test_algebra`: Solves a simple linear system using the _Conjugate Gradient Method_.
 
-Tests can be run by:
+Single tests can be run by:
 
     ./test_TESTNAME
+
+while the whole set of tests can be run by:
+
+    make run
