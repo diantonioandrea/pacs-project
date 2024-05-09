@@ -76,6 +76,10 @@ namespace pacs {
 
         // Neighbours.
         this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
+
+        // Areas and biggest simplices.
+        this->areas = mesh_areas(mesh);
+        this->max_simplices = mesh_max_simplices(mesh);
     }
 
     // READ.
