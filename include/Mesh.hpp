@@ -93,7 +93,6 @@ namespace pacs {
 
             // CONSTRUCTORS.
 
-            Mesh(const Polygon &, const std::size_t &);
             Mesh(const Polygon &, const std::vector<Polygon> &);
 
             // READ.
