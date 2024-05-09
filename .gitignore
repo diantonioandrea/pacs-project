@@ -6,6 +6,9 @@ report/output
 **/*.o
 **/*.out
 
+# Outputs
+**/output
+
 # Python
 **/__pycache__
 
