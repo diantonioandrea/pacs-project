@@ -225,6 +225,7 @@ namespace pacs {
 namespace std {
 
     double abs(const pacs::Point &);
+    double abs(const pacs::Segment &);
 
 }
 

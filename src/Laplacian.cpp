@@ -19,6 +19,9 @@
 // Basis functions.
 #include <Basis.hpp>
 
+// Algebra.
+#include <Algebra.hpp>
+
 namespace pacs {
 
     /**
@@ -36,12 +39,17 @@ namespace pacs {
         // Degrees of freedom.
         std::size_t dofs = mesh.dofs();
 
+        // Neighbours.
+        std::vector<std::vector<std::pair<std::size_t, int>>> neighbours = mesh.neighbours;
+
         // Matrices.
         Sparse<double> A{dofs, dofs};
         
         // To be added.
-        // Sparse<double> IA{dofs, dofs};
-        // Sparse<double> SA{dofs, dofs};
+        Sparse<double> IA{dofs, dofs};
+        Sparse<double> SA{dofs, dofs};
+
+        // Volume integrals.
 
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements_number(); ++j) {
@@ -109,7 +117,7 @@ namespace pacs {
                 // Basis function.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
-                // Local matrix assembly.
+                // Some products.
                 Matrix<double> scaled_gradx = gradx_phi;
                 Matrix<double> scaled_grady = grady_phi;
 
@@ -118,11 +126,83 @@ namespace pacs {
                     scaled_grady.column(l, scaled_grady.column(l) * scaled);
                 }
 
+                // Local matrix assembly.
                 local_A = local_A + scaled_gradx.transpose() * gradx_phi + scaled_grady.transpose() * grady_phi;
             }
 
             // Global matrix assembly.
             A.insert(indices, indices, local_A);
+
+            // Face integrals.
+
+            // Local matrices.
+            Matrix<double> local_IA{element_dofs, element_dofs};
+            Matrix<double> local_SA{element_dofs, element_dofs};
+
+            // Local matrices for neighbours.
+            Matrix<double> local_IAN{element_dofs, element_dofs};
+            Matrix<double> local_SAN{element_dofs, element_dofs};
+
+            // Element's neighbours.
+            std::vector<std::pair<std::size_t, int>> element_neighbours = neighbours[j];
+
+            // Loop over faces.
+            for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
+
+                // Neighbour information.
+                auto [edge, neighbour] = element_neighbours[k];
+
+                // Edge geometry.
+                Segment segment{mesh.edge(edge)};
+
+                // Edge's normal.
+                Vector<double> normal{2};
+
+                normal[0] = segment[1][1] - segment[0][1];
+                normal[0] = segment[0][0] - segment[1][0];
+
+                normal /= norm(normal);
+
+                // Jacobian.
+                Matrix<double> jacobian{2, 2};
+
+                jacobian(0, 0) = segment[1][0] - segment[0][0];
+                jacobian(0, 1) = 0.5 * (segment[1][0] - segment[0][0]);
+                jacobian(1, 0) = 0.5 * (segment[1][1] - segment[0][1]);
+                jacobian(1, 1) = segment[1][1] - segment[0][1];
+
+                // Jacobian's determinant.
+                double jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
+
+                // Translation.
+                Vector<double> translation{2};
+
+                translation[0] = segment[0][0];
+                translation[1] = segment[0][1];
+
+                // Physical nodes.
+                Vector<double> nodes_x_1d = nodes_1d;
+
+                Vector<double> physical_x{nodes_x_1d.length};
+                Vector<double> physical_y{nodes_x_1d.length};
+
+                for(std::size_t l = 0; l < nodes_x_1d.length; ++l) {
+                    Vector<double> node{2};
+
+                    node[0] = nodes_x_1d[l];
+
+                    Vector<double> transformed = jacobian * node + translation;
+
+                    physical_x[l] = transformed[0];
+                    physical_y[l] = transformed[1];
+                }
+
+                // Weights scaling.
+                Vector<double> scaled = jacobian_det * weights_1d;
+
+                // Basis functions.
+                auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
+            }
         }
 
         return A;

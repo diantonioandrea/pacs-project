@@ -78,6 +78,9 @@ namespace pacs {
             // Neighbours.
             std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
 
+            // Penalty coefficient.
+            double penalty = 10.0;
+
             // CONSTRUCTORS.
 
             Mesh(const Polygon &, const std::size_t &);

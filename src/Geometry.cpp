@@ -293,13 +293,23 @@ namespace pacs {
 namespace std {
 
     /**
-     * @brief Return the norm of a point.
+     * @brief Return the norm of a Point.
      * 
      * @param point 
      * @return double 
      */
     double abs(const pacs::Point &point) {
         return std::sqrt(point[0] * point[0] + point[1] * point[1]);
+    }
+
+    /**
+     * @brief Return the length of a Segment.
+     * 
+     * @param segment 
+     * @return double 
+     */
+    double abs(const pacs::Segment &segment) {
+        return std::abs(segment[1] - segment[0]);
     }
 
 }

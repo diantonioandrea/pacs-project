@@ -19,7 +19,13 @@
 
 namespace pacs {
 
+    // Laplacian matrix.
+
     Sparse<double> laplacian(const Mesh &);
+
+    // Penalty coefficients.
+    
+    Vector<double> penalty(const Mesh &, const std::size_t &);
 
 }
 
