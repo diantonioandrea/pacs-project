@@ -19,7 +19,7 @@ This repository presents an implementation of an adaptive HP Discontinuous Galë
 Key components include:
 
 - `include/`: Definitions of methods and classes.
-    - `Type.hpp`: Definitions of the custom concepts.
+    - `Type.hpp`: Definitions of the custom concepts and types.
     - `Algebra.hpp`: Methods for matrices and vectors.
     - `Geometry.hpp`: Definitions of geometrical objects and methods.
     - `Matrix.hpp`: Implementation of matrices.
@@ -31,6 +31,7 @@ Key components include:
     - `Basis.hpp`: Definitions of basis functions methods.
     - `Legendre.hpp`: Definitions of Legendre polynomials methods.
     - `Laplacian.hpp`: Definitions of methods for the laplacian matrix.
+    - `Forcing.hpp`: Definitions of methods for the forcing term.
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
