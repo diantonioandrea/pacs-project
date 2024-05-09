@@ -21,7 +21,7 @@ namespace pacs {
 
     // Laplacian matrix.
 
-    Sparse<double> laplacian(const Mesh &);
+    std::array<Sparse<double>, 2> laplacian(const Mesh &);
 
     // Penalty coefficients.
     

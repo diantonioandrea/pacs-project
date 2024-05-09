@@ -30,7 +30,7 @@ namespace pacs {
      * @param mesh 
      * @return Sparse<double> 
      */
-    Sparse<double> laplacian(const Mesh &mesh) {
+    std::array<Sparse<double>, 2> laplacian(const Mesh &mesh) {
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(5);
@@ -258,8 +258,9 @@ namespace pacs {
             }
 
         }
-
-        return A + SA - IA - IA.transpose();
+        
+        // Returns A and dGa.
+        return {A + SA - IA - IA.transpose(), A + SA};
     }
 
     Vector<double> penalty(const Mesh &mesh, const std::size_t &index) {

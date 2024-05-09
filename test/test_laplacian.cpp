@@ -30,7 +30,7 @@ int main() {
     mesh.write("laplacian.poly");
 
     // Builds the laplacian matrix.
-    pacs::Sparse<double> laplacian = pacs::laplacian(mesh);
+    auto [laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
     // Matrix output.
     std::cout << laplacian << std::endl;
