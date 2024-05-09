@@ -327,4 +327,59 @@ namespace pacs {
         return neighbours;
     }
 
+    /**
+     * @brief Returns a vector of the elements' areas.
+     * 
+     * @param polygons 
+     * @return std::vector<double> 
+     */
+    std::vector<double> mesh_areas(const std::vector<Polygon> &polygons) {
+        std::vector<double> areas;
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating elements' areas." << std::endl;
+        #endif
+
+        for(std::size_t j = 0; j < polygons.size(); ++j)
+            areas.emplace_back(polygons[j].area());
+
+        return areas;
+    }
+
+    /**
+     * @brief Returns a vector of the biggest simplices area for every element's edge.
+     * 
+     * @param polygons 
+     * @return std::vector<Vector<double>> 
+     */
+    std::vector<Vector<double>> mesh_max_simplices(const std::vector<Polygon> &polygons) {
+        std::vector<Vector<double>> max_simplices;
+
+        #ifdef VERBOSE
+        std::cout << "\nEvaluating elements' biggest simplices." << std::endl;
+        #endif
+
+        for(const auto &polygon: polygons) {
+            Vector<double> areas{polygon.edges().size()};
+
+            for(std::size_t j = 0; j < areas.length; ++j) {
+                Segment edge = polygon.edges()[j];
+
+                for(std::size_t k = 0; k < polygon.points.size(); ++k) {
+                    if((polygon.points[k] == edge[0]) || (polygon.points[k] == edge[1]))
+                        continue;
+
+                    Polygon triangle{{edge[0], edge[1], polygon.points[k]}};
+                    double area = triangle.area();
+
+                    areas[j] = (area > areas[j]) ? area : areas[j];
+                }
+            }
+
+            max_simplices.emplace_back(areas);
+        }
+
+        return max_simplices;
+    }
+
 }

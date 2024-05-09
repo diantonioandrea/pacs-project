@@ -32,6 +32,10 @@ namespace pacs {
     Polygon::Polygon(const std::vector<Point> &points): points{points} {
         #ifndef NDEBUG // Integrity check.
         assert(points.size() > 2);
+
+        for(std::size_t j = 0; j < points.size(); ++j)
+            for(std::size_t k = j + 1; k < points.size(); ++k)
+                assert(points[j] != points[k]);
         #endif
     }
 

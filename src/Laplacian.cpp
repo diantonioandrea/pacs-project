@@ -146,6 +146,9 @@ namespace pacs {
             // Element's neighbours.
             std::vector<std::pair<std::size_t, int>> element_neighbours = neighbours[j];
 
+            // Penalties.
+            Vector<double> penalties = penalty(mesh, j);
+
             // Loop over faces.
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
 
@@ -206,6 +209,64 @@ namespace pacs {
         }
 
         return A;
+    }
+
+    Vector<double> penalty(const Mesh &mesh, const std::size_t &index) {
+        
+        // Element.
+        Element element = mesh.elements[index];
+        Polygon polygon = mesh.element(index);
+
+        std::vector<std::pair<std::size_t, int>> neighbours = mesh.neighbours[index];
+
+        // Sizes.
+        Vector<double> sizes{element.edges.size()};
+
+        for(std::size_t j = 0; j < sizes.length; ++j)
+            sizes[j] = std::abs(polygon.edges()[j]);
+
+        // Element's area.
+        double area = mesh.areas[index];
+
+        // Biggest simplices areas.
+        Vector<double> areas = mesh.max_simplices[index];
+
+        // Inverse constant.
+        Vector<double> inverse = area / areas;
+
+        // Coefficients.
+        double penalty_coefficient = mesh.penalty * (element.degree * element.degree);
+        Vector<double> penalty_dirichlet = penalty_coefficient * inverse * sizes / area;
+
+        // Penalty evaluation.
+        Vector<double> penalties{neighbours.size()};
+        Vector<double> internal{neighbours.size()}; // Element.
+        Vector<double> external{neighbours.size()}; // Neighbour.
+        Vector<double> inverse_external{neighbours.size()};
+
+        for(std::size_t j = 0; j < neighbours.size(); ++j) {
+            if(neighbours[j].second == -1) {
+                penalties[j] = penalty_dirichlet[j];
+                continue;
+            }
+            
+            std::size_t edge = 0;
+            Element neighbour = mesh.elements[neighbours[j].second];
+
+            for(std::size_t k = 0; k < neighbour.edges.size(); ++k)
+                if(neighbour.edges[k] == element.edges[j]) {
+                    edge = k;
+                    break;
+                }
+
+            inverse_external[j] = mesh.areas[neighbours[j].second] / mesh.max_simplices[neighbours[j].second][edge];
+            internal[j] = penalty_coefficient * inverse[j] * sizes[j] / area;
+            external[j] = penalty_coefficient * inverse_external[j] * sizes[j] / mesh.areas[neighbours[j].second];
+
+            penalties[j] = (internal[j] > external[j]) ? internal[j] : external[j];
+        }
+
+        return penalties;
     }
 
 }

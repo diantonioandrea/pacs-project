@@ -17,6 +17,9 @@
 // Voronoi.
 #include <Voronoi.hpp>
 
+// Vectors.
+#include <Vector.hpp>
+
 // Containers.
 #include <vector>
 #include <array>
@@ -78,6 +81,10 @@ namespace pacs {
             // Neighbours.
             std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
 
+            // Areas.
+            std::vector<double> areas;
+            std::vector<Vector<double>> max_simplices;
+
             // Penalty coefficient.
             double penalty = 10.0;
 
@@ -109,12 +116,18 @@ namespace pacs {
     // Implemented under src/Builder.cpp
 
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &);
+
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &);
     std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &);
+
     std::vector<std::size_t> mesh_boundary_nodes(const Polygon &, const std::vector<Point> &);
     std::vector<std::size_t> mesh_boundary_edges(const Polygon &, const std::vector<Segment> &);
+
     std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &, const std::vector<std::size_t> &);
+
+    std::vector<double> mesh_areas(const std::vector<Polygon> &);
+    std::vector<Vector<double>> mesh_max_simplices(const std::vector<Polygon> &);
 
 }
 
