@@ -17,29 +17,10 @@
 // Mesh.
 #include <Mesh.hpp>
 
+// Functor.
+#include <Functor.hpp>
+
 namespace pacs {
-
-    /**
-     * @brief Functor class for the Poisson problem.
-     * 
-     */
-    class Functor {
-        private:
-            
-            // Function.
-            Function function;
-
-        public:
-
-            // CONSTRUCTORS.
-
-            Functor(const Function &);
-
-            // EVALUATION.
-
-            Real operator ()(const Real &, const Real &) const;
-            Vector<Real> operator ()(const Vector<Real> &, const Vector<Real> &) const;
-    };
 
     // RHS.
 
