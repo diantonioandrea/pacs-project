@@ -41,7 +41,7 @@ namespace pacs {
         std::vector<Polygon> mesh = voronoi(domain, cells);
 
         #ifdef VERBOSE
-        std::cout << "\nGenerated the Voronoi diagram.\n" << std::endl;
+        std::cout << "\tGenerated the Voronoi diagram." << std::endl;
         #endif
 
         // Relaxation.
@@ -49,7 +49,7 @@ namespace pacs {
             mesh = lloyd(domain, mesh);
 
             #ifdef VERBOSE
-            std::cout << "Completed step " << j + 1 << " of the Lloyd's algorithm." << std::endl;
+            std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm." << std::endl;
             #endif
         }
 
@@ -62,7 +62,7 @@ namespace pacs {
                 sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluated elements sizes.\n" << std::endl;
+        std::cout << "\tEvaluated elements sizes." << std::endl;
         #endif
 
         std::size_t index = 0;
@@ -70,7 +70,7 @@ namespace pacs {
             bool flag = true;
 
             #ifdef VERBOSE
-            std::cout << "Collapsing element " << index << "." << std::endl;
+            std::cout << "\tCollapsing element " << index << "." << std::endl;
             #endif
 
             // Cannot collapse triangles.
@@ -131,7 +131,7 @@ namespace pacs {
         std::vector<Point> nodes;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh nodes." << std::endl;
+        std::cout << "Evaluating mesh nodes." << std::endl;
         #endif
 
         for(const auto &cell: mesh) {
@@ -163,7 +163,7 @@ namespace pacs {
         std::vector<Segment> edges;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh edges." << std::endl;
+        std::cout << "Evaluating mesh edges." << std::endl;
         #endif
 
         for(const auto &cell: mesh) {
@@ -197,7 +197,7 @@ namespace pacs {
         std::vector<Element> elements;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh elements." << std::endl;
+        std::cout << "Evaluating mesh elements." << std::endl;
         #endif
 
         for(const auto &cell: mesh) {
@@ -239,7 +239,7 @@ namespace pacs {
         std::vector<std::size_t> boundary_nodes;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh boundary nodes." << std::endl;
+        std::cout << "Evaluating mesh boundary nodes." << std::endl;
         #endif
 
         for(const auto &bound: domain.edges()) {
@@ -263,7 +263,7 @@ namespace pacs {
         std::vector<std::size_t> boundary_edges;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh boundary edges." << std::endl;
+        std::cout << "Evaluating mesh boundary edges." << std::endl;
         #endif
 
         for(const auto &bound: domain.edges()) {
@@ -276,45 +276,43 @@ namespace pacs {
         return boundary_edges;
     }
 
-    std::vector<std::vector<std::array<int, 2>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
-        std::vector<std::vector<std::array<int, 2>>> neighbours;
+    std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
+        std::vector<std::vector<std::array<int, 3>>> neighbours;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating mesh neighbours." << std::endl;
+        std::cout << "Evaluating mesh neighbours." << std::endl;
         #endif
 
         for(std::size_t j = 0; j < elements.size(); ++j) {
-            std::vector<std::array<int, 2>> element_neighbours;
+            std::vector<std::array<int, 3>> element_neighbours;
 
             for(std::size_t k = 0; k < elements[j].edges.size(); ++k) {
                 bool boundary = false;
 
-                for(const auto &edge: boundary_edges) {
+                // Boundary edge.
+                for(const auto &edge: boundary_edges)
                     if(edge == elements[j].edges[k]) {
-                        std::array<int, 2> pair{static_cast<int>(k), -1};
-                        element_neighbours.emplace_back(pair);
-                        boundary = true;
-                        break;
+                        std::array<int, 3> neighbourhood{static_cast<int>(k), -1, -1};
+                        element_neighbours.emplace_back(neighbourhood);
+                        boundary = true; break;
                     }
-                }
 
                 if(boundary)
                     continue;
 
+                // Connected edge.
                 for(std::size_t h = 0; h < elements.size(); ++h) {
                     if(j == h)
                         continue;
 
                     bool connection = false;
 
-                    for(const auto &edge: elements[h].edges) {
-                        if(edge == elements[j].edges[k]) {
-                            std::array<int, 2> pair{static_cast<int>(k), static_cast<int>(h)};
-                            element_neighbours.emplace_back(pair);
-                            connection = true;
-                            break;
+                    for(std::size_t l = 0; l < elements[h].edges.size(); ++l)
+                        if(elements[h].edges[l] == elements[j].edges[k]) {
+                            std::array<int, 3> neighbourhood{static_cast<int>(k), static_cast<int>(h)};
+                            element_neighbours.emplace_back(neighbourhood);
+                            connection = true; break;
                         }
-                    }
 
                     if(connection)
                         break;
@@ -337,7 +335,7 @@ namespace pacs {
         std::vector<Real> areas;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating elements' areas." << std::endl;
+        std::cout << "Evaluating elements' areas." << std::endl;
         #endif
 
         for(std::size_t j = 0; j < polygons.size(); ++j)
@@ -356,7 +354,7 @@ namespace pacs {
         std::vector<Vector<Real>> max_simplices;
 
         #ifdef VERBOSE
-        std::cout << "\nEvaluating elements' biggest simplices." << std::endl;
+        std::cout << "Evaluating elements' biggest simplices." << std::endl;
         #endif
 
         for(const auto &polygon: polygons) {

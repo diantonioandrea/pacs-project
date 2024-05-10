@@ -43,7 +43,7 @@ namespace pacs {
         std::size_t dofs = mesh.dofs();
 
         // Neighbours.
-        std::vector<std::vector<std::array<int, 2>>> neighbours = mesh.neighbours;
+        std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
 
         // Matrices.
         Sparse<Real> A{dofs, dofs};
@@ -143,7 +143,7 @@ namespace pacs {
             Matrix<Real> local_SA{element_dofs, element_dofs};
 
             // Element's neighbours.
-            std::vector<std::array<int, 2>> element_neighbours = neighbours[j];
+            std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
 
             // Local matrices for neighbours.
             std::vector<Matrix<Real>> local_IAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
@@ -156,7 +156,7 @@ namespace pacs {
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
 
                 // Neighbour information.
-                auto [edge, neighbour] = element_neighbours[k];
+                auto [edge, neighbour, n_edge] = element_neighbours[k];
 
                 // Edge geometry.
                 Segment segment{mesh.edge(edge)};
@@ -272,7 +272,7 @@ namespace pacs {
         Element element = mesh.elements[index];
         Polygon polygon = mesh.element(index);
 
-        std::vector<std::array<int, 2>> neighbours = mesh.neighbours[index];
+        std::vector<std::array<int, 3>> neighbours = mesh.neighbours[index];
 
         // Sizes.
         Vector<Real> sizes{element.edges.size()};
@@ -304,17 +304,8 @@ namespace pacs {
                 penalties[j] = penalty_dirichlet[j];
                 continue;
             }
-            
-            std::size_t edge = 0;
-            Element neighbour = mesh.elements[neighbours[j][1]];
 
-            for(std::size_t k = 0; k < neighbour.edges.size(); ++k)
-                if(neighbour.edges[k] == element.edges[j]) {
-                    edge = k;
-                    break;
-                }
-
-            inverse_external[j] = mesh.areas[neighbours[j][1]] / mesh.max_simplices[neighbours[j][1]][edge];
+            inverse_external[j] = mesh.areas[neighbours[j][1]] / mesh.max_simplices[neighbours[j][1]][neighbours[j][2]];
             internal[j] = penalty_coefficient * inverse[j] * sizes[j] / area;
             external[j] = penalty_coefficient * inverse_external[j] * sizes[j] / mesh.areas[neighbours[j][1]];
 
