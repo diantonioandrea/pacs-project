@@ -61,7 +61,7 @@ Some meaningful tests may include:
 
 Single tests can be run by:
 
-    ./test_TESTNAME
+    ./executables/test_TESTNAME
 
 while the whole set of tests can be run by:
 
