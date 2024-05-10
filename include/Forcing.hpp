@@ -20,10 +20,10 @@
 namespace pacs {
 
     /**
-     * @brief Source class for the Poisson problem.
+     * @brief Functor class for the Poisson problem.
      * 
      */
-    class Source {
+    class Functor {
         private:
             
             // Function.
@@ -33,7 +33,7 @@ namespace pacs {
 
             // CONSTRUCTORS.
 
-            Source(const Function &);
+            Functor(const Function &);
 
             // EVALUATION.
 
@@ -43,7 +43,7 @@ namespace pacs {
 
     // RHS.
 
-    Vector<Real> forcing(const Mesh &, const Source &);
+    Vector<Real> forcing(const Mesh &, const Functor &);
 }
 
 #endif

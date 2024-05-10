@@ -37,11 +37,11 @@ namespace pacs {
     // CONSTRUCTORS
 
     /**
-     * @brief Construct a new Source from a given Function.
+     * @brief Construct a new Functor from a given Function.
      * 
      * @param function 
      */
-    Source::Source(const Function &function): function{function} {}
+    Functor::Functor(const Function &function): function{function} {}
 
     // EVALUATION
     
@@ -52,7 +52,7 @@ namespace pacs {
      * @param y 
      * @return Real 
      */
-    Real Source::operator ()(const Real &x, const Real &y) const {
+    Real Functor::operator ()(const Real &x, const Real &y) const {
         return this->function(x, y);
     }
 
@@ -63,7 +63,7 @@ namespace pacs {
      * @param y 
      * @return Vector<Real> 
      */
-    Vector<Real> Source::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {
+    Vector<Real> Functor::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {
         #ifndef NDEBUG // Integrity check.
         assert(x.length == y.length);
         #endif
@@ -86,7 +86,7 @@ namespace pacs {
      * @param mesh 
      * @return Vector<Real> 
      */
-    Vector<Real> forcing(const Mesh &mesh, const Source &source) {
+    Vector<Real> forcing(const Mesh &mesh, const Functor &source) {
 
         #ifdef VERBOSE
         std::cout << "Computing the forcing term." << std::endl;

@@ -33,7 +33,7 @@ int main() {
     pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 30)};
 
     // Source.
-    pacs::Source source{test};
+    pacs::Functor source{test};
 
     // Writes mesh informations to a file.
     mesh.write("poisson.poly");
