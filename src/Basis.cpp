@@ -63,23 +63,20 @@ namespace pacs {
         Vector<Real> translation_inv{2};
 
         jacobian_inv(0, 0) = jacobian(1, 1) / jacobian_det;
-        jacobian_inv(0, 1) = -jacobian(0, 1) / jacobian_det;
-        jacobian_inv(1, 0) = -jacobian(1, 0) / jacobian_det;
         jacobian_inv(1, 1) = jacobian(0, 0) / jacobian_det;
 
-        translation_inv[0] = (-jacobian(1, 1) * translation[0] + jacobian(0, 1) * translation[1]) / jacobian_det;
-        translation_inv[1] = (jacobian(1, 0) * translation[0] - jacobian(0, 0) * translation[1]) / jacobian_det;
+        translation_inv = -(jacobian_inv * translation);
 
         // Reference nodes.
         Vector<Real> nodes_x{nodes[0].length}, nodes_y{nodes[1].length};
 
         for(std::size_t j = 0; j < nodes[0].length; ++j) {
-            Vector<Real> nodes_j{2};
+            Vector<Real> node{2};
 
-            nodes_j[0] = nodes[0][j];
-            nodes_j[1] = nodes[1][j];
+            node[0] = nodes[0][j];
+            node[1] = nodes[1][j];
 
-            Vector<Real> product = jacobian_inv * nodes_j + translation_inv;
+            Vector<Real> product = jacobian_inv * node + translation_inv;
 
             nodes_x[j] = product[0];
             nodes_y[j] = product[1];
@@ -115,6 +112,21 @@ namespace pacs {
             phi_evaluations.column(j, phi);
             gradx_phi_evaluations.column(j, gradx_phi);
             grady_phi_evaluations.column(j, grady_phi);
+        }
+
+        // Scaling.
+        for(std::size_t j = 0; j < gradx_phi_evaluations.rows; ++j) {
+            for(std::size_t k = 0; k < gradx_phi_evaluations.columns; ++k) {
+                Vector<Real> node{2};
+
+                node[0] =  gradx_phi_evaluations(j, k);
+                node[1] =  grady_phi_evaluations(j, k);
+
+                node = jacobian_inv * node;
+
+                gradx_phi_evaluations(j, k) = node[0];
+                grady_phi_evaluations(j, k) = node[1];
+            }
         }
 
         return {phi_evaluations, gradx_phi_evaluations, grady_phi_evaluations};

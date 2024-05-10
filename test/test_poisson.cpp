@@ -30,7 +30,7 @@ int main() {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 32)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 30)};
 
     // Source.
     pacs::Source source{test};

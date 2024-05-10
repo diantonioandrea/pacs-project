@@ -433,6 +433,26 @@ namespace pacs {
                 return result;
             }
 
+            friend Vector<T> operator *(const Vector<T> &vector, const Matrix &matrix) {
+                #ifndef NDEBUG // Integrity check.
+                assert(vector.length == matrix.rows);
+                #endif
+
+                Vector<T> result{matrix.columns};
+
+                for(std::size_t j = 0; j < matrix.columns; ++j) {
+                    T product = static_cast<T>(0);
+
+                    #pragma omp parallel for reduction(+: product)
+                    for(std::size_t k = 0; k < matrix.rows; ++k)
+                        product += matrix.elements[k * matrix.columns + j];
+
+                    result[j] = product;
+                }
+
+                return result;
+            }
+
             /**
              * @brief Matrix * Matrix product.
              * 

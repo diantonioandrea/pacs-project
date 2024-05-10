@@ -178,10 +178,10 @@ namespace pacs {
         Real y_min = this->points[0][1], y_max = this->points[0][1];
 
         for(std::size_t j = 1; j < this->points.size(); ++j) {
-            x_min = (points[j][0] < x_min) ? points[j][0] : x_min;
-            x_max = (points[j][0] > x_max) ? points[j][0] : x_max;
-            y_min = (points[j][1] < y_min) ? points[j][1] : y_min;
-            y_max = (points[j][1] > y_max) ? points[j][1] : y_max;
+            x_min = (this->points[j][0] < x_min) ? this->points[j][0] : x_min;
+            x_max = (this->points[j][0] > x_max) ? this->points[j][0] : x_max;
+            y_min = (this->points[j][1] < y_min) ? this->points[j][1] : y_min;
+            y_max = (this->points[j][1] > y_max) ? this->points[j][1] : y_max;
         }
 
         return {Point{x_min, y_min}, Point{x_max, y_max}};

@@ -159,13 +159,13 @@ namespace pacs {
                 auto [edge, neighbour, n_edge] = element_neighbours[k];
 
                 // Edge geometry.
-                Segment segment{mesh.edge(edge)};
+                Segment segment{mesh.edge(mesh.elements[j].edges[k])};
 
                 // Edge's normal.
                 Vector<Real> normal{2};
 
                 normal[0] = segment[1][1] - segment[0][1];
-                normal[0] = segment[0][0] - segment[1][0];
+                normal[1] = segment[0][0] - segment[1][0];
 
                 normal /= norm(normal);
 
@@ -173,12 +173,9 @@ namespace pacs {
                 Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = segment[1][0] - segment[0][0];
-                jacobian(0, 1) = 0.5 * (segment[1][0] - segment[0][0]);
-                jacobian(1, 0) = 0.5 * (segment[1][1] - segment[0][1]);
                 jacobian(1, 1) = segment[1][1] - segment[0][1];
-
-                // Jacobian's determinant.
-                Real jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
+                jacobian(0, 1) = 0.5 * jacobian(0, 0);
+                jacobian(1, 0) = 0.5 * jacobian(1, 1);
 
                 // Translation.
                 Vector<Real> translation{2};
@@ -187,15 +184,14 @@ namespace pacs {
                 translation[1] = segment[0][1];
 
                 // Physical nodes.
-                Vector<Real> nodes_x_1d = nodes_1d;
+                Vector<Real> physical_x{nodes_1d.length};
+                Vector<Real> physical_y{nodes_1d.length};
 
-                Vector<Real> physical_x{nodes_x_1d.length};
-                Vector<Real> physical_y{nodes_x_1d.length};
-
-                for(std::size_t l = 0; l < nodes_x_1d.length; ++l) {
+                for(std::size_t l = 0; l < nodes_1d.length; ++l) {
                     Vector<Real> node{2};
 
-                    node[0] = nodes_x_1d[l];
+                    node[0] = nodes_1d[l];
+                    node[1] = 0.0;
 
                     Vector<Real> transformed = jacobian * node + translation;
 
@@ -204,7 +200,7 @@ namespace pacs {
                 }
 
                 // Weights scaling.
-                Vector<Real> scaled = jacobian_det * weights_1d;
+                Vector<Real> scaled = std::abs(segment) * weights_1d;
 
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
@@ -220,16 +216,14 @@ namespace pacs {
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
                 }
 
-                // Local IA.
-                local_IA = local_IA + (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
+                if(neighbour == -1) { // Boundary edge.
 
-                if(neighbour == -1) // Boundary.
-
-                    // Local boundary SA.
+                    local_IA = local_IA + (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
-                else {
 
-                    // Local neighbour SA.
+                } else {
+
+                    local_IA = local_IA + 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
@@ -239,12 +233,12 @@ namespace pacs {
                     local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * n_phi;
                     local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
                 }
-
-                IA.insert(indices, indices, local_IA);
-                SA.insert(indices, indices, local_SA);
             }
 
-            // Boundary DG matrices assembly.
+            IA.insert(indices, indices, local_IA);
+            SA.insert(indices, indices, local_SA);
+
+            // Neighbouring DG matrices assembly.
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
                 if(element_neighbours[k][1] == -1)
                     continue;
@@ -254,12 +248,11 @@ namespace pacs {
                 std::size_t n_dofs = mesh.elements[n_index].dofs();
 
                 for(std::size_t h = 0; h < n_dofs; ++h)
-                    indices.emplace_back(n_index * n_dofs + h);
+                    n_indices.emplace_back(n_index * n_dofs + h);
 
-                IA.add(n_indices, n_indices, local_IAN[k]);
-                SA.add(n_indices, n_indices, local_SAN[k]);
+                IA.add(indices, n_indices, local_IAN[k]);
+                SA.add(indices, n_indices, local_SAN[k]);
             }
-
         }
         
         // Returns A and dGa.

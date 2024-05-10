@@ -19,7 +19,7 @@
 
 namespace pacs {
 
-    // Legendre polynomials.
+    // Legendre polynomials and their derivatives.
 
     Vector<Real> legendre(const Vector<Real> &, const std::size_t &);
     Vector<Real> grad_legendre(const Vector<Real> &, const std::size_t &);
