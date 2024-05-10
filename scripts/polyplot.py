@@ -68,4 +68,7 @@ for line in lines:
 
     plt.plot(x, y, color = (0, 0, 0), linewidth = 0.5)
 
+ax = plt.gca()
+ax.set_aspect('equal', adjustable='box')
+
 plt.show()
