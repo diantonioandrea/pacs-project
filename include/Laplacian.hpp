@@ -26,10 +26,6 @@ namespace pacs {
 
     std::array<Sparse<Real>, 2> laplacian(const Mesh &);
 
-    // Penalty coefficients.
-    
-    Vector<Real> penalty(const Mesh &, const std::size_t &);
-
 }
 
 #endif

@@ -81,12 +81,16 @@ namespace pacs {
     // RHS
 
     /**
-     * @brief Assemblies the RHS for the Poisson problem.
+     * @brief Assemblies the RHS.
      * 
      * @param mesh 
      * @return Vector<Real> 
      */
     Vector<Real> forcing(const Mesh &mesh, const Source &source) {
+
+        #ifdef VERBOSE
+        std::cout << "Computing the forcing term." << std::endl;
+        #endif
 
         // Number of quadrature nodes.
         std::size_t degree = (mesh.degree() % 2) ? mesh.degree() : mesh.degree() + 1;
