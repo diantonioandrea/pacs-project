@@ -34,6 +34,7 @@ Key components include:
     - `Legendre.hpp`: Definitions of Legendre polynomials methods.
     - `Laplacian.hpp`: Definitions of methods for the laplacian matrix.
     - `Forcing.hpp`: Definitions of methods for the forcing term.
+    - `Forcing.hpp`: Definitions of methods for the penalty coefficients.
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
