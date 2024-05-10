@@ -99,7 +99,7 @@ namespace pacs {
         std::size_t dofs = mesh.dofs();
 
         // Neighbours.
-        std::vector<std::vector<std::pair<std::size_t, int>>> neighbours = mesh.neighbours;
+        std::vector<std::vector<std::array<int, 2>>> neighbours = mesh.neighbours;
 
         // Forcing term.
         Vector<Real> forcing{dofs};

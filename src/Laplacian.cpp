@@ -43,7 +43,7 @@ namespace pacs {
         std::size_t dofs = mesh.dofs();
 
         // Neighbours.
-        std::vector<std::vector<std::pair<std::size_t, int>>> neighbours = mesh.neighbours;
+        std::vector<std::vector<std::array<int, 2>>> neighbours = mesh.neighbours;
 
         // Matrices.
         Sparse<Real> A{dofs, dofs};
@@ -143,7 +143,7 @@ namespace pacs {
             Matrix<Real> local_SA{element_dofs, element_dofs};
 
             // Element's neighbours.
-            std::vector<std::pair<std::size_t, int>> element_neighbours = neighbours[j];
+            std::vector<std::array<int, 2>> element_neighbours = neighbours[j];
 
             // Local matrices for neighbours.
             std::vector<Matrix<Real>> local_IAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
@@ -246,11 +246,11 @@ namespace pacs {
 
             // Boundary DG matrices assembly.
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
-                if(element_neighbours[k].second == -1)
+                if(element_neighbours[k][1] == -1)
                     continue;
 
                 std::vector<std::size_t> n_indices;
-                std::size_t n_index = element_neighbours[k].second;
+                std::size_t n_index = element_neighbours[k][1];
                 std::size_t n_dofs = mesh.elements[n_index].dofs();
 
                 for(std::size_t h = 0; h < n_dofs; ++h)
@@ -272,7 +272,7 @@ namespace pacs {
         Element element = mesh.elements[index];
         Polygon polygon = mesh.element(index);
 
-        std::vector<std::pair<std::size_t, int>> neighbours = mesh.neighbours[index];
+        std::vector<std::array<int, 2>> neighbours = mesh.neighbours[index];
 
         // Sizes.
         Vector<Real> sizes{element.edges.size()};
@@ -300,13 +300,13 @@ namespace pacs {
         Vector<Real> inverse_external{neighbours.size()};
 
         for(std::size_t j = 0; j < neighbours.size(); ++j) {
-            if(neighbours[j].second == -1) {
+            if(neighbours[j][1] == -1) {
                 penalties[j] = penalty_dirichlet[j];
                 continue;
             }
             
             std::size_t edge = 0;
-            Element neighbour = mesh.elements[neighbours[j].second];
+            Element neighbour = mesh.elements[neighbours[j][1]];
 
             for(std::size_t k = 0; k < neighbour.edges.size(); ++k)
                 if(neighbour.edges[k] == element.edges[j]) {
@@ -314,9 +314,9 @@ namespace pacs {
                     break;
                 }
 
-            inverse_external[j] = mesh.areas[neighbours[j].second] / mesh.max_simplices[neighbours[j].second][edge];
+            inverse_external[j] = mesh.areas[neighbours[j][1]] / mesh.max_simplices[neighbours[j][1]][edge];
             internal[j] = penalty_coefficient * inverse[j] * sizes[j] / area;
-            external[j] = penalty_coefficient * inverse_external[j] * sizes[j] / mesh.areas[neighbours[j].second];
+            external[j] = penalty_coefficient * inverse_external[j] * sizes[j] / mesh.areas[neighbours[j][1]];
 
             penalties[j] = (internal[j] > external[j]) ? internal[j] : external[j];
         }

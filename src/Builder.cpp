@@ -276,22 +276,22 @@ namespace pacs {
         return boundary_edges;
     }
 
-    std::vector<std::vector<std::pair<std::size_t, int>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
-        std::vector<std::vector<std::pair<std::size_t, int>>> neighbours;
+    std::vector<std::vector<std::array<int, 2>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
+        std::vector<std::vector<std::array<int, 2>>> neighbours;
 
         #ifdef VERBOSE
         std::cout << "\nEvaluating mesh neighbours." << std::endl;
         #endif
 
         for(std::size_t j = 0; j < elements.size(); ++j) {
-            std::vector<std::pair<std::size_t, int>> element_neighbours;
+            std::vector<std::array<int, 2>> element_neighbours;
 
             for(std::size_t k = 0; k < elements[j].edges.size(); ++k) {
                 bool boundary = false;
 
                 for(const auto &edge: boundary_edges) {
                     if(edge == elements[j].edges[k]) {
-                        std::pair<std::size_t, int> pair{k, -1};
+                        std::array<int, 2> pair{static_cast<int>(k), -1};
                         element_neighbours.emplace_back(pair);
                         boundary = true;
                         break;
@@ -309,7 +309,7 @@ namespace pacs {
 
                     for(const auto &edge: elements[h].edges) {
                         if(edge == elements[j].edges[k]) {
-                            std::pair<std::size_t, int> pair{k, h};
+                            std::array<int, 2> pair{static_cast<int>(k), static_cast<int>(h)};
                             element_neighbours.emplace_back(pair);
                             connection = true;
                             break;
