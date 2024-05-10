@@ -55,7 +55,7 @@ Some meaningful tests may include:
 
 - `test_domain`: Creates a mesh over `[-1, 1] x [-1, 1]` and dumps it in `mesh.poly`, readable by `polyplot.py` by running `./scripts/polyplot.py mesh.poly`.
 - `test_gauss`: Evaluates and prints some **Gauss-Legendre** quadrature nodes and weights over `[-1, 1] x [-1, 1]`.
-- `test_algebra`: Solves a simple linear system using the _Conjugate Gradient Method_.
+- `test_algebra`: Solves a simple linear system `Ax = b`.
 
 Single tests can be run by:
 
