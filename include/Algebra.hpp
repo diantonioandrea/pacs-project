@@ -75,6 +75,10 @@ namespace pacs {
         assert(A.columns == b.length);
         #endif
 
+        #ifdef VERBOSE
+        std::cout << "Solving a linear system." << std::endl;
+        #endif
+
         Vector<T> xk{b.length};
         Vector<T> rk = b, rkk = b, pk = rk;
         T ak, bk;
@@ -102,7 +106,7 @@ namespace pacs {
         }
 
         #ifdef VERBOSE
-        std::cout << "\nCGM: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
+        std::cout << "\tConvergence: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
         #endif
 
         return xk;
