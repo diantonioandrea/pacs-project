@@ -6,7 +6,11 @@ report/output
 **/*.o
 **/*.out
 
-# Outputs
+# Makefile's output.
+**/executables
+**/objects
+
+# Executables' output.
 **/output
 
 # Python

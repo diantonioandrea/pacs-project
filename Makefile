@@ -1,5 +1,5 @@
 .PHONY: test run clean distclean
-CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3
+CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 
 # Further optimization.
 # CXXFLAGS += -DNDEBUG
@@ -23,47 +23,57 @@ else
 CXXFLAGS += -Wno-unknown-pragmas
 endif
 
-OBJECTS = $(subst .cpp,.o,$(shell ls ./src))
+# Files.
+OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
 HEADERS = ./include/*.hpp
 
 TEST_RUN = $(subst .cpp,,$(shell ls ./test))
-TEST_EXECS = $(subst .cpp,.out,$(shell ls ./test))
-TEST_OBJECTS = $(subst .cpp,.o,$(shell ls ./test))
+TEST_EXECS = $(subst test/,executables/,$(subst .cpp,.out,$(shell find test -name "*.cpp")))
+TEST_OBJECTS = $(subst test/,objects/,$(subst .cpp,.o,$(shell find test -name "*.cpp")))
 
+# Directories.
 OUTPUT_DIR = ./output
+OBJECT_DIR = ./objects
+EXEC_DIR = ./executables
 
 # Test.
-test: $(TEST_EXECS)
+test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
 	@echo "Done!"
 
-run: $(TEST_RUN)
+run: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
 	@echo "Done!"
 
-$(TEST_RUN): $(TEST_EXECS) $(OUTPUT_DIR)
-	@echo "Executing ./$@ and redirecting the output to $(OUTPUT_DIR)/$@.txt"
-	@./$@.out > $(OUTPUT_DIR)/$@.txt
+$(TEST_RUN): $(TEST_EXECS)
+	@echo "Executing $(EXEC_DIR)/$@ and redirecting the output to $(OUTPUT_DIR)/$@.txt"
+	@$(EXEC_DIR)/$@.out > $(OUTPUT_DIR)/$@.txt
 
-$(TEST_EXECS): %.out: %.o $(OBJECTS)
+$(TEST_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $^ to $@"; else echo "Linking $^ to $@ with the following flags: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(TEST_OBJECTS): %.o: test/%.cpp
+$(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
-$(OBJECTS): %.o: src/%.cpp $(HEADERS)
+$(OBJECTS): ./objects/%.o: src/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with the following flags: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 $(OUTPUT_DIR):
 	@mkdir -p $(OUTPUT_DIR)
 
+$(EXEC_DIR):
+	@mkdir -p $(EXEC_DIR)
+
+$(OBJECT_DIR):
+	@mkdir -p $(OBJECT_DIR)
+
 # Clean.
 clean:
 	@echo "Cleaning the repo."
-	@$(RM) ./*.o
-	@$(RM) ./*.poly
+	@$(RM) -r $(OBJECT_DIR)
 	@$(RM) -r $(OUTPUT_DIR)
+	@$(RM) ./*.poly
 
 distclean: clean
-	@$(RM) ./*.out
+	@$(RM) -r $(EXEC_DIR)
