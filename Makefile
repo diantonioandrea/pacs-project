@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 # CPPFLAGS += -DNVERBOSE
 
 # Further optimization.
-# CXXFLAGS += -DNDEBUG
+# CPPFLAGS += -DNDEBUG
 
 # Parallel computing using OpenMP.
 # ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
