@@ -190,11 +190,9 @@ namespace pacs {
                 Vector result{(j < k) ? k - j : j - k};
 
                 if(j < k) {
-                    #pragma omp parallel for
                     for(std::size_t h = j; h < k; ++h)
                         result[h - j] = this->elements[h];
                 } else {
-                    #pragma omp parallel for
                     for(std::size_t h = k; h > j; h--)
                         result[h - k] = this->elements[h];
                 }
@@ -215,7 +213,6 @@ namespace pacs {
 
                 Vector result{this->length - j};
                 
-                #pragma omp parallel for
                 for(std::size_t h = j; h < this->length; ++h)
                     result[h - j] = this->elements[h];
 
@@ -236,7 +233,6 @@ namespace pacs {
 
                 Vector result{indices.size()};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < indices.size(); ++j)
                     result[j] = this->elements[indices[j]];
 
@@ -257,7 +253,6 @@ namespace pacs {
                     assert(index < this->length);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < indices.size(); ++j)
                     this->elements[indices[j]] = values[j];
             }
@@ -281,7 +276,6 @@ namespace pacs {
             Vector operator -() const {
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element = -element;
 
@@ -297,7 +291,6 @@ namespace pacs {
             Vector operator *(const T &scalar) const {
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element *= scalar;
 
@@ -314,7 +307,6 @@ namespace pacs {
             friend Vector operator *(const T &scalar, const Vector &vector) {
                 Vector result{vector};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element *= scalar;
 
@@ -328,7 +320,6 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator *=(const T &scalar) {
-                #pragma omp parallel for
                 for(auto &element: this->elements)
                     element *= scalar;
 
@@ -344,7 +335,6 @@ namespace pacs {
             Vector operator /(const T &scalar) const {
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element /= scalar;
 
@@ -361,7 +351,6 @@ namespace pacs {
             friend Vector operator /(const T &scalar, const Vector &vector) {
                 Vector result{vector.length, scalar};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < result.length; ++j)
                     result.elements[j] /= vector.elements[j];
 
@@ -375,7 +364,6 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator /=(const T &scalar) {
-                #pragma omp parallel for
                 for(auto &element: this->elements)
                     element /= scalar;
 
@@ -395,7 +383,6 @@ namespace pacs {
 
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->length; ++j)
                     result.elements[j] += vector.elements[j];
 
@@ -413,7 +400,6 @@ namespace pacs {
                 assert(this->length == vector.length);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->length; ++j)
                     this->elements[j] += vector.elements[j];
 
@@ -429,7 +415,6 @@ namespace pacs {
             Vector operator +(const T &scalar) const {
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element += scalar;
                 
@@ -446,7 +431,6 @@ namespace pacs {
             friend Vector operator +(const T &scalar, const Vector &vector) {
                 Vector result{vector};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element += scalar;
                 
@@ -460,7 +444,6 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator +=(const T &scalar) {
-                #pragma omp parallel for
                 for(auto &element: this->elements)
                     element += scalar;
                 
@@ -480,7 +463,6 @@ namespace pacs {
 
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->length; ++j)
                     result.elements[j] -= vector.elements[j];
 
@@ -498,7 +480,6 @@ namespace pacs {
                 assert(this->length == vector.length);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->length; ++j)
                     this->elements[j] -= vector.elements[j];
 
@@ -514,7 +495,6 @@ namespace pacs {
             Vector operator -(const T &scalar) const {
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element -= scalar;
                 
@@ -531,7 +511,6 @@ namespace pacs {
             friend Vector operator -(const T &scalar, const Vector &vector) {
                 Vector result{vector};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element = scalar - element;
                 
@@ -545,7 +524,6 @@ namespace pacs {
              * @return Vector& 
              */
             Vector &operator -=(const T &scalar) {
-                #pragma omp parallel for
                 for(auto &element: this->elements)
                     element -= scalar;
                 
@@ -565,7 +543,6 @@ namespace pacs {
 
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < result.length; ++j)
                     result.elements[j] *= vector.elements[j];
 
@@ -585,7 +562,6 @@ namespace pacs {
 
                 Vector result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < result.length; ++j)
                     result.elements[j] /= vector.elements[j];
 
@@ -677,7 +653,6 @@ namespace pacs {
     
         T result = static_cast<T>(0);
 
-        #pragma omp parallel for reduction(+: result)
         for(std::size_t j = 0; j < first.length; ++j)
             result += first[j] * second[j];
 
@@ -696,13 +671,10 @@ namespace pacs {
     Vector<T> stack(const Vector<T> &first, const Vector<T> &second) {
         Vector<T> result{first.length + second.length};
 
-        #pragma omp parallel
         {
-            #pragma omp for
             for(std::size_t j = 0; j < first.length; ++j)
                 result[j] = first[j];
 
-            #pragma omp for
             for(std::size_t j = first.length; j < first.length + second.length; ++j)
                 result[j] = second[j - first.length];
         }
@@ -721,7 +693,6 @@ namespace pacs {
     Vector<T> flip(const Vector<T> &vector) {
         Vector<T> result{vector.length};
 
-        #pragma omp parallel for
         for(std::size_t j = 0; j < result.length; ++j)
             result[j] = vector[vector.length - j - 1];
 
@@ -743,7 +714,6 @@ namespace std {
     pacs::Vector<T> abs(const pacs::Vector<T> vector) {
         pacs::Vector<T> result{vector.length};
 
-        #pragma omp parallel for
         for(std::size_t j = 0; j < vector.length; ++j)
             result[j] = std::abs(vector[j]);
 

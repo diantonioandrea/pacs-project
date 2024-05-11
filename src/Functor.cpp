@@ -48,7 +48,6 @@ namespace pacs {
 
         Vector<Real> output{x.length};
 
-        #pragma omp parallel for
         for(std::size_t j = 0; j < output.length; ++j)
             output[j] = this->function(x[j], y[j]);
 

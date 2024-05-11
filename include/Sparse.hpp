@@ -345,7 +345,6 @@ namespace pacs {
                 if(std::abs(scalar) <= TOLERANCE)
                     return;
 
-                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->elements[{j, k}] = scalar;
             }
@@ -363,7 +362,6 @@ namespace pacs {
                 assert(!this->compressed);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->insert(j, k, vector[k]);
             }
@@ -412,7 +410,6 @@ namespace pacs {
                 if(std::abs(scalar) <= TOLERANCE)
                     return;
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->elements[{j, k}] = scalar;
             }
@@ -430,7 +427,6 @@ namespace pacs {
                 assert(!this->compressed);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->insert(j, k, vector[j]);
             }
@@ -671,7 +667,6 @@ namespace pacs {
                     for(auto &[key, element]: sparse.elements)
                         result.add(key[0], key[1], element);
                 else
-                    #pragma omp parallel for collapse(2)
                     for(std::size_t j = 0; j < sparse.rows; ++j)
                         for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
                             result.add(j, sparse.outer[k], sparse.values[k]);
@@ -695,7 +690,6 @@ namespace pacs {
                     for(auto &[key, element]: sparse.elements)
                         this->add(key[0], key[1], element);
                 else
-                    #pragma omp parallel for collapse(2)
                     for(std::size_t j = 0; j < sparse.rows; ++j)
                         for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
                             this->add(j, sparse.outer[k], sparse.values[k]);
@@ -721,7 +715,6 @@ namespace pacs {
                     for(auto &[key, element]: sparse.elements)
                         result.add(key[0], key[1], -element);
                 else
-                    #pragma omp parallel for collapse(2)
                     for(std::size_t j = 0; j < sparse.rows; ++j)
                         for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
                             result.add(j, sparse.outer[k], -sparse.values[k]);
@@ -745,7 +738,6 @@ namespace pacs {
                     for(auto &[key, element]: sparse.elements)
                         this->add(key[0], key[1], -element);
                 else
-                    #pragma omp parallel for collapse(2)
                     for(std::size_t j = 0; j < sparse.rows; ++j)
                         for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
                             this->add(j, sparse.outer[k], -sparse.values[k]);
@@ -767,7 +759,6 @@ namespace pacs {
                         element *= scalar;
                 else {
                     
-                    #pragma omp parallel for
                     for(auto &value: result.values)
                         value *= scalar;
 
@@ -791,7 +782,6 @@ namespace pacs {
                         element *= scalar;
                 else {
                     
-                    #pragma omp parallel for
                     for(auto &value: result.values)
                         value *= scalar;
                 }
@@ -811,7 +801,6 @@ namespace pacs {
                         element *= scalar;
                 else {
                     
-                    #pragma omp parallel for
                     for(std::size_t j = 0; j < this->values.size(); ++j)
                         this->values[j] *= scalar;
                 }
@@ -839,7 +828,6 @@ namespace pacs {
                     for(std::size_t j = 0; j < this->rows; ++j) {
                         T product = static_cast<T>(0);
 
-                        #pragma omp parallel for reduction(+: product)
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
                             product += this->values[k] * vector[this->outer[k]];
 
@@ -864,7 +852,6 @@ namespace pacs {
                 Sparse result{this->rows, sparse.columns};
 
                 // Temporary solution, may be extremely slow.
-                #pragma omp parallel for collapse(2)
                 for(std::size_t j = 0; j < this->rows; ++j)
                     for(std::size_t k = 0; k < sparse.columns; ++k)
                         result.insert(j, k, dot(this->row(j), sparse.column(k)));
@@ -918,7 +905,6 @@ namespace pacs {
 
         T product = static_cast<T>(1);
 
-        #pragma omp parallel for reduction(*: product)
         for(std::size_t j = 0; j < sparse.rows; ++j)
             product *= sparse(j, j); // Slow.
 

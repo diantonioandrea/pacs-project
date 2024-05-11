@@ -156,7 +156,6 @@ namespace pacs {
 
                 Vector<T> row{this->columns};
 
-                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     row[k] = this->elements[j * this->columns + k];
 
@@ -174,7 +173,6 @@ namespace pacs {
                 assert(j < this->rows);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->elements[j * this->columns + k] = scalar;
             }
@@ -191,7 +189,6 @@ namespace pacs {
                 assert(vector.length == this->columns);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->elements[j * this->columns + k] = vector[k];
             }
@@ -209,7 +206,6 @@ namespace pacs {
 
                 Vector<T> column{this->rows};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     column[j] = this->elements[j * this->columns + k];
 
@@ -227,7 +223,6 @@ namespace pacs {
                 assert(k < this->columns);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->elements[j * this->columns + k] = scalar;
             }
@@ -244,7 +239,6 @@ namespace pacs {
                 assert(vector.length == this->rows);
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->elements[j * this->columns + k] = vector[j];
             }
@@ -363,7 +357,6 @@ namespace pacs {
             Matrix operator -() const {
                 Matrix result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element = -element;
 
@@ -379,7 +372,6 @@ namespace pacs {
             Matrix operator *(const T &scalar) const {
                 Matrix result{*this};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element *= scalar;
 
@@ -396,7 +388,6 @@ namespace pacs {
             friend Matrix operator *(const T &scalar, const Matrix &matrix) {
                 Matrix result{matrix};
 
-                #pragma omp parallel for
                 for(auto &element: result.elements)
                     element *= scalar;
 
@@ -410,7 +401,6 @@ namespace pacs {
              * @return Matrix& 
              */
             Matrix &operator *=(const T scalar) {
-                #pragma omp parallel for
                 for(auto &element: this->elements)
                     element *= scalar;
 
@@ -430,7 +420,6 @@ namespace pacs {
 
                 Matrix result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->size(); ++j)
                     result.elements[j] += matrix.elements[j];
 
@@ -448,7 +437,6 @@ namespace pacs {
                 assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->size(); ++j)
                     this->elements[j] += matrix.elements[j];
 
@@ -468,7 +456,6 @@ namespace pacs {
 
                 Matrix result{*this};
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->size(); ++j)
                     result.elements[j] -= matrix.elements[j];
 
@@ -486,7 +473,6 @@ namespace pacs {
                 assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
                 #endif
 
-                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->size(); ++j)
                     this->elements[j] -= matrix.elements[j];
 
@@ -509,7 +495,6 @@ namespace pacs {
                 for(std::size_t j = 0; j < this->rows; ++j) {
                     T product = static_cast<T>(0);
 
-                    #pragma omp parallel for reduction(+: product)
                     for(std::size_t k = 0; k < this->columns; ++k)
                         product += this->elements[j * this->columns + k] * vector[k];
 
@@ -529,7 +514,6 @@ namespace pacs {
                 for(std::size_t j = 0; j < matrix.columns; ++j) {
                     T product = static_cast<T>(0);
 
-                    #pragma omp parallel for reduction(+: product)
                     for(std::size_t k = 0; k < matrix.rows; ++k)
                         product += matrix.elements[k * matrix.columns + j];
 
@@ -552,12 +536,10 @@ namespace pacs {
 
                 Matrix result{this->rows, matrix.columns};
                 
-                #pragma omp parallel for collapse(2)
                 for(std::size_t j = 0; j < this->rows; ++j)
                     for(std::size_t k = 0; k < matrix.columns; ++k) {
                         T product = static_cast<T>(0);
 
-                        #pragma omp parallel for reduction (+: product)
                         for(std::size_t h = 0; h < this->columns; ++h)
                             product += this->elements[j * this->columns + h] * matrix.elements[h * matrix.columns + k];
 
@@ -602,7 +584,6 @@ namespace pacs {
     Vector<T> squash(const Matrix<T> &matrix) {
         Vector<T> result{matrix.rows * matrix.columns};
 
-        #pragma omp parallel for collapse(2)
         for(std::size_t j = 0; j < matrix.rows; ++j)
             for(std::size_t k = 0; k < matrix.columns; ++k)
                 result[j * matrix.columns + k] = matrix(j, k);
@@ -625,7 +606,6 @@ namespace pacs {
 
         T product = static_cast<T>(1);
 
-        #pragma omp parallel for reduction(*: product)
         for(std::size_t j = 0; j < matrix.rows; ++j)
             product *= matrix(j, j);
 

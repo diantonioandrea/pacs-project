@@ -128,7 +128,6 @@ namespace pacs {
     std::size_t Mesh::dofs() const {
         std::size_t dofs = 0;
 
-        #pragma omp parallel for reduction(+: dofs)
         for(const auto &element: this->elements)
             dofs += element.dofs();
 
