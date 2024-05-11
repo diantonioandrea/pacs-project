@@ -91,10 +91,10 @@ namespace pacs {
         M upper = matrix.upper();
 
         // (L + diagonal)'s determinant.
-        T determinant = mtrace(lower);
+        T check = mtrace(matrix);
         
         #ifndef NDEBUG // Integrity check.
-        assert(std::abs(determinant) > ALGEBRA_TOLERANCE);
+        assert(std::abs(check) > ALGEBRA_TOLERANCE);
         #endif
 
         // L's inverse.
