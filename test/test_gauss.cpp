@@ -13,7 +13,6 @@
 
 // Testing Quadrature.
 #include <Quadrature.hpp>
-using pacs::Real;
 
 int main() {
 

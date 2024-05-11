@@ -13,12 +13,11 @@
 
 // Testing Algebra.
 #include <Algebra.hpp>
-using pacs::Real;
 
 int main() {
 
     // Constructs a Matrix.
-    pacs::Sparse<Real> matrix{2, 2};
+    pacs::Sparse<pacs::Real> matrix{2, 2};
 
     matrix.insert(0, 0, 4.0);
     matrix.insert(0, 1, 1.0);
@@ -26,7 +25,7 @@ int main() {
     matrix.insert(1, 1, 3.0);
 
     // Constructs a Vector.
-    pacs::Vector<Real> vector{2};
+    pacs::Vector<pacs::Real> vector{2};
 
     vector[0] = 1.0;
     vector[1] = 2.0;

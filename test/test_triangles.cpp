@@ -17,7 +17,6 @@
 // Testing Polygon triangulation.
 #include <Geometry.hpp>
 #include <Voronoi.hpp>
-using pacs::Real;
 
 int main() {
 

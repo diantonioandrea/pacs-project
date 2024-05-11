@@ -13,7 +13,6 @@
 
 // Testing Polygon.
 #include <Geometry.hpp>
-using pacs::Real;
 
 int main() {
 

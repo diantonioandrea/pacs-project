@@ -13,12 +13,11 @@
 
 // Testing Matrix.
 #include <Matrix.hpp>
-using pacs::Real;
 
 int main() {
 
     // Constructing a matrix.
-    pacs::Matrix<Real> matrix{2, 2};
+    pacs::Matrix<pacs::Real> matrix{2, 2};
 
     // Write.
     matrix(0, 0) = 1;
@@ -28,7 +27,7 @@ int main() {
     std::cout << matrix << std::endl;
 
     // Vector product.
-    pacs::Vector<Real> vector{2};
+    pacs::Vector<pacs::Real> vector{2};
     
     vector[0] = 1;
     vector[1] = 2;

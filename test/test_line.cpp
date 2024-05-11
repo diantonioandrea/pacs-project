@@ -13,7 +13,6 @@
 
 // Testing Line.
 #include <Geometry.hpp>
-using pacs::Real;
 
 int main() {
 

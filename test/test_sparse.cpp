@@ -13,12 +13,11 @@
 
 // Testing Sparse.
 #include <Sparse.hpp>
-using pacs::Real;
 
 int main() {
 
     // Constructing a matrix.
-    pacs::Sparse<Real> sparse{2, 2};
+    pacs::Sparse<pacs::Real> sparse{2, 2};
     
     // Insert.
     sparse.insert(0, 0, 1);
@@ -31,7 +30,7 @@ int main() {
     std::cout << sparse << std::endl;
 
     // Vector product.
-    pacs::Vector<Real> vector{2};
+    pacs::Vector<pacs::Real> vector{2};
     
     vector[0] = 1;
     vector[1] = 2;

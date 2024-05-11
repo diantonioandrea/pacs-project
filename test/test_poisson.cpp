@@ -18,10 +18,9 @@
 #include <Laplacian.hpp>
 #include <Forcing.hpp>
 #include <Solution.hpp>
-using pacs::Real;
 
-Real source(const Real &, const Real &);
-Real exact(const Real &, const Real &);
+pacs::Real source(const pacs::Real &, const pacs::Real &);
+pacs::Real exact(const pacs::Real &, const pacs::Real &);
 
 int main() {
 
@@ -45,10 +44,10 @@ int main() {
     auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
     // Builds the forcing term.
-    pacs::Vector<Real> forcing = pacs::forcing(mesh, test_source);
+    pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
     
     // Linear system solution.
-    pacs::Vector<Real> solution = pacs::solve(laplacian, forcing);
+    pacs::Vector<pacs::Real> solution = pacs::solve(laplacian, forcing);
 
     // Output.
     auto [x, y, n_solution, e_solution] = pacs::solution(mesh, solution, test_exact);
@@ -60,17 +59,17 @@ int main() {
  * 
  * @param x 
  * @param y 
- * @return Real 
+ * @return pacs::Real 
  */
-Real source(const Real &x, const Real &y) {
+pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
     return 2 * M_PI * M_PI * std::sin(M_PI * x) * std::sin(M_PI * y);
 }
 
 /**
  * @brief Test exact solution.
  * 
- * @return Real 
+ * @return pacs::Real 
  */
-Real exact(const Real &x, const Real &y) {
+pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
     return std::sin(M_PI * x) * std::sin(M_PI * y);
 }
