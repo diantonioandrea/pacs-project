@@ -201,6 +201,46 @@ namespace pacs {
 
                 return result;
             }
+            
+            /**
+             * @brief Returns a sub-Vector given a std::vector of indices.
+             * 
+             * @param indices 
+             * @return Vector 
+             */
+            Vector operator ()(const std::vector<std::size_t> &indices) const {
+                #ifndef NDEBUG // Integrity check.
+                for(const auto &index: indices)
+                    assert(index < this->length);
+                #endif
+
+                Vector result{indices.size()};
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < indices.size(); ++j)
+                    result[j] = this->elements[indices[j]];
+
+                return result;
+            }
+
+            /**
+             * @brief Sets a sub-Vector given a std::vector of indices and a Vector of values.
+             * 
+             * @param indices 
+             * @param values 
+             * @return Vector 
+             */
+            void operator ()(const std::vector<std::size_t> &indices, const Vector &values) {
+                #ifndef NDEBUG // Integrity check.
+                assert(indices.size() == values.length)
+                for(const auto &index: indices)
+                    assert(index < this->length);
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < indices.size(); ++j)
+                    this->elements[indices[j]] = values[j];
+            }
 
             /**
              * @brief Returns the [j, end) range.
