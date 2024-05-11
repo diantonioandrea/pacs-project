@@ -282,6 +282,48 @@ namespace pacs {
                 return transpose;
             }
 
+            /**
+             * @brief Returns the lower triangular part of the Matrix.
+             * 
+             * @return Matrix 
+             */
+            Matrix lower() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Matrix lower{this->rows, this->columns};
+
+                for(std::size_t j = 0; j < this->rows; ++j) {
+                    for(std::size_t k = 0; k <= j; ++k) {
+                        lower.elements[j * this->columns + k] = this->elements[j * this->columns + k];
+                    }
+                }
+
+                return lower;
+            }
+
+            /**
+             * @brief Returns the upper triangular part of the Matrix.
+             * 
+             * @return Matrix 
+             */
+            Matrix upper() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Matrix upper{this->rows, this->columns};
+
+                for(std::size_t j = 0; j < this->rows; ++j) {
+                    for(std::size_t k = this->columns - 1; k > j; --k) {
+                        upper.elements[j * this->columns + k] = this->elements[j * this->columns + k];
+                    }
+                }
+
+                return upper;
+            }
+
             // OPERATORS.
 
             /**
