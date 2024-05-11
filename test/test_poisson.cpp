@@ -32,7 +32,7 @@ int main() {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 30)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 32)};
 
     // Source and exact solution.
     pacs::Functor test_source{source};
@@ -42,12 +42,12 @@ int main() {
     mesh.write("poisson.poly");
 
     // Builds the laplacian matrix.
-    pacs::Sparse<Real> laplacian = pacs::laplacian(mesh)[1];
+    auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
     // Builds the forcing term.
     pacs::Vector<Real> forcing = pacs::forcing(mesh, test_source);
     
-    // Solution by CGM.
+    // Linear system solution.
     pacs::Vector<Real> solution = pacs::solve(laplacian, forcing);
 
     // Output.
