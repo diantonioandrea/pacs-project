@@ -15,6 +15,10 @@
 #define COLLAPSE_TOLERANCE 1E-1
 #endif
 
+#ifndef LLOYD_TOLERANCE
+#define LLOYD_TOLERANCE 1E-4
+#endif
+
 // Maximum number of iterations for the Lloyd's algorithm.
 #ifndef LLOYD_MAX_ITER
 #define LLOYD_MAX_ITER 256
@@ -44,13 +48,36 @@ namespace pacs {
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
         #endif
 
-        // Relaxation.
+        // Relaxation, Lloyd's algorithm.
+        std::vector<Point> centroids(cells, Point{0.0, 0.0});
+
         for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
-            mesh = lloyd(domain, mesh);
+
+            // Update.
+            Real residual = 0.0;
+
+            for(std::size_t k = 0; k < cells; ++k) {
+                
+                // New point.
+                Point centroid = mesh[k].centroid();
+
+                // Residual.
+                residual += std::abs(centroids[k] - centroid);
+
+                // Update.
+                centroids[k] = centroid;
+
+            }
+
+            // Relaxation step.
+            mesh = voronoi(domain, centroids);
 
             #ifndef NVERBOSE
-            std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm." << std::endl;
+            std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
             #endif
+
+            if(residual < LLOYD_TOLERANCE)
+                break;
         }
 
         // Small edges collapse.
@@ -62,7 +89,7 @@ namespace pacs {
                 sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
 
         #ifndef NVERBOSE
-        std::cout << "\tEvaluated elements sizes." << std::endl;
+        std::cout << "Evaluated elements sizes." << std::endl;
         #endif
 
         std::size_t index = 0;

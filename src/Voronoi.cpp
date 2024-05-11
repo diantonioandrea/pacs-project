@@ -86,24 +86,6 @@ namespace pacs {
         return voronoi(domain, points);
     }
 
-    // LLOYD.
-
-    /**
-     * @brief Relaxes a Voronoi diagram through a single-step Lloyd's algorithm.
-     * 
-     * @param domain 
-     * @param cells 
-     * @return std::vector<Polygon> 
-     */
-    std::vector<Polygon> lloyd(const Polygon &domain, const std::vector<Polygon> &cells) {
-        std::vector<Point> centroids;
-
-        for(const auto &cell: cells)
-            centroids.emplace_back(cell.centroid());
-
-        return voronoi(domain, centroids);
-    }
-
     // TRIANGLES.
 
     std::vector<Polygon> triangulate(const Polygon &polygon) {
