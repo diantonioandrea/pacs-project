@@ -386,7 +386,7 @@ namespace pacs {
                     }
                 else
                     for(std::size_t j = 0; j < this->rows; ++j)
-                        for(std::size_t h = this->inner[j]; h < this->inner[j + 1]; ++j)
+                        for(std::size_t h = this->inner[j]; h < this->inner[j + 1]; ++h)
                             if(this->outer[h] == k) {
                                 column[j] = this->values[h];
                                 break;
@@ -824,16 +824,10 @@ namespace pacs {
                 if(!(this->compressed))
                     for(const auto &[key, element]: this->elements)
                         result[key[0]] += element * vector[key[1]];
-                else {
-                    for(std::size_t j = 0; j < this->rows; ++j) {
-                        T product = static_cast<T>(0);
-
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                            product += this->values[k] * vector[this->outer[k]];
-
-                        result[j] = product;
-                    }
-                }
+                            result[j] += this->values[k] * vector[this->outer[k]];
 
                 return result;
             }
