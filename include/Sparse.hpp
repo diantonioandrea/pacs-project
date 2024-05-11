@@ -957,7 +957,7 @@ namespace pacs {
 
         #pragma omp parallel for reduction(*: product)
         for(std::size_t j = 0; j < sparse.rows; ++j)
-            product *= sparse(j, j); // Slower than matrices.
+            product *= sparse(j, j); // Slow.
 
         return product;
     }
