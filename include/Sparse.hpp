@@ -662,7 +662,6 @@ namespace pacs {
             Sparse operator +(const Sparse &sparse) const {
                 #ifndef NDEBUG // Integrity checks.
                 assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
-                assert(!result.compressed);
                 #endif
 
                 Sparse result{*this};

@@ -262,7 +262,7 @@ namespace pacs {
                     this->elements[indices[j]] = values[j];
             }
 
-            // OPERATORS.
+            // OPERATIONS.
 
             /**
              * @brief Vector unary +.
@@ -590,6 +590,22 @@ namespace pacs {
                     result.elements[j] /= vector.elements[j];
 
                 return result;
+            }
+
+            // NORM.
+
+            /**
+             * @brief Returns the l2 norm of the Vector.
+             * 
+             * @return Real 
+             */
+            Real norm() const {
+                Real norm = 0.0;
+
+                for(const auto &element: this->elements)
+                    norm += std::abs(element) * std::abs(element);
+
+                return std::sqrt(norm);
             }
 
             // OUTPUT.

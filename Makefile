@@ -2,7 +2,7 @@
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 
 # Verbosity.
-CPPFLAGS += -DNVERBOSE
+# CPPFLAGS += -DNVERBOSE
 
 # Further optimization.
 # CXXFLAGS += -DNDEBUG

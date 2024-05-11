@@ -178,7 +178,7 @@ namespace pacs {
                 normal[0] = segment[1][1] - segment[0][1];
                 normal[1] = segment[0][0] - segment[1][0];
 
-                normal /= norm(normal);
+                normal /= normal.norm();
 
                 // Jacobian.
                 Matrix<Real> jacobian{2, 2};
