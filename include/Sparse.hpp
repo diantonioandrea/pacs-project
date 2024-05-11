@@ -218,7 +218,7 @@ namespace pacs {
              * @param element 
              */
             void insert(const std::size_t &j, const std::size_t &k, const T &element) {
-                #ifndef NDEBUG // Out-of-bound and uncompression check.
+                #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 assert(!(this->compressed));
                 
@@ -260,7 +260,7 @@ namespace pacs {
              * @param element 
              */
             void add(const std::size_t &j, const std::size_t &k, const T &element) {
-                #ifndef NDEBUG // Out-of-bound and uncompression check.
+                #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 assert(!(this->compressed));
                 
@@ -491,7 +491,7 @@ namespace pacs {
                     for(std::size_t j = 0; j < this->rows; ++j)
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
                             if(j == this->outer[k]) {
-                                diagonal.elements[{j, k}] = this->values[k];
+                                diagonal.elements[{j, this->outer[k]}] = this->values[k];
                                 break;
                             }
                 
@@ -518,10 +518,8 @@ namespace pacs {
                 else
                     for(std::size_t j = 0; j < this->rows; ++j)
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                            if(j > this->outer[k]) {
-                                lower.elements[{j, k}] = this->values[k];
-                                break;
-                            }
+                            if(j > this->outer[k])
+                                lower.elements[{j, this->outer[k]}] = this->values[k];
                 
                 return lower;
             }
@@ -546,10 +544,8 @@ namespace pacs {
                 else
                     for(std::size_t j = 0; j < this->rows; ++j)
                         for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
-                            if(j < this->outer[k]) {
-                                upper.elements[{j, k}] = this->values[k];
-                                break;
-                            }
+                            if(j < this->outer[k])
+                                upper.elements[{j, this->outer[k]}] = this->values[k];
                 
                 return upper;
             }
