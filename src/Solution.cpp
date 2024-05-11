@@ -41,7 +41,7 @@ namespace pacs {
             edges += mesh.elements[j].edges.size();
 
         // Entries.
-        std::size_t entries = edges * mesh.dofs() * degree;
+        std::size_t entries = edges * degree * degree;
 
         // Return values.
         Vector<Real> x{entries};
@@ -51,6 +51,12 @@ namespace pacs {
 
         // Quadrature nodes.
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
+
+        // Local vectors indices.
+        std::vector<std::size_t> local_indices;
+
+        for(std::size_t h = 0; h < degree * degree; ++h)
+            local_indices.emplace_back(h);
 
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements_number(); ++j) {
@@ -72,12 +78,6 @@ namespace pacs {
 
             // Loop over the sub-triangulation.
             for(std::size_t k = 0; k < triangles.size(); ++k) {
-
-                // Local vectors indices.
-                std::vector<std::size_t> local_indices;
-
-                for(std::size_t h = 0; h < element_dofs; ++h)
-                    local_indices.emplace_back((j + k) * element_dofs + h);
 
                 // Triangle.
                 Polygon triangle = triangles[k];
@@ -126,6 +126,10 @@ namespace pacs {
                 y(local_indices, physical_y);
                 numerical_solution(local_indices, local_numerical);
                 exact_solution(local_indices, local_exact);
+
+                // Local indices update.
+                for(auto &index: local_indices)
+                    index += degree * degree;
             }
         }
 

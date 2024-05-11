@@ -24,7 +24,7 @@ namespace pacs {
 
     // Laplacian matrix.
 
-    std::array<Sparse<Real>, 2> laplacian(const Mesh &);
+    std::array<Sparse<Real>, 3> laplacian(const Mesh &);
 
 }
 

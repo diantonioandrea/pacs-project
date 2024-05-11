@@ -36,7 +36,7 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 8092
+#define ALGEBRA_ITER_MAX 2E4
 #endif
 
 namespace pacs {
@@ -107,6 +107,7 @@ namespace pacs {
 
         #ifdef VERBOSE
         std::cout << "\tConvergence: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
+        std::cout << "\tIterations: " << iterations << std::endl;
         std::cout << "\tResidual: " << norm(rkk) << std::endl;
         #endif
 

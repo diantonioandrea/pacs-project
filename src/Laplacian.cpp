@@ -33,7 +33,7 @@ namespace pacs {
      * @param mesh 
      * @return Sparse<Real> 
      */
-    std::array<Sparse<Real>, 2> laplacian(const Mesh &mesh) {
+    std::array<Sparse<Real>, 3> laplacian(const Mesh &mesh) {
 
         #ifdef VERBOSE
         std::cout << "Computing the laplacian matrix." << std::endl;
@@ -53,9 +53,8 @@ namespace pacs {
         std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
 
         // Matrices.
+        Sparse<Real> M{dofs, dofs};
         Sparse<Real> A{dofs, dofs};
-        
-        // To be added.
         Sparse<Real> IA{dofs, dofs};
         Sparse<Real> SA{dofs, dofs};
 
@@ -79,7 +78,8 @@ namespace pacs {
             // Element sub-triangulation.
             std::vector<Polygon> triangles = triangulate(polygon);
 
-            // Local A.
+            // Local matrices.
+            Matrix<Real> local_M{element_dofs, element_dofs};
             Matrix<Real> local_A{element_dofs, element_dofs};
 
             // Loop over the sub-triangulation.
@@ -130,17 +130,21 @@ namespace pacs {
                 // Some products.
                 Matrix<Real> scaled_gradx = gradx_phi;
                 Matrix<Real> scaled_grady = grady_phi;
+                Matrix<Real> scaled_phi = phi;
 
                 for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
                     scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
                     scaled_grady.column(l, scaled_grady.column(l) * scaled);
+                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
                 }
 
                 // Local matrix assembly.
+                local_M = local_M + scaled_phi.transpose() * scaled_phi;
                 local_A = local_A + scaled_gradx.transpose() * gradx_phi + scaled_grady.transpose() * grady_phi;
             }
 
             // Global matrix assembly.
+            M.insert(indices, indices, local_M);
             A.insert(indices, indices, local_A);
 
             // Face integrals.
@@ -261,9 +265,18 @@ namespace pacs {
                 SA.add(indices, n_indices, local_SAN[k]);
             }
         }
+
+        // Matrices.
+        Sparse<Real> mass = M;
+        Sparse<Real> dg_stiffness = A + SA;
+        Sparse<Real> stiffness = dg_stiffness - IA - IA.transpose();
+
+        // Compression.
+        mass.compress();
+        dg_stiffness.compress();
+        stiffness.compress();
         
-        // Returns A and dGa.
-        return {A + SA - IA - IA.transpose(), A + SA};
+        return {mass, stiffness, dg_stiffness};
     }
 
 }
