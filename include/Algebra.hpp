@@ -62,7 +62,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Linear system solver using CGM.
+     * @brief Linear system solver using Gauss-Seidel.
      * 
      * @tparam T 
      * @param A 
@@ -70,48 +70,81 @@ namespace pacs {
      * @return Vector<T> 
      */
     template<MatrixLike M, NumericType T>
-    Vector<T> solve(const M &A, const Vector<T> &b) {
-        #ifndef NDEBUG // Integrity check.
-        assert(A.columns == b.length);
+    Vector<T> solve(const M &matrix, const Vector<T> &vector) {
+        #ifndef NDEBUG // Integrity checks.
+        assert(matrix.rows == matrix.columns);
+        assert(matrix.columns == vector.length);
         #endif
 
         #ifdef VERBOSE
         std::cout << "Solving a linear system." << std::endl;
         #endif
 
-        Vector<T> xk{b.length};
-        Vector<T> rk = b, rkk = b, pk = rk;
-        T ak, bk;
+        // Matrix size.
+        const std::size_t size = matrix.rows;
 
+        // Iterations.
         std::size_t iterations = 0;
 
-        // *k: k-th value.
-        // *kk: (k + 1)-th value
-        while((norm(rkk) > ALGEBRA_TOLERANCE) && (iterations < ALGEBRA_ITER_MAX)) {
-            // Residual.
-            rk = rkk;
+        // L, diagonal and U.
+        M lower = matrix.lower() + matrix.diagonal();
+        M upper = matrix.upper();
 
-            // New guess point.
-            ak = dot(rk, rk) / dot(pk, A * pk);
-            xk += ak * pk;
+        // (L + diagonal)'s determinant.
+        T determinant = mtrace(lower);
+        
+        #ifndef NDEBUG // Integrity check.
+        assert(std::abs(determinant) > ALGEBRA_TOLERANCE);
+        #endif
 
-            // New residual.
-            rkk -= ak * A * pk;
+        // L's inverse.
+        M lower_inv{size, size};
 
-            // bk and pk.
-            bk = dot(rkk, rkk) / dot(rk, rk);
-            pk = rkk + bk * pk;
+        for(std::size_t j = 0; j < size; ++j) {
+            Vector<T> column{size};
+
+            for(std::size_t k = 0; k < size; ++k) {
+                T sum = static_cast<T>(0);
+
+                for(std::size_t l = 0; l < k; ++l)
+                    sum += lower(k, l) * column[l];
+
+                column[k] = (static_cast<T>(j == k) - sum) / lower(k, k);
+            }
+
+            lower_inv.column(j, column);
+        }
+
+        // Solution.    
+        Vector<T> solution{size, 1.0}, old_solution{size};
+
+        // Gauss-Seidel.
+        M T_matrix = - (lower_inv * upper);
+        Vector<T> C_vector = lower_inv * vector;
+
+        // Residual.
+        Vector<T> residual = C_vector;
+
+        // Method.
+        do {
+
+            // Solution evaluation.
+            old_solution = solution;
+            solution = T_matrix * solution + C_vector;
+
+            // Residual evaluation.
+            residual = solution - old_solution;
 
             ++iterations;
-        }
+        } while((norm(residual) > ALGEBRA_TOLERANCE) || (iterations > ALGEBRA_ITER_MAX));
 
         #ifdef VERBOSE
         std::cout << "\tConvergence: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
         std::cout << "\tIterations: " << iterations << std::endl;
-        std::cout << "\tResidual: " << norm(rkk) << std::endl;
+        std::cout << "\tResidual: " << norm(residual) << std::endl;
         #endif
 
-        return xk;
+        return solution;
     }
 }
 

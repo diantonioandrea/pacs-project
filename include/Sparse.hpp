@@ -181,7 +181,7 @@ namespace pacs {
                 return *this;
             }
 
-            // READ AND WRITE.
+            // READ.
 
             /**
              * @brief Const call operator, returns the (i, j)-th element if present.
@@ -207,6 +207,8 @@ namespace pacs {
                 // Default return.
                 return static_cast<T>(0);
             }
+
+            // INSERT.
 
             /**
              * @brief Inserts a new element.
@@ -248,6 +250,8 @@ namespace pacs {
                             this->elements[{J[j], K[k]}] = elements(j, k);
             }
 
+            // ADD.
+
             /**
              * @brief Adds a new element. Slower than an insert for simple creation.
              * 
@@ -272,7 +276,7 @@ namespace pacs {
             }
 
             /**
-             * @brief Adds a new matrix of elements. Slower than an insert for simple creation.
+             * @brief Adds a new matrix of elements.
              * 
              * @param j 
              * @param k 
@@ -294,6 +298,141 @@ namespace pacs {
                             else
                                 this->elements[{J[j], K[k]}] = elements(j, k);
                         }
+            }
+
+            // ROW AND COLUMN.
+
+            /**
+             * @brief Returns the j-th row as a Vector.
+             * 
+             * @param j 
+             * @return Vector<T> 
+             */
+            Vector<T> row(const std::size_t &j) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                #endif
+
+                Vector<T> row{this->columns};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements) {
+                        if(key[0] > j)
+                            break;
+
+                        if(key[0] == j)
+                            row[key[1]] = element;
+                    }
+                else
+                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                        row[this->outer[k]] = this->values[k];
+
+                return row;
+            }
+
+            /**
+             * @brief Sets the j-th row to the given scalar.
+             * 
+             * @param j 
+             * @param scalar 
+             */
+            void row(const std::size_t &j, const T &scalar) {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                assert(!this->compressed);
+                #endif
+
+                if(std::abs(scalar) <= TOLERANCE)
+                    return;
+
+                #pragma omp parallel for
+                for(std::size_t k = 0; k < this->columns; ++k)
+                    this->elements[{j, k}] = scalar;
+            }
+
+            /**
+             * @brief Sets the j-th row to the given Vector.
+             * 
+             * @param j 
+             * @param vector 
+             */
+            void row(const std::size_t &j, const Vector<T> &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->rows);
+                assert(vector.length == this->columns);
+                assert(!this->compressed);
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t k = 0; k < this->columns; ++k)
+                    this->insert(j, k, vector[k]);
+            }
+
+            /**
+             * @brief Return the k-th column as a Vector.
+             * 
+             * @param k 
+             * @return Vector<T> 
+             */
+            Vector<T> column(const std::size_t &k) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                #endif
+
+                Vector<T> column{this->rows};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements) {
+                        if(key[1] == k)
+                            column[key[0]] = element;
+                    }
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t h = this->inner[j]; h < this->inner[j + 1]; ++j)
+                            if(this->outer[h] == k) {
+                                column[j] = this->values[h];
+                                break;
+                            }
+
+                return column;
+            }
+
+            /**
+             * @brief Sets the k-th column to the given scalar.
+             * 
+             * @param k 
+             * @param scalar 
+             */
+            void column(const std::size_t &k, const T &scalar) {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                assert(!this->compressed);
+                #endif
+
+                if(std::abs(scalar) <= TOLERANCE)
+                    return;
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    this->elements[{j, k}] = scalar;
+            }
+
+            /**
+             * @brief Sets the k-th column to the given Vector.
+             * 
+             * @param k 
+             * @param vector 
+             */
+            void column(const std::size_t &k, const Vector<T> &vector) {
+                #ifndef NDEBUG // Integrity check.
+                assert(k < this->columns);
+                assert(vector.length == this->rows);
+                assert(!this->compressed);
+                #endif
+
+                #pragma omp parallel for
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    this->insert(j, k, vector[j]);
             }
 
             // SHAPE.
@@ -329,6 +468,90 @@ namespace pacs {
                             transpose.elements[{this->outer[k], j}] = this->values[k];
 
                 return transpose;
+            }
+
+            /**
+             * @brief Returns the diagonal.
+             * 
+             * @return Sparse 
+             */
+            Sparse diagonal() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Sparse diagonal{this->rows, this->columns};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements) {
+                        if(key[0] == key[1])
+                            diagonal.elements[key] = element;
+                    }
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j == this->outer[k]) {
+                                diagonal.elements[{j, k}] = this->values[k];
+                                break;
+                            }
+                
+                return diagonal;
+            }
+
+            /**
+             * @brief Returns the lower triangular part of the Sparse matrix.
+             * 
+             * @return Sparse 
+             */
+            Sparse lower() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Sparse lower{this->rows, this->columns};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements) {
+                        if(key[0] > key[1])
+                            lower.elements[key] = element;
+                    }
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j > this->outer[k]) {
+                                lower.elements[{j, k}] = this->values[k];
+                                break;
+                            }
+                
+                return lower;
+            }
+
+            /**
+             * @brief Returns the upper triangular part of the Sparse matrix.
+             * 
+             * @return Sparse 
+             */
+            Sparse upper() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Sparse upper{this->rows, this->columns};
+
+                if(!(this->compressed))
+                    for(const auto &[key, element]: this->elements) {
+                        if(key[0] < key[1])
+                            upper.elements[key] = element;
+                    }
+                else
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j < this->outer[k]) {
+                                upper.elements[{j, k}] = this->values[k];
+                                break;
+                            }
+                
+                return upper;
             }
 
             // COMPRESSION.
@@ -405,7 +628,34 @@ namespace pacs {
                 return this->compressed;
             }
 
-            // OPERATORS
+            // OPERATIONS.
+
+            /**
+             * @brief Sparse matrix unary +.
+             * 
+             * @return Sparse 
+             */
+            Sparse operator +() const {
+                return *this;
+            }
+
+            /**
+             * @brief Sparse matrix unary -.
+             * 
+             * @return Sparse 
+             */
+            Sparse operator -() const {
+                Sparse result{*this};
+
+                if(!(result.compressed))
+                    for(auto &[key, element]: result.elements)
+                        element = -element;
+                else
+                    for(auto &value: result.values)
+                        value = -value;
+                
+                return result;
+            }
 
             /**
              * @brief Sparse matrix sum.
@@ -576,7 +826,6 @@ namespace pacs {
                     #pragma omp parallel for
                     for(auto &value: result.values)
                         value *= scalar;
-
                 }
 
                 return result;
@@ -597,7 +846,6 @@ namespace pacs {
                     #pragma omp parallel for
                     for(std::size_t j = 0; j < this->values.size(); ++j)
                         this->values[j] *= scalar;
-
                 }
 
                 return *this;
@@ -634,6 +882,33 @@ namespace pacs {
                 return result;
             }
 
+            /**
+             * @brief Sparse matrix * Sparse matrix.
+             * 
+             * @param sparse 
+             * @return Sparse 
+             */
+            Sparse operator *(const Sparse &sparse) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->columns == sparse.rows);
+                #endif
+
+                Sparse result{this->rows, sparse.columns};
+
+                // Temporary solution, may be extremely slow.
+                #pragma omp parallel for collapse(2)
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = 0; k < sparse.columns; ++k)
+                        result.insert(j, k, dot(this->row(j), sparse.column(k)));
+
+                #ifdef DYNAMIC_SPARSE
+                if(this->compressed && sparse.compressed)
+                    result.compress();
+                #endif
+
+                return result;
+            }
+
             // OUTPUT.
 
             /**
@@ -664,6 +939,28 @@ namespace pacs {
                 return ost;
             }
     };
+
+    /**
+     * @brief Multiplicative trace.
+     * 
+     * @tparam T 
+     * @param matrix 
+     * @return T 
+     */
+    template<NumericType T>
+    T mtrace(const Sparse<T> &sparse) {
+        #ifndef NDEBUG // Integrity check.
+        assert(sparse.rows == sparse.columns);
+        #endif
+
+        T product = static_cast<T>(1);
+
+        #pragma omp parallel for reduction(*: product)
+        for(std::size_t j = 0; j < sparse.rows; ++j)
+            product *= sparse(j, j); // Slower than matrices.
+
+        return product;
+    }
 
 }
 

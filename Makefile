@@ -5,7 +5,7 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 # CXXFLAGS += -DNDEBUG
 
 # Verbosity.
-# CPPFLAGS += -DVERBOSE
+CPPFLAGS += -DVERBOSE
 
 # Dynamic compression.
 CPPFLAGS += -DDYNAMIC_SPARSE

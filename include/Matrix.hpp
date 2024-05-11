@@ -120,7 +120,7 @@ namespace pacs {
              * @param k 
              * @return T 
              */
-            T operator ()(const std::size_t &j, const std::size_t &k) const {
+            inline T operator ()(const std::size_t &j, const std::size_t &k) const {
                 #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 #endif
@@ -135,7 +135,7 @@ namespace pacs {
              * @param k 
              * @return T& 
              */
-            T &operator ()(const std::size_t &j, const std::size_t &k) {
+            inline T &operator ()(const std::size_t &j, const std::size_t &k) {
                 #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 #endif
@@ -156,6 +156,7 @@ namespace pacs {
 
                 Vector<T> row{this->columns};
 
+                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     row[k] = this->elements[j * this->columns + k];
 
@@ -173,12 +174,13 @@ namespace pacs {
                 assert(j < this->rows);
                 #endif
 
+                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->elements[j * this->columns + k] = scalar;
             }
 
             /**
-             * @brief Sets the j-th row to the given vector.
+             * @brief Sets the j-th row to the given Vector.
              * 
              * @param j 
              * @param vector 
@@ -189,6 +191,7 @@ namespace pacs {
                 assert(vector.length == this->columns);
                 #endif
 
+                #pragma omp parallel for
                 for(std::size_t k = 0; k < this->columns; ++k)
                     this->elements[j * this->columns + k] = vector[k];
             }
@@ -206,6 +209,7 @@ namespace pacs {
 
                 Vector<T> column{this->rows};
 
+                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     column[j] = this->elements[j * this->columns + k];
 
@@ -223,6 +227,7 @@ namespace pacs {
                 assert(k < this->columns);
                 #endif
 
+                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->elements[j * this->columns + k] = scalar;
             }
@@ -239,6 +244,7 @@ namespace pacs {
                 assert(vector.length == this->rows);
                 #endif
 
+                #pragma omp parallel for
                 for(std::size_t j = 0; j < this->rows; ++j)
                     this->elements[j * this->columns + k] = vector[j];
             }
@@ -281,6 +287,24 @@ namespace pacs {
 
                 return transpose;
             }
+            
+            /**
+             * @brief Returns the diagonal.
+             * 
+             * @return Matrix 
+             */
+            Matrix diagonal() const {
+                #ifndef NDEBUG // Integrity check.
+                assert(this->rows == this->columns);
+                #endif
+
+                Matrix diagonal{this->rows, this->columns};
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    diagonal.elements[j * (this->columns + 1)] = this->elements[j * (this->columns + 1)];
+
+                return diagonal;
+            }
 
             /**
              * @brief Returns the lower triangular part of the Matrix.
@@ -294,11 +318,9 @@ namespace pacs {
 
                 Matrix lower{this->rows, this->columns};
 
-                for(std::size_t j = 0; j < this->rows; ++j) {
-                    for(std::size_t k = 0; k <= j; ++k) {
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = 0; k < j; ++k)
                         lower.elements[j * this->columns + k] = this->elements[j * this->columns + k];
-                    }
-                }
 
                 return lower;
             }
@@ -315,16 +337,38 @@ namespace pacs {
 
                 Matrix upper{this->rows, this->columns};
 
-                for(std::size_t j = 0; j < this->rows; ++j) {
-                    for(std::size_t k = this->columns - 1; k > j; --k) {
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = this->columns - 1; k > j; --k)
                         upper.elements[j * this->columns + k] = this->elements[j * this->columns + k];
-                    }
-                }
 
                 return upper;
             }
 
-            // OPERATORS.
+            // OPERATIONS.
+
+            /**
+             * @brief Matrix unary +.
+             * 
+             * @return Matrix 
+             */
+            Matrix operator +() const {
+                return *this;
+            }
+
+            /**
+             * @brief Matrix unary -.
+             * 
+             * @return Matrix 
+             */
+            Matrix operator -() const {
+                Matrix result{*this};
+
+                #pragma omp parallel for
+                for(auto &element: result.elements)
+                    element = -element;
+
+                return result;
+            }
 
             /**
              * @brief Matrix scalar product.
@@ -564,6 +608,28 @@ namespace pacs {
                 result[j * matrix.columns + k] = matrix(j, k);
 
         return result;
+    }
+
+    /**
+     * @brief Multiplicative trace.
+     * 
+     * @tparam T 
+     * @param matrix 
+     * @return T 
+     */
+    template<NumericType T>
+    T mtrace(const Matrix<T> &matrix) {
+        #ifndef NDEBUG // Integrity check.
+        assert(matrix.rows == matrix.columns);
+        #endif
+
+        T product = static_cast<T>(1);
+
+        #pragma omp parallel for reduction(*: product)
+        for(std::size_t j = 0; j < matrix.rows; ++j)
+            product *= matrix(j, j);
+
+        return product;
     }
 
 }

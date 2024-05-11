@@ -15,16 +15,15 @@
 #include <Algebra.hpp>
 using pacs::Real;
 
-
 int main() {
 
     // Constructs a Matrix.
-    pacs::Matrix<Real> matrix{2, 2};
+    pacs::Sparse<Real> matrix{2, 2};
 
-    matrix(0, 0) = 4.0;
-    matrix(0, 1) = 1.0;
-    matrix(1, 0) = 1.0;
-    matrix(1, 1) = 3.0;
+    matrix.insert(0, 0, 4.0);
+    matrix.insert(0, 1, 1.0);
+    matrix.insert(1, 0, 1.0);
+    matrix.insert(1, 1, 3.0);
 
     // Constructs a Vector.
     pacs::Vector<Real> vector{2};
