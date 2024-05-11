@@ -90,9 +90,6 @@ namespace pacs {
                 jacobian(1, 0) = triangle.points[1][1] - triangle.points[0][1];
                 jacobian(1, 1) = triangle.points[2][1] - triangle.points[0][1];
 
-                // Jacobian's determinant.
-                Real jacobian_det = jacobian(0, 0) * jacobian(1, 1) - jacobian(0, 1) * jacobian(1, 0);
-
                 // Translation.
                 Vector<Real> translation{2};
 
