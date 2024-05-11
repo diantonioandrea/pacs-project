@@ -133,7 +133,7 @@ namespace pacs {
                 return *this;
             }
 
-            // CONVERSION
+            // CONVERSION.
 
             /**
              * @brief Converts the Vector into a std::vector<T>.
