@@ -36,7 +36,7 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 2E4
+#define ALGEBRA_ITER_MAX 32768
 #endif
 
 namespace pacs {
