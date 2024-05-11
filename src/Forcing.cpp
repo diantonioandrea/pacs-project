@@ -40,7 +40,7 @@ namespace pacs {
      */
     Vector<Real> forcing(const Mesh &mesh, const Functor &source) {
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Computing the forcing term." << std::endl;
         #endif
 

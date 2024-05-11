@@ -662,17 +662,11 @@ namespace pacs {
             Sparse operator +(const Sparse &sparse) const {
                 #ifndef NDEBUG // Integrity checks.
                 assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
+                assert(!result.compressed);
                 #endif
 
                 Sparse result{*this};
-                
-                #ifdef DYNAMIC_SPARSE
                 result.uncompress();
-                #endif
-
-                #ifndef NDEBUG // Integrity check.
-                assert(!result.compressed);
-                #endif
 
                 if(!(sparse.compressed))
                     for(auto &[key, element]: sparse.elements)
@@ -695,13 +689,6 @@ namespace pacs {
             Sparse &operator +=(const Sparse &sparse) {
                 #ifndef NDEBUG // Integrity checks.
                 assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
-                #endif
-
-                #ifdef DYNAMIC_SPARSE
-                this->uncompress();
-                #endif
-
-                #ifndef NDEBUG // Integrity check.
                 assert(!this->compressed);
                 #endif
 
@@ -729,14 +716,7 @@ namespace pacs {
                 #endif
 
                 Sparse result{*this};
-                
-                #ifdef DYNAMIC_SPARSE
                 result.uncompress();
-                #endif
-
-                #ifndef NDEBUG // Integrity check.
-                assert(!result.compressed);
-                #endif
 
                 if(!(sparse.compressed))
                     for(auto &[key, element]: sparse.elements)
@@ -759,13 +739,6 @@ namespace pacs {
             Sparse &operator -=(const Sparse &sparse) {
                 #ifndef NDEBUG // Integrity checks.
                 assert((this->rows == sparse.rows) && (this->columns == sparse.columns));
-                #endif
-
-                #ifdef DYNAMIC_SPARSE
-                this->uncompress();
-                #endif
-
-                #ifndef NDEBUG // Integrity check.
                 assert(!this->compressed);
                 #endif
 
@@ -896,11 +869,6 @@ namespace pacs {
                 for(std::size_t j = 0; j < this->rows; ++j)
                     for(std::size_t k = 0; k < sparse.columns; ++k)
                         result.insert(j, k, dot(this->row(j), sparse.column(k)));
-
-                #ifdef DYNAMIC_SPARSE
-                if(this->compressed && sparse.compressed)
-                    result.compress();
-                #endif
 
                 return result;
             }

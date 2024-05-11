@@ -35,7 +35,7 @@ namespace pacs {
      */
     std::array<Sparse<Real>, 3> laplacian(const Mesh &mesh) {
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Computing the laplacian matrix." << std::endl;
         #endif
 

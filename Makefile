@@ -1,14 +1,11 @@
 .PHONY: test run clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 
+# Verbosity.
+CPPFLAGS += -DNVERBOSE
+
 # Further optimization.
 # CXXFLAGS += -DNDEBUG
-
-# Verbosity.
-CPPFLAGS += -DVERBOSE
-
-# Dynamic compression.
-CPPFLAGS += -DDYNAMIC_SPARSE
 
 # Parallel computing using OpenMP.
 # ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.

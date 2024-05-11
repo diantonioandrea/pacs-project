@@ -76,7 +76,7 @@ namespace pacs {
         assert(matrix.columns == vector.length);
         #endif
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Solving a linear system." << std::endl;
         #endif
 
@@ -138,7 +138,7 @@ namespace pacs {
             ++iterations;
         } while((norm(residual) > ALGEBRA_TOLERANCE) || (iterations > ALGEBRA_ITER_MAX));
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "\tConvergence: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
         std::cout << "\tIterations: " << iterations << std::endl;
         std::cout << "\tResidual: " << norm(residual) << std::endl;

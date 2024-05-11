@@ -33,14 +33,14 @@ namespace pacs {
      */
     std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells) {
         
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Generating a mesh for: " << domain << std::endl;
         #endif
 
         // Diagram.
         std::vector<Polygon> mesh = voronoi(domain, cells);
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
         #endif
 
@@ -48,7 +48,7 @@ namespace pacs {
         for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
             mesh = lloyd(domain, mesh);
 
-            #ifdef VERBOSE
+            #ifndef NVERBOSE
             std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm." << std::endl;
             #endif
         }
@@ -61,7 +61,7 @@ namespace pacs {
             for(const auto &edge: mesh[j].edges())
                 sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "\tEvaluated elements sizes." << std::endl;
         #endif
 
@@ -69,7 +69,7 @@ namespace pacs {
         while(index < mesh.size()) {
             bool flag = true;
 
-            #ifdef VERBOSE
+            #ifndef NVERBOSE
             std::cout << "\tCollapsing element " << index << "." << std::endl;
             #endif
 
@@ -130,7 +130,7 @@ namespace pacs {
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &mesh) {
         std::vector<Point> nodes;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh nodes." << std::endl;
         #endif
 
@@ -162,7 +162,7 @@ namespace pacs {
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &mesh) {
         std::vector<Segment> edges;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh edges." << std::endl;
         #endif
 
@@ -196,7 +196,7 @@ namespace pacs {
     std::vector<Element> mesh_elements(const std::vector<Polygon> &mesh, const std::vector<Point> &nodes, const std::vector<Segment> &edges) {
         std::vector<Element> elements;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh elements." << std::endl;
         #endif
 
@@ -238,7 +238,7 @@ namespace pacs {
     std::vector<std::size_t> mesh_boundary_nodes(const Polygon &domain, const std::vector<Point> &nodes) {
         std::vector<std::size_t> boundary_nodes;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh boundary nodes." << std::endl;
         #endif
 
@@ -262,7 +262,7 @@ namespace pacs {
     std::vector<std::size_t> mesh_boundary_edges(const Polygon &domain, const std::vector<Segment> &edges) {
         std::vector<std::size_t> boundary_edges;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh boundary edges." << std::endl;
         #endif
 
@@ -279,7 +279,7 @@ namespace pacs {
     std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
         std::vector<std::vector<std::array<int, 3>>> neighbours;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating mesh neighbours." << std::endl;
         #endif
 
@@ -334,7 +334,7 @@ namespace pacs {
     std::vector<Real> mesh_areas(const std::vector<Polygon> &polygons) {
         std::vector<Real> areas;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating elements' areas." << std::endl;
         #endif
 
@@ -353,7 +353,7 @@ namespace pacs {
     std::vector<Vector<Real>> mesh_max_simplices(const std::vector<Polygon> &polygons) {
         std::vector<Vector<Real>> max_simplices;
 
-        #ifdef VERBOSE
+        #ifndef NVERBOSE
         std::cout << "Evaluating elements' biggest simplices." << std::endl;
         #endif
 
