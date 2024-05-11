@@ -31,7 +31,7 @@
 
 // Algebra tolerance.
 #ifndef ALGEBRA_TOLERANCE
-#define ALGEBRA_TOLERANCE 1E-8
+#define ALGEBRA_TOLERANCE 1E-6
 #endif
 
 // Algebra iterations limit.
@@ -41,36 +41,16 @@
 
 namespace pacs {
 
-    // METHODS.
-
     /**
-     * @brief Vector Euclidean norm.
-     * 
-     * @tparam T 
-     * @param vector 
-     * @return Real 
-     */
-    template<NumericType T>
-    Real norm(const Vector<T> &vector) {
-        Real sum = 0.0;
-
-        #pragma omp parallel for reduction(+: sum)
-        for(std::size_t j = 0; j < vector.length; ++j)
-            sum += std::abs(vector[j]) * std::abs(vector[j]);
-
-        return std::sqrt(sum);
-    }
-
-    /**
-     * @brief Linear system solver using Gauss-Seidel.
+     * @brief Sparse solver using Gauss-Seidel.
      * 
      * @tparam T 
      * @param A 
      * @param b 
      * @return Vector<T> 
      */
-    template<MatrixLike M, NumericType T>
-    Vector<T> solve(const M &matrix, const Vector<T> &vector) {
+    template<NumericType T>
+    Vector<T> solve(const Sparse<T> &matrix, const Vector<T> &vector) {
         #ifndef NDEBUG // Integrity checks.
         assert(matrix.rows == matrix.columns);
         assert(matrix.columns == vector.length);
@@ -86,9 +66,22 @@ namespace pacs {
         // Iterations.
         std::size_t iterations = 0;
 
+        // Diagonal's inverse.
+        Sparse<T> m_diagonal = matrix.diagonal();
+        Sparse<T> diagonal_inv{size, size};
+
+        for(std::size_t j = 0; j < size; ++j)
+            diagonal_inv.insert(j, j, static_cast<T>(1) / m_diagonal(j, j));
+
+        // Preconditioned.
+        Sparse<T> p_matrix = matrix * diagonal_inv;
+
         // L, diagonal and U.
-        M lower = matrix.lower() + matrix.diagonal();
-        M upper = matrix.upper();
+        Sparse<T> lower = p_matrix.lower();
+        Sparse<T> diagonal = p_matrix.diagonal();
+        Sparse<T> upper = p_matrix.upper();
+
+        Sparse<T> LD = lower + diagonal;
 
         // (L + diagonal)'s determinant.
         T check = mtrace(matrix);
@@ -98,7 +91,7 @@ namespace pacs {
         #endif
 
         // L's inverse.
-        M lower_inv{size, size};
+        Sparse<T> LD_inv{size, size};
 
         for(std::size_t j = 0; j < size; ++j) {
             Vector<T> column{size};
@@ -107,23 +100,26 @@ namespace pacs {
                 T sum = static_cast<T>(0);
 
                 for(std::size_t l = 0; l < k; ++l)
-                    sum += lower(k, l) * column[l];
+                    sum += LD(k, l) * column[l];
 
-                column[k] = (static_cast<T>(j == k) - sum) / lower(k, k);
+                column[k] = (static_cast<T>(j == k) - sum) / LD(k, k);
             }
 
-            lower_inv.column(j, column);
+            LD_inv.column(j, column);
         }
 
         // Solution.    
         Vector<T> solution{size, 1.0}, old_solution{size};
 
         // Gauss-Seidel.
-        M T_matrix = - (lower_inv * upper);
-        Vector<T> C_vector = lower_inv * vector;
+        Sparse<T> T_matrix = - (LD_inv * upper);
+        Vector<T> C_vector = LD_inv * vector;
+
+        // Compression.
+        T_matrix.compress();
 
         // Residual.
-        Vector<T> residual = C_vector;
+        Real residual = 1.0;
 
         // Method.
         do {
@@ -133,18 +129,18 @@ namespace pacs {
             solution = T_matrix * solution + C_vector;
 
             // Residual evaluation.
-            residual = solution - old_solution;
+            residual = (solution - old_solution).norm();
 
             ++iterations;
-        } while((norm(residual) > ALGEBRA_TOLERANCE) || (iterations > ALGEBRA_ITER_MAX));
+        } while((residual > ALGEBRA_TOLERANCE) || (iterations > ALGEBRA_ITER_MAX));
 
         #ifndef NVERBOSE
         std::cout << "\tConvergence: " << ((iterations >= ALGEBRA_ITER_MAX) ? "failure" : "success") << std::endl;
         std::cout << "\tIterations: " << iterations << std::endl;
-        std::cout << "\tResidual: " << norm(residual) << std::endl;
+        std::cout << "\tResidual: " << residual << std::endl;
         #endif
 
-        return solution;
+        return diagonal_inv * solution;
     }
 }
 
