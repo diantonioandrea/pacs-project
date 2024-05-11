@@ -201,6 +201,26 @@ namespace pacs {
 
                 return result;
             }
+
+            /**
+             * @brief Returns the [j, end) range.
+             * 
+             * @param j 
+             * @return Vector 
+             */
+            Vector operator ()(const std::size_t &j) const {
+                #ifndef NDEBUG // Integrity check.
+                assert(j < this->length);
+                #endif
+
+                Vector result{this->length - j};
+                
+                #pragma omp parallel for
+                for(std::size_t h = j; h < this->length; ++h)
+                    result[h - j] = this->elements[h];
+
+                return result;
+            }
             
             /**
              * @brief Returns a sub-Vector given a std::vector of indices.
@@ -232,7 +252,7 @@ namespace pacs {
              */
             void operator ()(const std::vector<std::size_t> &indices, const Vector &values) {
                 #ifndef NDEBUG // Integrity check.
-                assert(indices.size() == values.length)
+                assert(indices.size() == values.length);
                 for(const auto &index: indices)
                     assert(index < this->length);
                 #endif
@@ -240,26 +260,6 @@ namespace pacs {
                 #pragma omp parallel for
                 for(std::size_t j = 0; j < indices.size(); ++j)
                     this->elements[indices[j]] = values[j];
-            }
-
-            /**
-             * @brief Returns the [j, end) range.
-             * 
-             * @param j 
-             * @return Vector 
-             */
-            Vector operator ()(const std::size_t &j) const {
-                #ifndef NDEBUG // Integrity check.
-                assert(j < this->length);
-                #endif
-
-                Vector result{this->length - j};
-                
-                #pragma omp parallel for
-                for(std::size_t h = j; h < this->length; ++h)
-                    result[h - j] = this->elements[h];
-
-                return result;
             }
 
             // OPERATORS.
