@@ -11,9 +11,6 @@
 // Output.
 #include <iostream>
 
-// Algebra.
-#include <Algebra.hpp>
-
 // Testing Poisson problem.
 #include <Laplacian.hpp>
 #include <Forcing.hpp>
@@ -45,9 +42,9 @@ int main() {
 
     // Builds the forcing term.
     pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
-    
+
     // Linear system solution.
-    pacs::Vector<pacs::Real> solution = pacs::solve(laplacian, forcing);
+    pacs::Vector<pacs::Real> solution = laplacian.solve(forcing);
 
     // Output.
     auto [x, y, n_solution, e_solution] = pacs::solution(mesh, solution, test_exact);

@@ -19,9 +19,6 @@
 // Basis functions.
 #include <Basis.hpp>
 
-// Algebra.
-#include <Algebra.hpp>
-
 // Penalty.
 #include <Penalty.hpp>
 

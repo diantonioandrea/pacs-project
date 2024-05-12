@@ -42,6 +42,16 @@
 // Copy.
 #include <algorithm>
 
+// Algebra tolerance.
+#ifndef ALGEBRA_TOLERANCE
+#define ALGEBRA_TOLERANCE 1E-4
+#endif
+
+// Algebra iterations limit.
+#ifndef ALGEBRA_ITER_MAX
+#define ALGEBRA_ITER_MAX 1E4
+#endif
+
 namespace pacs {
     
     /**
@@ -851,6 +861,92 @@ namespace pacs {
                         result.insert(j, k, dot(this->row(j), sparse.column(k)));
 
                 return result;
+            }
+
+            // LINEAR.
+
+            Vector<T> solve(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Search.
+                Vector<T> search{size};
+
+                // Parameters.
+                T alpha, beta;
+
+                // Direction.
+                Vector<T> direction = vector;
+
+                // Residual.
+                Vector<T> residual = vector, old_residual = vector;
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tCGM, iteration: " << iterations << std::endl;
+                    #endif
+
+                    // Search.
+                    search = target * direction;
+
+                    // Old solution and residual.
+                    old_solution = solution;
+                    old_residual = residual;
+
+                    // Alpha computation.
+                    alpha = dot(residual, residual) / dot(direction, search);
+
+                    // Step.
+                    solution += alpha * direction;
+                    residual = vector - target * solution;
+
+                    //  Beta computation.
+                    beta = dot(residual, residual) / dot(old_residual, old_residual);
+
+                    // Direction evaluation.
+                    direction = residual + beta * direction;
+
+                    // Checks.
+                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                        break;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
             }
 
             // OUTPUT.

@@ -11,8 +11,8 @@
 // Output.
 #include <iostream>
 
-// Testing Algebra.
-#include <Algebra.hpp>
+// Testing Sparse solvers.
+#include <Sparse.hpp>
 
 int main() {
 
@@ -24,6 +24,8 @@ int main() {
     matrix.insert(1, 0, 1.0);
     matrix.insert(1, 1, 3.0);
 
+    matrix.compress();
+
     // Constructs a Vector.
     pacs::Vector<pacs::Real> vector{2};
 
@@ -31,6 +33,6 @@ int main() {
     vector[1] = 2.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << pacs::solve(matrix, vector) << std::endl;
+    std::cout << matrix.solve(vector) << std::endl;
     
 }

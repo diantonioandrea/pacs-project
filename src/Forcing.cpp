@@ -27,9 +27,6 @@
 // Basis functions.
 #include <Basis.hpp>
 
-// Algebra.
-#include <Algebra.hpp>
-
 namespace pacs {
 
     /**
