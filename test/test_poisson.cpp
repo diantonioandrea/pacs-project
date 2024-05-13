@@ -46,9 +46,6 @@ int main() {
     // Linear system solution.
     pacs::Vector<pacs::Real> solution = laplacian.solve(forcing);
 
-    // Output.
-    auto [x, y, n_solution, e_solution] = pacs::solution(mesh, solution, test_exact);
-
 }
 
 /**

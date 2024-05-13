@@ -29,6 +29,10 @@ namespace pacs {
 
     std::array<Vector<Real>, 4> solution(const Mesh &, const Vector<Real> &, const Functor &);
 
+    // Modal coefficients of the exact solution.
+
+    Vector<Real> modal(const Mesh &, const Functor &);
+
 }
 
 #endif

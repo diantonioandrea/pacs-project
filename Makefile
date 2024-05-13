@@ -1,8 +1,8 @@
-.PHONY: test run clean distclean
+.PHONY: test example testrun clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 
 # Verbosity.
-# CPPFLAGS += -DNVERBOSE
+CPPFLAGS += -DNVERBOSE
 
 # Further optimization.
 # CPPFLAGS += -DNDEBUG
@@ -24,6 +24,9 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -I./include -O3 -fPIC
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
 HEADERS = ./include/*.hpp
 
+EXAMPLE_EXECS = $(subst example/,executables/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
+EXAMPLE_OBJECTS = $(subst example/,objects/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
+
 TEST_RUN = $(subst .cpp,,$(shell ls ./test))
 TEST_EXECS = $(subst test/,executables/,$(subst .cpp,.out,$(shell find test -name "*.cpp")))
 TEST_OBJECTS = $(subst test/,objects/,$(subst .cpp,.o,$(shell find test -name "*.cpp")))
@@ -37,7 +40,7 @@ EXEC_DIR = ./executables
 test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
 	@echo "Done!"
 
-run: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
+testrun: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
 	@echo "Done!"
 
 $(TEST_RUN): $(TEST_EXECS)
@@ -52,10 +55,24 @@ $(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+# Examples.
+example: $(OBJECT_DIR) $(EXEC_DIR) $(EXAMPLE_EXECS)
+	@echo "Done!"
+
+$(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
+	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+
+$(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS)
+	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+# Objects.
 $(OBJECTS): ./objects/%.o: src/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
+# Directories.
 $(OUTPUT_DIR):
 	@mkdir -p $(OUTPUT_DIR)
 
