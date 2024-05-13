@@ -33,6 +33,7 @@ int main() {
     vector[1] = 2.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << matrix.solve(vector) << std::endl;
+    std::cout << matrix.solve(vector) << std::endl; // CGM.
+    std::cout << matrix.solve<pacs::Kaczmarz>(vector) << std::endl; // Kaczmarz.
     
 }

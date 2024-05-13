@@ -53,6 +53,9 @@
 #endif
 
 namespace pacs {
+
+    // Solvers.
+    enum Solver {Conjugate, Kaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -865,7 +868,53 @@ namespace pacs {
 
             // LINEAR.
 
+            template<Solver S = Conjugate>
             Vector<T> solve(const Vector<T> &vector) const {
+                
+                if constexpr (S == Conjugate)
+                    return this->conjugate_gradient(vector);
+
+                if constexpr (S == Kaczmarz)
+                    return this->kaczmarz(vector);
+
+                return this->conjugate_gradient(vector);
+            }
+
+            // OUTPUT.
+
+            /**
+             * @brief Sparse matrix output.
+             * 
+             * @param ost 
+             * @param sparse 
+             * @return std::ostream& 
+             */
+            friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {
+                if(!(sparse.compressed))
+                    for(const auto &[key, element]: sparse.elements) {
+                        ost << "(" << key[0] << ", " << key[1] << "): " << element;
+
+                        if(key != (*--sparse.elements.end()).first)
+                            ost << std::endl;
+                    }
+                else {
+                    for(std::size_t j = 0; j < sparse.rows; ++j)
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            ost << "(" << j << ", " << sparse.outer[k] << "): " << sparse.values[k];
+
+                            if(k < sparse.inner[sparse.rows] - 1)
+                                ost << std::endl;
+                        }
+                }
+
+                return ost;
+            }
+
+        private:
+
+            // SOLVERS.
+
+            Vector<T> conjugate_gradient(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
@@ -949,34 +998,75 @@ namespace pacs {
                 return solution;
             }
 
-            // OUTPUT.
+            Vector<T> kaczmarz(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
 
-            /**
-             * @brief Sparse matrix output.
-             * 
-             * @param ost 
-             * @param sparse 
-             * @return std::ostream& 
-             */
-            friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {
-                if(!(sparse.compressed))
-                    for(const auto &[key, element]: sparse.elements) {
-                        ost << "(" << key[0] << ", " << key[1] << "): " << element;
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
 
-                        if(key != (*--sparse.elements.end()).first)
-                            ost << std::endl;
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tKaczmarz, iteration: " << iterations << std::endl;
+                    #endif
+
+                    // Index.
+                    std::size_t index = iterations % size;
+
+                    // Step.
+                    Vector<T> row{size};
+                    T product = static_cast<T>(0);
+                    Real norm = 0.0;
+
+                    for(std::size_t k = target.inner[index]; k < target.inner[index + 1]; ++k) {
+                        const T value = target.values[k];
+
+                        row[target.outer[k]] = value;
+                        norm += std::abs(value) * std::abs(value);
+                        product += solution[target.outer[k]] * value;
                     }
-                else {
-                    for(std::size_t j = 0; j < sparse.rows; ++j)
-                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
-                            ost << "(" << j << ", " << sparse.outer[k] << "): " << sparse.values[k];
 
-                            if(k < sparse.inner[sparse.rows] - 1)
-                                ost << std::endl;
-                        }
-                }
+                    old_solution = solution;
+                    solution += ((vector[index] - product) / norm) * row;
 
-                return ost;
+                    // Checks.
+                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                        break;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
             }
     };
 
