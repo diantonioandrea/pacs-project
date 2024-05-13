@@ -17,7 +17,6 @@
 #include <Solution.hpp>
 
 pacs::Real source(const pacs::Real &, const pacs::Real &);
-pacs::Real exact(const pacs::Real &, const pacs::Real &);
 
 int main() {
 
@@ -32,7 +31,6 @@ int main() {
 
     // Source and exact solution.
     pacs::Functor test_source{source};
-    pacs::Function test_exact{exact};
 
     // Writes mesh informations to a file.
     mesh.write("poisson.poly");
@@ -57,13 +55,4 @@ int main() {
  */
 pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
     return 2 * M_PI * M_PI * std::sin(M_PI * x) * std::sin(M_PI * y);
-}
-
-/**
- * @brief Test exact solution.
- * 
- * @return pacs::Real 
- */
-pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
-    return std::sin(M_PI * x) * std::sin(M_PI * y);
 }
