@@ -25,6 +25,25 @@
 
 namespace pacs {
 
+    /**
+     * @brief Readable and plottable solution.
+     * 
+     */
+    struct Solution {
+
+        // Vectors.
+        Vector<Real> x;
+        Vector<Real> y;
+        Vector<Real> numerical;
+        Vector<Real> exact;
+
+        // CONSTRUCTORS.
+
+        Solution() = delete;
+        Solution(const Mesh &, const Vector<Real> &, const Functor &);
+
+    };
+
     // Solution evaluated over the quadrature nodes.
 
     std::array<Vector<Real>, 4> solution(const Mesh &, const Vector<Real> &, const Functor &);

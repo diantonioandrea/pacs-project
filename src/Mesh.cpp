@@ -56,6 +56,19 @@ namespace pacs {
         // Areas and biggest simplices.
         this->areas = mesh_areas(mesh);
         this->max_simplices = mesh_max_simplices(mesh);
+
+        // Degree and entries.
+        std::size_t degree = 0, entries = 0;
+
+        for(const auto &element: this->elements) {
+            degree = (degree < element.degree) ? element.degree : degree;
+            entries += element.edges.size();
+        }
+
+        entries *= degree * degree;
+
+        this->degree = degree;
+        this->entries = entries;
     }
 
     // READ.
@@ -132,20 +145,6 @@ namespace pacs {
             dofs += element.dofs();
 
         return dofs;
-    }
-
-    /**
-     * @brief Returns the highest degree between the mesh' elements.
-     * 
-     * @return std::size_t 
-     */
-    std::size_t Mesh::degree() const {
-        std::size_t degree = 0;
-
-        for(const auto &element: this->elements)
-            degree = (element.degree > degree) ? element.degree : degree;
-
-        return degree;
     }
 
     // OUTPUT.

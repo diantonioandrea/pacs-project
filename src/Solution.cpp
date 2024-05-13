@@ -22,32 +22,17 @@
 namespace pacs {
 
     /**
-     * @brief Returns the quadrature nodes evaluation of a given numerical solution and of the exact solution.
+     * @brief Constructs a new Solution structure.
      * 
      * @param mesh 
      * @param values 
      * @param exact 
-     * @return Vector<Real> 
      */
-    std::array<Vector<Real>, 4> solution(const Mesh &mesh, const Vector<Real> &values, const Functor &exact) {
+    Solution::Solution(const Mesh &mesh, const Vector<Real> &values, const Functor &exact):
+    x{mesh.entries}, y{mesh.entries}, numerical{mesh.entries}, exact{mesh.entries} {
 
         // Number of quadrature nodes.
-        std::size_t degree = (mesh.degree() % 2) ? mesh.degree() : mesh.degree() + 1;
-
-        // Edges.
-        std::size_t edges = 0;
-
-        for(std::size_t j = 0; j < mesh.elements_number(); ++j)
-            edges += mesh.elements[j].edges.size();
-
-        // Entries.
-        std::size_t entries = edges * degree * degree;
-
-        // Return values.
-        Vector<Real> x{entries};
-        Vector<Real> y{entries};
-        Vector<Real> numerical_solution{entries};
-        Vector<Real> exact_solution{entries};
+        std::size_t degree = mesh.degree;
 
         // Quadrature nodes.
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
@@ -122,18 +107,16 @@ namespace pacs {
                 Vector<Real> local_exact = exact(physical_x, physical_y);
 
                 // Writing.
-                x(local_indices, physical_x);
-                y(local_indices, physical_y);
-                numerical_solution(local_indices, local_numerical);
-                exact_solution(local_indices, local_exact);
+                this->x(local_indices, physical_x);
+                this->y(local_indices, physical_y);
+                this->numerical(local_indices, local_numerical);
+                this->exact(local_indices, local_exact);
 
                 // Local indices update.
                 for(auto &index: local_indices)
                     index += degree * degree;
             }
         }
-
-        return {x, y, numerical_solution, exact_solution};
     }
 
     /**
@@ -146,7 +129,7 @@ namespace pacs {
     Vector<Real> modal(const Mesh &mesh, const Functor &exact) {
 
         // Number of quadrature nodes.
-        std::size_t degree = (mesh.degree() % 2) ? mesh.degree() : mesh.degree() + 1;
+        std::size_t degree = (mesh.degree % 2) ? mesh.degree : mesh.degree + 1;
 
         // Coefficients.
         Vector<Real> coefficients{mesh.dofs()};

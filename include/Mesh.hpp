@@ -91,6 +91,12 @@ namespace pacs {
             // Penalty coefficient.
             Real penalty = 10.0;
 
+            // Entries for the solution.
+            std::size_t entries;
+
+            // Quadrature nodes.
+            std::size_t degree;
+
             // CONSTRUCTORS.
 
             Mesh(const Polygon &, const std::vector<Polygon> &);
@@ -109,7 +115,6 @@ namespace pacs {
             inline std::size_t elements_number() const { return this->elements.size(); }
 
             std::size_t dofs() const;
-            std::size_t degree() const;
 
             // OUTPUT.
 

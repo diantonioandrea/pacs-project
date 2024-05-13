@@ -42,7 +42,7 @@ namespace pacs {
         #endif
 
         // Number of quadrature nodes.
-        std::size_t degree = (mesh.degree() % 2) ? mesh.degree() : mesh.degree() + 1;
+        std::size_t degree = (mesh.degree % 2) ? mesh.degree : mesh.degree + 1;
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(degree);
