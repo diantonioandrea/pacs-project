@@ -11,15 +11,25 @@
 // Output.
 #include <iostream>
 
-// Needed headers.
+// Matrices and RHS.
 #include <Laplacian.hpp>
 #include <Forcing.hpp>
+
+// Error evaluation.
+#include <Errors.hpp>
+
+// Solution plot.
 #include <Solution.hpp>
+
+// Filename.
+#include <string>
 
 pacs::Real source(const pacs::Real &, const pacs::Real &);
 pacs::Real exact(const pacs::Real &, const pacs::Real &);
 
 int main() {
+
+    std::cout << "Square domain - uniform refinement." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -45,19 +55,16 @@ int main() {
         // Linear system solution.
         pacs::Vector<pacs::Real> numerical = laplacian.solve(forcing);
 
-        // Error vector.
-        pacs::Vector<pacs::Real> error = pacs::modal(mesh, exact) - numerical;
+        // Errors.
+        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
-        // DG Error.
-        pacs::Real dg_error = std::sqrt(pacs::dot(error, dg_laplacian * error));
-
-        // L2 Error.
-        pacs::Real l2_error = std::sqrt(pacs::dot(error, mass * error));
+        // Solution structure (output).
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string filename = "square_" + std::to_string(mesh.elements.size()) + ".surf";
+        solution.write(filename);
 
         // Output.
-        std::cout << ((j != 0) ? "\n" : "") << "Elements: " << elements << std::endl;
-        std::cout << "L2 Error: " << l2_error << std::endl;
-        std::cout << "DG Error: " << dg_error << std::endl;
+        std::cout << "\n" << error << std::endl;
     }
 }
 

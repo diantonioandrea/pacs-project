@@ -127,10 +127,10 @@ namespace pacs {
      * @brief Constructs a new Solution structure.
      * 
      * @param mesh 
-     * @param values 
+     * @param numerical 
      * @param exact 
      */
-    Solution::Solution(const Mesh &mesh, const Vector<Real> &values, const Functor &exact):
+    Solution::Solution(const Mesh &mesh, const Vector<Real> &numerical, const Functor &exact):
     x{mesh.entries}, y{mesh.entries}, numerical{mesh.entries}, exact{mesh.entries} {
 
         // Number of quadrature nodes.
@@ -203,7 +203,7 @@ namespace pacs {
                 Matrix<Real> phi = basis_2d(mesh, j, {physical_x, physical_y})[0];
 
                 // Numerical solution.
-                Vector<Real> local_numerical = phi * values(indices);
+                Vector<Real> local_numerical = phi * numerical(indices);
 
                 // Exact solution.
                 Vector<Real> local_exact = exact(physical_x, physical_y);
