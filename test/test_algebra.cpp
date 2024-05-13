@@ -33,7 +33,8 @@ int main() {
     vector[1] = 2.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << matrix.solve(vector) << std::endl; // CGM.
+    std::cout << matrix.solve(vector) << std::endl; // Conjugate gradient.
     std::cout << matrix.solve<pacs::Kaczmarz>(vector) << std::endl; // Kaczmarz.
+    std::cout << matrix.solve<pacs::RandomKaczmarz>(vector) << std::endl; // Randomized Kaczmarz.
     
 }

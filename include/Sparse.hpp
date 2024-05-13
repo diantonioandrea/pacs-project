@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Kaczmarz};
+    enum Solver {Conjugate, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -877,6 +877,10 @@ namespace pacs {
                 if constexpr (S == Kaczmarz)
                     return this->kaczmarz(vector);
 
+                if constexpr (S == RandomKaczmarz)
+                    return this->randomized_kaczmarz(vector);
+
+                // Default.
                 return this->conjugate_gradient(vector);
             }
 
@@ -1037,6 +1041,104 @@ namespace pacs {
 
                     // Index.
                     std::size_t index = iterations % size;
+
+                    // Step.
+                    Vector<T> row{size};
+                    T product = static_cast<T>(0);
+                    Real norm = 0.0;
+
+                    for(std::size_t k = target.inner[index]; k < target.inner[index + 1]; ++k) {
+                        const T value = target.values[k];
+
+                        row[target.outer[k]] = value;
+                        norm += std::abs(value) * std::abs(value);
+                        product += solution[target.outer[k]] * value;
+                    }
+
+                    old_solution = solution;
+                    solution += ((vector[index] - product) / norm) * row;
+
+                    // Checks.
+                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                        break;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
+            }
+
+            Vector<T> randomized_kaczmarz(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                // Probabilities.
+                Vector<Real> norms{size}, probabilities{size + 1};
+                Real norm = 0.0;
+
+                for(std::size_t j = 0; j < size; ++j) {
+                    for(std::size_t k = target.inner[j]; k < target.inner[j + 1]; ++k)
+                        norms[j] += std::abs(target.values[k]) * std::abs(target.values[k]);
+
+                    norm += norms[j];
+                }
+
+                for(std::size_t j = 0; j < size + 1; ++j) {
+                    Real sum = 0.0;
+
+                    for(std::size_t k = 0; k < j; ++k)
+                        sum += norms[k] / norm;
+
+                    probabilities[j] = sum;
+                }
+                        
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tKaczmarz, iteration: " << iterations << std::endl;
+                    #endif
+
+                    // Index.
+                    std::size_t index = iterations % size; // Fallback.
+                    Real random = static_cast<Real>(std::rand()) / static_cast<Real>(RAND_MAX);
+
+                    for(std::size_t j = 0; j < size; ++j)
+                        if((probabilities[j] <= random) && (random <= probabilities[j + 1])) {
+                            index = j;
+                            break;
+                        }
 
                     // Step.
                     Vector<T> row{size};
