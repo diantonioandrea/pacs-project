@@ -23,6 +23,9 @@
 // Functor.
 #include <Functor.hpp>
 
+// Output.
+#include <string>
+
 namespace pacs {
 
     /**
@@ -41,6 +44,10 @@ namespace pacs {
 
         Solution() = delete;
         Solution(const Mesh &, const Vector<Real> &, const Functor &);
+
+        // OUTPUT.
+
+        void write(const std::string &);
 
     };
 

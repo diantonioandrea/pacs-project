@@ -88,6 +88,7 @@ clean:
 	@$(RM) -r $(OBJECT_DIR)
 	@$(RM) -r $(OUTPUT_DIR)
 	@$(RM) ./*.poly
+	@$(RM) ./*.surf
 
 distclean: clean
 	@$(RM) -r $(EXEC_DIR)

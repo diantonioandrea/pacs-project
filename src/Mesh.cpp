@@ -57,7 +57,7 @@ namespace pacs {
         this->areas = mesh_areas(mesh);
         this->max_simplices = mesh_max_simplices(mesh);
 
-        // Degree and entries.
+        // Number of quadrature nodes and solution evaluation entries.
         std::size_t degree = 0, entries = 0;
 
         for(const auto &element: this->elements) {
@@ -65,6 +65,7 @@ namespace pacs {
             entries += element.edges.size();
         }
 
+        degree = (degree % 2 == 0) ? degree + 1 : degree;
         entries *= degree * degree;
 
         this->degree = degree;
