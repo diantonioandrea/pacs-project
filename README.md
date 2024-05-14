@@ -36,6 +36,7 @@ Key components include:
     - `Penalty.hpp`: Definitions of methods for the penalty coefficients.
     - `Functor.hpp`: Definitions of the functor class.
     - `Solution.hpp`: Definitions of methods for working with the numerical solution.
+    - `Errors.hpp`: Definitions of methods for evaluating the errors.
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
