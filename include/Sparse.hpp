@@ -941,8 +941,8 @@ namespace pacs {
                 // Search.
                 Vector<T> search{size};
 
-                // Parameters.
-                T alpha, beta;
+                // Parameter.
+                T alpha;
 
                 // Direction.
                 Vector<T> direction = vector;
@@ -981,15 +981,12 @@ namespace pacs {
                     solution += alpha * direction;
                     residual = vector - target * solution;
 
-                    //  Beta computation.
-                    beta = dot(residual, residual) / dot(old_residual, old_residual);
-
-                    // Direction evaluation.
-                    direction = residual + beta * direction;
-
                     // Checks.
                     if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
                         break;
+
+                    // Direction evaluation.
+                    direction = residual; // beta = 0.0.
 
                 } while(iterations < ALGEBRA_ITER_MAX);
 

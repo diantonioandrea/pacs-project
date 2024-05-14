@@ -36,6 +36,9 @@ OUTPUT_DIR = ./output
 OBJECT_DIR = ./objects
 EXEC_DIR = ./executables
 
+# All.
+all: test example
+
 # Test.
 test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
 	@echo "Done!"
