@@ -221,6 +221,29 @@ namespace pacs {
                 return static_cast<T>(0);
             }
 
+            /**
+             * @brief Const call operator, returns a sub-matrix.
+             * 
+             * @param J 
+             * @param K 
+             * @return Matrix<T> 
+             */
+            Matrix<T> operator ()(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K) const {
+                #ifndef NDEBUG // Out-of-bound check.
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    for(std::size_t k = 0; k < K.size(); ++k)
+                        assert((J[j] < this->rows) && (K[k] < this->columns));
+                #endif
+
+                Matrix<T> matrix{J.size(), K.size()};
+
+                for(std::size_t j = 0; j < J.size(); ++j)
+                    for(std::size_t k = 0; k < K.size(); ++k)
+                        matrix(j, k) = (*this)(J[j], K[k]);
+                
+                return matrix;
+            }
+
             // INSERT.
 
             /**

@@ -44,6 +44,8 @@ namespace pacs {
         Real dg_error;
         Real l2_error;
 
+        Vector<Real> l2_errors;
+
         // CONSTRUCTORS.
 
         Error(const Mesh &, const std::array<Sparse<Real>, 2> &, const Vector<Real> &, const Functor &);
