@@ -46,6 +46,10 @@ int main() {
         // Mesh.
         pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
 
+        // Mesh output.
+        std::string polyfile = "square_" + std::to_string(mesh.elements.size()) + ".poly";
+        mesh.write(polyfile);
+
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
@@ -60,8 +64,8 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string filename = "square_" + std::to_string(mesh.elements.size()) + ".surf";
-        solution.write(filename);
+        std::string surffile = "square_" + std::to_string(mesh.elements.size()) + ".surf";
+        solution.write(surffile);
 
         // Output.
         std::cout << "\n" << error << std::endl;
