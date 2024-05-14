@@ -1,7 +1,7 @@
 /**
  * @file square.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief Poisson on a square domain.
+ * @brief Poisson on a square domain. Uniform refinement.
  * @date 2024-05-13
  * 
  * @copyright Copyright (c) 2024
