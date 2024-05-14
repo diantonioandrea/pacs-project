@@ -38,11 +38,11 @@ namespace pacs {
     std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells) {
         
         #ifndef NVERBOSE
-        std::cout << "Generating a mesh for: " << domain << std::endl;
+        std::cout << "Generating a diagram for: " << domain << std::endl;
         #endif
 
         // Diagram.
-        std::vector<Polygon> mesh = voronoi(domain, cells);
+        std::vector<Polygon> diagram = voronoi(domain, cells);
 
         #ifndef NVERBOSE
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
@@ -59,7 +59,7 @@ namespace pacs {
             for(std::size_t k = 0; k < cells; ++k) {
                 
                 // New point.
-                Point centroid = mesh[k].centroid();
+                Point centroid = diagram[k].centroid();
 
                 // Residual.
                 residual += std::abs(centroids[k] - centroid);
@@ -70,7 +70,7 @@ namespace pacs {
             }
 
             // Relaxation step.
-            mesh = voronoi(domain, centroids);
+            diagram = voronoi(domain, centroids);
 
             #ifndef NVERBOSE
             std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
@@ -82,10 +82,10 @@ namespace pacs {
 
         // Small edges collapse.
         std::vector<Real> sizes;
-        sizes.resize(mesh.size(), 0.0);
+        sizes.resize(diagram.size(), 0.0);
 
-        for(std::size_t j = 0; j < mesh.size(); ++j)
-            for(const auto &edge: mesh[j].edges())
+        for(std::size_t j = 0; j < diagram.size(); ++j)
+            for(const auto &edge: diagram[j].edges())
                 sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
 
         #ifndef NVERBOSE
@@ -93,7 +93,7 @@ namespace pacs {
         #endif
 
         std::size_t index = 0;
-        while(index < mesh.size()) {
+        while(index < diagram.size()) {
             bool flag = true;
 
             #ifndef NVERBOSE
@@ -101,15 +101,15 @@ namespace pacs {
             #endif
 
             // Cannot collapse triangles.
-            if(mesh[index].edges().size() == 3)
+            if(diagram[index].edges().size() == 3)
                 continue;
 
             // Looks for small edges.
-            for(auto &edge: mesh[index].edges()) {
+            for(auto &edge: diagram[index].edges()) {
                 if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * sizes[index])
                     continue;
 
-                for(std::size_t k = 0; k < mesh.size(); ++k) {
+                for(std::size_t k = 0; k < diagram.size(); ++k) {
                     if(index == k)
                         continue;
 
@@ -117,21 +117,21 @@ namespace pacs {
                         break;
 
                     // Collapses small edges.
-                    if(mesh[k].contains(edge)) {
-                        mesh[index] = collapse(mesh[index], edge);
-                        mesh[k] = collapse(mesh[k], edge);
+                    if(diagram[k].contains(edge)) {
+                        diagram[index] = collapse(diagram[index], edge);
+                        diagram[k] = collapse(diagram[k], edge);
                         flag = false;
 
                         Point mid = (edge[0] + edge[1]) * 0.5;
 
                         // Moves vertices.
-                        for(std::size_t h = 0; h < mesh.size(); ++h) {
+                        for(std::size_t h = 0; h < diagram.size(); ++h) {
                             if((index  == h) || (k == h))
                                 continue;
 
-                            for(std::size_t l = 0; l < mesh[h].points.size(); ++l) {
-                                if((mesh[h].points[l] == edge[0]) || (mesh[h].points[l] == edge[1]))
-                                    mesh[h].points[l] = mid;
+                            for(std::size_t l = 0; l < diagram[h].points.size(); ++l) {
+                                if((diagram[h].points[l] == edge[0]) || (diagram[h].points[l] == edge[1]))
+                                    diagram[h].points[l] = mid;
                             }
                         }
                     }
@@ -145,7 +145,47 @@ namespace pacs {
                 ++index;
         }
 
-        return mesh;
+        return diagram;
+    }
+
+    std::vector<Polygon> mesh_refine(const Mesh &mesh, const std::vector<std::size_t> &indices) {
+        #ifndef NDEBUG // Integrity check.
+        for(std::size_t j = 0; j < indices.size(); ++j)
+            for(std::size_t k = j + 1; k < indices.size(); ++k)
+                assert(indices[j] != indices[k]);
+        #endif
+
+        #ifndef NVERBOSE
+        std::cout << "Refining mesh." << std::endl;
+        #endif
+
+        std::vector<Polygon> diagram;
+        std::vector<Polygon> refine;
+
+        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
+            bool flag = true;
+
+            for(const auto &index: indices)
+                if(index == j) {
+                    flag = false;
+                    break;
+                }
+
+            if(flag)
+                diagram.emplace_back(mesh.element(j));
+            else
+                refine.emplace_back(mesh.element(j));
+        }
+
+        for(const auto &polygon: refine) {
+            std::vector<Polygon> subdiagram = mesh_diagram(polygon, 3);
+
+            for(const auto &refined: subdiagram)
+                diagram.emplace_back(refined);
+        }
+
+        return diagram;
+
     }
 
     /**
