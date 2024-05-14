@@ -868,6 +868,13 @@ namespace pacs {
 
             // LINEAR.
 
+            /**
+             * @brief Solves a linear system in the form of Ax = b.
+             * 
+             * @tparam S 
+             * @param vector 
+             * @return Vector<T> 
+             */
             template<Solver S = Conjugate>
             Vector<T> solve(const Vector<T> &vector) const {
                 
@@ -921,6 +928,12 @@ namespace pacs {
 
             // SOLVERS.
 
+            /**
+             * @brief Conjugate Gradient method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
             Vector<T> conjugate_gradient(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
@@ -1005,6 +1018,12 @@ namespace pacs {
                 return solution;
             }
 
+            /**
+             * @brief Gradient Descent method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
             Vector<T> gradient_descent(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
@@ -1048,6 +1067,8 @@ namespace pacs {
                         std::cout << "\tGradient Descent, iteration: " << iterations << std::endl;
                     #endif
 
+                    old_solution = solution;
+
                     // Alpha computation.
                     alpha = dot(residual, residual) / dot(residual, target * residual);
 
@@ -1072,6 +1093,12 @@ namespace pacs {
                 return solution;
             }
 
+            /**
+             * @brief Kaczmarz method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
             Vector<T> kaczmarz(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
@@ -1143,6 +1170,12 @@ namespace pacs {
                 return solution;
             }
 
+            /**
+             * @brief Randomized Kaczmarz method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
             Vector<T> randomized_kaczmarz(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
