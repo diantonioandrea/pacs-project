@@ -1,8 +1,8 @@
 /**
- * @file square.cpp
+ * @file square_h.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief Poisson on a square domain. Uniform refinement.
- * @date 2024-05-13
+ * @brief Poisson on a square domain. Element size adaptive refinement.
+ * @date 2024-05-14
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -29,7 +29,7 @@
 
 int main() {
 
-    std::cout << "Square domain - uniform refinement." << std::endl;
+    std::cout << "Square domain - element size adaptive refinement." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -39,15 +39,17 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d}};
 
+    // Diagram.
+    std::vector<pacs::Polygon> diagram  = pacs::mesh_diagram(domain, 16);
+
     // Sequence of meshes.
     for(std::size_t j = 0; j < 4; ++j) {
-        std::size_t elements = std::pow(2, 4 + j);
 
         // Mesh.
-        pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
+        pacs::Mesh mesh{domain, diagram};
 
         // Mesh output.
-        std::string polyfile = "square_" + std::to_string(mesh.elements.size()) + ".poly";
+        std::string polyfile = "square_h_" + std::to_string(mesh.elements.size()) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
@@ -64,10 +66,20 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string surffile = "square_" + std::to_string(mesh.elements.size()) + ".surf";
+        std::string surffile = "square_h_" + std::to_string(mesh.elements.size()) + ".surf";
         solution.write(surffile);
 
         // Output.
         std::cout << "\n" << error << std::endl;
+
+        // Refinement.
+        pacs::Real threshold = pacs::max(error.l2_errors) * 0.5;
+        std::vector<std::size_t> indices;
+
+        for(std::size_t j = 0; j < error.l2_errors.length; ++j)
+            if(error.l2_errors[j] > threshold)
+                indices.emplace_back(j);
+
+        diagram = pacs::mesh_refine(mesh, indices);
     }
 }
