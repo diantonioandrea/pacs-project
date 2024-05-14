@@ -34,6 +34,7 @@ int main() {
 
     // Linear system (Ax = b) solution.
     std::cout << matrix.solve(vector) << std::endl; // Conjugate gradient.
+    std::cout << matrix.solve<pacs::Descent>(vector) << std::endl; // Gradient descent.
     std::cout << matrix.solve<pacs::Kaczmarz>(vector) << std::endl; // Kaczmarz.
     std::cout << matrix.solve<pacs::RandomKaczmarz>(vector) << std::endl; // Randomized Kaczmarz.
     

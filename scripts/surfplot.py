@@ -10,6 +10,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import numpy as np
 import sys
 
 if len(sys.argv) <= 1:
@@ -58,6 +59,13 @@ for line in lines:
 
     except ValueError:
         continue
+
+# Data.
+x_array = np.asarray(x)
+y_array = np.asarray(y)
+z_array = np.asarray(numerical)
+
+indices = np.lexsort((y_array, x_array))
 
 # Plot.
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})

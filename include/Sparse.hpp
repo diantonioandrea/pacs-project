@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Kaczmarz, RandomKaczmarz};
+    enum Solver {Conjugate, Descent, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -874,6 +874,9 @@ namespace pacs {
                 if constexpr (S == Conjugate)
                     return this->conjugate_gradient(vector);
 
+                if constexpr (S == Descent)
+                    return this->gradient_descent(vector);
+
                 if constexpr (S == Kaczmarz)
                     return this->kaczmarz(vector);
 
@@ -941,8 +944,8 @@ namespace pacs {
                 // Search.
                 Vector<T> search{size};
 
-                // Parameter.
-                T alpha;
+                // Parameters.
+                T alpha, beta;
 
                 // Direction.
                 Vector<T> direction = vector;
@@ -964,7 +967,7 @@ namespace pacs {
 
                     #ifndef NVERBOSE
                     if(!(iterations % 50))
-                        std::cout << "\tCGM, iteration: " << iterations << std::endl;
+                        std::cout << "\tConjugate Gradient, iteration: " << iterations << std::endl;
                     #endif
 
                     // Search.
@@ -985,8 +988,78 @@ namespace pacs {
                     if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
                         break;
 
+                    //  Beta computation.
+                    beta = dot(residual, residual) / dot(old_residual, old_residual);
+
                     // Direction evaluation.
-                    direction = residual; // beta = 0.0.
+                    direction = residual + beta * direction;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
+            }
+
+            Vector<T> gradient_descent(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Parameters.
+                T alpha;
+
+                // Residual.
+                Vector<T> residual = vector, old_residual = vector;
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tGradient Descent, iteration: " << iterations << std::endl;
+                    #endif
+
+                    // Alpha computation.
+                    alpha = dot(residual, residual) / dot(residual, target * residual);
+
+                    // Step.
+                    solution += alpha * residual;
+                    residual = vector - target * solution;
+
+                    // Checks.
+                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                        break;
+
+                    residual = vector - target * solution;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
 
@@ -1124,7 +1197,7 @@ namespace pacs {
 
                     #ifndef NVERBOSE
                     if(!(iterations % 50))
-                        std::cout << "\tKaczmarz, iteration: " << iterations << std::endl;
+                        std::cout << "\tRandomized Kaczmarz, iteration: " << iterations << std::endl;
                     #endif
 
                     // Index.
