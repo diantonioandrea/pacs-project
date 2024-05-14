@@ -27,7 +27,7 @@ namespace pacs {
 
     // Real alias.
 
-    using Real = double;
+    using Real = long double;
 
     // Function alias.
     
