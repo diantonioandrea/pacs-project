@@ -582,6 +582,71 @@ namespace pacs {
                 return upper;
             }
 
+            // SHAPE CHECKS.
+
+            /**
+             * @brief Checks whether the Sparse matrix is diagonal.
+             * 
+             * @return true 
+             * @return false 
+             */
+            bool is_diagonal() const {
+                if(!(this->compressed)) {
+                    for(const auto &[key, element]: this->elements)
+                        if(key[0] != key[1])
+                            return false;
+                } else {
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j != this->outer[k])
+                                return false;
+                }
+
+                return true;
+            }
+
+            /**
+             * @brief Checks whether the Sparse matrix is lower triangular.
+             * 
+             * @return true 
+             * @return false 
+             */
+            bool is_lower() const {
+                if(!(this->compressed)) {
+                    for(const auto &[key, element]: this->elements)
+                        if(key[0] < key[1])
+                            return false;
+                } else {
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j < this->outer[k])
+                                return false;
+                }
+
+                return true;
+            }
+
+            /**
+             * @brief Checks whether the Sparse matrix is upper triangular.
+             * 
+             * @return true 
+             * @return false 
+             */
+            bool is_upper() const {
+                if(!(this->compressed)) {
+                    for(const auto &[key, element]: this->elements)
+                        if(key[0] > key[1])
+                            return false;
+                } else {
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(j > this->outer[k])
+                                return false;
+                }
+
+                return true;
+            }
+
             // COMPRESSION.
 
             /**
@@ -1018,10 +1083,10 @@ namespace pacs {
 
                     // Step.
                     solution += alpha * direction;
-                    residual = vector - target * solution;
+                    residual -= alpha * search;
 
                     // Checks.
-                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                    if(((vector - target * solution).norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
                         break;
 
                     //  Beta computation.
