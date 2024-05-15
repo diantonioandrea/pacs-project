@@ -59,7 +59,7 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = laplacian.solve<pacs::Descent>(forcing);
+        pacs::Vector<pacs::Real> numerical = laplacian.solve(forcing);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
@@ -71,6 +71,7 @@ int main() {
 
         // Output.
         std::cout << "\n" << error << std::endl;
+        std::cout << "Residual: " << (laplacian * numerical - forcing).norm() << std::endl;
 
         // Refinement.
         diagram = pacs::mesh_refine(mesh, pacs::highest(error.l2_errors, 3));
