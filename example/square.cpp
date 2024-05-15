@@ -47,7 +47,7 @@ int main() {
         pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
 
         // Mesh output.
-        std::string polyfile = "square_" + std::to_string(mesh.elements.size()) + ".poly";
+        std::string polyfile = "square_" + std::to_string(j) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
@@ -64,7 +64,7 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string surffile = "square_" + std::to_string(mesh.elements.size()) + ".surf";
+        std::string surffile = "square_" + std::to_string(j) + ".surf";
         solution.write(surffile);
 
         // Output.

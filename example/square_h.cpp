@@ -43,13 +43,13 @@ int main() {
     std::vector<pacs::Polygon> diagram  = pacs::mesh_diagram(domain, 16);
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 4; ++j) {
+    for(std::size_t j = 0; j < 6; ++j) {
 
         // Mesh.
         pacs::Mesh mesh{domain, diagram};
 
         // Mesh output.
-        std::string polyfile = "square_h_" + std::to_string(mesh.elements.size()) + ".poly";
+        std::string polyfile = "square_h_" + std::to_string(j) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
@@ -66,7 +66,7 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string surffile = "square_h_" + std::to_string(mesh.elements.size()) + ".surf";
+        std::string surffile = "square_h_" + std::to_string(j) + ".surf";
         solution.write(surffile);
 
         // Output.
