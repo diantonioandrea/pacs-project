@@ -1187,7 +1187,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
                 #endif
 
                 return solution;
@@ -1291,7 +1291,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
                 #endif
 
                 return solution;
