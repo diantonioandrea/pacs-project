@@ -647,6 +647,39 @@ namespace pacs {
                 return true;
             }
 
+            /**
+             * @brief Checks whether the Sparse matrix is symmetric.
+             * 
+             * @return true 
+             * @return false 
+             */
+            bool is_symmetric() const {
+                if(this->rows != this->columns)
+                    return false;
+
+                Sparse transpose = this->transpose();
+
+                if(!(this->compressed)) {
+                    for(const auto &[key, element]: this->elements) {
+                        if(transpose.elements.contains(key)) {
+                            if(std::abs(this->elements[key] - transpose.elements[key]) > TOLERANCE)
+                                return false;
+                        } else
+                            return false;
+                    }
+                } else {
+                    for(std::size_t j = 0; j < this->rows; ++j)
+                        for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                            if(transpose.elements.contains({j, this->outer[k]})) {
+                                if(std::abs(this->outer[k] - transpose.elements[{j, this->outer[k]}]) > TOLERANCE)
+                                return false;
+                            } else 
+                                return false;
+                }
+
+                return true;
+            }
+
             // COMPRESSION.
 
             /**
