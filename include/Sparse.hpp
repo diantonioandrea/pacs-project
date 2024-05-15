@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Descent, Kaczmarz, RandomKaczmarz};
+    enum Solver {Conjugate, Descent, Gauss, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -669,18 +669,11 @@ namespace pacs {
                     for(auto it = this->elements.lower_bound(current); (*it).first < (*(this->elements.lower_bound(next))).first; ++it) {
                         auto [key, value] = (*it);
 
-                        #ifndef NDEBUG
                         if(std::abs(value) > TOLERANCE) {
                             this->outer.emplace_back(key[1]);
                             this->values.emplace_back(value);
                             ++index;
                         }
-                        #else
-                        this->outer.emplace_back(key[1]);
-                        this->values.emplace_back(value);
-                        ++index;
-                        #endif
-
                     }
 
                     this->inner[j] = index;
@@ -972,6 +965,9 @@ namespace pacs {
                 if constexpr (S == Descent)
                     return this->gradient_descent(vector);
 
+                if constexpr (S == Gauss)
+                    return this->gauss_seidel(vector);
+
                 if constexpr (S == Kaczmarz)
                     return this->kaczmarz(vector);
 
@@ -1058,10 +1054,6 @@ namespace pacs {
                 Sparse target{*this};
                 target.compress();
 
-                #ifndef NVERBOSE
-                std::cout << "Solving a linear system." << std::endl;
-                #endif
-
                 // Method.
                 do {
                     ++iterations;
@@ -1142,10 +1134,6 @@ namespace pacs {
                 Sparse target{*this};
                 target.compress();
 
-                #ifndef NVERBOSE
-                std::cout << "Solving a linear system." << std::endl;
-                #endif
-
                 // Method.
                 do {
                     ++iterations;
@@ -1182,6 +1170,102 @@ namespace pacs {
             }
 
             /**
+             * @brief Gauss-Seidel method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> gauss_seidel(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Splitting.
+                Sparse lower = this->lower() + this->diagonal();
+                Sparse upper = this->upper();
+
+                // Inversion of lower.
+                Sparse lower_inv{size, size};
+                lower.compress();
+
+                for(std::size_t h = 0; h < size; ++h) {
+                    Vector<T> column{size};
+
+                    for(std::size_t j = 0; j < size; ++j) {
+                        for(std::size_t k = lower.inner[j]; k < lower.inner[j + 1]; ++k) {
+                            T sum = static_cast<T>(0);
+                            T last = static_cast<T>(1);
+
+                            for(std::size_t l = lower.inner[j]; l < lower.inner[j + 1]; ++l) {
+                                if(lower.outer[l] == j) {
+                                    last = lower.values[l];
+                                    break;
+                                }
+
+                                sum += lower.values[l] * column[lower.outer[l]];
+                            }
+
+                            column[j] = (static_cast<T>(j == h) - sum) / last;
+                        }
+                    }
+
+                    lower_inv.column(h, column);
+                }
+
+                // T-matrix and C-vector.
+                Sparse t_matrix = - (lower_inv * upper);
+                Vector<T> c_vector = lower_inv * vector;
+                t_matrix.compress();
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tGauss-Seidel, iteration: " << iterations << std::endl;
+                    #endif
+
+                    // Step.
+                    old_solution = solution;
+                    solution = t_matrix * solution + c_vector;
+
+                    // Checks.
+                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                        break;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                #endif
+
+                return solution;
+                
+            }
+
+            /**
              * @brief Kaczmarz method.
              * 
              * @param vector 
@@ -1210,10 +1294,6 @@ namespace pacs {
                 // Target.
                 Sparse target{*this};
                 target.compress();
-
-                #ifndef NVERBOSE
-                std::cout << "Solving a linear system." << std::endl;
-                #endif
 
                 // Method.
                 do {
