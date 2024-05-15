@@ -162,6 +162,9 @@ namespace pacs {
         std::vector<Polygon> diagram;
         std::vector<Polygon> refine;
 
+        // Convex combination coefficient.
+        Real t = 2.0 / 3.0;
+
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
             bool flag = true;
 
@@ -178,7 +181,24 @@ namespace pacs {
         }
 
         for(const auto &polygon: refine) {
-            std::vector<Polygon> subdiagram = mesh_diagram(polygon, 3);
+
+            // Refinement.
+            std::vector<Polygon> subdiagram;
+            std::vector<Point> points;
+            Point centroid = polygon.centroid();
+
+            // Quadrilaterals.
+            for(const auto &edge: polygon.edges()) {
+                Point mid_0 = edge[0] * (1.0 - t) + centroid * t, mid_1 = edge[1] * (1.0 - t) + centroid * t;
+                Polygon element{{edge[0], edge[1], mid_1, mid_0}};
+
+                subdiagram.emplace_back(element);
+                points.emplace_back(mid_1);
+            }
+            
+            // Central element.
+            Polygon element{points};
+            subdiagram.emplace_back(element);
 
             for(const auto &refined: subdiagram)
                 diagram.emplace_back(refined);

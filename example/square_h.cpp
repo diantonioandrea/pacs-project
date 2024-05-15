@@ -73,13 +73,6 @@ int main() {
         std::cout << "\n" << error << std::endl;
 
         // Refinement.
-        pacs::Real threshold = pacs::max(error.l2_errors) * 0.5;
-        std::vector<std::size_t> indices;
-
-        for(std::size_t j = 0; j < error.l2_errors.length; ++j)
-            if(error.l2_errors[j] > threshold)
-                indices.emplace_back(j);
-
-        diagram = pacs::mesh_refine(mesh, indices);
+        diagram = pacs::mesh_refine(mesh, pacs::highest(error.l2_errors, 3));
     }
 }

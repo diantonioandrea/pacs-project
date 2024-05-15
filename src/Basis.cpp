@@ -33,7 +33,7 @@ namespace pacs {
         std::size_t degree = element.degree;
 
         #ifndef NDEBUG // Integrity checks.
-        assert(polygon.edges().size() > 3);
+        // assert(polygon.edges().size() > 3); // Triangles.
         assert(nodes[0].length == nodes[1].length);
         #endif
 
