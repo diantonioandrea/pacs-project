@@ -49,7 +49,7 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1E4
+#define ALGEBRA_ITER_MAX 1E5
 #endif
 
 namespace pacs {
@@ -1210,22 +1210,16 @@ namespace pacs {
                     for(std::size_t j = 0; j < size; ++j) {
                         for(std::size_t k = lower.inner[j]; k < lower.inner[j + 1]; ++k) {
                             T sum = static_cast<T>(0);
-                            T last = static_cast<T>(1);
 
-                            for(std::size_t l = lower.inner[j]; l < lower.inner[j + 1]; ++l) {
-                                if(lower.outer[l] == j) {
-                                    last = lower.values[l];
-                                    break;
-                                }
-
+                            for(std::size_t l = lower.inner[j]; l < lower.inner[j + 1] - 1; ++l)
                                 sum += lower.values[l] * column[lower.outer[l]];
-                            }
 
-                            column[j] = (static_cast<T>(j == h) - sum) / last;
+                            column[j] = (static_cast<T>(j == h) - sum) / lower.values[lower.inner[j + 1] - 1];
                         }
                     }
 
-                    lower_inv.column(h, column);
+                    for(std::size_t k = 0; k < size; ++k) // May introduce fill-ins.
+                        lower_inv.elements[{k, h}] = column[k];
                 }
 
                 // T-matrix and C-vector.
