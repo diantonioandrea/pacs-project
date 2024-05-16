@@ -35,14 +35,14 @@ int main() {
     vector[1] = 2.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << matrix.solve(vector) << std::endl; // Conjugate gradient.
-    std::cout << matrix.solve<pacs::Descent>(vector) << std::endl; // Gradient descent.
-    std::cout << matrix.solve<pacs::Minimal>(vector) << std::endl; // Minimal residual.
-    std::cout << matrix.solve<pacs::NormDescent>(vector) << std::endl; // Norm Steepest Descent.
-    std::cout << matrix.solve<pacs::Gauss>(vector) << std::endl; // Gauss-Seidel.
-    std::cout << matrix.solve<pacs::Fom>(vector) << std::endl; // FOM.
-    std::cout << matrix.solve<pacs::Kaczmarz>(vector) << std::endl; // Kaczmarz.
-    std::cout << matrix.solve<pacs::RandomKaczmarz>(vector) << std::endl; // Randomized Kaczmarz.
+    std::cout << matrix.solve<pacs::CG>(vector) << std::endl; // Conjugate gradient.
+    std::cout << matrix.solve<pacs::SD>(vector) << std::endl; // Gradient descent.
+    std::cout << matrix.solve<pacs::MR>(vector) << std::endl; // Minimal residual.
+    std::cout << matrix.solve<pacs::NS>(vector) << std::endl; // Norm Steepest Descent.
+    std::cout << matrix.solve<pacs::GS>(vector) << std::endl; // Gauss-Seidel.
+    std::cout << matrix.solve<pacs::RFOM>(vector) << std::endl; // Restarted FOM.
+    std::cout << matrix.solve<pacs::KM>(vector) << std::endl; // Kaczmarz.
+    std::cout << matrix.solve<pacs::RKM>(vector) << std::endl; // Randomized Kaczmarz.
 
     // Dense.
     
@@ -55,6 +55,6 @@ int main() {
     dense(1, 1) = 3.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << dense.solve(vector) << std::endl;
+    std::cout << dense.solve(vector) << std::endl; // LU.
     
 }

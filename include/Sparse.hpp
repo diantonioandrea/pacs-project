@@ -59,8 +59,19 @@
 
 namespace pacs {
 
-    // Solvers.
-    enum Solver {Conjugate, Descent, Minimal, NormDescent, Gauss, Fom, Kaczmarz, RandomKaczmarz};
+    /**
+     * @brief Solvers.
+     * CG: Conjugate Gradient method.
+     * SD: Steeped Descent method.
+     * MR: Minimal Residual method.
+     * NS: Residual Norm Steepest Descent method.
+     * GS: Gauss-Seidel method.
+     * RFOM: Restarted Full Orthogonalization method.
+     * KM: Kaczmarz method.
+     * RKM: Randomized Kaczmard method.
+     * 
+     */
+    enum Solver {CG, SD, MR, NS, GS, RFOM, KM, RKM};
     
     /**
      * @brief Sparse matrix class.
@@ -994,31 +1005,31 @@ namespace pacs {
              * @param vector 
              * @return Vector<T> 
              */
-            template<Solver S = Conjugate>
+            template<Solver S = CG>
             Vector<T> solve(const Vector<T> &vector) const {
                 
-                if constexpr (S == Conjugate)
+                if constexpr (S == CG)
                     return this->conjugate_gradient(vector);
 
-                if constexpr (S == Descent)
+                if constexpr (S == SD)
                     return this->gradient_descent(vector);
 
-                if constexpr (S == Minimal)
+                if constexpr (S == MR)
                     return this->minimal_residual(vector);
 
-                if constexpr (S == NormDescent)
+                if constexpr (S == NS)
                     return this->norm_descent(vector);
 
-                if constexpr (S == Gauss)
+                if constexpr (S == GS)
                     return this->gauss_seidel(vector);
 
-                if constexpr (S == Fom)
+                if constexpr (S == RFOM)
                     return this->full_orthogonalization(vector);
 
-                if constexpr (S == Kaczmarz)
+                if constexpr (S == KM)
                     return this->kaczmarz(vector);
 
-                if constexpr (S == RandomKaczmarz)
+                if constexpr (S == RKM)
                     return this->randomized_kaczmarz(vector);
 
                 // Default.
