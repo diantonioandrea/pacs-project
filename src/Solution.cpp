@@ -37,7 +37,7 @@ namespace pacs {
     Vector<Real> modal(const Mesh &mesh, const Functor &exact) {
 
         // Number of quadrature nodes.
-        std::size_t degree = (mesh.degree % 2) ? mesh.degree : mesh.degree + 1;
+        std::size_t degree = mesh.quadrature;
 
         // Coefficients.
         Vector<Real> coefficients{mesh.dofs()};
@@ -134,7 +134,7 @@ namespace pacs {
     x{mesh.entries}, y{mesh.entries}, numerical{mesh.entries}, exact{mesh.entries} {
 
         // Number of quadrature nodes.
-        std::size_t degree = mesh.degree;
+        std::size_t degree = mesh.quadrature;
 
         // Quadrature nodes.
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);

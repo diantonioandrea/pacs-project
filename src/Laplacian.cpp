@@ -37,7 +37,7 @@ namespace pacs {
         #endif
 
         // Number of quadrature nodes.
-        std::size_t degree = (mesh.degree % 2) ? mesh.degree : mesh.degree + 1;
+        std::size_t degree = mesh.quadrature;
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(degree);
@@ -226,19 +226,19 @@ namespace pacs {
 
                 if(neighbour == -1) { // Boundary edge.
 
-                    local_IA = local_IA + (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
+                    local_IA = local_IA + (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                 } else {
 
-                    local_IA = local_IA + 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * phi;
+                    local_IA = local_IA + 0.5 * (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
                     Matrix<Real> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
 
                     // Neighbour's local matrix.
-                    local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx.transpose() + normal[1] * scaled_grady.transpose()) * n_phi;
+                    local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * n_phi;
                     local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
                 }
             }

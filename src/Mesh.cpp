@@ -65,11 +65,9 @@ namespace pacs {
             entries += element.edges.size();
         }
 
-        degree = (degree % 2 == 0) ? degree + 1 : degree;
-        entries *= degree * degree;
-
         this->degree = degree;
-        this->entries = entries;
+        this->quadrature = 7; // Arbitrary.
+        this->entries = entries * this->quadrature * this->quadrature;
     }
 
     // READ.
