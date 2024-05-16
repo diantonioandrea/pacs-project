@@ -44,7 +44,7 @@
 
 // Algebra tolerance.
 #ifndef ALGEBRA_TOLERANCE
-#define ALGEBRA_TOLERANCE 1E-4
+#define ALGEBRA_TOLERANCE 1E-8
 #endif
 
 // Algebra iterations limit.
@@ -1456,6 +1456,12 @@ namespace pacs {
                 
             }
 
+            /**
+             * @brief Restarted FOM method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
             Vector<T> full_orthogonalization(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
