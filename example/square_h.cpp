@@ -71,6 +71,7 @@ int main() {
 
         // Output.
         std::cout << "\n" << error << std::endl;
+        std::cout << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << std::endl;
         std::cout << "Residual: " << (laplacian * numerical - forcing).norm() << std::endl;
 
         // Refinement.
