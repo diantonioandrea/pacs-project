@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Descent, Gauss, Kaczmarz, RandomKaczmarz};
+    enum Solver {Conjugate, Descent, Minimal, Gauss, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -998,6 +998,9 @@ namespace pacs {
                 if constexpr (S == Descent)
                     return this->gradient_descent(vector);
 
+                if constexpr (S == Minimal)
+                    return this->minimal_residual(vector);
+
                 if constexpr (S == Gauss)
                     return this->gauss_seidel(vector);
 
@@ -1190,6 +1193,80 @@ namespace pacs {
                         break;
 
                     residual = vector - target * solution;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
+            }
+            
+            /**
+             * @brief Minimal residual method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> minimal_residual(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Parameters.
+                T alpha;
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                // Residual.
+                Vector<T> residual = vector;
+
+                // Direction.
+                Vector<T> direction = target * residual;
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tMinimal residual, iteration: " << iterations << std::endl;
+                    #endif
+
+                    old_solution = solution;
+
+                    // Alpha computation.
+                    alpha = dot(direction, residual) / dot(direction, direction);
+
+                    // Step.
+                    solution += alpha * residual;
+                    residual -= alpha * direction;
+
+                    // Checks.
+                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                        break;
+
+                    direction = target * residual;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
 
