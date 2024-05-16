@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Descent, Minimal, NormDescent, Gauss, Kaczmarz, RandomKaczmarz};
+    enum Solver {Conjugate, Descent, Minimal, NormDescent, Gauss, Fom, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -1007,6 +1007,9 @@ namespace pacs {
                 if constexpr (S == Gauss)
                     return this->gauss_seidel(vector);
 
+                if constexpr (S == Fom)
+                    return this->full_orthogonalization(vector);
+
                 if constexpr (S == Kaczmarz)
                     return this->kaczmarz(vector);
 
@@ -1446,6 +1449,89 @@ namespace pacs {
 
                 return solution;
                 
+            }
+
+            Vector<T> full_orthogonalization(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // m parameter.
+                std::size_t m = (size / 5) + 1; // Needs restarting.
+                std::size_t new_m = m;
+
+                // Solution.
+                Vector<T> solution{size};
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                // Residual.
+                Vector<T> residual = vector;
+
+                // Beta.
+                Real beta = residual.norm();
+
+                // V and H.
+                Matrix<T> V{size, m}, H{m, m};
+                V.column(0, residual / beta);
+
+                // Method.
+                for(std::size_t j = 0; j < m; ++j) {
+                    Vector<T> w = target * V.column(j);
+
+                    for(std::size_t k = 0; k <= j; ++k) {
+                        H(k, j) = dot(w, V.column(k));
+                        w -= H(k, j) * V.column(k);
+                    }
+
+                    // End.
+                    if(j == m - 1)
+                        break;
+
+                    // New element for H.
+                    H(j + 1, j) = w.norm();
+
+                    // Check.
+                    if(H(j + 1, j) < TOLERANCE) {
+                        new_m = j;
+                        break;
+                    }
+
+                    // New v.
+                    V.column(j + 1, w / H(j + 1, j));
+                }
+
+                // New matrices, if needed.
+                Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
+                Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
+
+                if(new_m < m) {
+                    for(std::size_t j = 0; j < new_m; ++j) {
+                        new_H.column(j, (H.column(j))(0, new_m));
+                        new_V.column(j, V.column(j));
+                    }
+                }
+
+                // Beta Vector.
+                Vector<T> beta_vector{new_m};
+                beta_vector[0] = beta;
+
+                // Evaluates y.
+                Vector<T> y = new_H.solve(beta_vector);
+
+                // Solution.
+                return new_V * y;
             }
 
             /**

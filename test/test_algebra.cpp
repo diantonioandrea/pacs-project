@@ -11,10 +11,12 @@
 // Output.
 #include <iostream>
 
-// Testing Sparse solvers.
+// Testing Solvers.
 #include <Sparse.hpp>
 
 int main() {
+
+    // Sparse.
 
     // Constructs a Matrix.
     pacs::Sparse<pacs::Real> matrix{2, 2};
@@ -38,7 +40,21 @@ int main() {
     std::cout << matrix.solve<pacs::Minimal>(vector) << std::endl; // Minimal residual.
     std::cout << matrix.solve<pacs::NormDescent>(vector) << std::endl; // Norm Steepest Descent.
     std::cout << matrix.solve<pacs::Gauss>(vector) << std::endl; // Gauss-Seidel.
+    std::cout << matrix.solve<pacs::Fom>(vector) << std::endl; // FOM.
     std::cout << matrix.solve<pacs::Kaczmarz>(vector) << std::endl; // Kaczmarz.
     std::cout << matrix.solve<pacs::RandomKaczmarz>(vector) << std::endl; // Randomized Kaczmarz.
+
+    // Dense.
+    
+    // Constructs a Matric.
+    pacs::Matrix<pacs::Real> dense{2, 2};
+
+    dense(0, 0) = 4.0;
+    dense(0, 1) = 1.0;
+    dense(1, 0) = 1.0;
+    dense(1, 1) = 3.0;
+
+    // Linear system (Ax = b) solution.
+    std::cout << dense.solve(vector) << std::endl;
     
 }

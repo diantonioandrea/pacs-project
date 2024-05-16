@@ -549,6 +549,79 @@ namespace pacs {
                 return result;
             }
 
+            // LINEAR.
+
+            /**
+             * @brief Solves a linear system in the form of Ax = b using LU factorization.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> solve(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                #endif
+
+                // Target.
+                Matrix target{*this};
+
+                // LU decomposition
+                Matrix<T> L{this->rows, this->columns};
+                Matrix<T> U{this->rows, this->columns};
+
+                for (std::size_t j = 0; j < this->columns; ++j) {
+                    L(j, j) = static_cast<T>(1);
+
+                    // Compute elements of U
+                    for (std::size_t i = 0; i <= j; ++i) {
+                        T sum = static_cast<T>(0);
+
+                        for (std::size_t k = 0; k < i; ++k)
+                            sum += L(i, k) * U(k, j);
+
+                        U(i, j) = target(i, j) - sum;
+                    }
+
+                    // Compute elements of L
+                    for (std::size_t i = j + 1; i < this->rows; ++i) {
+                        T sum = static_cast<T>(0);
+
+                        for (std::size_t k = 0; k < j; ++k)
+                            sum += L(i, k) * U(k, j);
+
+                        L(i, j) = (target(i, j) - sum) / U(j, j);
+                    }
+                }
+
+                // Solve Ly = b using forward substitution
+                Vector<T> y{this->rows};
+
+                for (std::size_t i = 0; i < this->rows; ++i) {
+                    T sum = static_cast<T>(0);
+
+                    for (std::size_t j = 0; j < i; ++j)
+                        sum += L(i, j) * y[j];
+
+                    y[i] = (vector[i] - sum) / L(i, i);
+                }
+
+                // Solve Ux = y using backward substitution
+                Vector<T> x{this->columns};
+
+                for (std::size_t i = this->columns; i > 0; --i) {
+                    T sum = static_cast<T>(0);
+
+                    for (std::size_t j = i; j < this->columns; ++j)
+                        sum += U(i - 1, j) * x[j];
+
+                    x[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
+                }
+
+                return x;
+            }
+
+
             // OUTPUT.
 
             /**
