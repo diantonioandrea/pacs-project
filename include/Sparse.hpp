@@ -52,6 +52,11 @@
 #define ALGEBRA_ITER_MAX 1E5
 #endif
 
+// Algebra m limit.
+#ifndef ALGEBRA_M_MAX
+#define ALGEBRA_M_MAX 1E2
+#endif
+
 namespace pacs {
 
     // Solvers.
@@ -1464,10 +1469,12 @@ namespace pacs {
 
                 // Problem's size.
                 const std::size_t size = this->rows;
-                
-                // m parameter.
-                std::size_t m = (size / 5) + 1; // Needs restarting.
-                std::size_t new_m = m;
+
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // m.
+                std::size_t m = 1;
 
                 // Solution.
                 Vector<T> solution{size};
@@ -1476,62 +1483,95 @@ namespace pacs {
                 Sparse target{*this};
                 target.compress();
 
-                // Residual.
-                Vector<T> residual = vector;
+                do {
 
-                // Beta.
-                Real beta = residual.norm();
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tRestarted FOM, iteration: " << iterations << std::endl;
+                    #endif
 
-                // V and H.
-                Matrix<T> V{size, m}, H{m, m};
-                V.column(0, residual / beta);
+                    // Residual.
+                    Vector<T> residual = vector - target * solution;
 
-                // Method.
-                for(std::size_t j = 0; j < m; ++j) {
-                    Vector<T> w = target * V.column(j);
+                    // New m value.
+                    std::size_t new_m = m;
 
-                    for(std::size_t k = 0; k <= j; ++k) {
-                        H(k, j) = dot(w, V.column(k));
-                        w -= H(k, j) * V.column(k);
-                    }
-
-                    // End.
-                    if(j == m - 1)
+                    // Exit condition.
+                    if(residual.norm() < ALGEBRA_TOLERANCE)
                         break;
 
-                    // New element for H.
-                    H(j + 1, j) = w.norm();
+                    // Beta.
+                    Real beta = residual.norm();
 
-                    // Check.
-                    if(H(j + 1, j) < TOLERANCE) {
-                        new_m = j;
-                        break;
+                    // V and H.
+                    Matrix<T> V{size, m}, H{m, m};
+                    V.column(0, residual / beta);
+
+                    // Method.
+                    for(std::size_t j = 0; j < m; ++j) {
+                        Vector<T> w = target * V.column(j);
+
+                        for(std::size_t k = 0; k <= j; ++k) {
+                            H(k, j) = dot(w, V.column(k));
+                            w -= H(k, j) * V.column(k);
+                        }
+
+                        // End.
+                        if(j == m - 1)
+                            break;
+
+                        // New element for H.
+                        H(j + 1, j) = w.norm();
+
+                        // Check.
+                        if(H(j + 1, j) < TOLERANCE) {
+                            new_m = j;
+                            break;
+                        }
+
+                        // New v.
+                        V.column(j + 1, w / H(j + 1, j));
                     }
 
-                    // New v.
-                    V.column(j + 1, w / H(j + 1, j));
-                }
+                    // New matrices, if needed.
+                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
+                    Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
 
-                // New matrices, if needed.
-                Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
-                Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
-
-                if(new_m < m) {
-                    for(std::size_t j = 0; j < new_m; ++j) {
-                        new_H.column(j, (H.column(j))(0, new_m));
-                        new_V.column(j, V.column(j));
+                    if(new_m < m) {
+                        for(std::size_t j = 0; j < new_m; ++j) {
+                            new_H.column(j, (H.column(j))(0, new_m));
+                            new_V.column(j, V.column(j));
+                        }
                     }
-                }
 
-                // Beta Vector.
-                Vector<T> beta_vector{new_m};
-                beta_vector[0] = beta;
+                    // Beta Vector.
+                    Vector<T> beta_vector{new_m};
+                    beta_vector[0] = beta;
 
-                // Evaluates y.
-                Vector<T> y = new_H.solve(beta_vector);
+                    // Evaluates y.
+                    Vector<T> y = new_H.solve(beta_vector);
 
-                // Solution.
-                return new_V * y;
+                    // Solution.
+                    solution = solution + new_V * y;
+
+                    // Iterations update.
+                    ++iterations;
+
+                    // m update.
+                    ++m;
+
+                    if(m > ALGEBRA_M_MAX)
+                        m = 1;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                #endif
+
+                return solution;
             }
 
             /**
