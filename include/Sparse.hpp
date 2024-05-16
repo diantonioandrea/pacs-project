@@ -62,13 +62,13 @@ namespace pacs {
     /**
      * @brief Solvers.
      * CG: Conjugate Gradient method.
-     * SD: Steeped Descent method.
+     * SD: Steepest Descent method.
      * MR: Minimal Residual method.
      * NS: Residual Norm Steepest Descent method.
      * GS: Gauss-Seidel method.
      * RFOM: Restarted Full Orthogonalization method.
      * KM: Kaczmarz method.
-     * RKM: Randomized Kaczmard method.
+     * RKM: Randomized Kaczmarz method.
      * 
      */
     enum Solver {CG, SD, MR, NS, GS, RFOM, KM, RKM};
