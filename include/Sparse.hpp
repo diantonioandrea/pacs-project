@@ -55,7 +55,7 @@
 namespace pacs {
 
     // Solvers.
-    enum Solver {Conjugate, Descent, Minimal, Gauss, Kaczmarz, RandomKaczmarz};
+    enum Solver {Conjugate, Descent, Minimal, NormDescent, Gauss, Kaczmarz, RandomKaczmarz};
     
     /**
      * @brief Sparse matrix class.
@@ -1001,6 +1001,9 @@ namespace pacs {
                 if constexpr (S == Minimal)
                     return this->minimal_residual(vector);
 
+                if constexpr (S == NormDescent)
+                    return this->norm_descent(vector);
+
                 if constexpr (S == Gauss)
                     return this->gauss_seidel(vector);
 
@@ -1267,6 +1270,82 @@ namespace pacs {
                         break;
 
                     direction = target * residual;
+
+                } while(iterations < ALGEBRA_ITER_MAX);
+
+                #ifndef NVERBOSE
+                std::cout << "Results:" << std::endl;
+                std::cout << "\tIterations: " << iterations << std::endl;
+                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                #endif
+
+                return solution;
+            }
+
+            /**
+             * @brief Norm Steepest Descent method.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> norm_descent(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == this->columns);
+                assert(this->columns == vector.length);
+                assert(std::abs(mtrace(*this)) > TOLERANCE);
+                #endif
+
+                #ifndef NVERBOSE
+                std::cout << "Solving a linear system." << std::endl;
+                #endif
+
+                // Problem's size.
+                const std::size_t size = this->rows;
+                
+                // Iterations.
+                std::size_t iterations = 0;
+
+                // Solution.
+                Vector<T> solution{size}, old_solution{size};
+
+                // Parameters.
+                T alpha;
+
+                // Target.
+                Sparse target{*this};
+                target.compress();
+
+                // Residual.
+                Vector<T> residual = vector;
+
+                // Direction.
+                Vector<T> direction{size};
+
+                // Method.
+                do {
+                    ++iterations;
+
+                    #ifndef NVERBOSE
+                    if(!(iterations % 50))
+                        std::cout << "\tNorm Steepest Descent, iteration: " << iterations << std::endl;
+                    #endif
+
+                    old_solution = solution;
+
+                    // Direction.
+                    direction = target.transpose() * residual;
+
+                    // Alpha computation.
+                    alpha = direction.norm() / (target * direction).norm();
+                    alpha *= alpha;
+
+                    // Step.
+                    solution += alpha * direction;
+                    residual -= alpha * target * direction;
+
+                    // Checks.
+                    if((target * solution - vector).norm() < ALGEBRA_TOLERANCE)
+                        break;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
 
