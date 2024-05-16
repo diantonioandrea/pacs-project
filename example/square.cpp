@@ -68,8 +68,12 @@ int main() {
         solution.write(surffile);
 
         // Output.
-        std::cout << "\n" << error << std::endl;
+        std::cout << "\n" << error << "\n" << std::endl;
+        
         std::cout << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << std::endl;
-        std::cout << "Residual: " << (laplacian * numerical - forcing).norm() << std::endl;
+        std::cout << "Residual: " << (laplacian * numerical - forcing).norm() << "\n" << std::endl;
+
+        std::cout << "Mesh saved to " << polyfile << std::endl;
+        std::cout << "Surface saved to " << surffile << std::endl;
     }
 }
