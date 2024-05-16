@@ -13,7 +13,6 @@
 
 // Math.
 #include <cmath>
-#include <cmath>
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
@@ -25,7 +24,7 @@
  * @param y 
  * @return pacs::Real 
  */
-pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
+inline pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
     return 2 * M_PI * M_PI * std::sin(M_PI * x) * std::sin(M_PI * y);
 }
 
@@ -34,6 +33,6 @@ pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
  * 
  * @return pacs::Real 
  */
-pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
+inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
     return std::sin(M_PI * x) * std::sin(M_PI * y);
 }
