@@ -45,23 +45,29 @@ namespace pacs {
         Polygon box = domain;
 
         // Reflections.
-        std::vector<Point> reflection_points;
+        std::vector<std::vector<Point>> reflection_points;
 
         if(reflect) {
-            for(const auto &point: points)
+            for(const auto &point: points) {
+                std::vector<Point> reflection_set;
+
                 for(const auto &reflection: reflections(domain, point))
-                    reflection_points.emplace_back(reflection);
+                    reflection_set.emplace_back(reflection);
+
+                reflection_points.emplace_back(reflection_set);
+            }
 
             auto [xy_min, xy_max] = domain.box();
             Real x_min = xy_min[0], y_min = xy_min[1];
             Real x_max = xy_max[0], y_max = xy_max[1];
-
-            for(const auto &point: reflection_points) {
-                x_min = (point[0] < x_min) ? point[0] : x_min;
-                x_max = (point[0] > x_max) ? point[0] : x_max;
-                y_min = (point[1] < y_min) ? point[1] : y_min;
-                y_max = (point[1] > y_max) ? point[1] : y_max;
-            }
+            
+            for(const auto &reflection: reflection_points)
+                for(const auto &point: reflection) {
+                    x_min = (point[0] < x_min) ? point[0] : x_min;
+                    x_max = (point[0] > x_max) ? point[0] : x_max;
+                    y_min = (point[1] < y_min) ? point[1] : y_min;
+                    y_max = (point[1] > y_max) ? point[1] : y_max;
+                }
 
             x_min -= GEOMETRY_PADDING;
             x_max += GEOMETRY_PADDING;
@@ -89,8 +95,8 @@ namespace pacs {
             }
 
             if(reflect)
-                for(std::size_t k = 0; k < reflection_points.size(); ++k)
-                    cell = reduce(cell, bisector(point, reflection_points[k]), point);
+                for(const auto &reflection: reflection_points[j])
+                    cell = reduce(cell, bisector(point, reflection), point);
 
             cells.emplace_back(cell);
         }

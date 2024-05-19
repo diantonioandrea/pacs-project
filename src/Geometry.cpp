@@ -364,14 +364,13 @@ namespace pacs {
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert(points.size() <= 2); // Convex domain assumption.
+        assert(points.size() <= 2);
         #endif
 
-        // Trivial cases.
         if(points.size() <= 1)
             return polygon;
 
-        // Angular coefficient.
+        // Line's angular coefficient.
         Real angular = -(line[0] / line[1]);
 
         // Building.
@@ -382,6 +381,8 @@ namespace pacs {
         if(line > point) { // Point under the Line.
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
+                std::swap(points[0], points[1]);
+            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
             else if((angular > 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
@@ -414,6 +415,8 @@ namespace pacs {
         } else { // Point above the Line.
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0]))
+                std::swap(points[0], points[1]);
+            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
             else if((angular > 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
