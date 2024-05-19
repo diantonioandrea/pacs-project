@@ -123,9 +123,7 @@ namespace pacs {
 
             // METHODS.
 
-            Real angular() const;
             bool contains(const Point &) const;
-            bool is_parallel(const Line &) const;
 
             // OUTPUT.
 
@@ -212,19 +210,23 @@ namespace pacs {
     // METHODS.
     // Implemented under src/Geometry.cpp
 
+    // Distance between objects.
     Real distance(const Point &, const Point &);
     Real distance(const Point &, const Line &);
     Real distance(const Point &, const Segment &);
 
     Line bisector(const Point &, const Point &);
     
+    // Intersections between objects.
     std::vector<Point> intersections(const Line &, const Line &);
     std::vector<Point> intersections(const Line &, const Segment &);
     std::vector<Point> intersections(const Line &, const Polygon &);
 
+    // Polygon collapse.
     Polygon collapse(const Polygon &, const Point &);
     Polygon collapse(const Polygon &, const Segment &);
 
+    // Polygon reduction.
     Polygon reduce(const Polygon &, const Line &, const Point &);
 
 }

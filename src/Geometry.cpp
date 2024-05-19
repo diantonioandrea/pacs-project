@@ -130,7 +130,7 @@ namespace pacs {
         // Evaluation by cases.
 
         // No (or infinite) intersections.
-        if(s.is_parallel(r))
+        if((std::abs(s[0] - r[0]) <= GEOMETRY_TOLERANCE) && (std::abs(s[1] - r[1]) <= GEOMETRY_TOLERANCE))
             return points;
 
         // S is vertical.
@@ -277,6 +277,9 @@ namespace pacs {
         if(points.size() <= 1)
             return polygon;
 
+        // Angular coefficient.
+        Real angular = -(line[0] / line[1]);
+
         // Building.
         std::vector<Point> vertices = polygon.points;
         std::vector<Segment> edges = polygon.edges();
@@ -286,9 +289,9 @@ namespace pacs {
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
                 std::swap(points[0], points[1]);
-            else if((line.angular() > 0.0) && (points[0][1] < points[1][1]))
+            else if((angular > 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
-            else if((line.angular() < 0.0) && (points[0][1] > points[1][1]))
+            else if((angular < 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
 
             new_vertices.emplace_back(points[0]);
@@ -318,9 +321,9 @@ namespace pacs {
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0]))
                 std::swap(points[0], points[1]);
-            else if((line.angular() > 0.0) && (points[0][1] > points[1][1]))
+            else if((angular > 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
-            else if((line.angular() < 0.0) && (points[0][1] < points[1][1]))
+            else if((angular < 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
 
             new_vertices.emplace_back(points[0]);

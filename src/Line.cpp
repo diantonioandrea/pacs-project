@@ -208,22 +208,6 @@ namespace pacs {
     // METHODS.
 
     /**
-     * @brief Returns the Line's angular coefficient.
-     * 
-     * @return Real 
-     */
-    Real Line::angular() const {
-        #ifndef NDEBUG // Integrity check.
-        assert(std::abs(this->b) > GEOMETRY_TOLERANCE);
-        #endif
-
-        if(std::abs(this->a) <= GEOMETRY_TOLERANCE)
-            return 0.0;
-
-        return -this->a / this->b;
-    }
-
-    /**
      * @brief Checks whether a Point is contained inside the Line.
      * 
      * @param point 
@@ -232,17 +216,6 @@ namespace pacs {
      */
     bool Line::contains(const Point &point) const {
         return std::abs(this->a * point[0] + this->b * point[1] - this->c) <= GEOMETRY_TOLERANCE;
-    }
-
-    /**
-     * @brief Checks whether two Lines are parallel.
-     * 
-     * @param line 
-     * @return true 
-     * @return false 
-     */
-    bool Line::is_parallel(const Line &line) const {
-        return (std::abs(this->a - line.a) <= GEOMETRY_TOLERANCE) && (std::abs(this->b - line.b) <= GEOMETRY_TOLERANCE);
     }
 
     // OUTPUT.
