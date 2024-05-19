@@ -49,7 +49,7 @@ for line in lines:
 
 # Comparisons.
 elements_linear = [1.0 / (value / elements[-1]) * errors[-1] for value in elements]
-elements_quadratic_root = [1.0 / ((value / elements[-1]) ** 0.5) * errors[-1] for value in elements]
+elements_square_root = [1.0 / ((value / elements[-1]) ** 0.5) * errors[-1] for value in elements]
 
 sizes_linear = [value * (errors[0] / sizes[0]) for value in sizes]
 sizes_quadratic = [(value / sizes[0]) ** 2 * errors[0] for value in sizes]
@@ -61,14 +61,17 @@ elements_labels = [str(tick) for tick in elements_ticks]
 sizes_ticks = [sizes[0], sizes[-1]]
 sizes_labels = [f"{tick:1.2f}" for tick in sizes_ticks]
 
+errors_ticks = [errors[0], errors[-1]]
+errors_labels = [f"{tick:1.2e}" for tick in errors_ticks]
+
 if "--single" in sys.argv: # Elements only.
     # Plot.
     fig, axes = plt.subplots()
     fig.suptitle(lines[0])
 
     # Elements.
-    axes.plot(elements, elements_linear, linewidth=1.0, linestyle=":", color="red") # Linear comparison.
-    axes.plot(elements, elements_quadratic_root, linewidth=1.0, linestyle=":", color="red") # Quadratic comparison.
+    axes.plot(elements, elements_linear, linewidth=1.0, linestyle=":", color="red", label="Linear") # Linear comparison.
+    axes.plot(elements, elements_square_root, linewidth=1.0, linestyle="--", color="red", label="Square root") # Square root comparison.
     axes.plot(elements, errors, color="black") # Errors.
 
     # Loglog scale.
@@ -77,7 +80,15 @@ if "--single" in sys.argv: # Elements only.
 
     # Ticks.
     axes.xaxis.set_minor_formatter(NullFormatter())
+    axes.yaxis.set_minor_formatter(NullFormatter())
     axes.set_xticks(elements_ticks, labels=elements_labels)
+    axes.set_yticks(errors_ticks, labels=errors_labels)
+
+    # Label.
+    axes.set_xlabel("Elements")
+
+    # Legend.
+    axes.legend()
 
     plt.show()
     sys.exit(0)
@@ -87,13 +98,13 @@ fig, axes = plt.subplots(1, 2)
 fig.suptitle(lines[0])
 
 # Elements.
-axes[0].plot(elements, elements_linear, linewidth=1.0, linestyle=":", color="red") # Linear comparison.
-axes[0].plot(elements, elements_quadratic_root, linewidth=1.0, linestyle=":", color="red") # Quadratic comparison.
+axes[0].plot(elements, elements_linear, linewidth=1.0, linestyle=":", color="red", label="Linear") # Linear comparison.
+axes[0].plot(elements, elements_square_root, linewidth=1.0, linestyle="--", color="red", label="Square root") # Square root comparison.
 axes[0].plot(elements, errors, color="black") # Errors.
 
 # Sizes.
-axes[1].plot(sizes, sizes_linear, linewidth=1.0, linestyle=":", color="red") # Linear comparison.
-axes[1].plot(sizes, sizes_quadratic, linewidth=1.0, linestyle=":", color="red") # Quadratic comparison.
+axes[1].plot(sizes, sizes_linear, linewidth=1.0, linestyle=":", color="red", label="Linear") # Linear comparison.
+axes[1].plot(sizes, sizes_quadratic, linewidth=1.0, linestyle="--", color="red", label="Quadratic") # Quadratic comparison.
 axes[1].plot(sizes, errors, color="black") # Errors.
 
 # Loglog scale.
@@ -108,6 +119,16 @@ axes[1].xaxis.set_minor_formatter(NullFormatter())
 axes[0].yaxis.set_minor_formatter(NullFormatter())
 axes[1].yaxis.set_minor_formatter(NullFormatter())
 axes[0].set_xticks(elements_ticks, labels=elements_labels)
+axes[0].set_yticks(errors_ticks, labels=errors_labels)
 axes[1].set_xticks(sizes_ticks, labels=sizes_labels)
+axes[1].set_yticks(errors_ticks, labels=errors_labels)
+
+# Labels.
+axes[0].set_xlabel("Elements")
+axes[1].set_xlabel("Size")
+
+# Legends.
+axes[0].legend()
+axes[1].legend()
 
 plt.show()
