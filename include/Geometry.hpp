@@ -212,6 +212,10 @@ namespace pacs {
     // METHODS.
     // Implemented under src/Geometry.cpp
 
+    Real distance(const Point &, const Point &);
+    Real distance(const Point &, const Line &);
+    Real distance(const Point &, const Segment &);
+
     Line bisector(const Point &, const Point &);
     
     std::vector<Point> intersections(const Line &, const Line &);

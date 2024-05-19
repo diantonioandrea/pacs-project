@@ -20,7 +20,70 @@
 #include <algorithm>
 
 namespace pacs {
+    
+    /**
+     * @brief Returns the distance between two Points.
+     * 
+     * @param p 
+     * @param q 
+     * @return Real 
+     */
+    Real distance(const Point &p, const Point &q) {
+        if(p == q)
+            return 0.0;
+            
+        return std::abs(p - q);
+    }
 
+    /**
+     * @brief Returns the distance between a Point and a Line.
+     * 
+     * @param point 
+     * @param line 
+     * @return Real 
+     */
+    Real distance(const Point &point, const Line &line) {
+        if(line.contains(point))
+            return 0.0;
+
+        // Evaluation by cases.
+        
+        // Horizonal line.
+        if(std::abs(line[0]) < GEOMETRY_TOLERANCE)
+            return std::abs(point[1] - line[2] / line[1]);
+
+        // Vertical line.
+        if(std::abs(line[1]) < GEOMETRY_TOLERANCE)
+            return std::abs(point[0] - line[2] / line[0]);
+
+        // General case.
+        Real m = line[1] / line[0];
+        Line normal{-m, 1.0, -m * point[0] + point[1]};
+
+        Point intersection = intersections(line, normal)[0];
+
+        return distance(point, intersection);
+    }
+
+    Real distance(const Point &point, const Segment &segment) {
+        if(segment.contains(point))
+            return 0.0;
+
+        Real d0 = distance(point, segment[0]), d1 = distance(point, segment[1]);
+
+        // General case.
+        Line line = segment.line();
+        Real m = line[1] / line[0];
+        Line normal{-m, 1.0, -m * point[0] + point[1]};
+
+        Point intersection = intersections(line, normal)[0];
+
+        if(segment.contains(intersection))
+            return distance(point, intersection);
+        
+        return (d0 < d1) ? d0 : d1;
+    }
+    
     /**
      * @brief Finds the bisector given two Points.
      * 
