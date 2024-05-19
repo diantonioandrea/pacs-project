@@ -170,12 +170,12 @@ namespace pacs {
                 Segment segment{mesh.edge(mesh.elements[j].edges[k])};
 
                 // Edge's normal.
-                Vector<Real> normal{2};
+                Vector<Real> unit_vector{2};
 
-                normal[0] = segment[1][1] - segment[0][1];
-                normal[1] = segment[0][0] - segment[1][0];
+                unit_vector[0] = segment[1][1] - segment[0][1];
+                unit_vector[1] = segment[0][0] - segment[1][0];
 
-                normal /= normal.norm();
+                unit_vector /= unit_vector.norm();
 
                 // Jacobian.
                 Matrix<Real> jacobian{2, 2};
@@ -226,19 +226,19 @@ namespace pacs {
 
                 if(neighbour == -1) { // Boundary edge.
 
-                    local_IA = local_IA + (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * phi;
+                    local_IA = local_IA + (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                 } else {
 
-                    local_IA = local_IA + 0.5 * (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * phi;
+                    local_IA = local_IA + 0.5 * (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
                     Matrix<Real> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
 
                     // Neighbour's local matrix.
-                    local_IAN[k] = local_IAN[k] - 0.5 * (normal[0] * scaled_gradx + normal[1] * scaled_grady).transpose() * n_phi;
+                    local_IAN[k] = local_IAN[k] - 0.5 * (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * n_phi;
                     local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
                 }
             }

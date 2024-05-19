@@ -24,8 +24,8 @@ namespace pacs {
 
     // VORONOI.
 
-    std::vector<Polygon> voronoi(const Polygon &, const std::vector<Point> &);
-    std::vector<Polygon> voronoi(const Polygon &, const std::size_t &);
+    std::vector<Polygon> voronoi(const Polygon &, const std::vector<Point> &, const bool &reflect = false);
+    std::vector<Polygon> voronoi(const Polygon &, const std::size_t &, const bool &reflect = false);
 
     // TRIANGLES.
 

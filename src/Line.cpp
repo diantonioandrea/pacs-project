@@ -117,6 +117,10 @@ namespace pacs {
         if(std::abs(this->b) <= GEOMETRY_TOLERANCE)
             return this->c / this->a < point[0];
 
+        // Line is horizontal.
+        if(std::abs(this->a) <= GEOMETRY_TOLERANCE)
+            return this->c / this->b < point[1];
+
         // Vertical Line intersection.
         Line vertical{1.0, 0.0, point[0]};
         Point intersection = intersections(*this, vertical)[0];

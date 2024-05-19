@@ -35,14 +35,14 @@ namespace pacs {
      * @param cells 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells) {
+    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
         
         #ifndef NVERBOSE
         std::cout << "Generating a diagram for: " << domain << std::endl;
         #endif
 
         // Diagram.
-        std::vector<Polygon> diagram = voronoi(domain, cells);
+        std::vector<Polygon> diagram = voronoi(domain, cells, reflect);
 
         #ifndef NVERBOSE
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
@@ -70,7 +70,7 @@ namespace pacs {
             }
 
             // Relaxation step.
-            diagram = voronoi(domain, centroids);
+            diagram = voronoi(domain, centroids, reflect);
 
             #ifndef NVERBOSE
             std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
