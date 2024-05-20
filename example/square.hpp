@@ -18,6 +18,15 @@
 #endif
 
 /**
+ * @brief Exact solution.
+ * 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
+    return std::sin(M_PI * x) * std::sin(M_PI * y);
+}
+
+/**
  * @brief Source.
  * 
  * @param x 
@@ -25,14 +34,5 @@
  * @return pacs::Real 
  */
 inline pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
-    return 2 * M_PI * M_PI * std::sin(M_PI * x) * std::sin(M_PI * y);
-}
-
-/**
- * @brief Exact solution.
- * 
- * @return pacs::Real 
- */
-inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
-    return std::sin(M_PI * x) * std::sin(M_PI * y);
+    return 2.0 * M_PI * M_PI * exact(x, y);
 }
