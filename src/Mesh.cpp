@@ -169,8 +169,14 @@ namespace pacs {
         // Polygons.
         file << "@ Elements\' coordinates: \n";
 
-        for(const auto &element: this->elements)
-            file << this->element(element) << "\n";
+        for(const auto &element: this->elements) {
+            Polygon polygon{this->element(element)};
+
+            for(const auto &vertex: polygon.points)
+                file << vertex[0] << " " << vertex[1] << " ";
+            
+            file << "\n";
+        }
     }
 
 }
