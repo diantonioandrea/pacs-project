@@ -136,7 +136,7 @@ namespace pacs {
                 }
 
                 // Local matrix assembly.
-                local_M = local_M + scaled_phi.transpose() * scaled_phi;
+                local_M = local_M + scaled_phi.transpose() * phi;
                 local_A = local_A + scaled_gradx.transpose() * gradx_phi + scaled_grady.transpose() * grady_phi;
             }
 
@@ -169,11 +169,11 @@ namespace pacs {
                 // Edge geometry.
                 Segment segment{mesh.edge(mesh.elements[j].edges[k])};
 
-                // Edge's normal.
+                // Edge's normal. Mind the order.
                 Vector<Real> unit_vector{2};
 
-                unit_vector[0] = segment[1][1] - segment[0][1];
-                unit_vector[1] = segment[0][0] - segment[1][0];
+                unit_vector[0] = segment[0][1] - segment[1][1];
+                unit_vector[1] = segment[1][0] - segment[0][0];
 
                 unit_vector /= unit_vector.norm();
 
@@ -181,9 +181,9 @@ namespace pacs {
                 Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = segment[1][0] - segment[0][0];
-                jacobian(1, 1) = segment[1][1] - segment[0][1];
                 jacobian(0, 1) = 0.5 * jacobian(0, 0);
-                jacobian(1, 0) = 0.5 * jacobian(1, 1);
+                jacobian(1, 0) = segment[1][1] - segment[0][1];
+                jacobian(1, 1) = 0.5 * jacobian(1, 0);
 
                 // Translation.
                 Vector<Real> translation{2};
@@ -214,9 +214,9 @@ namespace pacs {
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Local matrix assembly.
-                Matrix<Real> scaled_gradx = gradx_phi;
-                Matrix<Real> scaled_grady = grady_phi;
-                Matrix<Real> scaled_phi = phi;
+                Matrix<Real> scaled_gradx{gradx_phi};
+                Matrix<Real> scaled_grady{grady_phi};
+                Matrix<Real> scaled_phi{phi};
 
                 for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
                     scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
@@ -224,24 +224,28 @@ namespace pacs {
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
                 }
 
+                Matrix<Real> scaled_grad = unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady;
+
                 if(neighbour == -1) { // Boundary edge.
 
-                    local_IA = local_IA + (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * phi;
+                    local_IA = local_IA + scaled_grad.transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                 } else {
 
-                    local_IA = local_IA + 0.5 * (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * phi;
+                    local_IA = local_IA + 0.5 * scaled_grad.transpose() * phi;
                     local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
                     Matrix<Real> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
 
                     // Neighbour's local matrix.
-                    local_IAN[k] = local_IAN[k] - 0.5 * (unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady).transpose() * n_phi;
+                    local_IAN[k] = local_IAN[k] - 0.5 * scaled_grad.transpose() * n_phi;
                     local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
                 }
             }
+
+            // std::cout << local_SA << std::endl << std::endl;
 
             IA.insert(indices, indices, local_IA);
             SA.insert(indices, indices, local_SA);

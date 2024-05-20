@@ -539,7 +539,7 @@ namespace pacs {
                 for(std::size_t j = 0; j < this->rows; ++j)
                     for(std::size_t k = 0; k < matrix.columns; ++k)
                         for(std::size_t h = 0; h < this->columns; ++h)
-                            result.elements[j * matrix.columns + k] += this->elements[j * this->columns + h] * matrix.elements[h * matrix.columns + k];
+                            result.elements[j * result.columns + k] += this->elements[j * this->columns + h] * matrix.elements[h * matrix.columns + k];
 
                 return result;
             }
