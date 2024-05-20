@@ -51,9 +51,6 @@ namespace pacs {
         // Degrees of freedom.
         std::size_t dofs = mesh.dofs();
 
-        // Neighbours.
-        std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
-
         // Forcing term.
         Vector<Real> forcing{dofs};
 
@@ -127,7 +124,7 @@ namespace pacs {
 
                 // Basis functions.
                 auto phi = basis_2d(mesh, j, {physical_x, physical_y})[0];
-                Matrix<Real> scaled_phi = phi;
+                Matrix<Real> scaled_phi{phi};
 
                 for(std::size_t l = 0; l < scaled_phi.columns; ++l)
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
@@ -137,8 +134,7 @@ namespace pacs {
             }
 
             // Global forcing term.
-            for(std::size_t k = 0; k < indices.size(); ++k)
-                forcing[indices[k]] = local_f[k];
+            forcing(indices, local_f);
 
         }
 
