@@ -245,8 +245,6 @@ namespace pacs {
                 }
             }
 
-            // std::cout << local_SA << std::endl << std::endl;
-
             IA.insert(indices, indices, local_IA);
             SA.insert(indices, indices, local_SA);
 
