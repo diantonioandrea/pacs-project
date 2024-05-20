@@ -36,6 +36,7 @@ x: list[float] = []
 y: list[float] = []
 numerical: list[float] = []
 exact: list[float] = []
+difference: list[float] = []
 
 # Reads values.
 for line in lines:
@@ -55,11 +56,13 @@ for line in lines:
         y.append(value_y)
         numerical.append(value_numerical)
         exact.append(value_exact)
+        difference.append(value_exact - value_numerical)
 
     except ValueError:
         continue
 
 # Plot.
-fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-ax.plot_trisurf(x, y, numerical, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+fig, axes = plt.subplots(1, 2, subplot_kw={"projection": "3d"})
+axes[0].plot_trisurf(x, y, numerical, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+axes[1].plot_trisurf(x, y, exact, cmap=cm.coolwarm, linewidth=0, antialiased=True)
 plt.show()
