@@ -17,10 +17,10 @@ report/output
 **/__pycache__
 
 # polyplot.py
-**/*.poly
+/*.poly
 
 # surfplot.py
-**/*.surf
+/*.surf
 
 # Others
 **/*.DS_Store
