@@ -10,6 +10,12 @@
 
 #include <Mesh.hpp>
 
+// IO handling.
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+
 // Small edges tolerance.
 #ifndef COLLAPSE_TOLERANCE
 #define COLLAPSE_TOLERANCE 1E-1
@@ -148,6 +154,53 @@ namespace pacs {
         return diagram;
     }
 
+    /**
+     * @brief Reads a diagram from a file.
+     * 
+     * @param filename 
+     * @return std::vector<Polygon> 
+     */
+    std::vector<Polygon> mesh_diagram(const std::string &filename) {
+        // File loading.
+        std::ifstream file{filename};
+
+        // Diagram.
+        std::vector<Polygon> diagram;
+
+        // Reading.
+        std::string line;
+        
+        while (std::getline(file, line)) {
+
+            // Skip lines starting with '@'
+            if (!line.empty() && line[0] == '@') {
+                continue;
+            }
+
+            // Reading points.
+            std::istringstream lineStream{line};
+
+            std::vector<Point> points;
+            Real x, y;
+
+            while (lineStream >> x >> y) {
+                Point point{x, y};
+                points.emplace_back(point);
+            }
+
+            diagram.emplace_back(points);
+        }
+
+        return diagram;
+    }
+
+    /**
+     * @brief Refines specified elements from a mesh.
+     * 
+     * @param mesh 
+     * @param indices 
+     * @return std::vector<Polygon> 
+     */
     std::vector<Polygon> mesh_refine(const Mesh &mesh, const std::vector<std::size_t> &indices) {
         #ifndef NDEBUG // Integrity check.
         for(std::size_t j = 0; j < indices.size(); ++j)

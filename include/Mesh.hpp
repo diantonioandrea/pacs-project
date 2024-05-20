@@ -126,6 +126,7 @@ namespace pacs {
     // Implemented under src/Builder.cpp
 
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &reflect = false);
+    std::vector<Polygon> mesh_diagram(const std::string &);
     std::vector<Polygon> mesh_refine(const Mesh &, const std::vector<std::size_t> &);
 
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
