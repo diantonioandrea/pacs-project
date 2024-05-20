@@ -273,12 +273,10 @@ namespace pacs {
                 #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 assert(!(this->compressed));
-                
+                #endif
+
                 if(std::abs(element) > TOLERANCE)
                     this->elements[{j, k}] = element;
-                #else
-                this->elements[{j, k}] = element;
-                #endif
             }
 
             /**
@@ -315,16 +313,14 @@ namespace pacs {
                 #ifndef NDEBUG // Integrity check.
                 assert((j < this->rows) && (k < this->columns));
                 assert(!(this->compressed));
-                
+                #endif
+
                 if(std::abs(element) > TOLERANCE) {
                     if(this->elements.contains({j, k}))
                         this->elements[{j, k}] += element;
                     else
                         this->elements[{j, k}] = element;
                 }
-                #else
-                this->elements[{j, k}] += element;
-                #endif
             }
 
             /**
@@ -807,12 +803,20 @@ namespace pacs {
                 result.uncompress();
 
                 if(!(sparse.compressed))
-                    for(auto &[key, element]: sparse.elements)
-                        result.add(key[0], key[1], element);
+                    for(auto &[key, element]: sparse.elements) {
+                        if(result.elements.contains(key))
+                            result.elements[key] += element;
+                        else
+                            result.elements[key] = element;
+                    }
                 else
                     for(std::size_t j = 0; j < sparse.rows; ++j)
-                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
-                            result.add(j, sparse.outer[k], sparse.values[k]);
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            if(result.elements.contains({j, sparse.outer[k]}))
+                                result.elements[{j, sparse.outer[k]}] += sparse.values[k];
+                            else
+                                result.elements[{j, sparse.outer[k]}] = sparse.values[k];
+                        }
 
                 return result;
             }
@@ -830,12 +834,20 @@ namespace pacs {
                 #endif
 
                 if(!(sparse.compressed))
-                    for(auto &[key, element]: sparse.elements)
-                        this->add(key[0], key[1], element);
+                    for(auto &[key, element]: sparse.elements) {
+                        if(this->elements.contains(key))
+                            this->elements[key] += element;
+                        else
+                            this->elements[key] = element;
+                    }
                 else
                     for(std::size_t j = 0; j < sparse.rows; ++j)
-                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
-                            this->add(j, sparse.outer[k], sparse.values[k]);
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            if(this->elements.contains({j, sparse.outer[k]}))
+                                this->elements[{j, sparse.outer[k]}] += sparse.values[k];
+                            else
+                                this->elements[{j, sparse.outer[k]}] = sparse.values[k];
+                        }
 
                 return *this;
             }
@@ -855,12 +867,20 @@ namespace pacs {
                 result.uncompress();
 
                 if(!(sparse.compressed))
-                    for(auto &[key, element]: sparse.elements)
-                        result.add(key[0], key[1], -element);
+                    for(auto &[key, element]: sparse.elements) {
+                        if(result.elements.contains(key))
+                            result.elements[key] -= element;
+                        else
+                            result.elements[key] = -element;
+                    }
                 else
                     for(std::size_t j = 0; j < sparse.rows; ++j)
-                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
-                            result.add(j, sparse.outer[k], -sparse.values[k]);
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            if(result.elements.contains({j, sparse.outer[k]}))
+                                result.elements[{j, sparse.outer[k]}] -= sparse.values[k];
+                            else
+                                result.elements[{j, sparse.outer[k]}] = -sparse.values[k];
+                        }
 
                 return result;
             }
@@ -878,12 +898,20 @@ namespace pacs {
                 #endif
 
                 if(!(sparse.compressed))
-                    for(auto &[key, element]: sparse.elements)
-                        this->add(key[0], key[1], -element);
+                    for(auto &[key, element]: sparse.elements) {
+                        if(this->elements.contains(key))
+                            this->elements[key] -= element;
+                        else
+                            this->elements[key] = -element;
+                    }
                 else
                     for(std::size_t j = 0; j < sparse.rows; ++j)
-                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k)
-                            this->add(j, sparse.outer[k], -sparse.values[k]);
+                        for(std::size_t k = sparse.inner[j]; k < sparse.inner[j + 1]; ++k) {
+                            if(this->elements.contains({j, sparse.outer[k]}))
+                                this->elements[{j, sparse.outer[k]}] -= sparse.values[k];
+                            else
+                                this->elements[{j, sparse.outer[k]}] = -sparse.values[k];
+                        }
 
                 return *this;
             }
@@ -900,12 +928,9 @@ namespace pacs {
                 if(!(this->compressed)) 
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
-                else {
-                    
+                else
                     for(auto &value: result.values)
                         value *= scalar;
-
-                }
 
                 return result;
             }
@@ -920,14 +945,12 @@ namespace pacs {
             friend Sparse operator *(const T &scalar, const Sparse &sparse) {
                 Sparse result{sparse};
 
-                if(!(sparse.compressed))
+                if(!(result.compressed)) 
                     for(auto &[key, element]: result.elements)
                         element *= scalar;
-                else {
-                    
+                else
                     for(auto &value: result.values)
                         value *= scalar;
-                }
 
                 return result;
             }
@@ -939,14 +962,12 @@ namespace pacs {
              * @return Sparse& 
              */
             Sparse &operator *=(const T &scalar) {
-                if(!(this->compressed))
+                if(!(this->compressed)) 
                     for(auto &[key, element]: this->elements)
                         element *= scalar;
-                else {
-                    
-                    for(std::size_t j = 0; j < this->values.size(); ++j)
-                        this->values[j] *= scalar;
-                }
+                else
+                    for(auto &value: this->values)
+                        value *= scalar;
 
                 return *this;
             }
