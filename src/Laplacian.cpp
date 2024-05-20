@@ -125,9 +125,9 @@ namespace pacs {
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Some products.
-                Matrix<Real> scaled_gradx = gradx_phi;
-                Matrix<Real> scaled_grady = grady_phi;
-                Matrix<Real> scaled_phi = phi;
+                Matrix<Real> scaled_gradx{gradx_phi};
+                Matrix<Real> scaled_grady{grady_phi};
+                Matrix<Real> scaled_phi{phi};
 
                 for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
                     scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
