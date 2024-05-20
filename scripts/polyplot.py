@@ -23,16 +23,6 @@ try:
     lines: list[str] = file.read().split("\n")
     file.close()
 
-    # Postprocessing.
-    for j in range(len(lines)):
-        if lines[j]:
-            if lines[j][0] == "@":
-                continue
-
-        lines[j] = lines[j].replace("[", "").replace("]", "")
-        lines[j] = lines[j].replace("(", "").replace(")", "")
-        lines[j] = lines[j].replace(" ", "")
-
 except FileNotFoundError:
     print("File not found.")
     sys.exit(-1)
@@ -52,7 +42,8 @@ for line in lines:
     x: list[float] = []
     y: list[float] = []
 
-    data: list[str] = line.split(",")
+    data: list[str] = line.split(" ")
+    data: list[float] = [float(number) for number in data if number]
     
     try:
 
@@ -61,6 +52,9 @@ for line in lines:
             y.append(float(data[j + 1]))
 
     except ValueError:
+        continue
+
+    if not (x and y):
         continue
 
     x.append(x[0])

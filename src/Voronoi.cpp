@@ -14,9 +14,18 @@
 #include <cstdlib>
 #include <ctime>
 
+// Copy.
+#include <algorithm>
+#include <ranges>
+
 // Safe distance.
 #ifndef GEOMETRY_SAFE
 #define GEOMETRY_SAFE 1E-2
+#endif
+
+// Padding.
+#ifndef GEOMETRY_PADDING
+#define GEOMETRY_PADDING 5E-1
 #endif
 
 namespace pacs {
@@ -28,22 +37,66 @@ namespace pacs {
      * 
      * @param domain 
      * @param points 
+     * @param reflect 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> voronoi(const Polygon &domain, const std::vector<Point> &points) {
+    std::vector<Polygon> voronoi(const Polygon &domain, const std::vector<Point> &points, const bool &reflect) {
         std::vector<Polygon> cells;
+        Polygon box = domain;
+
+        // Reflections.
+        std::vector<std::vector<Point>> reflection_points;
+
+        if(reflect) {
+            for(const auto &point: points) {
+                std::vector<Point> reflection_set;
+
+                for(const auto &reflection: reflections(domain, point))
+                    reflection_set.emplace_back(reflection);
+
+                reflection_points.emplace_back(reflection_set);
+            }
+
+            auto [xy_min, xy_max] = domain.box();
+            Real x_min = xy_min[0], y_min = xy_min[1];
+            Real x_max = xy_max[0], y_max = xy_max[1];
+            
+            for(const auto &reflection: reflection_points)
+                for(const auto &point: reflection) {
+                    x_min = (point[0] < x_min) ? point[0] : x_min;
+                    x_max = (point[0] > x_max) ? point[0] : x_max;
+                    y_min = (point[1] < y_min) ? point[1] : y_min;
+                    y_max = (point[1] > y_max) ? point[1] : y_max;
+                }
+
+            x_min -= GEOMETRY_PADDING;
+            x_max += GEOMETRY_PADDING;
+            y_min -= GEOMETRY_PADDING;
+            y_max += GEOMETRY_PADDING;
+
+            // Boundary rectangle {a, b, c, d};
+            Point a{x_min, y_min};
+            Point b{x_max, y_min};
+            Point c{x_max, y_max};
+            Point d{x_min, y_max};
+
+            box = Polygon{{a, b, c, d}};
+        }
 
         for(std::size_t j = 0; j < points.size(); ++j) {
             Point point{points[j]};
-            Polygon cell = domain;
+            Polygon cell = box;
 
             for(std::size_t k = 0; k < points.size(); ++k) {
                 if(k == j)
                     continue;
 
-                Line line = bisector(point, points[k]);
-                cell = reduce(cell, line, point);
+                cell = reduce(cell, bisector(point, points[k]), point);
             }
+
+            if(reflect)
+                for(const auto &reflection: reflection_points[j])
+                    cell = reduce(cell, bisector(point, reflection), point);
 
             cells.emplace_back(cell);
         }
@@ -56,9 +109,10 @@ namespace pacs {
      * 
      * @param domain 
      * @param cells 
+     * @param reflect 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> voronoi(const Polygon &domain, const std::size_t &cells) {
+    std::vector<Polygon> voronoi(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
         // Seeding.
         std::srand(time(0));
 
@@ -70,7 +124,7 @@ namespace pacs {
             bool check = true;
 
             for(const auto &point: points) {
-                if(std::abs(point - random) <= GEOMETRY_SAFE) {
+                if(distance(point, random) <= GEOMETRY_SAFE) {
                     check = false;
                     break;
                 }
@@ -83,7 +137,7 @@ namespace pacs {
 
         } while(counter < cells);
 
-        return voronoi(domain, points);
+        return voronoi(domain, points, reflect);
     }
 
     // TRIANGLES.

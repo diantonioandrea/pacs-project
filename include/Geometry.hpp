@@ -222,9 +222,16 @@ namespace pacs {
     std::vector<Point> intersections(const Line &, const Segment &);
     std::vector<Point> intersections(const Line &, const Polygon &);
 
+    // Normal line.
+    Line normal(const Line &, const Point &);
+    Line normal(const Segment &, const Point &);
+
     // Polygon collapse.
     Polygon collapse(const Polygon &, const Point &);
     Polygon collapse(const Polygon &, const Segment &);
+
+    // Polygon Point reflection.
+    std::vector<Point> reflections(const Polygon &, const Point &);
 
     // Polygon reduction.
     Polygon reduce(const Polygon &, const Line &, const Point &);

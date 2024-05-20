@@ -20,14 +20,14 @@ pacs::Real source(const pacs::Real &, const pacs::Real &);
 
 int main() {
 
-    // Constructs a mesh.
+    // Loads a mesh.
     pacs::Point a{0.0, 0.0};
     pacs::Point b{1.0, 0.0};
     pacs::Point c{1.0, 1.0};
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 32)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/example.poly")};
 
     // Source and exact solution.
     pacs::Functor test_source{source};
@@ -42,7 +42,7 @@ int main() {
     pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
 
     // Linear system solution.
-    pacs::Vector<pacs::Real> solution = laplacian.solve(forcing);
+    pacs::Vector<pacs::Real> solution = laplacian.solve<pacs::RFOM>(forcing);
 
 }
 

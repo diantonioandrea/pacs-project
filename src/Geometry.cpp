@@ -57,10 +57,7 @@ namespace pacs {
             return std::abs(point[0] - line[2] / line[0]);
 
         // General case.
-        Real m = line[1] / line[0];
-        Line normal{-m, 1.0, -m * point[0] + point[1]};
-
-        Point intersection = intersections(line, normal)[0];
+        Point intersection = intersections(line, normal(line, point))[0];
 
         return distance(point, intersection);
     }
@@ -73,10 +70,7 @@ namespace pacs {
 
         // General case.
         Line line = segment.line();
-        Real m = line[1] / line[0];
-        Line normal{-m, 1.0, -m * point[0] + point[1]};
-
-        Point intersection = intersections(line, normal)[0];
+        Point intersection = intersections(line, normal(segment, point))[0];
 
         if(segment.contains(intersection))
             return distance(point, intersection);
@@ -197,6 +191,40 @@ namespace pacs {
     }
 
     /**
+     * @brief Returns the normal with respect to a Line and passing through a point.
+     * 
+     * @param line 
+     * @param point 
+     * @return Line 
+     */
+    Line normal(const Line &line, const Point &point) {
+        // Evaluation by cases.
+
+        // Horizonal line.
+        if(std::abs(line[0]) < GEOMETRY_TOLERANCE)
+            return Line{1.0, 0.0, point[0]};
+
+        // Vertical line.
+        if(std::abs(line[1]) < GEOMETRY_TOLERANCE)
+            return Line{0.0, 1.0, point[1]};
+
+        // General case.
+        Real m = line[1] / line[0];
+        return Line{-m, 1.0, -m * point[0] + point[1]};
+    }
+
+    /**
+     * @brief Returns the normal with respect to a Segment and passing through a point.
+     * 
+     * @param segment 
+     * @param point 
+     * @return Line 
+     */
+    Line normal(const Segment &segment, const Point &point) {
+        return normal(segment.line(), point);
+    }
+    
+    /**
      * @brief Polygon collapse over a vertex.
      * 
      * @param polygon 
@@ -258,6 +286,71 @@ namespace pacs {
     }
 
     /**
+     * @brief Returns the reflection(s) of a Point with respect to a Polygon.
+     * 
+     * @param polygon 
+     * @param point 
+     * @return Point 
+     */
+    std::vector<Point> reflections(const Polygon &polygon, const Point &point) {
+        #ifndef NDEBUG // Integrity check.
+        assert(polygon.contains(point));
+        #endif
+        
+        std::vector<Point> points;
+
+        // Edges.
+        std::vector<Segment> edges = polygon.edges();
+        
+        int closest = -1; // Closest edge's index.
+        Real minimum = 0.0;
+
+        for(std::size_t j = 0; j < polygon.points.size(); ++j) {
+            Real candidate = distance(point, edges[j]);
+
+            if((candidate < minimum) || (closest == -1)) {
+                if(!(intersections(normal(edges[j], point), edges[j]).size()))
+                    continue;
+
+                closest = j;
+                minimum = candidate;
+            }
+        }
+
+        // Previous and next edges.
+        Segment previous = (closest != 0) ? edges[closest - 1] : edges[edges.size() - 1];
+        Segment next = (closest != edges.size() - 1) ? edges[closest + 1] : edges[0];
+
+        // Reflection with respect to the closest edge.
+        Point projection = intersections(normal(edges[closest], point), edges[closest])[0];
+        Point reflection = projection * 2 - point;
+
+        if(!(polygon.contains(reflection)))
+            points.emplace_back(reflection);
+
+        // Reflection with respect to previous and next edges.
+        std::vector<Point> previous_intersections = intersections(normal(previous, point), previous);
+
+        if(previous_intersections.size()) {
+            Point previous_reflection = previous_intersections[0] * 2 - point;
+
+            if(!(polygon.contains(previous_reflection)))
+                points.emplace_back(previous_reflection);
+        }
+
+        std::vector<Point> next_intersections = intersections(normal(next, point), next);
+
+        if(next_intersections.size()) {
+            Point next_reflection = next_intersections[0] * 2 - point;
+
+            if(!(polygon.contains(next_reflection)))
+                points.emplace_back(next_reflection);
+        }
+
+        return points;
+    }
+
+    /**
      * @brief Reduce a Polygon cutted by a Line. Picks the part which contains the argument Point.
      * 
      * @param polygon 
@@ -271,13 +364,13 @@ namespace pacs {
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert(points.size() <= 2); // Convex domain assumption.
+        assert(points.size() <= 2);
         #endif
 
         if(points.size() <= 1)
             return polygon;
 
-        // Angular coefficient.
+        // Line's angular coefficient.
         Real angular = -(line[0] / line[1]);
 
         // Building.
@@ -288,6 +381,8 @@ namespace pacs {
         if(line > point) { // Point under the Line.
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
+                std::swap(points[0], points[1]);
+            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
             else if((angular > 0.0) && (points[0][1] < points[1][1]))
                 std::swap(points[0], points[1]);
@@ -321,6 +416,8 @@ namespace pacs {
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0]))
                 std::swap(points[0], points[1]);
+            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] < points[1][1]))
+                std::swap(points[0], points[1]);
             else if((angular > 0.0) && (points[0][1] > points[1][1]))
                 std::swap(points[0], points[1]);
             else if((angular < 0.0) && (points[0][1] < points[1][1]))
@@ -348,7 +445,6 @@ namespace pacs {
                 for(const auto &vertex: vertices)
                     if(line <= vertex)
                         new_vertices.emplace_back(vertex);
-
         }
 
         return Polygon{new_vertices};
