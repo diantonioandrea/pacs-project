@@ -449,7 +449,7 @@ namespace pacs {
 
                     for(std::size_t l = 0; l < elements[h].edges.size(); ++l)
                         if(elements[h].edges[l] == elements[j].edges[k]) {
-                            std::array<int, 3> neighbourhood{static_cast<int>(k), static_cast<int>(h)};
+                            std::array<int, 3> neighbourhood{static_cast<int>(k), static_cast<int>(h), static_cast<int>(l)};
                             element_neighbours.emplace_back(neighbourhood);
                             connection = true; break;
                         }

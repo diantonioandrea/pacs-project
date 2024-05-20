@@ -31,10 +31,11 @@ namespace pacs {
         std::vector<std::array<int, 3>> neighbours = mesh.neighbours[index];
 
         // Sizes.
+        std::vector<Segment> edges = polygon.edges();
         Vector<Real> sizes{element.edges.size()};
 
         for(std::size_t j = 0; j < sizes.length; ++j)
-            sizes[j] = std::abs(polygon.edges()[j]);
+            sizes[j] = std::abs(edges[j]);
 
         // Element's area.
         Real area = mesh.areas[index];
