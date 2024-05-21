@@ -62,7 +62,8 @@ for line in lines:
         continue
 
 # Plot.
-fig, axes = plt.subplots(1, 2, subplot_kw={"projection": "3d"})
+fig, axes = plt.subplots(1, 3, subplot_kw={"projection": "3d"})
 axes[0].plot_trisurf(x, y, numerical, cmap=cm.coolwarm, linewidth=0, antialiased=True)
 axes[1].plot_trisurf(x, y, exact, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+axes[2].plot_trisurf(x, y, difference, cmap=cm.coolwarm, linewidth=0, antialiased=True)
 plt.show()
