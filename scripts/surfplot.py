@@ -36,7 +36,7 @@ x: list[float] = []
 y: list[float] = []
 numerical: list[float] = []
 exact: list[float] = []
-difference: list[float] = []
+error: list[float] = []
 
 # Reads values.
 for line in lines:
@@ -56,7 +56,7 @@ for line in lines:
         y.append(value_y)
         numerical.append(value_numerical)
         exact.append(value_exact)
-        difference.append(abs(value_exact - value_numerical))
+        error.append(abs(value_exact - value_numerical))
 
     except ValueError:
         continue
@@ -65,12 +65,12 @@ for line in lines:
 fig, axes = plt.subplots(1, 3, subplot_kw={"projection": "3d"})
 
 axes[0].plot_trisurf(x, y, numerical, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[0].set_title("Numerical solution.")
+axes[0].set_title("Numerical solution")
 
 axes[1].plot_trisurf(x, y, exact, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[1].set_title("Exact solution.")
+axes[1].set_title("Exact solution")
 
-axes[2].plot_trisurf(x, y, difference, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[2].set_title("Error.")
+axes[2].plot_trisurf(x, y, error, cmap=cm.coolwarm, linewidth=0, antialiased=True)
+axes[2].set_title("Error")
 
 plt.show()
