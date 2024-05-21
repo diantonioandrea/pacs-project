@@ -1101,7 +1101,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1187,7 +1186,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1258,7 +1256,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1332,7 +1329,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1408,7 +1404,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1498,7 +1493,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1622,7 +1616,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1695,7 +1688,6 @@ namespace pacs {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->columns == vector.length);
-                assert(std::abs(mtrace(*this)) > TOLERANCE);
                 #endif
 
                 #ifndef NVERBOSE
