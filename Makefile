@@ -41,10 +41,10 @@ all: test example $(OUTPUT_DIR)
 
 # Test.
 test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
-	@echo "Done!"
+	@echo "Compiled tests!"
 
 testrun: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
-	@echo "Done!"
+	@echo "Run tests!"
 
 $(TEST_RUN): $(TEST_EXECS)
 	@echo "Executing $(EXEC_DIR)/$@ and redirecting the output to $(OUTPUT_DIR)/$@.txt"
@@ -60,7 +60,7 @@ $(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
 
 # Examples.
 example: $(OBJECT_DIR) $(EXEC_DIR) $(EXAMPLE_EXECS)
-	@echo "Done!"
+	@echo "Compiled examples!"
 
 $(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
