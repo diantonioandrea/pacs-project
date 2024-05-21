@@ -35,7 +35,7 @@ int main() {
     pacs::Functor test_source{source};
 
     // Writes mesh informations to a file.
-    mesh.write("poisson.poly");
+    mesh.write("output/poisson.poly");
 
     // Builds the laplacian matrix.
     auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
@@ -51,7 +51,7 @@ int main() {
 
     // Solution structure (output).
     pacs::Solution solution{mesh, numerical, exact};
-    solution.write("poisson.surf");
+    solution.write("output/poisson.surf");
 
     // Output.
     std::cout << "\n" << error << "\n" << std::endl;

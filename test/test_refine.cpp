@@ -39,6 +39,6 @@ int main() {
     pacs::Mesh refined_mesh{domain, refined};
 
     // Mesh output.
-    refined_mesh.write("refined.poly");
+    refined_mesh.write("output/refined.poly");
 
 }

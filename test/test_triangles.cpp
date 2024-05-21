@@ -31,8 +31,4 @@ int main() {
 
     // Centroid triangulation.
     std::vector<pacs::Polygon> triangles = pacs::triangulate(polygon);
-
-    // Triangulation output.
-    for(const auto &triangle: triangles)
-        std::cout << triangle << std::endl;
 }

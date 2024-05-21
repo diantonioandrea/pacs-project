@@ -34,6 +34,6 @@ int main() {
     pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 64, true)};
 
     // Mesh output.
-    mesh.write("mesh.poly");
+    mesh.write("output/mesh.poly");
 
 }
