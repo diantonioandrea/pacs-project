@@ -71,6 +71,6 @@ axes[1].plot_trisurf(x, y, exact, cmap=cm.coolwarm, linewidth=0, antialiased=Tru
 axes[1].set_title("Exact solution.")
 
 axes[2].plot_trisurf(x, y, difference, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[2].set_title("Noise.")
+axes[2].set_title("Error.")
 
 plt.show()
