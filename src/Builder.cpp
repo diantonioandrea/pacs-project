@@ -333,7 +333,7 @@ namespace pacs {
      * @param edges 
      * @return std::vector<Element> 
      */
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &mesh, const std::vector<Point> &nodes, const std::vector<Segment> &edges) {
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &mesh, const std::vector<Point> &nodes, const std::vector<Segment> &edges, const std::size_t &degree) {
         std::vector<Element> elements;
 
         #ifndef NVERBOSE
@@ -362,7 +362,7 @@ namespace pacs {
                 }
             }
 
-            elements.emplace_back(element_nodes, element_edges);
+            elements.emplace_back(element_nodes, element_edges, degree);
         }
 
         return elements;

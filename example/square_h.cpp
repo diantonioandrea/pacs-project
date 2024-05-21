@@ -52,7 +52,7 @@ int main() {
     for(std::size_t j = 0; j < 6; ++j) {
 
         // Mesh.
-        pacs::Mesh mesh{domain, diagram};
+        pacs::Mesh mesh{domain, diagram, 3};
 
         // Mesh output.
         std::string polyfile = "output/square_h_" + std::to_string(j) + ".poly";

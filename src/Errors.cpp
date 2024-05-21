@@ -59,15 +59,13 @@ namespace pacs {
         }
 
         // Data.
-        this->degree = 0;
+        this->degree = mesh.degree;
         this->size = 0.0;
         this->elements = mesh.elements.size();
 
         for(const auto &element: mesh.elements) {
-            for(const auto &edge: element.edges)
-                this->size = (std::abs(mesh.edge(edge)) > this->size) ? std::abs(mesh.edge(edge)) : this->size;
-
-            this->degree = (element.degree > this->degree) ? element.degree : this->degree;
+            for(const auto &edge: mesh.element(element).edges())
+                this->size = (std::abs(edge) > this->size) ? std::abs(edge) : this->size;
         }
     }
 

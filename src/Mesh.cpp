@@ -37,14 +37,14 @@ namespace pacs {
      * @param domain 
      * @param mesh 
      */
-    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh): domain{domain} {
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh, const std::size_t &degree): domain{domain}, degree{degree} {
 
         // Building nodes and edges.
         this->nodes = mesh_nodes(mesh);
         this->edges = mesh_edges(mesh);
 
         // Elements.
-        this->elements = mesh_elements(mesh, this->nodes, this->edges);
+        this->elements = mesh_elements(mesh, this->nodes, this->edges, degree);
         
         // Boundary nodes and edges.
         this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
@@ -58,14 +58,11 @@ namespace pacs {
         this->max_simplices = mesh_max_simplices(mesh);
 
         // Number of quadrature nodes and solution evaluation entries.
-        std::size_t degree = 0, entries = 0;
+        std::size_t entries = 0;
 
-        for(const auto &element: this->elements) {
-            degree = (degree < element.degree) ? element.degree : degree;
+        for(const auto &element: this->elements)
             entries += element.edges.size();
-        }
 
-        this->degree = degree;
         this->quadrature = 7; // Arbitrary.
         this->entries = entries * this->quadrature * this->quadrature;
     }
@@ -84,20 +81,6 @@ namespace pacs {
         #endif
 
         return this->nodes[j];
-    }
-
-    /**
-     * @brief Returns the j-th edge.
-     * 
-     * @param j 
-     * @return Segment 
-     */
-    Segment Mesh::edge(const std::size_t &j) const {
-        #ifndef NDEBUG // Integrity check.
-        assert(j < this->edges.size());
-        #endif
-
-        return this->edges[j];
     }
 
     /**

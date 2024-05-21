@@ -68,9 +68,9 @@ namespace pacs {
         protected:
 
             // Geometry.
-            Polygon domain;
-            std::vector<Point> nodes;
-            std::vector<Segment> edges;
+            Polygon domain; // Polygonal domain.
+            std::vector<Point> nodes; // Unique nodes.
+            std::vector<Segment> edges; // Unique edges.
 
         public:
 
@@ -100,12 +100,11 @@ namespace pacs {
 
             // CONSTRUCTORS.
 
-            Mesh(const Polygon &, const std::vector<Polygon> &);
+            Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
 
             // READ.
         
             Point node(const std::size_t &) const;
-            Segment edge(const std::size_t &) const;
             Polygon element(const std::size_t &) const;
             Polygon element(const Element &) const;
 
@@ -131,7 +130,7 @@ namespace pacs {
 
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &);
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &);
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &, const std::size_t &);
 
     std::vector<std::size_t> mesh_boundary_nodes(const Polygon &, const std::vector<Point> &);
     std::vector<std::size_t> mesh_boundary_edges(const Polygon &, const std::vector<Segment> &);

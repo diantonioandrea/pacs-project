@@ -53,7 +53,7 @@ int main() {
         std::string polyfile = "output/square_" + std::to_string(j) + ".poly";
         std::vector<pacs::Polygon> diagram = std::filesystem::exists(polyfile) ? pacs::mesh_diagram(polyfile) : pacs::mesh_diagram(domain, elements);
 
-        pacs::Mesh mesh{domain, diagram};
+        pacs::Mesh mesh{domain, diagram, 3};
         mesh.write(polyfile); // Update.
 
         // Matrices.
