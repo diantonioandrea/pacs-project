@@ -160,6 +160,9 @@ namespace pacs {
             // Penalties.
             Vector<Real> penalties = penalty(mesh, j);
 
+            // Edges.
+            std::vector<Segment> edges{polygon.edges()};
+
             // Loop over faces.
             for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
 
@@ -167,23 +170,28 @@ namespace pacs {
                 auto [edge, neighbour, n_edge] = element_neighbours[k];
 
                 // Edge geometry.
-                Segment segment{mesh.edge(mesh.elements[j].edges[k])};
+                Segment segment{edges[k]}; // Mesh's edges to be fixed. [!]
 
-                // Edge's normal. Mind the order.
-                Vector<Real> unit_vector{2};
+                // Edge's normal. Check the order. [!]
+                Vector<Real> edge_vector{2};
 
-                unit_vector[0] = segment[0][1] - segment[1][1];
-                unit_vector[1] = segment[1][0] - segment[0][0];
+                edge_vector[0] = segment[1][0] - segment[0][0];
+                edge_vector[1] = segment[1][1] - segment[0][1];
 
-                unit_vector /= unit_vector.norm();
+                Vector<Real> normal_vector{2};
+
+                normal_vector[0] = edge_vector[1];
+                normal_vector[1] = -edge_vector[0];
+
+                normal_vector /= normal_vector.norm();
 
                 // Jacobian.
                 Matrix<Real> jacobian{2, 2};
 
                 jacobian(0, 0) = segment[1][0] - segment[0][0];
-                jacobian(0, 1) = 0.5 * jacobian(0, 0);
+                jacobian(0, 1) = 0.5 * (segment[1][0] - segment[0][0]);
                 jacobian(1, 0) = segment[1][1] - segment[0][1];
-                jacobian(1, 1) = 0.5 * jacobian(1, 0);
+                jacobian(1, 1) = 0.5 * (segment[1][1] - segment[0][1]);
 
                 // Translation.
                 Vector<Real> translation{2};
@@ -199,7 +207,6 @@ namespace pacs {
                     Vector<Real> node{2};
 
                     node[0] = nodes_1d[l];
-                    node[1] = 0.0;
 
                     Vector<Real> transformed = jacobian * node + translation;
 
@@ -224,7 +231,7 @@ namespace pacs {
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
                 }
 
-                Matrix<Real> scaled_grad = unit_vector[0] * scaled_gradx + unit_vector[1] * scaled_grady;
+                Matrix<Real> scaled_grad = normal_vector[0] * scaled_gradx + normal_vector[1] * scaled_grady;
 
                 if(neighbour == -1) { // Boundary edge.
 
