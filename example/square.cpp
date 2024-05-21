@@ -8,8 +8,12 @@
  * 
  */
 
-// Output.
+// IO handling.
+#include <string>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <filesystem>
 
 // Matrices and RHS.
 #include <Laplacian.hpp>
@@ -21,15 +25,17 @@
 // Solution plot.
 #include <Solution.hpp>
 
-// Filename.
-#include <string>
-
 // Test functions.
 #include "square.hpp"
 
 int main() {
 
+    std::ofstream output{"output/square.error"};
+
+    output << "Square domain - uniform refinement." << "\n";
+
     std::cout << "Square domain - uniform refinement." << std::endl;
+    std::cout << "Output under output/square.error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -44,11 +50,11 @@ int main() {
         std::size_t elements = std::pow(2, 4 + j);
 
         // Mesh.
-        pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
+        std::string polyfile = "output/square_" + std::to_string(j) + ".poly";
+        std::vector<pacs::Polygon> diagram = std::filesystem::exists(polyfile) ? pacs::mesh_diagram(polyfile) : pacs::mesh_diagram(domain, elements);
 
-        // Mesh output.
-        std::string polyfile = "square_" + std::to_string(j) + ".poly";
-        mesh.write(polyfile);
+        pacs::Mesh mesh{domain, diagram};
+        mesh.write(polyfile); // Update.
 
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
@@ -64,16 +70,13 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string surffile = "square_" + std::to_string(j) + ".surf";
+        std::string surffile = "output/square_" + std::to_string(j) + ".surf";
         solution.write(surffile);
 
         // Output.
-        std::cout << "\n" << error << "\n" << std::endl;
+        output << "\n" << error << "\n\n";
         
-        std::cout << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << std::endl;
-        std::cout << "Residual: " << (laplacian * numerical - forcing).norm() << "\n" << std::endl;
-
-        std::cout << "Mesh saved to " << polyfile << std::endl;
-        std::cout << "Surface saved to " << surffile << std::endl;
+        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+        output << "Residual: " << (laplacian * numerical - forcing).norm() << "\n";
     }
 }
