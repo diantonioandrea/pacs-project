@@ -20,6 +20,8 @@
 /**
  * @brief Exact solution.
  * 
+ * @param x 
+ * @param y 
  * @return pacs::Real 
  */
 inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
