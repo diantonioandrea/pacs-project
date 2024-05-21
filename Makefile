@@ -37,7 +37,7 @@ OBJECT_DIR = ./objects
 EXEC_DIR = ./executables
 
 # All.
-all: test example
+all: test example $(OUTPUT_DIR)
 
 # Test.
 test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
@@ -90,8 +90,6 @@ clean:
 	@echo "Cleaning the repo."
 	@$(RM) -r $(OBJECT_DIR)
 	@$(RM) -r $(OUTPUT_DIR)
-	@$(RM) ./*.poly
-	@$(RM) ./*.surf
 
 distclean: clean
 	@$(RM) -r $(EXEC_DIR)
