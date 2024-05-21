@@ -54,7 +54,7 @@ int main() {
         std::vector<pacs::Polygon> diagram = std::filesystem::exists(polyfile) ? pacs::mesh_diagram(polyfile) : pacs::mesh_diagram(domain, elements);
 
         pacs::Mesh mesh{domain, diagram, 3};
-        mesh.write(polyfile); // Update.
+        mesh.write(polyfile);
 
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
