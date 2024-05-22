@@ -63,10 +63,12 @@ namespace pacs {
         this->size = 0.0;
         this->elements = mesh.elements.size();
 
-        for(const auto &element: mesh.elements) {
-            for(const auto &edge: mesh.element(element).edges())
-                this->size = (std::abs(edge) > this->size) ? std::abs(edge) : this->size;
-        }
+        for(const auto &element: mesh.elements)
+            for(const auto &p: mesh.element(element).points)
+                for(const auto &q: mesh.element(element).points) {
+                    Real size = distance(p, q);
+                    this->size = (size > this->size) ? size : this->size;
+                }
     }
 
     // OUTPUT.
