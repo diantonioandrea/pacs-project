@@ -121,9 +121,9 @@ if "--elements" in sys.argv: # Elements only.
     axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     if "--p" in sys.argv:
-        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order + 1}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order - 1}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order + 1}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order - 1}") # Comparison.
     axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     # Parameters.
@@ -162,9 +162,9 @@ fig.suptitle(title)
 
 # Elements.
 if "--p" in sys.argv:
-    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order + 1}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order - 1}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order -1}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order + 1}") # Comparison.
 axes[0, 0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 if "--p" in sys.argv:
