@@ -25,7 +25,7 @@
  * @return pacs::Real 
  */
 inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
-    return std::sin(M_PI * x) * std::sin(M_PI * y);
+    return std::sin(2.0 * M_PI * x) * std::cos(2.0 * M_PI * y);
 }
 
 /**
@@ -36,5 +36,16 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
  * @return pacs::Real 
  */
 inline pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
-    return 2.0 * M_PI * M_PI * exact(x, y);
+    return 8.0 * M_PI * M_PI * exact(x, y);
+}
+
+/**
+ * @brief Dirichlet boundary conditions.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real dirichlet(const pacs::Real &x, const pacs::Real &y) {
+    return exact(x, y);
 }
