@@ -40,7 +40,7 @@ Key components include:
 - `src/`: Implementations of the methods and classes defined under `include/`.
 - `scripts/`: Useful scripts.
     - `polyplot.py`: Plots a mesh dumped with `Mesh::write(const std::string &filename)`
-    - `surfplot.py`: Plots a solution dumped with `Solution::write(const std::string &filename)`
+    - `contplot.py`: Plots a solution dumped with `Solution::write(const std::string &filename)`
     - `errorplot.py`: Plots a convergence graph from an example output.
 - `test/`: Some tests for the code. See [Test Compilation](#test-compilation).
 

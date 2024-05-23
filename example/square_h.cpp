@@ -72,8 +72,8 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string surffile = "output/square_h_" + std::to_string(j) + ".surf";
-        solution.write(surffile);
+        std::string contfile = "output/square_h_" + std::to_string(j) + ".cont";
+        solution.write(contfile);
 
         // Output.
         output << "\n" << error << "\n\n";

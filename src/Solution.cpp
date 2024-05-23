@@ -233,7 +233,7 @@ namespace pacs {
         std::ofstream file{filename};
 
         file << "@ " << filename << "\n";
-        file << "@ surfplot.py readable mesh\n";
+        file << "@ contplot.py readable mesh\n";
         file << "@ Structure: [x, y, numerical(x, y), exact(x, y)].\n";
 
         for(std::size_t j = 0; j < this->x.length; ++j) {

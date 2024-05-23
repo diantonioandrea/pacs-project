@@ -19,8 +19,8 @@ report/output
 # polyplot.py
 /*.poly
 
-# surfplot.py
-/*.surf
+# contplot.py
+/*.cont
 
 # Others
 **/*.DS_Store

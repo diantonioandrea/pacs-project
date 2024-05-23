@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-@file surfplot.py
+@file contplot.py
 @author Andrea Di Antonio (github.com/diantonioandrea)
 @date 2024-05-13
 
@@ -13,11 +13,11 @@ from matplotlib import cm
 import sys
 
 if len(sys.argv) <= 1:
-    print(f"Usage: {sys.argv[0]} /path/to/file.surf.")
+    print(f"Usage: {sys.argv[0]} /path/to/file.cont.")
     sys.exit(0)
 
 try:
-    if sys.argv[1].split(".")[-1] != "surf":
+    if sys.argv[1].split(".")[-1] != "cont":
         raise
 
     file = open(sys.argv[1], "r+")
@@ -29,11 +29,14 @@ except FileNotFoundError:
     sys.exit(-1)
 
 except:
-    print("Load a .surf file.")
+    print("Load a .cont file.")
     sys.exit(-1)
 
+# Points.
 x: list[float] = []
 y: list[float] = []
+
+# Data.
 numerical: list[float] = []
 exact: list[float] = []
 error: list[float] = []
@@ -62,15 +65,28 @@ for line in lines:
         continue
 
 # Plot.
-fig, axes = plt.subplots(1, 3, subplot_kw={"projection": "3d"})
+fig, axes = plt.subplots(1, 3)
 
-axes[0].plot_trisurf(x, y, numerical, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[0].set_title("Numerical solution")
+data: list[list[float]] = [numerical, exact, error]
+titles: list[str] = ["Numerical solution", "Exact solution", "Error"]
 
-axes[1].plot_trisurf(x, y, exact, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[1].set_title("Exact solution")
+contours: list = [None] * 3
+bars: list = [None] * 3
 
-axes[2].plot_trisurf(x, y, error, cmap=cm.coolwarm, linewidth=0, antialiased=True)
-axes[2].set_title("Error")
+for j in range(3):
+
+    # Plot.
+    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm)
+    axes[j].set_title(titles[j])
+
+    # Proportions.
+    axes[j].set_aspect('equal', adjustable='box')
+
+    # Colorbars.
+    bars[j] = fig.colorbar(contours[j], cmap=cm.coolwarm, orientation="horizontal")
+    bars[j].set_ticks([min(data[j]), max(data[j])])
+
+    if j == 2:
+        bars[j].set_ticklabels([f"{min(data[j]):1.2e}", f"{max(data[j]):1.2e}"])
 
 plt.show()
