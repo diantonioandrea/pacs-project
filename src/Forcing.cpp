@@ -27,6 +27,9 @@
 // Basis functions.
 #include <Basis.hpp>
 
+// Penalty.
+#include <Penalty.hpp>
+
 namespace pacs {
 
     /**
@@ -35,7 +38,7 @@ namespace pacs {
      * @param mesh 
      * @return Vector<Real> 
      */
-    Vector<Real> forcing(const Mesh &mesh, const Functor &source) {
+    Vector<Real> forcing(const Mesh &mesh, const Functor &source, const Functor &dirichlet) {
 
         #ifndef NVERBOSE
         std::cout << "Computing the forcing term." << std::endl;
@@ -50,6 +53,9 @@ namespace pacs {
 
         // Degrees of freedom.
         std::size_t dofs = mesh.dofs();
+
+        // Neighbours.
+        std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
 
         // Forcing term.
         Vector<Real> forcing{dofs};
@@ -131,6 +137,99 @@ namespace pacs {
 
                 // Local forcing term.
                 local_f = local_f + scaled_phi.transpose() * local_source;
+            }
+
+            // Face integrals.
+
+            // Element's neighbours.
+            std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
+
+            // Penalties.
+            Vector<Real> penalties = penalty(mesh, j);
+
+            // Edges.
+            std::vector<Segment> edges{polygon.edges()};
+
+            // Loop over faces.
+            for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
+
+                // Neighbour information.
+                auto [edge, neighbour, n_edge] = element_neighbours[k];
+
+                // Only domain's border,
+                if(neighbour != -1)
+                    continue;
+
+                // Edge geometry.
+                Segment segment{edges[k]}; // Mesh's edges to be fixed. [!]
+
+                // Edge's normal. Check the order. [!]
+                Vector<Real> edge_vector{2};
+
+                edge_vector[0] = segment[1][0] - segment[0][0];
+                edge_vector[1] = segment[1][1] - segment[0][1];
+
+                Vector<Real> normal_vector{2};
+
+                normal_vector[0] = edge_vector[1];
+                normal_vector[1] = -edge_vector[0];
+
+                normal_vector /= normal_vector.norm();
+
+                // Jacobian.
+                Matrix<Real> jacobian{2, 2};
+
+                jacobian(0, 0) = segment[1][0] - segment[0][0];
+                jacobian(0, 1) = 0.5 * (segment[1][0] - segment[0][0]);
+                jacobian(1, 0) = segment[1][1] - segment[0][1];
+                jacobian(1, 1) = 0.5 * (segment[1][1] - segment[0][1]);
+
+                // Translation.
+                Vector<Real> translation{2};
+
+                translation[0] = segment[0][0];
+                translation[1] = segment[0][1];
+
+                // Physical nodes.
+                Vector<Real> physical_x{nodes_1d.length};
+                Vector<Real> physical_y{nodes_1d.length};
+
+                for(std::size_t l = 0; l < nodes_1d.length; ++l) {
+                    Vector<Real> node{2};
+
+                    node[0] = nodes_1d[l];
+
+                    Vector<Real> transformed = jacobian * node + translation;
+
+                    physical_x[l] = transformed[0];
+                    physical_y[l] = transformed[1];
+                }
+
+                // Weights scaling.
+                Vector<Real> scaled = std::abs(segment) * weights_1d;
+
+                // Basis functions.
+                auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
+
+                // Local matrix assembly.
+                Matrix<Real> scaled_gradx{gradx_phi};
+                Matrix<Real> scaled_grady{grady_phi};
+                Matrix<Real> scaled_phi{phi};
+
+                for(std::size_t l = 0; l < scaled_gradx.columns; ++l) {
+                    scaled_gradx.column(l, scaled_gradx.column(l) * scaled);
+                    scaled_grady.column(l, scaled_grady.column(l) * scaled);
+                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
+                }
+
+                Matrix<Real> scaled_grad = normal_vector[0] * scaled_gradx + normal_vector[1] * scaled_grady;
+
+                // Boundary conditions.
+                Vector<Real> boundary = dirichlet(physical_x, physical_y);
+
+                // Local forcing term.
+                local_f = local_f - scaled_grad * boundary;
+                local_f = local_f + penalties[k] * scaled_phi * boundary;
             }
 
             // Global forcing term.

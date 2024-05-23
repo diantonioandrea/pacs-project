@@ -317,6 +317,10 @@ namespace pacs {
             }
         }
 
+        #ifndef NDEBUG // Integrity check.
+        assert(closest != -1);
+        #endif
+
         // Previous and next edges.
         Segment previous = (closest != 0) ? edges[closest - 1] : edges[edges.size() - 1];
         Segment next = (closest != edges.size() - 1) ? edges[closest + 1] : edges[0];

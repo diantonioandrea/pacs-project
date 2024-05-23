@@ -20,6 +20,13 @@
 namespace pacs {
 
     /**
+     * @brief Zero function.
+     * 
+     * @return Real 
+     */
+    inline Real zero(const Real &, const Real &) { return 0.0; }
+
+    /**
      * @brief Functor class.
      * 
      */
@@ -32,7 +39,8 @@ namespace pacs {
         public:
 
             // CONSTRUCTORS.
-
+            
+            Functor();
             Functor(const Function &);
 
             // EVALUATION.

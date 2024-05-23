@@ -24,7 +24,7 @@ namespace pacs {
 
     // RHS.
 
-    Vector<Real> forcing(const Mesh &, const Functor &);
+    Vector<Real> forcing(const Mesh &, const Functor &, const Functor &dirichlet = Functor{});
 }
 
 #endif

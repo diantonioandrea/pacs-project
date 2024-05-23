@@ -15,6 +15,12 @@ namespace pacs {
     // CONSTRUCTORS
 
     /**
+     * @brief Construct a new Functor with the zero function.
+     * 
+     */
+    Functor::Functor(): function{zero} {}
+
+    /**
      * @brief Construct a new Functor from a given Function.
      * 
      * @param function 
