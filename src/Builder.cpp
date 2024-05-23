@@ -22,7 +22,7 @@
 #endif
 
 #ifndef LLOYD_TOLERANCE
-#define LLOYD_TOLERANCE 1E-4
+#define LLOYD_TOLERANCE 1E-3
 #endif
 
 // Maximum number of iterations for the Lloyd's algorithm.
@@ -66,9 +66,10 @@ namespace pacs {
                 
                 // New point.
                 Point centroid = diagram[k].centroid();
+                Real shift = distance(centroid, centroids[k]);
 
-                // Residual.
-                residual += std::abs(centroids[k] - centroid);
+                // Residual (biggest centroid shift).
+                residual = (shift > residual) ? shift : residual;
 
                 // Update.
                 centroids[k] = centroid;
