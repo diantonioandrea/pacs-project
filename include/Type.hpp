@@ -20,7 +20,7 @@
 
 // Zero tolerance.
 #ifndef TOLERANCE
-#define TOLERANCE 1E-10
+#define TOLERANCE 1E-14
 #endif
 
 namespace pacs {

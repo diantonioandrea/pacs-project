@@ -44,12 +44,12 @@
 
 // Algebra tolerance.
 #ifndef ALGEBRA_TOLERANCE
-#define ALGEBRA_TOLERANCE 1E-8
+#define ALGEBRA_TOLERANCE 1E-10
 #endif
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1E5
+#define ALGEBRA_ITER_MAX 1E4
 #endif
 
 // Algebra m limit.
@@ -1590,9 +1590,9 @@ namespace pacs {
                     ++iterations;
 
                     // m update.
-                    ++m;
-
-                    if(m > ALGEBRA_M_MAX)
+                    if(m <= ALGEBRA_M_MAX)
+                        ++m;
+                    else
                         m = 1;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
