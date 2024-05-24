@@ -45,16 +45,22 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d}};
 
-    // Sequence of meshes.
+    // Diagrams.
+    std::vector<std::vector<pacs::Polygon>> diagrams;
+
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_100.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_200.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_400.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_800.poly"));
+
+    // Polynomial degree.
+    std::size_t degree = 3;
+
+    // Test.
     for(std::size_t j = 0; j < 4; ++j) {
-        std::size_t elements = std::pow(2, 4 + j);
 
         // Mesh.
-        std::string polyfile = "output/square_" + std::to_string(j) + ".poly";
-        std::vector<pacs::Polygon> diagram = std::filesystem::exists(polyfile) ? pacs::mesh_diagram(polyfile) : pacs::mesh_diagram(domain, elements);
-
-        pacs::Mesh mesh{domain, diagram, 3};
-        mesh.write(polyfile);
+        pacs::Mesh mesh{domain, diagrams[j], degree};
 
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
