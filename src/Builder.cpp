@@ -162,6 +162,11 @@ namespace pacs {
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> mesh_diagram(const std::string &filename) {
+
+        #ifndef NVERBOSE
+        std::cout << "Loading a diagram from: " << filename << std::endl;
+        #endif
+
         // File loading.
         std::ifstream file{filename};
 
