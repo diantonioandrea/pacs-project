@@ -31,6 +31,10 @@ namespace pacs {
     Error::Error(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &exact):
     l2_errors{mesh.elements.size()} {
 
+        #ifndef NVERBOSE
+        std::cout << "Evaluating errors." << std::endl;
+        #endif
+
         // Matrices.
         auto [mass, dg_laplacian] = matrices;
 
