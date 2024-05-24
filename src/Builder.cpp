@@ -116,12 +116,12 @@ namespace pacs {
                 if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * sizes[index])
                     continue;
 
+                if(domain.contains(edge))
+                    continue;
+
                 for(std::size_t k = 0; k < diagram.size(); ++k) {
                     if(index == k)
                         continue;
-
-                    if(domain.contains(edge))
-                        break;
 
                     // Collapses small edges.
                     if(diagram[k].contains(edge)) {
