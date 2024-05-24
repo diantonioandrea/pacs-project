@@ -199,7 +199,8 @@ for j in range(2):
         axes[j, k].yaxis.set_minor_formatter(NullFormatter())
 
         # Legend.
-        axes[j, k].legend()
+        if "--p" in sys.argv:
+            axes[j, k].legend()
 
     # Ticks.
     axes[j, 0].set_xticks(elements_ticks, labels=elements_labels)
