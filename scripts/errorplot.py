@@ -67,27 +67,27 @@ for line in lines:
 elements_comparison_l2: list[list[float]] = [None] * 3
 sizes_comparison_l2: list[list[float]] = [None] * 3
 
-elements_comparison_l2[0] = [(value / elements[-1]) ** -(order - 1) * l2_error[-1] for value in elements]
+elements_comparison_l2[0] = [(value / elements[-1]) ** -((order + 1) / 2 - 0.5) * l2_error[-1] for value in elements]
 sizes_comparison_l2[0] = [(value / sizes[0]) ** order * l2_error[0] for value in sizes]
 
-elements_comparison_l2[1] = [(value / elements[-1]) ** -order * l2_error[-1] for value in elements]
+elements_comparison_l2[1] = [(value / elements[-1]) ** -((order + 1) / 2) * l2_error[-1] for value in elements]
 sizes_comparison_l2[1] = [(value / sizes[0]) ** (order + 1) * l2_error[0] for value in sizes]
 
-elements_comparison_l2[2] = [(value / elements[-1]) ** -(order + 1) * l2_error[-1] for value in elements]
+elements_comparison_l2[2] = [(value / elements[-1]) ** -((order + 1) / 2 + 0.5) * l2_error[-1] for value in elements]
 sizes_comparison_l2[2] = [(value / sizes[0]) ** (order + 2) * l2_error[0] for value in sizes]
 
 # DG.
 elements_comparison_dg: list[list[float]] = [None] * 3
 sizes_comparison_dg: list[list[float]] = [None] * 3
 
-elements_comparison_dg[0] = [(value / elements[-1]) ** -(order - 1) * dg_error[-1] for value in elements]
-sizes_comparison_dg[0] = [(value / sizes[0]) ** order * dg_error[0] for value in sizes]
+elements_comparison_dg[0] = [(value / elements[-1]) ** -(order / 2 - 0.5) * dg_error[-1] for value in elements]
+sizes_comparison_dg[0] = [(value / sizes[0]) ** (order - 1) * dg_error[0] for value in sizes]
 
-elements_comparison_dg[1] = [(value / elements[-1]) ** -order * dg_error[-1] for value in elements]
-sizes_comparison_dg[1] = [(value / sizes[0]) ** (order + 1) * dg_error[0] for value in sizes]
+elements_comparison_dg[1] = [(value / elements[-1]) ** -(order / 2) * dg_error[-1] for value in elements]
+sizes_comparison_dg[1] = [(value / sizes[0]) ** order * dg_error[0] for value in sizes]
 
-elements_comparison_dg[2] = [(value / elements[-1]) ** -(order + 1) * dg_error[-1] for value in elements]
-sizes_comparison_dg[2] = [(value / sizes[0]) ** (order + 2) * dg_error[0] for value in sizes]
+elements_comparison_dg[2] = [(value / elements[-1]) ** -(order / 2 + 0.5) * dg_error[-1] for value in elements]
+sizes_comparison_dg[2] = [(value / sizes[0]) ** (order + 1) * dg_error[0] for value in sizes]
 
 # Ticks.
 elements_ticks = [elements[0], elements[-1]]
@@ -115,15 +115,15 @@ if "--elements" in sys.argv: # Elements only.
 
     # Elements.
     if "--p" in sys.argv:
-        axes[0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order - 1}") # Comparison.
-        axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order}") # Comparison.
-        axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order + 1}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{(order + 1) / 2 - 1}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{(order + 1) / 2}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{(order + 1) / 2 + 1}") # Comparison.
     axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     if "--p" in sys.argv:
-        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order + 1}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order - 1}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 1}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 1}") # Comparison.
     axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     # Parameters.
@@ -162,28 +162,28 @@ fig.suptitle(title)
 
 # Elements.
 if "--p" in sys.argv:
-    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order -1}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order + 1}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{(order + 1) / 2 -0.5}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{(order + 1) / 2}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{(order + 1) / 2 + 0.5}") # Comparison.
 axes[0, 0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 if "--p" in sys.argv:
-    axes[1, 0].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order - 1}") # Comparison.
-    axes[1, 0].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: -{order}") # Comparison.
-    axes[1, 0].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order + 1}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 0.5}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 0.5}") # Comparison.
 axes[1, 0].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 # Sizes.
 if "--p" in sys.argv:
     axes[0, 1].plot(sizes, sizes_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: {order}") # Comparison.
-    axes[0, 1].plot(sizes, sizes_comparison_l2[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: {order + 1}") # Comparison.
+    axes[0, 1].plot(sizes, sizes_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: {order + 1}") # Comparison.
     axes[0, 1].plot(sizes, sizes_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: {order + 2}") # Comparison.
 axes[0, 1].plot(sizes, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 if "--p" in sys.argv:
-    axes[1, 1].plot(sizes, sizes_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: {order}") # Comparison.
-    axes[1, 1].plot(sizes, sizes_comparison_dg[1], linewidth=1.0, alpha=0.5, linestyle="-", color="red", label=f"Order: {order + 1}") # Comparison.
-    axes[1, 1].plot(sizes, sizes_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: {order + 2}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: {order - 1}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: {order}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: {order + 1}") # Comparison.
 axes[1, 1].plot(sizes, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 # Parameters.
