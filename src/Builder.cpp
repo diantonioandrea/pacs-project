@@ -129,7 +129,21 @@ namespace pacs {
                         diagram[k] = collapse(diagram[k], edge);
                         flag = false;
 
-                        Point mid = (edge[0] + edge[1]) * 0.5;
+                        // Collapse target.
+                        Point target = (edge[0] + edge[1]) * 0.5;
+
+                        // Avoids domain distortion.
+                        for(const auto &boundary_edge: domain.edges()) {
+                            if(boundary_edge.contains(edge[0])) {
+                                target = edge[0];
+                                break;
+                            }
+
+                            if(boundary_edge.contains(edge[1])) {
+                                target = edge[1];
+                                break;
+                            }
+                        }
 
                         // Moves vertices.
                         for(std::size_t h = 0; h < diagram.size(); ++h) {
@@ -138,7 +152,7 @@ namespace pacs {
 
                             for(std::size_t l = 0; l < diagram[h].points.size(); ++l) {
                                 if((diagram[h].points[l] == edge[0]) || (diagram[h].points[l] == edge[1]))
-                                    diagram[h].points[l] = mid;
+                                    diagram[h].points[l] = target;
                             }
                         }
                     }
