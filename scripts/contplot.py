@@ -76,7 +76,7 @@ bars: list = [None] * 3
 for j in range(3):
 
     # Plot.
-    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm)
+    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm, levels=50)
     axes[j].set_title(titles[j])
 
     # Proportions.
