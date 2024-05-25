@@ -1563,10 +1563,6 @@ namespace pacs {
                             w -= H(k, j) * V.column(k);
                         }
 
-                        // // End.
-                        // if(j == m - 1)
-                        //     break;
-
                         // New element for H.
                         H(j + 1, j) = w.norm();
 
