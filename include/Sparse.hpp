@@ -749,6 +749,8 @@ namespace pacs {
                 this->values.clear();
             }
 
+            // DETAILS.
+
             /**
              * @brief Returns the compressed state.
              *
@@ -757,6 +759,18 @@ namespace pacs {
              */
             inline bool is_compressed() const {
                 return this->compressed;
+            }
+
+            /**
+             * @brief Returns the number of non zero elements.
+             * 
+             * @return std::size_t 
+             */
+            inline std::size_t non_zero() const {
+                if(!(this->compressed))
+                    return this->elements.size();
+
+                return this->values.size();
             }
 
             // OPERATIONS.
