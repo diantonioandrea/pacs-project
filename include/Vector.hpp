@@ -55,12 +55,10 @@ namespace pacs {
              * 
              * @param length 
              */
-            Vector(const std::size_t &length): length{length} {
+            Vector(const std::size_t &length): elements(length, static_cast<T>(0)), length{length} {
                 #ifndef NDEBUG // Integrity check.
                 assert(length > 0);
                 #endif
-
-                this->elements.resize(length, static_cast<T>(0));
             }
 
             /**
@@ -69,12 +67,10 @@ namespace pacs {
              * @param length 
              * @param value 
              */
-            Vector(const std::size_t &length, const T &value): length{length} {
+            Vector(const std::size_t &length, const T &value): elements(length, value), length{length} {
                 #ifndef NDEBUG // Integrity check.
                 assert(length > 0);
                 #endif
-
-                this->elements.resize(length, value);
             }
 
             /**

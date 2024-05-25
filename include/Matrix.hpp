@@ -60,12 +60,10 @@ namespace pacs {
              * @param rows 
              * @param columns 
              */
-            Matrix(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns} {
+            Matrix(const std::size_t &rows, const std::size_t &columns): elements(rows * columns, static_cast<T>(0)), rows{rows}, columns{columns} {
                 #ifndef NDEBUG // Integrity check.
                 assert((rows > 0) && (columns > 0));
                 #endif
-
-                this->elements.resize(rows * columns, static_cast<T>(0));
             }
 
             /**
