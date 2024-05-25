@@ -49,12 +49,12 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1E4
+#define ALGEBRA_ITER_MAX 1024
 #endif
 
 // Algebra m limit.
 #ifndef ALGEBRA_M_MAX
-#define ALGEBRA_M_MAX 1E2
+#define ALGEBRA_M_MAX 128
 #endif
 
 namespace pacs {
@@ -980,7 +980,7 @@ namespace pacs {
              */
             Vector<T> operator *(const Vector<T> &vector) const {
                 #ifndef NDEBUG // Integrity check.
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 Vector<T> result{this->rows};
@@ -1100,7 +1100,7 @@ namespace pacs {
             Vector<T> conjugate_gradient(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1185,7 +1185,7 @@ namespace pacs {
             Vector<T> gradient_descent(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1255,7 +1255,7 @@ namespace pacs {
             Vector<T> minimal_residual(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1328,7 +1328,7 @@ namespace pacs {
             Vector<T> norm_descent(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1403,7 +1403,7 @@ namespace pacs {
             Vector<T> gauss_seidel(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1492,7 +1492,7 @@ namespace pacs {
             Vector<T> full_orthogonalization(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1536,7 +1536,7 @@ namespace pacs {
                     Real beta = residual.norm();
 
                     // V and H.
-                    Matrix<T> V{size, m}, H{m, m};
+                    Matrix<T> V{size, m}, H{m + 1, m};
                     V.column(0, residual / beta);
 
                     // Method.
@@ -1548,9 +1548,9 @@ namespace pacs {
                             w -= H(k, j) * V.column(k);
                         }
 
-                        // End.
-                        if(j == m - 1)
-                            break;
+                        // // End.
+                        // if(j == m - 1)
+                        //     break;
 
                         // New element for H.
                         H(j + 1, j) = w.norm();
@@ -1561,23 +1561,26 @@ namespace pacs {
                             break;
                         }
 
+                        if(j == m - 1)
+                            break;
+
                         // New v.
                         V.column(j + 1, w / H(j + 1, j));
                     }
 
                     // New matrices, if needed.
-                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
+                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m + 1, new_m} : H;
                     Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
 
                     if(new_m < m) {
                         for(std::size_t j = 0; j < new_m; ++j) {
-                            new_H.column(j, (H.column(j))(0, new_m));
+                            new_H.column(j, (H.column(j))(0, new_m + 1));
                             new_V.column(j, V.column(j));
                         }
                     }
 
                     // Beta Vector.
-                    Vector<T> beta_vector{new_m};
+                    Vector<T> beta_vector{new_m + 1};
                     beta_vector[0] = beta;
 
                     // Evaluates y.
@@ -1615,7 +1618,7 @@ namespace pacs {
             Vector<T> kaczmarz(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE
@@ -1687,7 +1690,7 @@ namespace pacs {
             Vector<T> randomized_kaczmarz(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
+                assert(this->rows == vector.length);
                 #endif
 
                 #ifndef NVERBOSE

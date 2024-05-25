@@ -17,33 +17,23 @@
 int main() {
 
     // Constructing a matrix.
-    pacs::Matrix<pacs::Real> matrix{2, 2};
+    pacs::Matrix<pacs::Real> matrix{3, 2};
 
     // Write.
     matrix(0, 0) = 1;
-    matrix(1, 1) = -1;
+    matrix(0, 1) = 2;
+    matrix(1, 0) = 3;
+    matrix(1, 1) = 4;
+    matrix(2, 0) = 5;
+    matrix(2, 1) = 6;
     
+    // QR decomposition.
+    auto [Q, R] = matrix.transpose().QR();
+
     // Output.
-    std::cout << matrix << std::endl;
-
-    // Vector product.
-    pacs::Vector<pacs::Real> vector{2};
-    
-    vector[0] = 1;
-    vector[1] = 2;
-
-    // Vector product output.
-    std::cout << (matrix * vector) << std::endl;
-
-    // .row() and .column().
-    std::cout << matrix.row(0) << std::endl;
-    matrix.column(0, 3.0);
-    std::cout << matrix << std::endl << std::endl;
-
-    // Product output.
-    std::cout << matrix * matrix << std::endl << std::endl;
-
-    // Transpose output.
-    std::cout << matrix.transpose() << std::endl;
-    
+    std::cout << matrix.transpose() << std::endl << std::endl;
+    std::cout << Q << std::endl << std::endl;
+    std::cout << R << std::endl << std::endl;
+    std::cout << Q * Q.transpose() << std::endl << std::endl;
+    std::cout << Q * R << std::endl;
 }

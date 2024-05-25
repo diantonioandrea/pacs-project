@@ -46,7 +46,7 @@ int main() {
 
     // Dense.
     
-    // Constructs a Matric.
+    // Constructs a Matrix.
     pacs::Matrix<pacs::Real> dense{2, 2};
 
     dense(0, 0) = 4.0;

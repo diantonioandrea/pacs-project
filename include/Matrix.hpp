@@ -408,6 +408,34 @@ namespace pacs {
             }
 
             /**
+             * @brief Matrix scalar division.
+             * 
+             * @param scalar 
+             * @return Matrix 
+             */
+            Matrix operator /(const T &scalar) const {
+                Matrix result{*this};
+
+                for(auto &element: result.elements)
+                    element /= scalar;
+
+                return result;
+            }
+
+            /**
+             * @brief Matrix scalar division and assignation.
+             * 
+             * @param scalar 
+             * @return Matrix& 
+             */
+            Matrix &operator /=(const T scalar) {
+                for(auto &element: this->elements)
+                    element /= scalar;
+
+                return *this;
+            }
+
+            /**
              * @brief Matrix sum.
              * 
              * @param matrix 
@@ -544,26 +572,24 @@ namespace pacs {
                 return result;
             }
 
-            // LINEAR.
+            // DECOMPOSITIONS.
 
             /**
-             * @brief Solves a linear system in the form of Ax = b using LU factorization.
+             * @brief Returns the LU decomposition of the Matrix.
              * 
-             * @param vector 
-             * @return Vector<T> 
+             * @return std::array<Matrix, 2> 
              */
-            Vector<T> solve(const Vector<T> &vector) const {
+            std::array<Matrix, 2> LU() const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
-                assert(this->columns == vector.length);
                 #endif
 
                 // Target.
                 Matrix target{*this};
 
                 // LU decomposition
-                Matrix<T> L{this->rows, this->columns};
-                Matrix<T> U{this->rows, this->columns};
+                Matrix L{this->rows, this->columns};
+                Matrix U{this->rows, this->columns};
 
                 for (std::size_t j = 0; j < this->columns; ++j) {
                     L(j, j) = static_cast<T>(1);
@@ -589,33 +615,71 @@ namespace pacs {
                     }
                 }
 
-                // Solve Ly = b using forward substitution
-                Vector<T> y{this->rows};
-
-                for (std::size_t i = 0; i < this->rows; ++i) {
-                    T sum = static_cast<T>(0);
-
-                    for (std::size_t j = 0; j < i; ++j)
-                        sum += L(i, j) * y[j];
-
-                    y[i] = (vector[i] - sum) / L(i, i);
-                }
-
-                // Solve Ux = y using backward substitution
-                Vector<T> x{this->columns};
-
-                for (std::size_t i = this->columns; i > 0; --i) {
-                    T sum = static_cast<T>(0);
-
-                    for (std::size_t j = i; j < this->columns; ++j)
-                        sum += U(i - 1, j) * x[j];
-
-                    x[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
-                }
-
-                return x;
+                return {L, U};
             }
 
+            /**
+             * @brief Returns the QR decomposition of the Matrix.
+             * 
+             * @return std::array<Matrix, 2> 
+             */
+            std::array<Matrix, 2> QR() const {
+
+                // Identity matrix.
+                Matrix I{this->rows, this->rows};
+
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    I.elements[j * (this->rows + 1)] = static_cast<T>(1);
+
+                // QR decomposition.
+                Matrix Q{I};
+                Matrix R{*this};
+
+                // Algorithm, real case.
+                for(std::size_t j = 0; j < ((this->rows > this->columns) ? this->columns : this->rows); ++j) {
+
+                    // Householder vector.
+                    Vector<T> vector{this->rows - j};
+
+                    for(std::size_t k = 0; k < this->rows - j; ++k)
+                        vector[k] = R.elements[(j + k) * this->columns + j];
+
+                    vector[0] += (vector[0] > 0 ? static_cast<T>(1) : static_cast<T>(-1)) * vector.norm();
+                    vector /= vector.norm();
+
+                    // Householder matrix.
+                    Matrix H{I};
+
+                    for(std::size_t k = 0; k < this->rows - j; ++k)
+                        for(std::size_t l = 0; l < this->rows - j; ++l)
+                            H.elements[(j + k) * this->rows + (j + l)] -= 2 * vector[k] * vector[l];
+
+                    // QR.
+                    R = H * R;
+                    Q = Q * H.transpose();
+                }
+
+                return {Q, R};
+            }
+
+            // LINEAR.
+
+            /**
+             * @brief Solves a linear system in the form of Ax = b.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> solve(const Vector<T> &vector) const {
+                #ifndef NDEBUG
+                assert(this->rows == vector.length);
+                #endif
+
+                if(this->rows == this->columns)
+                    return lu_solver(vector);
+
+                return qr_solver(vector);
+            }
 
             // OUTPUT.
 
@@ -636,6 +700,75 @@ namespace pacs {
                 }
 
                 return ost;
+            }
+
+        private:
+
+            // SOLVERS.
+
+            /**
+             * @brief LU solver.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> lu_solver(const Vector<T> &vector) const {
+
+                // LU decomposition.
+                auto [L, U] = this->LU();
+
+                // Solves Ly = b using forward substitution.
+                Vector<T> y{this->rows};
+
+                for (std::size_t i = 0; i < this->rows; ++i) {
+                    T sum = static_cast<T>(0);
+
+                    for (std::size_t j = 0; j < i; ++j)
+                        sum += L(i, j) * y[j];
+
+                    y[i] = (vector[i] - sum) / L(i, i);
+                }
+
+                // Solves Ux = y using backward substitution.
+                Vector<T> x{this->columns};
+
+                for (std::size_t i = this->columns; i > 0; --i) {
+                    T sum = static_cast<T>(0);
+
+                    for (std::size_t j = i; j < this->columns; ++j)
+                        sum += U(i - 1, j) * x[j];
+
+                    x[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
+                }
+
+                return x;
+            }
+            
+            /**
+             * @brief QR solver.
+             * 
+             * @param vector 
+             * @return Vector<T> 
+             */
+            Vector<T> qr_solver(const Vector<T> &vector) const {
+                
+                // QR decomposition.
+                auto [Q, R] = this->QR();
+
+                // Solves Rx = QTb using backward substitution.
+                Vector<T> x{this->columns};
+                Vector<T> b{Q.transpose() * vector};
+
+                for (std::size_t i = this->columns; i > 0; --i) {
+                    T sum = static_cast<T>(0);
+
+                    for (std::size_t j = i; j < this->columns; ++j)
+                        sum += R(i - 1, j) * x[j];
+
+                    x[i - 1] = (b[i - 1] - sum) / R(i - 1, i - 1);
+                }
+
+                return x;
             }
     };
 
