@@ -1516,6 +1516,7 @@ namespace pacs {
                 target.compress();
 
                 do {
+                    ++iterations;
 
                     #ifndef NVERBOSE
                     if(!(iterations % 50))
@@ -1526,7 +1527,7 @@ namespace pacs {
                     Vector<T> residual = vector - target * solution;
 
                     // New m value.
-                    std::size_t new_m = m;
+                    std::size_t new_m = m + 1;
 
                     // Exit condition.
                     if(residual.norm() < ALGEBRA_TOLERANCE)
@@ -1561,6 +1562,7 @@ namespace pacs {
                             break;
                         }
 
+                        // Discards V_{m + 1}.
                         if(j == m - 1)
                             break;
 
@@ -1569,18 +1571,18 @@ namespace pacs {
                     }
 
                     // New matrices, if needed.
-                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m + 1, new_m} : H;
+                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
                     Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
 
                     if(new_m < m) {
                         for(std::size_t j = 0; j < new_m; ++j) {
-                            new_H.column(j, (H.column(j))(0, new_m + 1));
+                            new_H.column(j, (H.column(j))(0, new_m));
                             new_V.column(j, V.column(j));
                         }
                     }
 
                     // Beta Vector.
-                    Vector<T> beta_vector{new_m + 1};
+                    Vector<T> beta_vector{new_m};
                     beta_vector[0] = beta;
 
                     // Evaluates y.
@@ -1588,9 +1590,6 @@ namespace pacs {
 
                     // Solution.
                     solution = solution + new_V * y;
-
-                    // Iterations update.
-                    ++iterations;
 
                     // m update.
                     if(m <= ALGEBRA_M_MAX)
@@ -1640,15 +1639,16 @@ namespace pacs {
 
                 // Method.
                 do {
+
+                    // Index.
+                    std::size_t index = iterations % size;
+
                     ++iterations;
 
                     #ifndef NVERBOSE
                     if(!(iterations % 50))
                         std::cout << "\tKaczmarz, iteration: " << iterations << std::endl;
                     #endif
-
-                    // Index.
-                    std::size_t index = iterations % size;
 
                     // Step.
                     Vector<T> row{size};
