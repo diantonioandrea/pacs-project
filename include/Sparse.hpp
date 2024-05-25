@@ -44,17 +44,17 @@
 
 // Algebra tolerance.
 #ifndef ALGEBRA_TOLERANCE
-#define ALGEBRA_TOLERANCE 1E-10
+#define ALGEBRA_TOLERANCE 1E-12
 #endif
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1024
+#define ALGEBRA_ITER_MAX 1E3
 #endif
 
 // Algebra m limit.
 #ifndef ALGEBRA_M_MAX
-#define ALGEBRA_M_MAX 128
+#define ALGEBRA_M_MAX 2E2
 #endif
 
 namespace pacs {
@@ -1543,29 +1543,34 @@ namespace pacs {
                     // Beta.
                     Real beta = residual.norm();
 
-                    // V and H.
-                    Matrix<T> V{size, m}, H{m + 1, m};
-                    V.column(0, residual / beta);
+                    // H.
+                    Matrix<T> H{m + 1, m};
+
+                    // Vs.
+                    std::vector<Vector<T>> Vs;
+                    Vs.emplace_back(residual / beta);
 
                     // Arnoldi.
                     for(std::size_t j = 0; j < m; ++j) {
-                        Vector<T> w = target * V.column(j);
+                        Vector<T> w = target * Vs[j];
 
                         for(std::size_t k = 0; k <= j; ++k) {
-                            H(k, j) = dot(w, V.column(k));
-                            w -= H(k, j) * V.column(k);
+                            H(k, j) = dot(w, Vs[k]);
+                            w -= H(k, j) * Vs[k];
                         }
 
                         // New element for H.
                         H(j + 1, j) = w.norm();
 
-                        // Discards V_{m + 1}.
-                        if(j == m - 1)
-                            break;
-
                         // New v.
-                        V.column(j + 1, w / H(j + 1, j));
+                        Vs.emplace_back(w / H(j + 1, j));
                     }
+
+                    // V.
+                    Matrix<T> V{size, m};
+
+                    for(std::size_t j = 0; j < m; ++j)
+                        V.column(j, Vs[j]);
 
                     // Least square's right-hand side.
                     Vector<T> rhs{m + 1};
