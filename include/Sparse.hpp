@@ -66,12 +66,12 @@ namespace pacs {
      * MR: Minimal Residual method.
      * NS: Residual Norm Steepest Descent method.
      * GS: Gauss-Seidel method.
-     * RFOM: Restarted Full Orthogonalization method.
+     * GMRES: Generalized Minimum Residual method.
      * KM: Kaczmarz method.
      * RKM: Randomized Kaczmarz method.
      * 
      */
-    enum Solver {CG, SD, MR, NS, GS, RFOM, KM, RKM};
+    enum Solver {CG, SD, MR, NS, GS, GMRES, KM, RKM};
     
     /**
      * @brief Sparse matrix class.
@@ -1058,8 +1058,8 @@ namespace pacs {
                 if constexpr (S == GS)
                     return this->gauss_seidel(vector);
 
-                if constexpr (S == RFOM)
-                    return this->full_orthogonalization(vector);
+                if constexpr (S == GMRES)
+                    return this->gmres(vector);
 
                 if constexpr (S == KM)
                     return this->kaczmarz(vector);
@@ -1503,7 +1503,7 @@ namespace pacs {
              * @param vector 
              * @return Vector<T> 
              */
-            Vector<T> full_orthogonalization(const Vector<T> &vector) const {
+            Vector<T> gmres(const Vector<T> &vector) const {
                 #ifndef NDEBUG
                 assert(this->rows == this->columns);
                 assert(this->rows == vector.length);
@@ -1529,23 +1529,16 @@ namespace pacs {
                 Sparse target{*this};
                 target.compress();
 
+                // Residual.
+                Vector<T> residual = vector;
+
                 do {
                     ++iterations;
 
                     #ifndef NVERBOSE
                     if(!(iterations % 50))
-                        std::cout << "\tRestarted FOM, iteration: " << iterations << std::endl;
+                        std::cout << "\tRestarted GMRES, iteration: " << iterations << std::endl;
                     #endif
-
-                    // Residual.
-                    Vector<T> residual = vector - target * solution;
-
-                    // New m value.
-                    std::size_t new_m = m + 1;
-
-                    // Exit condition.
-                    if(residual.norm() < ALGEBRA_TOLERANCE)
-                        break;
 
                     // Beta.
                     Real beta = residual.norm();
@@ -1554,7 +1547,7 @@ namespace pacs {
                     Matrix<T> V{size, m}, H{m + 1, m};
                     V.column(0, residual / beta);
 
-                    // Method.
+                    // Arnoldi.
                     for(std::size_t j = 0; j < m; ++j) {
                         Vector<T> w = target * V.column(j);
 
@@ -1566,12 +1559,6 @@ namespace pacs {
                         // New element for H.
                         H(j + 1, j) = w.norm();
 
-                        // Check.
-                        if(H(j + 1, j) < TOLERANCE) {
-                            new_m = j;
-                            break;
-                        }
-
                         // Discards V_{m + 1}.
                         if(j == m - 1)
                             break;
@@ -1580,26 +1567,52 @@ namespace pacs {
                         V.column(j + 1, w / H(j + 1, j));
                     }
 
-                    // New matrices, if needed.
-                    Matrix<T> new_H = (new_m < m) ? Matrix<T>{new_m, new_m} : H;
-                    Matrix<T> new_V = (new_m < m) ? Matrix<T>{size, new_m} : V;
+                    // Least square's right-hand side.
+                    Vector<T> rhs{m + 1};
+                    rhs[0] = beta;
 
-                    if(new_m < m) {
-                        for(std::size_t j = 0; j < new_m; ++j) {
-                            new_H.column(j, (H.column(j))(0, new_m));
-                            new_V.column(j, V.column(j));
-                        }
+                    // H rotations.
+                    Matrix<T> rotation = identity<T>(m + 1);
+
+                    for(std::size_t j = 0; j < m; ++j) {
+                        Matrix<T> rotation_j = rotation;
+
+                        // Rotation coefficients.
+                        T s = H(j + 1, j) / std::sqrt(H(j, j) * H(j, j) + H(j + 1, j) * H(j + 1, j));
+                        T c = H(j, j) / std::sqrt(H(j, j) * H(j, j) + H(j + 1, j) * H(j + 1, j));
+
+                        rotation_j(j, j) = c;
+                        rotation_j(j + 1, j + 1) = c;
+
+                        rotation_j(j, j + 1) = s;
+                        rotation_j(j + 1, j) = -s;
+
+                        // Rotation.
+                        H = rotation_j * H;
+                        rhs = rotation_j * rhs;
                     }
 
-                    // Beta Vector.
-                    Vector<T> beta_vector{new_m};
-                    beta_vector[0] = beta;
+                    // Solves Hy = rhs by backward substitution.
+                    Vector<T> y{m};
 
-                    // Evaluates y.
-                    Vector<T> y = new_H.solve(beta_vector);
+                    for(std::size_t j = m; j > 0; --j) {
+                        T sum = static_cast<T>(0);
 
-                    // Solution.
-                    solution = solution + new_V * y;
+                        for(std::size_t k = j; k < m; ++k)
+                            sum += H(j - 1, k) * y[k];
+                        
+                        y[j - 1] = (rhs[j - 1] - sum) / H(j - 1, j - 1);
+                    }
+
+                    // Solution estimate. 
+                    solution = solution + V * y;
+
+                    // Residual update.
+                    residual = vector - target * solution;
+
+                    // Exit condition.
+                    if(std::abs(rhs[m]) < ALGEBRA_TOLERANCE)
+                        break;
 
                     // m update.
                     if(m <= ALGEBRA_M_MAX)

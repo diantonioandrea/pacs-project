@@ -774,6 +774,20 @@ namespace pacs {
 
     // METHODS.
 
+    template<NumericType T>
+    inline Matrix<T> identity(const std::size_t &size) {
+        #ifndef NDEBUG // Integrity check.
+        assert(size > 0);
+        #endif
+
+        Matrix<T> I{size, size};
+
+        for(std::size_t j = 0; j < size; ++j)
+            I(j, j) = static_cast<T>(1);
+
+        return I;
+    }
+
     /**
      * @brief Squashes a matrix to a vector.
      * 

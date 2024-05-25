@@ -40,7 +40,7 @@ int main() {
     std::cout << matrix.solve<pacs::MR>(vector) << std::endl; // Minimal residual.
     std::cout << matrix.solve<pacs::NS>(vector) << std::endl; // Norm Steepest Descent.
     std::cout << matrix.solve<pacs::GS>(vector) << std::endl; // Gauss-Seidel.
-    std::cout << matrix.solve<pacs::RFOM>(vector) << std::endl; // Restarted FOM.
+    std::cout << matrix.solve<pacs::GMRES>(vector) << std::endl; // Restarted FOM.
     std::cout << matrix.solve<pacs::KM>(vector) << std::endl; // Kaczmarz.
     std::cout << matrix.solve<pacs::RKM>(vector) << std::endl; // Randomized Kaczmarz.
 

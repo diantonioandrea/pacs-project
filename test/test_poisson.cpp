@@ -44,7 +44,7 @@ int main() {
     pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
 
     // Linear system solution.
-    pacs::Vector<pacs::Real> numerical = laplacian.solve<pacs::RFOM>(forcing);
+    pacs::Vector<pacs::Real> numerical = laplacian.solve<pacs::GMRES>(forcing);
 
     // Errors.
     pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
