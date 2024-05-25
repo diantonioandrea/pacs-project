@@ -54,7 +54,7 @@ int main() {
     diagrams.emplace_back(pacs::mesh_diagram("data/square_800.poly"));
 
     // Polynomial degree.
-    std::size_t degree = 3;
+    std::size_t degree = 4;
 
     // Test.
     for(std::size_t j = 0; j < 4; ++j) {
