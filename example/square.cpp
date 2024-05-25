@@ -69,7 +69,6 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = laplacian.solve<pacs::RFOM>(forcing);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
