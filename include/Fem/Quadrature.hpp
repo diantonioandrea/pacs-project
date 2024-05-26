@@ -27,11 +27,11 @@ namespace pacs {
 
     // Gauss-Legendre quadrature nodes.
 
-    std::pair<Vector<Real>, Vector<Real>> gauss_legendre(const Real &, const Real &, const std::size_t &);
+    std::array<Vector<Real>, 2> gauss_legendre(const Real &, const Real &, const std::size_t &);
 
     // Reference interval and square quadrature nodes.
 
-    std::pair<Vector<Real>, Vector<Real>> quadrature_1d(const std::size_t &);
+    std::array<Vector<Real>, 2> quadrature_1d(const std::size_t &);
     std::array<Vector<Real>, 3> quadrature_2d(const std::size_t &);
 
 }

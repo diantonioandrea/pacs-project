@@ -27,7 +27,7 @@ namespace pacs {
      * @param order 
      * @return std::vector<Vector<Real>> 
      */
-    std::pair<Vector<Real>, Vector<Real>> gauss_legendre(const Real &a, const Real &b, const std::size_t &order) {
+    std::array<Vector<Real>, 2> gauss_legendre(const Real &a, const Real &b, const std::size_t &order) {
         #ifndef NDEBUG // Integrity check.
         assert(b > a);
         assert(order % 2);
@@ -104,7 +104,7 @@ namespace pacs {
      * @param order 
      * @return std::vector<Vector<Real>> 
      */
-    std::pair<Vector<Real>, Vector<Real>> quadrature_1d(const std::size_t &order) {
+    std::array<Vector<Real>, 2> quadrature_1d(const std::size_t &order) {
 
         // Gauss-Legendre nodes over [0, 1].
         return gauss_legendre(0.0, 1.0, order);
