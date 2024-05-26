@@ -24,8 +24,7 @@
 #endif
 
 // STL Parallelism.
-#ifndef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
-#define PARALLEL
+#ifdef PARALLEL
 #include<execution>
 #define POLICY std::execution::par_unseq
 #endif

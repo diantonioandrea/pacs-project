@@ -7,23 +7,24 @@ CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
 # Disables debugging.
 # CPPFLAGS += -DNDEBUG
 
-# Parallel computing using a custom OpenMP installation.
-# ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
-# ifeq ($(shell uname),Darwin) # Apple's clang.
-# CXXFLAGS += -Xclang
-# endif
-# CXXFLAGS += -fopenmp
-# CPPFLAGS += -I$(OpenMP)/include
-# LDFLAGS += -L$(OpenMP)/lib
-# LDLIBS += -lomp
-# else
-# CXXFLAGS += -Wno-unknown-pragmas
-# endif
-
 # Parallel computing using STL and modules.
 ifneq ($(mkTbbLib),)
+CPPFLAGS += -DPARALLEL
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
+endif
+
+# Parallel computing using OpenMP.
+ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
+ifeq ($(shell uname),Darwin) # Apple's clang.
+CXXFLAGS += -Xclang
+endif
+CXXFLAGS += -fopenmp
+CPPFLAGS += -I$(OpenMP)/include
+LDFLAGS += -L$(OpenMP)/lib
+LDLIBS += -lomp
+else
+CXXFLAGS += -Wno-unknown-pragmas
 endif
 
 # Files.
