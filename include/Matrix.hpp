@@ -637,8 +637,8 @@ namespace pacs {
                     for(std::size_t k = 0; k < this->rows - j; ++k)
                         vector[k] = R.elements[(j + k) * this->columns + j];
 
-                    vector[0] += (vector[0] > 0 ? static_cast<T>(1) : static_cast<T>(-1)) * vector.norm();
-                    vector /= vector.norm();
+                    vector[0] += (vector[0] > 0 ? static_cast<T>(1) : static_cast<T>(-1)) * norm(vector);
+                    vector /= norm(vector);
 
                     // Householder matrix.
                     Matrix H{I};

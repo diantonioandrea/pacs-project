@@ -1165,7 +1165,7 @@ namespace pacs {
                     residual -= alpha * search;
 
                     // Checks.
-                    if(((vector - target * solution).norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                    if((norm(vector - target * solution) <= ALGEBRA_TOLERANCE) || (norm(old_solution - solution) <= ALGEBRA_TOLERANCE))
                         break;
 
                     //  Beta computation.
@@ -1179,7 +1179,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << norm(residual) << std::endl;
                 #endif
 
                 return solution;
@@ -1239,7 +1239,7 @@ namespace pacs {
                     residual = vector - target * solution;
 
                     // Checks.
-                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                    if((norm(residual) <= ALGEBRA_TOLERANCE) || (norm(old_solution - solution) <= ALGEBRA_TOLERANCE))
                         break;
 
                     residual = vector - target * solution;
@@ -1249,7 +1249,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << norm(residual) << std::endl;
                 #endif
 
                 return solution;
@@ -1312,7 +1312,7 @@ namespace pacs {
                     residual -= alpha * direction;
 
                     // Checks.
-                    if((residual.norm() <= ALGEBRA_TOLERANCE) || ((old_solution - solution).norm() <= ALGEBRA_TOLERANCE))
+                    if((norm(residual) <= ALGEBRA_TOLERANCE) || (norm(old_solution - solution) <= ALGEBRA_TOLERANCE))
                         break;
 
                     direction = target * residual;
@@ -1322,7 +1322,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << norm(residual) << std::endl;
                 #endif
 
                 return solution;
@@ -1381,7 +1381,7 @@ namespace pacs {
                     direction = target.transpose() * residual;
 
                     // Alpha computation.
-                    alpha = direction.norm() / (target * direction).norm();
+                    alpha = norm(direction) / norm(target * direction);
                     alpha *= alpha;
 
                     // Step.
@@ -1389,7 +1389,7 @@ namespace pacs {
                     residual -= alpha * target * direction;
 
                     // Checks.
-                    if((target * solution - vector).norm() < ALGEBRA_TOLERANCE)
+                    if(norm(target * solution - vector) < ALGEBRA_TOLERANCE)
                         break;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
@@ -1397,7 +1397,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << residual.norm() << std::endl;
+                std::cout << "\tResidual: " << norm(residual) << std::endl;
                 #endif
 
                 return solution;
@@ -1477,7 +1477,7 @@ namespace pacs {
                     solution = t_matrix * solution + c_vector;
 
                     // Checks.
-                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                    if(norm(target * solution - vector) <= ALGEBRA_TOLERANCE)
                         break;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
@@ -1485,7 +1485,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                std::cout << "\tResidual: " << norm(target * solution - vector) << std::endl;
                 #endif
 
                 return solution;
@@ -1536,7 +1536,7 @@ namespace pacs {
                     #endif
 
                     // Beta.
-                    Real beta = residual.norm();
+                    Real beta = norm(residual);
 
                     // H.
                     Matrix<T> H{m + 1, m};
@@ -1555,7 +1555,7 @@ namespace pacs {
                         }
 
                         // New element for H.
-                        H(j + 1, j) = w.norm();
+                        H(j + 1, j) = norm(w);
 
                         // New v.
                         Vs.emplace_back(w / H(j + 1, j));
@@ -1625,7 +1625,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                std::cout << "\tResidual: " << norm(target * solution - vector) << std::endl;
                 #endif
 
                 return solution;
@@ -1676,21 +1676,21 @@ namespace pacs {
                     // Step.
                     Vector<T> row{size};
                     T product = static_cast<T>(0);
-                    Real norm = 0.0;
+                    Real row_norm = 0.0;
 
                     for(std::size_t k = target.inner[index]; k < target.inner[index + 1]; ++k) {
                         const T value = target.values[k];
 
                         row[target.outer[k]] = value;
-                        norm += std::abs(value) * std::abs(value);
+                        row_norm += std::abs(value) * std::abs(value);
                         product += solution[target.outer[k]] * value;
                     }
 
                     old_solution = solution;
-                    solution += ((vector[index] - product) / norm) * row;
+                    solution += ((vector[index] - product) / row_norm) * row;
 
                     // Checks.
-                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                    if(norm(target * solution - vector) <= ALGEBRA_TOLERANCE)
                         break;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
@@ -1698,7 +1698,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                std::cout << "\tResidual: " << norm(target * solution - vector) << std::endl;
                 #endif
 
                 return solution;
@@ -1735,20 +1735,20 @@ namespace pacs {
 
                 // Probabilities.
                 Vector<Real> norms{size}, probabilities{size + 1};
-                Real norm = 0.0;
+                Real matrix_norm = 0.0;
 
                 for(std::size_t j = 0; j < size; ++j) {
                     for(std::size_t k = target.inner[j]; k < target.inner[j + 1]; ++k)
                         norms[j] += std::abs(target.values[k]) * std::abs(target.values[k]);
 
-                    norm += norms[j];
+                    matrix_norm += norms[j];
                 }
 
                 for(std::size_t j = 0; j < size + 1; ++j) {
                     Real sum = 0.0;
 
                     for(std::size_t k = 0; k < j; ++k)
-                        sum += norms[k] / norm;
+                        sum += norms[k] / matrix_norm;
 
                     probabilities[j] = sum;
                 }
@@ -1779,21 +1779,21 @@ namespace pacs {
                     // Step.
                     Vector<T> row{size};
                     T product = static_cast<T>(0);
-                    Real norm = 0.0;
+                    Real row_norm = 0.0;
 
                     for(std::size_t k = target.inner[index]; k < target.inner[index + 1]; ++k) {
                         const T value = target.values[k];
 
                         row[target.outer[k]] = value;
-                        norm += std::abs(value) * std::abs(value);
+                        row_norm += std::abs(value) * std::abs(value);
                         product += solution[target.outer[k]] * value;
                     }
 
                     old_solution = solution;
-                    solution += ((vector[index] - product) / norm) * row;
+                    solution += ((vector[index] - product) / row_norm) * row;
 
                     // Checks.
-                    if((target * solution - vector).norm() <= ALGEBRA_TOLERANCE)
+                    if(norm(target * solution - vector) <= ALGEBRA_TOLERANCE)
                         break;
 
                 } while(iterations < ALGEBRA_ITER_MAX);
@@ -1801,7 +1801,7 @@ namespace pacs {
                 #ifndef NVERBOSE
                 std::cout << "Results:" << std::endl;
                 std::cout << "\tIterations: " << iterations << std::endl;
-                std::cout << "\tResidual: " << (target * solution - vector).norm() << std::endl;
+                std::cout << "\tResidual: " << norm(target * solution - vector) << std::endl;
                 #endif
 
                 return solution;

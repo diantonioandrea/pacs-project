@@ -183,7 +183,7 @@ namespace pacs {
                 normal_vector[0] = edge_vector[1];
                 normal_vector[1] = -edge_vector[0];
 
-                normal_vector /= normal_vector.norm();
+                normal_vector /= norm(normal_vector);
 
                 // Jacobian.
                 Matrix<Real> jacobian{2, 2};

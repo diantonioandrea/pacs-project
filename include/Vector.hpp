@@ -596,14 +596,15 @@ namespace pacs {
             /**
              * @brief Returns the l2 norm of the Vector.
              * 
+             * @param vector 
              * @return Real 
              */
-            inline Real norm() const {
+            inline friend Real norm(const Vector<T> &vector) {
                 #ifdef PARALLEL
-                return std::sqrt(std::transform_reduce(POLICY, this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
+                return std::sqrt(std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
                 #endif
 
-                return std::sqrt(std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
+                return std::sqrt(std::transform_reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
             }
 
             // OUTPUT.

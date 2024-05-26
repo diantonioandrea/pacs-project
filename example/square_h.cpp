@@ -79,7 +79,7 @@ int main() {
         output << "\n" << error << "\n\n";
         
         output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << (laplacian * numerical - forcing).norm() << "\n";
+        output << "Residual: " << norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
         diagram = pacs::mesh_refine(mesh, pacs::highest(error.l2_errors, 3));
