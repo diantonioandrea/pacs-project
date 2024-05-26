@@ -11,28 +11,17 @@
 #ifndef SPARSE_PACS
 #define SPARSE_PACS
 
-// Type.
 #include <Type.hpp>
 
-// Algebra.
 #include "Vector.hpp"
 #include "Matrix.hpp"
 
-// Containers.
-#include <vector>
-#include <array>
-#include <map>
-
-// Output.
 #include <iostream>
-
-// Assertions.
 #include <cassert>
-
-// Math.
+#include <vector>
+#include <map>
+#include <array>
 #include <cmath>
-
-// Copy.
 #include <algorithm>
 
 namespace pacs {

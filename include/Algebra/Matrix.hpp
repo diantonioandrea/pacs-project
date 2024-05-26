@@ -14,22 +14,12 @@
 // Type.
 #include <Type.hpp>
 
-// Vector.
 #include "Vector.hpp"
 
-// Containers.
-#include <vector>
-
-// Output.
 #include <iostream>
-
-// Assertions.
 #include <cassert>
-
-// Math.
+#include <vector>
 #include <cmath>
-
-// Copy.
 #include <algorithm>
 
 namespace pacs {
