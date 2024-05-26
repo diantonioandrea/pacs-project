@@ -283,7 +283,7 @@ namespace pacs {
                 T sum = std::transform_reduce(y.elements.begin() + j, y.elements.end(), H.elements.begin() + ((j - 1) * m + j), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
                 #endif
                 
-                y.elements[j - 1] = (rhs.elements[j - 1] - sum) / H.elements[(j - 1) * (m + 1) + j - 1];
+                y.elements[j - 1] = (rhs.elements[j - 1] - sum) / H.elements[(j - 1) * m + j - 1];
             }
 
             // Solution estimate. 
