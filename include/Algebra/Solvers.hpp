@@ -146,22 +146,22 @@ namespace pacs {
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _qr(const Matrix<T> &matrix, const Vector<T> &vector) {
+    Vector<T> _qr(const Matrix<T> &A, const Vector<T> &b) {
         
         // QR decomposition.
-        auto [Q, R] = QR(matrix);
+        auto [Q, R] = QR(A);
 
         // Solves Rx = QTb using backward substitution.
-        Vector<T> x{matrix.columns};
-        Vector<T> b{Q.transpose() * vector};
+        Vector<T> x{A.columns};
+        Vector<T> Qb{Q.transpose() * b};
 
-        for (std::size_t i = matrix.columns; i > 0; --i) {
+        for (std::size_t i = A.columns; i > 0; --i) {
             T sum = static_cast<T>(0);
 
-            for (std::size_t j = i; j < matrix.columns; ++j)
+            for (std::size_t j = i; j < A.columns; ++j)
                 sum += R(i - 1, j) * x[j];
 
-            x[i - 1] = (b[i - 1] - sum) / R(i - 1, i - 1);
+            x[i - 1] = (Qb[i - 1] - sum) / R(i - 1, i - 1);
         }
 
         return x;
