@@ -960,27 +960,6 @@ namespace pacs {
             return result;
         }
 
-        /**
-         * @brief Sparse matrix * Sparse matrix.
-         * 
-         * @param sparse 
-         * @return Sparse 
-         */
-        Sparse operator *(const Sparse &sparse) const {
-            #ifndef NDEBUG // Integrity check.
-            assert(this->columns == sparse.rows);
-            #endif
-
-            Sparse result{this->rows, sparse.columns};
-
-            // Temporary solution, may be extremely slow.
-            for(std::size_t j = 0; j < this->rows; ++j)
-                for(std::size_t k = 0; k < sparse.columns; ++k)
-                    result.insert(j, k, dot(this->row(j), sparse.column(k)));
-
-            return result;
-        }
-
         // OUTPUT.
 
         /**
