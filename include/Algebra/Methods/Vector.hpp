@@ -23,7 +23,11 @@ namespace pacs {
      */
     template<NumericType T>
     inline T min(const Vector<T> &vector) {
+        #ifdef PARALLEL
+        return *std::min_element(POLICY, vector.elements.begin(), vector.elements.end());
+        #else
         return *std::min_element(vector.elements.begin(), vector.elements.end());
+        #endif
     }
 
     /**
@@ -34,7 +38,11 @@ namespace pacs {
      */
     template<NumericType T>
     inline T max(const Vector<T> &vector) {
+        #ifdef PARALLEL
+        return *std::max_element(POLICY, vector.elements.begin(), vector.elements.end());
+        #else
         return *std::max_element(vector.elements.begin(), vector.elements.end());
+        #endif
     }
 
     /**
@@ -52,9 +60,19 @@ namespace pacs {
 
         #ifdef PARALLEL
         return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](auto first, auto second){ return first * second; });
-        #endif
+        #else
+        #ifdef _OPENMP
+        T sum = static_cast<T>(0);
 
+        #pragma omp parallel for reduction(+: sum)
+        for(std::size_t j = 0; j < first.length; ++j)
+            sum += first.elements[j] * second.elements[j];
+
+        return sum;
+        #else
         return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
+        #endif
+        #endif
     }
 
     /**
@@ -67,9 +85,19 @@ namespace pacs {
     inline Real norm(const Vector<T> &vector) {
         #ifdef PARALLEL
         return std::sqrt(std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
-        #endif
+        #else
+        #ifdef _OPENMP
+        T sum = static_cast<T>(0);
 
+        #pragma omp parallel for reduction(+: sum)
+        for(std::size_t j = 0; j < vector.length; ++j)
+            sum += std::abs(vector.elements[j]) * std::abs(vector.elements[j]);
+
+        return std::sqrt(sum);
+        #else
         return std::sqrt(std::transform_reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
+        #endif
+        #endif
     }
 
     /**
@@ -84,13 +112,11 @@ namespace pacs {
     Vector<T> stack(const Vector<T> &first, const Vector<T> &second) {
         Vector<T> result{first.length + second.length};
 
-        {
-            for(std::size_t j = 0; j < first.length; ++j)
-                result[j] = first[j];
+        for(std::size_t j = 0; j < first.length; ++j)
+            result[j] = first[j];
 
-            for(std::size_t j = first.length; j < first.length + second.length; ++j)
-                result[j] = second[j - first.length];
-        }
+        for(std::size_t j = first.length; j < first.length + second.length; ++j)
+            result[j] = second[j - first.length];
 
         return result;
     }
