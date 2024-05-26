@@ -148,4 +148,25 @@ namespace pacs {
     
 }
 
+namespace std {
+
+    /**
+     * @brief std::abs overload for Vectors.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return pacs::Vector<T> 
+     */
+    template<pacs::NumericType T>
+    pacs::Vector<T> abs(const pacs::Vector<T> vector) {
+        pacs::Vector<T> result{vector.length};
+
+        for(std::size_t j = 0; j < vector.length; ++j)
+            result[j] = std::abs(vector[j]);
+
+        return result;
+    }
+
+}
+
 #endif
