@@ -29,7 +29,7 @@ int main() {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/example.poly")};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly"), 4};
 
     // Source and exact solution.
     pacs::Functor test_source{source};
