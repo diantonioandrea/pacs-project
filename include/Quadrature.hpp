@@ -15,7 +15,7 @@
 #include <Type.hpp>
 
 // Vectors.
-#include <Vector.hpp>
+#include <Algebra.hpp>
 
 // Geometry.
 #include <Geometry.hpp>

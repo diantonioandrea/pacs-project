@@ -12,21 +12,21 @@
 #include <iostream>
 
 // Testing Solvers.
-#include <Sparse.hpp>
+#include <Algebra.hpp>
 
 int main() {
 
     // Sparse.
 
     // Constructs a Matrix.
-    pacs::Sparse<pacs::Real> matrix{2, 2};
+    pacs::Sparse<pacs::Real> sparse{2, 2};
 
-    matrix.insert(0, 0, 4.0);
-    matrix.insert(0, 1, 1.0);
-    matrix.insert(1, 0, 1.0);
-    matrix.insert(1, 1, 3.0);
+    sparse.insert(0, 0, 4.0);
+    sparse.insert(0, 1, 1.0);
+    sparse.insert(1, 0, 1.0);
+    sparse.insert(1, 1, 3.0);
 
-    matrix.compress();
+    sparse.compress();
 
     // Constructs a Vector.
     pacs::Vector<pacs::Real> vector{2};
@@ -35,14 +35,7 @@ int main() {
     vector[1] = 2.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << matrix.solve<pacs::CG>(vector) << std::endl; // Conjugate gradient.
-    std::cout << matrix.solve<pacs::SD>(vector) << std::endl; // Gradient descent.
-    std::cout << matrix.solve<pacs::MR>(vector) << std::endl; // Minimal residual.
-    std::cout << matrix.solve<pacs::NS>(vector) << std::endl; // Norm Steepest Descent.
-    std::cout << matrix.solve<pacs::GS>(vector) << std::endl; // Gauss-Seidel.
-    std::cout << matrix.solve<pacs::GMRES>(vector) << std::endl; // Restarted FOM.
-    std::cout << matrix.solve<pacs::KM>(vector) << std::endl; // Kaczmarz.
-    std::cout << matrix.solve<pacs::RKM>(vector) << std::endl; // Randomized Kaczmarz.
+    std::cout << pacs::solve(sparse, vector, pacs::GMRES) << std::endl; // GMRES.
 
     // Dense.
     
@@ -55,6 +48,7 @@ int main() {
     dense(1, 1) = 3.0;
 
     // Linear system (Ax = b) solution.
-    std::cout << dense.solve(vector) << std::endl; // LU.
+    std::cout << pacs::solve(dense, vector, pacs::QRD) << std::endl; // QR.
+    std::cout << pacs::solve(dense, vector, pacs::LUD) << std::endl; // LU.
     
 }

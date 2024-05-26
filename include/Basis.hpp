@@ -14,11 +14,8 @@
 // Type.
 #include <Type.hpp>
 
-// Vectors.
-#include <Vector.hpp>
-
-// Matrices.
-#include <Matrix.hpp>
+// Algebra.
+#include <Algebra.hpp>
 
 // Mesh.
 #include <Mesh.hpp>

@@ -12,7 +12,7 @@
 #include <iostream>
 
 // Testing Matrix.
-#include <Matrix.hpp>
+#include <Algebra.hpp>
 
 int main() {
 
@@ -28,7 +28,7 @@ int main() {
     matrix(2, 1) = 6;
     
     // QR decomposition.
-    auto [Q, R] = matrix.transpose().QR();
+    auto [Q, R] = QR(matrix.transpose());
 
     // Output.
     std::cout << matrix.transpose() << std::endl << std::endl;

@@ -12,7 +12,7 @@
 #include <iostream>
 
 // Testing Vector.
-#include <Vector.hpp>
+#include <Algebra.hpp>
 
 int main() {
 

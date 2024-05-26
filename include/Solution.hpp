@@ -18,7 +18,7 @@
 #include <Mesh.hpp>
 
 // Vectors.
-#include <Vector.hpp>
+#include <Algebra.hpp>
 
 // Functor.
 #include <Functor.hpp>

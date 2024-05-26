@@ -14,8 +14,8 @@
 // Type.
 #include <Type.hpp>
 
-// Sparse matrices.
-#include <Sparse.hpp>
+// Algebra.
+#include <Algebra.hpp>
 
 // Mesh.
 #include <Mesh.hpp>

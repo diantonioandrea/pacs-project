@@ -21,7 +21,7 @@
 #include <Voronoi.hpp>
 
 // Vectors.
-#include <Vector.hpp>
+#include <Algebra.hpp>
 
 // Containers.
 #include <vector>

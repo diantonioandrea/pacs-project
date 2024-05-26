@@ -16,8 +16,8 @@
 #define _USE_MATH_DEFINES
 #endif
 
-// Matrices.
-#include <Matrix.hpp>
+// Algebra.
+#include <Algebra.hpp>
 
 namespace pacs {
 

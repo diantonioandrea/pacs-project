@@ -13,11 +13,8 @@
 // Quadrature.
 #include <Quadrature.hpp>
 
-// Vectors.
-#include <Vector.hpp>
-
-// Matrices.
-#include <Matrix.hpp>
+// Algebra.
+#include <Algebra.hpp>
 
 // Basis functions.
 #include <Basis.hpp>

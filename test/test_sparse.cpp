@@ -12,7 +12,7 @@
 #include <iostream>
 
 // Testing Sparse.
-#include <Sparse.hpp>
+#include <Algebra.hpp>
 
 int main() {
 

@@ -29,7 +29,7 @@ int main() {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly"), 4};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly"), 3};
 
     // Source and exact solution.
     pacs::Functor test_source{source};
@@ -44,7 +44,7 @@ int main() {
     pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
 
     // Linear system solution.
-    pacs::Vector<pacs::Real> numerical = laplacian.solve<pacs::GMRES>(forcing);
+    pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing);
 
     // Errors.
     pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
