@@ -24,6 +24,11 @@
 
 namespace pacs {
 
+    /**
+     * @brief Matrix structure.
+     * 
+     * @tparam T 
+     */
     template<NumericType T>
     struct Matrix {
 

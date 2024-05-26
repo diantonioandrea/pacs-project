@@ -23,7 +23,7 @@
 namespace pacs {
 
     /**
-     * @brief Vector struct.
+     * @brief Vector structure.
      * 
      * @tparam T 
      */

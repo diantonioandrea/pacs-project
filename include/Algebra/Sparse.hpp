@@ -27,7 +27,7 @@
 namespace pacs {
     
     /**
-     * @brief Sparse matrix class.
+     * @brief Sparse matrix structure.
      * 
      * @tparam T Matrix' type.
      */
