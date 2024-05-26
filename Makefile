@@ -1,10 +1,10 @@
 .PHONY: test example testrun clean distclean
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
 
-# Verbosity.
+# Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
 
-# Further optimization.
+# Disables debugging.
 # CPPFLAGS += -DNDEBUG
 
 # Parallel computing using a custom OpenMP installation.
