@@ -8,19 +8,9 @@
  * 
  */
 
+#include <Fem.hpp>
 #include <Laplacian.hpp>
-
-// Quadrature.
-#include <Quadrature.hpp>
-
-// Algebra.
 #include <Algebra.hpp>
-
-// Basis functions.
-#include <Basis.hpp>
-
-// Penalty.
-#include <Penalty.hpp>
 
 namespace pacs {
 

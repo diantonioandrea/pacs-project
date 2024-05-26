@@ -8,7 +8,7 @@
  * 
  */
 
-#include <Penalty.hpp>
+#include <Fem.hpp>
 #include <Geometry.hpp>
 
 namespace pacs {

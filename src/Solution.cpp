@@ -8,18 +8,9 @@
  * 
  */
 
-#include <Solution.hpp>
-
-// Quadrature.
-#include <Quadrature.hpp>
-
-// Algebra.
+#include <Fem.hpp>
 #include <Algebra.hpp>
 
-// Basis.
-#include <Basis.hpp>
-
-// IO handling.
 #include <string>
 #include <iostream>
 #include <fstream>

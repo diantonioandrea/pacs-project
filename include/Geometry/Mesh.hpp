@@ -21,6 +21,18 @@
 #include <array>
 #include <string>
 
+#ifndef COLLAPSE_TOLERANCE
+#define COLLAPSE_TOLERANCE 1E-1
+#endif
+
+#ifndef LLOYD_TOLERANCE
+#define LLOYD_TOLERANCE 1E-3
+#endif
+
+#ifndef LLOYD_MAX_ITER
+#define LLOYD_MAX_ITER 256
+#endif
+
 namespace pacs {
 
     // Element, implemented under Element.cpp

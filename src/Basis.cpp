@@ -8,12 +8,8 @@
  * 
  */
 
-#include <Basis.hpp>
+#include <Fem.hpp>
 
-// Legendre.
-#include <Legendre.hpp>
-
-// Assertions.
 #include <cassert>
 
 namespace pacs {

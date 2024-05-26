@@ -2,7 +2,7 @@
  * @file Laplacian.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
- * @date 2024-05-08
+ * @date 2024-05-26
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -11,16 +11,13 @@
 #ifndef LAPLACIAN_PACS
 #define LAPLACIAN_PACS
 
-#include <Type.hpp>
-#include <Algebra.hpp>
-#include <Geometry.hpp>
+// Laplacian matrix.
+#include <Laplacian/Laplacian.hpp>
 
-namespace pacs {
+// Forcing term.
+#include <Laplacian/Forcing.hpp>
 
-    // Laplacian matrix.
-
-    std::array<Sparse<Real>, 3> laplacian(const Mesh &);
-
-}
+// Errors evaluation.
+#include <Laplacian/Errors.hpp>
 
 #endif

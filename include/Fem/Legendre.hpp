@@ -11,10 +11,7 @@
 #ifndef LEGENDRE_PACS
 #define LEGENDRE_PACS
 
-// Type.
 #include <Type.hpp>
-
-// Vectors.
 #include <Algebra.hpp>
 
 namespace pacs {

@@ -8,10 +8,8 @@
  * 
  */
 
+#include <Fem.hpp>
 #include <Laplacian.hpp>
-#include <Forcing.hpp>
-#include <Errors.hpp>
-#include <Solution.hpp>
 
 #include "square.hpp"
 

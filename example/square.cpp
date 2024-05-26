@@ -8,10 +8,8 @@
  * 
  */
 
+#include <Fem.hpp>
 #include <Laplacian.hpp>
-#include <Forcing.hpp>
-#include <Errors.hpp>
-#include <Solution.hpp>
 
 #include "square.hpp"
 
@@ -47,7 +45,7 @@ int main() {
     diagrams.emplace_back(pacs::mesh_diagram("data/square_800.poly"));
 
     // Polynomial degree.
-    std::size_t degree = 2;
+    std::size_t degree = 3;
 
     // Test.
     for(std::size_t j = 0; j < 4; ++j) {

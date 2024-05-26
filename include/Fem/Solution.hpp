@@ -14,9 +14,9 @@
 #include <Type.hpp>
 #include <Geometry.hpp>
 #include <Algebra.hpp>
-#include <Functor.hpp>
 
-// Output.
+#include "Functor.hpp"
+
 #include <string>
 
 namespace pacs {

@@ -15,14 +15,6 @@
 #include <algorithm>
 #include <ranges>
 
-#ifndef GEOMETRY_SAFE
-#define GEOMETRY_SAFE 1E-2
-#endif
-
-#ifndef GEOMETRY_PADDING
-#define GEOMETRY_PADDING 5E-1
-#endif
-
 namespace pacs {
 
     // VORONOI.

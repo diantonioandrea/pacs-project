@@ -11,12 +11,19 @@
 #ifndef VORONOI_PACS
 #define VORONOI_PACS
 
-// Type.
 #include <Type.hpp>
 
 #include "Shapes.hpp"
 
 #include <vector>
+
+#ifndef GEOMETRY_SAFE
+#define GEOMETRY_SAFE 1E-2
+#endif
+
+#ifndef GEOMETRY_PADDING
+#define GEOMETRY_PADDING 5E-1
+#endif
 
 namespace pacs {
 

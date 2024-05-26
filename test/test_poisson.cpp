@@ -9,9 +9,7 @@
  */
 
 #include <Laplacian.hpp>
-#include <Forcing.hpp>
-#include <Solution.hpp>
-#include <Errors.hpp>
+#include <Fem.hpp>
 
 #include <iostream>
 

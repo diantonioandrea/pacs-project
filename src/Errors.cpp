@@ -8,13 +8,9 @@
  * 
  */
 
-#include <Errors.hpp>
-
-// Modal coefficients.
-#include <Solution.hpp>
-
-// Vectors.
 #include <Algebra.hpp>
+#include <Fem.hpp>
+#include <Laplacian.hpp>
 
 namespace pacs {
 

@@ -11,10 +11,9 @@
 #ifndef FORCING_PACS
 #define FORCING_PACS
 
-// Type.
 #include <Type.hpp>
 #include <Geometry.hpp>
-#include <Functor.hpp>
+#include <Fem.hpp>
 
 namespace pacs {
 
