@@ -8,22 +8,17 @@
  * 
  */
 
-#include <Voronoi.hpp>
+#include <Geometry.hpp>
 
-// Random.
 #include <cstdlib>
 #include <ctime>
-
-// Copy.
 #include <algorithm>
 #include <ranges>
 
-// Safe distance.
 #ifndef GEOMETRY_SAFE
 #define GEOMETRY_SAFE 1E-2
 #endif
 
-// Padding.
 #ifndef GEOMETRY_PADDING
 #define GEOMETRY_PADDING 5E-1
 #endif

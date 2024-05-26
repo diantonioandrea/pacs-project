@@ -8,9 +8,8 @@
  * 
  */
 
-#include <Mesh.hpp>
+#include <Geometry.hpp>
 
-// Assertions.
 #include <cassert>
 
 namespace pacs {

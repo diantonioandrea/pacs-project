@@ -9,8 +9,6 @@
  */
 
 #include <Penalty.hpp>
-
-// Geometry.
 #include <Geometry.hpp>
 
 namespace pacs {

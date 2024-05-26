@@ -11,23 +11,14 @@
 #ifndef MESH_PACS
 #define MESH_PACS
 
-// Type.
 #include <Type.hpp>
-
-// Geometry.
-#include <Geometry.hpp>
-
-// Voronoi.
-#include <Voronoi.hpp>
-
-// Vectors.
 #include <Algebra.hpp>
 
-// Containers.
+#include "Shapes.hpp"
+#include "Shapes.hpp"
+
 #include <vector>
 #include <array>
-
-// Output.
 #include <string>
 
 namespace pacs {

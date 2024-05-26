@@ -11,22 +11,19 @@
 #ifndef SOLUTION_PACS
 #define SOLUTION_PACS
 
-// Type.
 #include <Type.hpp>
-
-// Mesh.
-#include <Mesh.hpp>
-
-// Vectors.
+#include <Geometry.hpp>
 #include <Algebra.hpp>
-
-// Functor.
 #include <Functor.hpp>
 
 // Output.
 #include <string>
 
 namespace pacs {
+
+    // Modal coefficients of the exact solution.
+
+    Vector<Real> modal(const Mesh &, const Functor &);
 
     /**
      * @brief Readable and plottable solution.
@@ -50,14 +47,6 @@ namespace pacs {
         void write(const std::string &);
 
     };
-
-    // Solution evaluated over the quadrature nodes.
-
-    std::array<Vector<Real>, 4> solution(const Mesh &, const Vector<Real> &, const Functor &);
-
-    // Modal coefficients of the exact solution.
-
-    Vector<Real> modal(const Mesh &, const Functor &);
 
 }
 

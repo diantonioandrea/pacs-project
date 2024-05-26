@@ -14,10 +14,8 @@
 // Type.
 #include <Type.hpp>
 
-// Geometry.
-#include <Geometry.hpp>
+#include "Shapes.hpp"
 
-// Containers.
 #include <vector>
 
 namespace pacs {

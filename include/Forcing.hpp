@@ -13,11 +13,7 @@
 
 // Type.
 #include <Type.hpp>
-
-// Mesh.
-#include <Mesh.hpp>
-
-// Functor.
+#include <Geometry.hpp>
 #include <Functor.hpp>
 
 namespace pacs {

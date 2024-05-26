@@ -11,14 +11,9 @@
 #ifndef PENALTY_PACS
 #define PENALTY_PACS
 
-// Type.
 #include <Type.hpp>
-
-// Vectors.
 #include <Algebra.hpp>
-
-// Mesh.
-#include <Mesh.hpp>
+#include <Geometry.hpp>
 
 namespace pacs {
 

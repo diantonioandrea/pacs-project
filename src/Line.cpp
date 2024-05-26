@@ -10,10 +10,7 @@
 
 #include <Geometry.hpp>
 
-// Assertions.
 #include <cassert>
-
-// Math.
 #include <cmath>
 
 namespace pacs {

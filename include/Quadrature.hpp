@@ -11,16 +11,11 @@
 #ifndef QUADRATURE_PACS
 #define QUADRATURE_PACS
 
-// Type.
 #include <Type.hpp>
 
-// Vectors.
 #include <Algebra.hpp>
-
-// Geometry.
 #include <Geometry.hpp>
 
-// Containers.
 #include <vector>
 
 // Quadrature tolerance.

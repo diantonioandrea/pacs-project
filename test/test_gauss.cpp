@@ -8,11 +8,9 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Testing Quadrature.
 #include <Quadrature.hpp>
+
+#include <iostream>
 
 int main() {
 

@@ -8,19 +8,13 @@
  * 
  */
 
-#include <Mesh.hpp>
+#include <Geometry.hpp>
 
-// Assertions.
 #include <cassert>
-
-// IO handling.
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-
-// Voronoi.
-#include <Voronoi.hpp>
 
 namespace pacs {
 

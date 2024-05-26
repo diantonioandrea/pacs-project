@@ -8,15 +8,10 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Containers.
-#include <vector>
-
-// Testing Polygon triangulation.
 #include <Geometry.hpp>
-#include <Voronoi.hpp>
+
+#include <iostream>
+#include <vector>
 
 int main() {
 

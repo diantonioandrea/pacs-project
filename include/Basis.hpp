@@ -11,16 +11,10 @@
 #ifndef BASIS_PACS
 #define BASIS_PACS
 
-// Type.
 #include <Type.hpp>
-
-// Algebra.
 #include <Algebra.hpp>
+#include <Geometry.hpp>
 
-// Mesh.
-#include <Mesh.hpp>
-
-// Containers.
 #include <array>
 
 namespace pacs {

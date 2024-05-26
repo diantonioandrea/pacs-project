@@ -10,13 +10,8 @@
 
 #include <Geometry.hpp>
 
-// Assertions.
 #include <cassert>
-
-// Math.
 #include <cmath>
-
-// Random.
 #include <cstdlib>
 #include <ctime>
 

@@ -8,14 +8,12 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Testing Poisson problem.
 #include <Laplacian.hpp>
 #include <Forcing.hpp>
 #include <Solution.hpp>
 #include <Errors.hpp>
+
+#include <iostream>
 
 pacs::Real exact(const pacs::Real &, const pacs::Real &);
 pacs::Real source(const pacs::Real &, const pacs::Real &);

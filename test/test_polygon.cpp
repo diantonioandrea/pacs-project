@@ -8,11 +8,9 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Testing Polygon.
 #include <Geometry.hpp>
+
+#include <iostream>
 
 int main() {
 

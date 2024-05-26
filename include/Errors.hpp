@@ -11,22 +11,12 @@
 #ifndef ERRORS_PACS
 #define ERRORS_PACS
 
-// Output.
-#include <iostream>
-
-// Type.
 #include <Type.hpp>
-
-// Functor.
 #include <Functor.hpp>
-
-// Algebra.
 #include <Algebra.hpp>
+#include <Geometry.hpp>
 
-// Mesh.
-#include <Mesh.hpp>
-
-// Containers.
+#include <iostream>
 #include <array>
 
 namespace pacs {

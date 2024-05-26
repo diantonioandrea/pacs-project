@@ -8,15 +8,10 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Containers.
-#include <vector>
-
-// Testing Refinement.
 #include <Geometry.hpp>
-#include <Mesh.hpp>
+
+#include <iostream>
+#include <vector>
 
 int main() {
 

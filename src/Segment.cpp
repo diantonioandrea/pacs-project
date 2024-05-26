@@ -10,11 +10,9 @@
 
 #include <Geometry.hpp>
 
-// Assertions.
 #include <cassert>
-
-// Math.
 #include <cmath>
+
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif

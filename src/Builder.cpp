@@ -8,15 +8,13 @@
  * 
  */
 
-#include <Mesh.hpp>
+#include <Geometry.hpp>
 
-// IO handling.
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 
-// Small edges tolerance.
 #ifndef COLLAPSE_TOLERANCE
 #define COLLAPSE_TOLERANCE 1E-1
 #endif
@@ -25,7 +23,6 @@
 #define LLOYD_TOLERANCE 1E-3
 #endif
 
-// Maximum number of iterations for the Lloyd's algorithm.
 #ifndef LLOYD_MAX_ITER
 #define LLOYD_MAX_ITER 256
 #endif

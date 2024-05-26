@@ -8,25 +8,18 @@
  * 
  */
 
-// IO handling.
+#include <Laplacian.hpp>
+#include <Forcing.hpp>
+#include <Errors.hpp>
+#include <Solution.hpp>
+
+#include "square.hpp"
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <filesystem>
-
-// Matrices and RHS.
-#include <Laplacian.hpp>
-#include <Forcing.hpp>
-
-// Error evaluation.
-#include <Errors.hpp>
-
-// Solution plot.
-#include <Solution.hpp>
-
-// Test functions.
-#include "square.hpp"
 
 int main() {
 
@@ -54,7 +47,7 @@ int main() {
     diagrams.emplace_back(pacs::mesh_diagram("data/square_800.poly"));
 
     // Polynomial degree.
-    std::size_t degree = 4;
+    std::size_t degree = 2;
 
     // Test.
     for(std::size_t j = 0; j < 4; ++j) {

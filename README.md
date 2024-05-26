@@ -22,7 +22,7 @@ Key components include:
 
 - `include/`: Definitions of methods and classes.
     - `Type.hpp`: Definitions of the custom concepts and types.
-    - `Geometry.hpp`: Definitions of geometrical objects and methods.
+    - `Shapes.hpp`: Definitions of geometrical objects and methods.
     - `Matrix.hpp`: Implementation of matrices.
     - `Sparse.hpp`: Implementation of sparse matrices.
     - `Vector.hpp`: Implementation of vectors.

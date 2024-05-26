@@ -8,11 +8,9 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Testing Sparse.
 #include <Algebra.hpp>
+
+#include <iostream>
 
 int main() {
 

@@ -8,11 +8,9 @@
  * 
  */
 
-// Output.
-#include <iostream>
-
-// Testing Line.
 #include <Geometry.hpp>
+
+#include <iostream>
 
 int main() {
 
