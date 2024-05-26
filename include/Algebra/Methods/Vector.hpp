@@ -59,7 +59,7 @@ namespace pacs {
         #endif
 
         #ifdef PARALLEL
-        return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](auto first, auto second){ return first * second; });
+        return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
         #else
         return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
         #endif
@@ -74,9 +74,9 @@ namespace pacs {
     template<NumericType T>
     inline Real norm(const Vector<T> &vector) {
         #ifdef PARALLEL
-        return std::sqrt(std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
+        return std::sqrt(std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](const auto &element){ return std::abs(element) * std::abs(element); }));
         #else
-        return std::sqrt(std::transform_reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
+        return std::sqrt(std::transform_reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](const auto &element){ return std::abs(element) * std::abs(element); }));
         #endif
     }
 
