@@ -23,6 +23,13 @@
 #define TOLERANCE 1E-14
 #endif
 
+// Parallelism.
+#ifndef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
+#define PARALLEL
+#include<execution>
+using POLICY = std::execution::par_unseq;
+#endif
+
 namespace pacs {
 
     // Real alias.

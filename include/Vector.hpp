@@ -11,28 +11,18 @@
 #ifndef VECTOR_PACS
 #define VECTOR_PACS
 
-// Type.
 #include <Type.hpp>
 
-// OpenMP.
+#include <iostream>
+#include <cassert>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <numeric>
+
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-// Containers.
-#include <vector>
-
-// Output.
-#include <iostream>
-
-// Assertions.
-#include <cassert>
-
-// Math.
-#include <cmath>
-
-// Copy, Swap.
-#include <algorithm>
 
 namespace pacs {
 
@@ -564,6 +554,47 @@ namespace pacs {
                 return result;
             }
 
+            // METHODS.
+
+            /**
+             * @brief Minimum value of a Vector.
+             * 
+             * @param vector 
+             * @return T 
+             */
+            inline friend T min(const Vector<T> &vector) {
+                return *std::min_element(vector.elements.begin(), vector.elements.end());
+            }
+
+            /**
+             * @brief Maximum value of a Vector.
+             * 
+             * @param vector 
+             * @return T 
+             */
+            inline friend T max(const Vector<T> &vector) {
+                return *std::max_element(vector.elements.begin(), vector.elements.end());
+            }
+
+            /**
+             * @brief Vector dot product.
+             * 
+             * @param first 
+             * @param second 
+             * @return T 
+             */
+            inline friend T dot(const Vector<T> &first, const Vector<T> &second) {
+                #ifndef NDEBUG
+                assert(first.length == second.length);
+                #endif
+
+                #ifdef PARALLEL
+                return std::inner_product(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
+                #endif
+
+                return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
+            }
+
             // NORM.
 
             /**
@@ -571,13 +602,12 @@ namespace pacs {
              * 
              * @return Real 
              */
-            Real norm() const {
-                Real norm = 0.0;
+            inline Real norm() const {
+                #ifdef PARALLEL
+                return std::sqrt(POLICY, std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){return std::abs(element) * std::abs(element); }));
+                #endif
 
-                for(const auto &element: this->elements)
-                    norm += std::abs(element) * std::abs(element);
-
-                return std::sqrt(norm);
+                return std::sqrt(std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){return std::abs(element) * std::abs(element); }));
             }
 
             // OUTPUT.
@@ -598,62 +628,6 @@ namespace pacs {
     };
 
     // METHODS.
-
-    /**
-     * @brief Maximum value of a Vector.
-     * 
-     * @tparam T 
-     * @param vector 
-     * @return T 
-     */
-    template<NumericType T>
-    T max(const Vector<T> &vector) {
-        T max = vector[0];
-
-        for(std::size_t j = 1; j < vector.length; ++j)
-            max = (vector[j] > max) ? vector[j] : max;
-
-        return max;
-    }
-
-    /**
-     * @brief Minimum value of a Vector.
-     * 
-     * @tparam T 
-     * @param vector 
-     * @return T 
-     */
-    template<NumericType T>
-    T min(const Vector<T> &vector) {
-        T min = vector[0];
-
-        for(std::size_t j = 1; j < vector.length; ++j)
-            min = (vector[j] < min) ? vector[j] : min;
-
-        return min;
-    }
-
-    /**
-     * @brief Dot product.
-     * 
-     * @tparam T 
-     * @param first 
-     * @param second 
-     * @return T 
-     */
-    template<NumericType T>
-    T dot(const Vector<T> &first, const Vector<T> &second) {
-        #ifndef NDEBUG
-        assert(first.length == second.length);
-        #endif
-    
-        T result = static_cast<T>(0);
-
-        for(std::size_t j = 0; j < first.length; ++j)
-            result += first[j] * second[j];
-
-        return result;
-    }
 
     /**
      * @brief Stacks two vectors.
