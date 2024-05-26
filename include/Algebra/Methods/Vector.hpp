@@ -61,17 +61,7 @@ namespace pacs {
         #ifdef PARALLEL
         return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](auto first, auto second){ return first * second; });
         #else
-        #ifdef _OPENMP
-        T sum = static_cast<T>(0);
-
-        #pragma omp parallel for reduction(+: sum)
-        for(std::size_t j = 0; j < first.length; ++j)
-            sum += first.elements[j] * second.elements[j];
-
-        return sum;
-        #else
         return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
-        #endif
         #endif
     }
 
@@ -86,17 +76,7 @@ namespace pacs {
         #ifdef PARALLEL
         return std::sqrt(std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
         #else
-        #ifdef _OPENMP
-        T sum = static_cast<T>(0);
-
-        #pragma omp parallel for reduction(+: sum)
-        for(std::size_t j = 0; j < vector.length; ++j)
-            sum += std::abs(vector.elements[j]) * std::abs(vector.elements[j]);
-
-        return std::sqrt(sum);
-        #else
         return std::sqrt(std::transform_reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
-        #endif
         #endif
     }
 

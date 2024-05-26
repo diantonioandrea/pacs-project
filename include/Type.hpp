@@ -29,10 +29,10 @@
 #define POLICY std::execution::par_unseq
 #endif
 
-// OpenMP Parallelism.
-#ifdef _OPENMP
-#include <omp.h>
-#endif
+// // OpenMP Parallelism.
+// #ifdef _OPENMP
+// #include <omp.h>
+// #endif
 
 namespace pacs {
 
