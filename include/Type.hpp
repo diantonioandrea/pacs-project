@@ -23,11 +23,16 @@
 #define TOLERANCE 1E-14
 #endif
 
-// Parallelism.
+// STL Parallelism.
 #ifndef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
 #define PARALLEL
 #include<execution>
 using POLICY = std::execution::par_unseq;
+#endif
+
+// OpenMP Parallelism.
+#ifdef _OPENMP
+#include <omp.h>
 #endif
 
 namespace pacs {
