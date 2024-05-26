@@ -13,11 +13,6 @@
 // Assertions.
 #include <cassert>
 
-// OpenMP.
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
 // IO handling.
 #include <string>
 #include <iostream>

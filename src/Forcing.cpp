@@ -19,11 +19,6 @@
 // Matrices.
 #include <Matrix.hpp>
 
-// OpenMP.
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
 // Basis functions.
 #include <Basis.hpp>
 

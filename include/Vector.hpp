@@ -20,10 +20,6 @@
 #include <algorithm>
 #include <numeric>
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
 namespace pacs {
 
     template<NumericType T>
