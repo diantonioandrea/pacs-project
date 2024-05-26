@@ -226,26 +226,27 @@ namespace pacs {
                 Vector<T> w = A * Vs[j];
 
                 for(std::size_t k = 0; k <= j; ++k) {
-                    H(k, j) = dot(w, Vs[k]);
-                    w -= H(k, j) * Vs[k];
+                    H.elements[k * m + j] = dot(w, Vs[k]);
+                    w -= H.elements[k * m + j] * Vs[k];
                 }
 
                 // New element for H.
-                H(j + 1, j) = norm(w);
+                H.elements[(j + 1) * m + j] = norm(w);
 
                 // New v.
-                Vs.emplace_back(w / H(j + 1, j));
+                Vs.emplace_back(w / H.elements[(j + 1) * m + j]);
             }
 
             // V.
             Matrix<T> V{size, m};
 
             for(std::size_t j = 0; j < m; ++j)
-                V.column(j, Vs[j]);
+                for(std::size_t k = 0; k < size; ++k)
+                    V.elements[k * m + j] = Vs[j].elements[k];
 
-            // Least square's right-hand side.
+            // Least squares' right-hand side.
             Vector<T> rhs{m + 1};
-            rhs[0] = beta;
+            rhs.elements[0] = beta;
 
             // H rotations.
             Matrix<T> rotation = identity<T>(m + 1);
@@ -254,14 +255,18 @@ namespace pacs {
                 Matrix<T> rotation_j = rotation;
 
                 // Rotation coefficients.
-                T s = H(j + 1, j) / std::sqrt(H(j, j) * H(j, j) + H(j + 1, j) * H(j + 1, j));
-                T c = H(j, j) / std::sqrt(H(j, j) * H(j, j) + H(j + 1, j) * H(j + 1, j));
+                T first = H.elements[j * m + j];
+                T second = H.elements[(j + 1) * m + j];
+                T denominator = std::sqrt(first * first + second * second);
 
-                rotation_j(j, j) = c;
-                rotation_j(j + 1, j + 1) = c;
+                T s = second / denominator;
+                T c = first / denominator;
 
-                rotation_j(j, j + 1) = s;
-                rotation_j(j + 1, j) = -s;
+                rotation_j.elements[j * (m + 1) + j] = c;
+                rotation_j.elements[(j + 1) * (m + 1) + j + 1] = c;
+
+                rotation_j.elements[j * (m + 1) + j + 1] = s;
+                rotation_j.elements[(j + 1) * (m + 1) + j] = -s;
 
                 // Rotation.
                 H = rotation_j * H;
@@ -272,12 +277,13 @@ namespace pacs {
             Vector<T> y{m};
 
             for(std::size_t j = m; j > 0; --j) {
-                T sum = static_cast<T>(0);
-
-                for(std::size_t k = j; k < m; ++k)
-                    sum += H(j - 1, k) * y[k];
+                #ifdef PARALLEL
+                T sum = std::transform_reduce(POLICY, y.elements.begin() + j, y.elements.end(), H.elements.begin() + ((j - 1) * m + j), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
+                #else
+                T sum = std::transform_reduce(y.elements.begin() + j, y.elements.end(), H.elements.begin() + ((j - 1) * m + j), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
+                #endif
                 
-                y[j - 1] = (rhs[j - 1] - sum) / H(j - 1, j - 1);
+                y.elements[j - 1] = (rhs.elements[j - 1] - sum) / H.elements[(j - 1) * (m + 1) + j - 1];
             }
 
             // Solution estimate. 
@@ -287,7 +293,7 @@ namespace pacs {
             residual = b - A * x;
 
             // Exit condition.
-            if(std::abs(rhs[m]) < ALGEBRA_TOLERANCE)
+            if(std::abs(rhs.elements[m]) < ALGEBRA_TOLERANCE)
                 break;
 
             // m update.
