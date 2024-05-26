@@ -29,7 +29,13 @@ endif
 
 # Files.
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
+
 HEADERS = ./include/*.hpp
+HEADERS += ./include/Algebra/*.hpp
+HEADERS += ./include/Algebra/Methods/*.hpp
+HEADERS += ./include/Geometry/*.hpp
+HEADERS += ./include/Fem/*.hpp
+HEADERS += ./include/Laplacian/*.hpp
 
 EXAMPLE_EXECS = $(subst example/,executables/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
 EXAMPLE_OBJECTS = $(subst example/,objects/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
