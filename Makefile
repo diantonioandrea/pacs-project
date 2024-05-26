@@ -20,6 +20,12 @@ CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
 # CXXFLAGS += -Wno-unknown-pragmas
 # endif
 
+# Parallel computing using STL and modules.
+ifneq ($(mkTbbLib),)
+LDFLAGS += -L$(mkTbbLib)
+LDLIBS += -ltbb
+endif
+
 # Files.
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
 HEADERS = ./include/*.hpp
