@@ -7,7 +7,7 @@ CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
 # Further optimization.
 # CPPFLAGS += -DNDEBUG
 
-# Parallel computing using OpenMP.
+# Parallel computing using a custom OpenMP installation.
 # ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
 # ifeq ($(shell uname),Darwin) # Apple's clang.
 # CXXFLAGS += -Xclang
