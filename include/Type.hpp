@@ -27,7 +27,7 @@
 #ifndef _LIBCPP_HAS_NO_INCOMPLETE_PSTL
 #define PARALLEL
 #include<execution>
-using POLICY = std::execution::par_unseq;
+#define POLICY std::execution::par_unseq
 #endif
 
 // OpenMP Parallelism.

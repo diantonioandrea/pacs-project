@@ -585,7 +585,7 @@ namespace pacs {
                 #endif
 
                 #ifdef PARALLEL
-                return std::inner_product(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
+                return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](auto first, auto second){ return first * second; });
                 #endif
 
                 return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
@@ -600,10 +600,10 @@ namespace pacs {
              */
             inline Real norm() const {
                 #ifdef PARALLEL
-                return std::sqrt(POLICY, std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){return std::abs(element) * std::abs(element); }));
+                return std::sqrt(std::transform_reduce(POLICY, this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
                 #endif
 
-                return std::sqrt(std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){return std::abs(element) * std::abs(element); }));
+                return std::sqrt(std::transform_reduce(this->elements.begin(), this->elements.end(), static_cast<T>(0), std::plus{}, [](auto element){ return std::abs(element) * std::abs(element); }));
             }
 
             // OUTPUT.
