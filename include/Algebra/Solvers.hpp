@@ -287,7 +287,7 @@ namespace pacs {
             }
 
             // Solution estimate. 
-            x = x + V * y;
+            x += V * y;
 
             // Residual update.
             residual = b - A * x;
