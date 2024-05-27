@@ -19,7 +19,6 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
-#include <ranges>
 
 namespace pacs {
 
