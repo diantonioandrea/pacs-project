@@ -60,14 +60,11 @@ namespace pacs {
          * @param columns 
          * @param elements 
          */
-        Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns} {
+        Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements(elements.begin(), elements.end()) {
             #ifndef NDEBUG // Integrity check.
             assert((rows > 0) && (columns > 0));
             assert(elements.size() == rows * columns);
             #endif
-
-            this->elements.resize(rows * columns);
-            std::ranges::copy(elements.begin(), elements.end(), this->elements.begin());
         }
 
         /**
@@ -75,10 +72,7 @@ namespace pacs {
          * 
          * @param matrix 
          */
-        Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns} {
-            this->elements.resize(this->rows * this->columns);
-            std::ranges::copy(matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
-        }
+        Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()) {}
         
         /**
          * @brief Copy operator.
@@ -91,8 +85,12 @@ namespace pacs {
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
 
-            this->elements.resize(matrix.elements.size());
-            std::ranges::copy(matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
+            #ifdef PARALLEL
+            std::copy(POLICY, matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
+            #else
+            std::copy(matrix.elements.begin(), matrix.elements.end(), this->elements.begin());
+            #endif
+
             return *this;
         }
 
@@ -141,8 +139,11 @@ namespace pacs {
 
             Vector<T> row{this->columns};
 
-            for(std::size_t k = 0; k < this->columns; ++k)
-                row[k] = this->elements[j * this->columns + k];
+            #ifdef PARALLEL
+            std::copy(POLICY, this->elements.begin() + j * this->columns, this->elements.begin() + (j + 1) * this->columns, row.elements.begin());
+            #else
+            std::copy(this->elements.begin() + j * this->columns, this->elements.begin() + (j + 1) * this->columns, row.elements.begin());
+            #endif
 
             return row;
         }
@@ -158,8 +159,11 @@ namespace pacs {
             assert(j < this->rows);
             #endif
 
-            for(std::size_t k = 0; k < this->columns; ++k)
-                this->elements[j * this->columns + k] = scalar;
+            #ifdef PARALLEL
+            std::for_each_n(POLICY, this->elements.begin() + j * this->columns, this->columns, [scalar](auto &element){ element = scalar; });
+            #else
+            std::for_each_n(this->elements.begin() + j * this->columns, this->columns, [scalar](auto &element){ element = scalar; });
+            #endif
         }
 
         /**
@@ -174,8 +178,11 @@ namespace pacs {
             assert(vector.length == this->columns);
             #endif
 
-            for(std::size_t k = 0; k < this->columns; ++k)
-                this->elements[j * this->columns + k] = vector[k];
+            #ifdef PARALLEL
+            std::copy(POLICY, vector.elements.begin(), vector.elements.end(), this->elements.begin() + j * this->columns);
+            #else
+            std::copy(vector.elements.begin(), vector.elements.end(), this->elements.begin() + j * this->columns);
+            #endif
         }
 
         /**
@@ -248,7 +255,7 @@ namespace pacs {
          * @param columns 
          * @return Matrix 
          */
-        Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
+        inline Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
             return Matrix{rows, columns, this->elements};
         }
 
@@ -340,10 +347,13 @@ namespace pacs {
          * @return Matrix 
          */
         Matrix operator -() const {
-            Matrix result{*this};
+            Matrix result{this->rows, this->columns};
 
-            for(auto &element: result.elements)
-                element = -element;
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [](const auto &element){ return -element; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [](const auto &element){ return -element; });
+            #endif
 
             return result;
         }
@@ -355,10 +365,13 @@ namespace pacs {
          * @return Matrix 
          */
         Matrix operator *(const T &scalar) const {
-            Matrix result{*this};
+            Matrix result{this->rows, this->columns};
 
-            for(auto &element: result.elements)
-                element *= scalar;
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #endif
 
             return result;
         }
@@ -371,10 +384,13 @@ namespace pacs {
          * @return Matrix 
          */
         friend Matrix operator *(const T &scalar, const Matrix &matrix) {
-            Matrix result{matrix};
+            Matrix result{matrix.rows, matrix.columns};
 
-            for(auto &element: result.elements)
-                element *= scalar;
+            #ifdef PARALLEL
+            std::transform(POLICY, matrix.elements.begin(), matrix.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #else
+            std::transform(matrix.elements.begin(), matrix.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #endif
 
             return result;
         }
@@ -386,8 +402,11 @@ namespace pacs {
          * @return Matrix& 
          */
         Matrix &operator *=(const T scalar) {
-            for(auto &element: this->elements)
-                element *= scalar;
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element * scalar; });
+            #endif
 
             return *this;
         }
@@ -399,10 +418,13 @@ namespace pacs {
          * @return Matrix 
          */
         Matrix operator /(const T &scalar) const {
-            Matrix result{*this};
+            Matrix result{this->rows, this->columns};
 
-            for(auto &element: result.elements)
-                element /= scalar;
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element / scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element / scalar; });
+            #endif
 
             return result;
         }
@@ -414,8 +436,11 @@ namespace pacs {
          * @return Matrix& 
          */
         Matrix &operator /=(const T scalar) {
-            for(auto &element: this->elements)
-                element /= scalar;
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element / scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element / scalar; });
+            #endif
 
             return *this;
         }
@@ -431,10 +456,13 @@ namespace pacs {
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
 
-            Matrix result{*this};
+            Matrix result{this->rows, this->columns};
 
-            for(std::size_t j = 0; j < this->size(); ++j)
-                result.elements[j] += matrix.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), matrix.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), matrix.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #endif
 
             return result;
         }
@@ -450,8 +478,11 @@ namespace pacs {
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
 
-            for(std::size_t j = 0; j < this->size(); ++j)
-                this->elements[j] += matrix.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), matrix.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), matrix.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #endif
 
             return *this;
         }
@@ -467,10 +498,13 @@ namespace pacs {
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
 
-            Matrix result{*this};
+            Matrix result{this->rows, this->columns};
 
-            for(std::size_t j = 0; j < this->size(); ++j)
-                result.elements[j] -= matrix.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), matrix.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), matrix.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #endif
 
             return result;
         }
@@ -486,8 +520,11 @@ namespace pacs {
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
 
-            for(std::size_t j = 0; j < this->size(); ++j)
-                this->elements[j] -= matrix.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), matrix.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), matrix.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #endif
 
             return *this;
         }
@@ -504,19 +541,24 @@ namespace pacs {
             #endif
 
             Vector<T> result{this->rows};
-            
-            for(std::size_t j = 0; j < this->rows; ++j) {
-                T product = static_cast<T>(0);
 
-                for(std::size_t k = 0; k < this->columns; ++k)
-                    product += this->elements[j * this->columns + k] * vector[k];
-
-                result[j] = product;
-            }
+            for(std::size_t j = 0; j < this->rows; ++j)
+                #ifdef PARALLEL
+                result.elements[j] = std::transform_reduce(POLICY, vector.elements.begin(), vector.elements.end(), this->elements.begin() + j * this->columns, static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
+                #else 
+                result.elements[j] = std::inner_product(vector.elements.begin(), vector.elements.end(), this->elements.begin() + j * this->columns, static_cast<T>(0));
+                #endif
 
             return result;
         }
 
+        /**
+         * @brief Friend Vector * Matrix product.
+         * 
+         * @param vector 
+         * @param matrix 
+         * @return Vector<T> 
+         */
         friend Vector<T> operator *(const Vector<T> &vector, const Matrix &matrix) {
             #ifndef NDEBUG // Integrity check.
             assert(vector.length == matrix.rows);
