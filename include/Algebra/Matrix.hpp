@@ -304,8 +304,11 @@ namespace pacs {
 
             Matrix diagonal{this->rows, this->columns};
 
-            for(std::size_t j = 0; j < this->rows; ++j)
-                diagonal.elements[j * (this->columns + 1)] = this->elements[j * (this->columns + 1)];
+            #ifdef PARALLEL
+            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, diagonal](const auto &index){ diagonal.elements[index[1] + index[0]] = this->elements[index[1] + index[0]]; });
+            #else
+            std::for_each(this->indices.begin(), this->indices.end(), [this, diagonal](const auto &index){ diagonal.elements[index[1] + index[0]] = this->elements[index[1] + index[0]]; });
+            #endif
 
             return diagonal;
         }
@@ -323,8 +326,11 @@ namespace pacs {
             Matrix lower{this->rows, this->columns};
 
             for(std::size_t j = 0; j < this->rows; ++j)
-                for(std::size_t k = 0; k < j; ++k)
-                    lower.elements[j * this->columns + k] = this->elements[j * this->columns + k];
+                #ifdef PARALLEL
+                std::copy(POLICY, this->elements.begin() + j * this->columns, this->elements.begin() + j * this->columns + j, lower.elements.begin() + j * this->columns);
+                #else
+                std::copy(this->elements.begin() + j * this->columns, this->elements.begin() + j * this->columns + j, lower.elements.begin() + j * this->columns);
+                #endif
 
             return lower;
         }
@@ -342,8 +348,11 @@ namespace pacs {
             Matrix upper{this->rows, this->columns};
 
             for(std::size_t j = 0; j < this->rows; ++j)
-                for(std::size_t k = this->columns - 1; k > j; --k)
-                    upper.elements[j * this->columns + k] = this->elements[j * this->columns + k];
+                #ifdef PARALLEL
+                std::copy(POLICY, this->elements.begin() + j * this->columns + j + 1, this->elements.begin() + (j + 1) * this->columns, upper.elements.begin() + j * this->columns + j + 1);
+                #else
+                std::copy(this->elements.begin() + j * this->columns + j + 1, this->elements.begin() + (j + 1) * this->columns, upper.elements.begin() + j * this->columns + j + 1);
+                #endif
 
             return upper;
         }
@@ -584,14 +593,12 @@ namespace pacs {
 
             Vector<T> result{matrix.columns};
 
-            for(std::size_t j = 0; j < matrix.columns; ++j) {
-                T product = static_cast<T>(0);
-
-                for(std::size_t k = 0; k < matrix.rows; ++k)
-                    product += matrix.elements[k * matrix.columns + j];
-
-                result[j] = product;
-            }
+            for(std::size_t j = 0; j < matrix.columns; ++j)
+                #ifdef PARALLEL
+                result.elements[j] = std::transform_reduce(POLICY, matrix.indices.begin(), matrix.indices.end(), vector.elements.begin(), static_cast<T>(0), std::plus{}, [matrix, j](const auto &index, const auto &element){ return element * matrix.elements[index[1] + j]; });
+                #else 
+                result.elements[j] = std::transform_reduce(matrix.indices.begin(), matrix.indices.end(), vector.elements.begin(), static_cast<T>(0), std::plus{}, [matrix, j](const auto &index, const auto &element){ return element * matrix.elements[index[1] + j]; });
+                #endif
 
             return result;
         }
