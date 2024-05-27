@@ -40,7 +40,7 @@ namespace pacs {
         std::vector<T> elements;
 
         // Columns' indices.
-        std::vector<std::size_t> indices;
+        std::vector<std::array<std::size_t, 2>> indices;
 
         // CONSTRUCTORS.
 
@@ -56,7 +56,7 @@ namespace pacs {
             #endif
 
             for(std::size_t j = 0; j < rows; ++j)
-                indices.emplace_back(j * columns);
+                indices.emplace_back(std::array<std::size_t, 2>{j, j * columns});
         }
 
         /**
@@ -73,7 +73,7 @@ namespace pacs {
             #endif
 
             for(std::size_t j = 0; j < rows; ++j)
-                indices.emplace_back(j * columns);
+                indices.emplace_back(std::array<std::size_t, 2>{j, j * columns});
         }
 
         /**
@@ -208,9 +208,9 @@ namespace pacs {
             Vector<T> column{this->rows};
 
             #ifdef PARALLEL
-            std::transform(POLICY, this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index + k]; });
+            std::transform(POLICY, this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index[1] + k]; });
             #else
-            std::transform(this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index + k]; });
+            std::transform(this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index[1] + k]; });
             #endif
 
             return column;
@@ -228,9 +228,9 @@ namespace pacs {
             #endif
 
             #ifdef PARALLEL
-            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index + k] = scalar; });
+            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index[1] + k] = scalar; });
             #else
-            std::for_each(this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index + k] = scalar; });
+            std::for_each(this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index[1] + k] = scalar; });
             #endif
         }
 
@@ -246,8 +246,11 @@ namespace pacs {
             assert(vector.length == this->rows);
             #endif
 
-            for(std::size_t j = 0; j < this->rows; ++j)
-                this->elements[j * this->columns + k] = vector.elements[j];
+            #ifdef PARALLEL
+            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, vector](const auto &index){ this->elements[index[1] + k] = vector[index[0]]; });
+            #else
+            std::for_each(this->indices.begin(), this->indices.end(), [this, k, vector](const auto &index){ this->elements[index[1] + k] = vector[index[0]]; });
+            #endif
         }
 
         // SIZE.
