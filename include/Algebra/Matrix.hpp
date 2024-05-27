@@ -39,6 +39,9 @@ namespace pacs {
         // Elements.
         std::vector<T> elements;
 
+        // Columns' indices.
+        std::vector<std::size_t> indices;
+
         // CONSTRUCTORS.
 
         /**
@@ -51,6 +54,9 @@ namespace pacs {
             #ifndef NDEBUG // Integrity check.
             assert((rows > 0) && (columns > 0));
             #endif
+
+            for(std::size_t j = 0; j < rows; ++j)
+                indices.emplace_back(j * columns);
         }
 
         /**
@@ -65,6 +71,9 @@ namespace pacs {
             assert((rows > 0) && (columns > 0));
             assert(elements.size() == rows * columns);
             #endif
+
+            for(std::size_t j = 0; j < rows; ++j)
+                indices.emplace_back(j * columns);
         }
 
         /**
@@ -72,7 +81,7 @@ namespace pacs {
          * 
          * @param matrix 
          */
-        Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()) {}
+        Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()), indices(matrix.indices.begin(), matrix.indices.end()) {}
         
         /**
          * @brief Copy operator.
@@ -198,8 +207,11 @@ namespace pacs {
 
             Vector<T> column{this->rows};
 
-            for(std::size_t j = 0; j < this->rows; ++j)
-                column[j] = this->elements[j * this->columns + k];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index + k]; });
+            #else
+            std::transform(this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index + k]; });
+            #endif
 
             return column;
         }
@@ -215,8 +227,11 @@ namespace pacs {
             assert(k < this->columns);
             #endif
 
-            for(std::size_t j = 0; j < this->rows; ++j)
-                this->elements[j * this->columns + k] = scalar;
+            #ifdef PARALLEL
+            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index + k] = scalar; });
+            #else
+            std::for_each(this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index + k] = scalar; });
+            #endif
         }
 
         /**
@@ -232,7 +247,7 @@ namespace pacs {
             #endif
 
             for(std::size_t j = 0; j < this->rows; ++j)
-                this->elements[j * this->columns + k] = vector[j];
+                this->elements[j * this->columns + k] = vector.elements[j];
         }
 
         // SIZE.
