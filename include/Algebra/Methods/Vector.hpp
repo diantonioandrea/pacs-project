@@ -165,12 +165,12 @@ namespace std {
      */
     template<pacs::NumericType T>
     pacs::Vector<T> abs(const pacs::Vector<T> vector) {
-        pacs::Vector<T> result{vector};
+        pacs::Vector<T> result{vector.length};
 
         #ifdef PARALLEL
-        std::for_each(POLICY, result.elements.begin(), result.elements.end(), [](auto &element){ element = std::abs(element); });
+        std::transform(POLICY, vector.elements.begin(), vector.elements.end(), result.elements.begin(), [](auto &element){ return std::abs(element); });
         #else
-        std::for_each(result.elements.begin(), result.elements.end(), [](auto &element){ element = std::abs(element); });
+        std::transform(vector.elements.begin(), vector.elements.end(), result.elements.begin(), [](auto &element){ return std::abs(element); });
         #endif
 
         return result;
