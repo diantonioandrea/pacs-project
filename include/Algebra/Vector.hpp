@@ -19,6 +19,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <ranges>
 
 namespace pacs {
 
@@ -258,12 +259,12 @@ namespace pacs {
          * @return Vector 
          */
         Vector operator -() const {
-            Vector result{*this};
+            Vector result{this->length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [](auto &element){ element = -element; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [](const auto &element){ return -element; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [](auto &element){ element = -element; });
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [](const auto &element){ return -element; });
             #endif
 
             return result;
@@ -276,12 +277,12 @@ namespace pacs {
          * @return Vector 
          */
         Vector operator *(const T &scalar) const {
-            Vector result{*this};
+            Vector result{this->length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #endif
 
             return result;
@@ -295,12 +296,12 @@ namespace pacs {
          * @return Vector 
          */
         friend Vector operator *(const T &scalar, const Vector &vector) {
-            Vector result{vector};
+            Vector result{vector.length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(POLICY, vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #endif
 
             return result;
@@ -314,9 +315,9 @@ namespace pacs {
          */
         Vector &operator *=(const T &scalar) {
             #ifdef PARALLEL
-            std::for_each(POLICY, this->elements.begin(), this->elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #else
-            std::for_each(this->elements.begin(), this->elements.end(), [scalar](auto &element){ element *= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element * scalar; });
             #endif
 
             return *this;
@@ -329,12 +330,12 @@ namespace pacs {
          * @return Vector 
          */
         Vector operator /(const T &scalar) const {
-            Vector result{*this};
+            Vector result{this->length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element /= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element / scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element /= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element / scalar; });
             #endif
 
             return result;
@@ -348,12 +349,12 @@ namespace pacs {
          * @return Vector 
          */
         friend Vector operator /(const T &scalar, const Vector &vector) {
-            Vector result{vector};
+            Vector result{vector.length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element = scalar / element; });
+            std::transform(POLICY, vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return scalar / element; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element = scalar / element; });
+            std::transform(vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return scalar / element; });
             #endif
 
             return result;
@@ -367,9 +368,9 @@ namespace pacs {
          */
         Vector &operator /=(const T &scalar) {
             #ifdef PARALLEL
-            std::for_each(POLICY, this->elements.begin(), this->elements.end(), [scalar](auto &element){ element /= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element / scalar; });
             #else
-            std::for_each(this->elements.begin(), this->elements.end(), [scalar](auto &element){ element /= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element / scalar; });
             #endif
 
             return *this;
@@ -386,10 +387,13 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            Vector result{*this};
+            Vector result{this->length};
 
-            for(std::size_t j = 0; j < this->length; ++j)
-                result.elements[j] += vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #endif
 
             return result;
         }
@@ -405,8 +409,11 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            for(std::size_t j = 0; j < this->length; ++j)
-                this->elements[j] += vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first + second; });
+            #endif
 
             return *this;
         }
@@ -418,12 +425,12 @@ namespace pacs {
          * @return Vector 
          */
         Vector operator +(const T &scalar) const {
-            Vector result{*this};
+            Vector result{this->length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #endif
             
             return result;
@@ -437,12 +444,12 @@ namespace pacs {
          * @return Vector 
          */
         friend Vector operator +(const T &scalar, const Vector &vector) {
-            Vector result{vector};
+            Vector result{vector.length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(POLICY, vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #endif
             
             return result;
@@ -456,9 +463,9 @@ namespace pacs {
          */
         Vector &operator +=(const T &scalar) {
             #ifdef PARALLEL
-            std::for_each(POLICY, this->elements.begin(), this->elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #else
-            std::for_each(this->elements.begin(), this->elements.end(), [scalar](auto &element){ element += scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element + scalar; });
             #endif
             
             return *this;
@@ -475,10 +482,13 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            Vector result{*this};
+            Vector result{this->length};
 
-            for(std::size_t j = 0; j < this->length; ++j)
-                result.elements[j] -= vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #endif
 
             return result;
         }
@@ -494,8 +504,11 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            for(std::size_t j = 0; j < this->length; ++j)
-                this->elements[j] -= vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first - second; });
+            #endif
 
             return *this;
         }
@@ -507,12 +520,12 @@ namespace pacs {
          * @return Vector 
          */
         Vector operator -(const T &scalar) const {
-            Vector result{*this};
+            Vector result{this->length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element -= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element - scalar; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element -= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), result.elements.begin(), [scalar](const auto &element){ return element - scalar; });
             #endif
             
             return result;
@@ -526,12 +539,12 @@ namespace pacs {
          * @return Vector 
          */
         friend Vector operator -(const T &scalar, const Vector &vector) {
-            Vector result{vector};
+            Vector result{vector.length};
 
             #ifdef PARALLEL
-            std::for_each(POLICY, result.elements.begin(), result.elements.end(), [scalar](auto &element){ element = scalar - element; });
+            std::transform(POLICY, vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return scalar - element; });
             #else
-            std::for_each(result.elements.begin(), result.elements.end(), [scalar](auto &element){ element = scalar - element; });
+            std::transform(vector.elements.begin(), vector.elements.end(), result.elements.begin(), [scalar](const auto &element){ return scalar - element; });
             #endif
             
             return result;
@@ -545,9 +558,9 @@ namespace pacs {
          */
         Vector &operator -=(const T &scalar) {
             #ifdef PARALLEL
-            std::for_each(POLICY, this->elements.begin(), this->elements.end(), [scalar](auto &element){ element -= scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element - scalar; });
             #else
-            std::for_each(this->elements.begin(), this->elements.end(), [scalar](auto &element){ element -= scalar; });
+            std::transform(this->elements.begin(), this->elements.end(), this->elements.begin(), [scalar](const auto &element){ return element - scalar; });
             #endif
             
             return *this;
@@ -564,12 +577,35 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            Vector result{*this};
+            Vector result{this->length};
 
-            for(std::size_t j = 0; j < result.length; ++j)
-                result.elements[j] *= vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first * second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first * second; });
+            #endif
 
             return result;
+        }
+
+        /**
+         * @brief Vector element-wise product and assignation.
+         * 
+         * @param vector 
+         * @return T 
+         */
+        Vector operator *=(const Vector &vector) const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->length == vector.length);
+            #endif
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first * second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first * second; });
+            #endif
+
+            return *this;
         }
 
         /**
@@ -583,12 +619,35 @@ namespace pacs {
             assert(this->length == vector.length);
             #endif
 
-            Vector result{*this};
+            Vector result{this->length};
 
-            for(std::size_t j = 0; j < result.length; ++j)
-                result.elements[j] /= vector.elements[j];
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first / second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), result.elements.begin(), [](const auto &first, const auto &second){ return first / second; });
+            #endif
 
             return result;
+        }
+
+        /**
+         * @brief Vector element-wise division and assignation.
+         * 
+         * @param vector 
+         * @return T 
+         */
+        Vector operator /=(const Vector &vector) const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->length == vector.length);
+            #endif
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first / second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), this->elements.begin(), [](const auto &first, const auto &second){ return first / second; });
+            #endif
+
+            return *this;
         }
 
         // OUTPUT.
