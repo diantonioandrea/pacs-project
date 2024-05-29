@@ -39,9 +39,6 @@ namespace pacs {
         // Elements.
         std::vector<T> elements;
 
-        // Columns' indices.
-        std::vector<std::array<std::size_t, 2>> indices;
-
         // CONSTRUCTORS.
 
         /**
@@ -50,13 +47,10 @@ namespace pacs {
          * @param rows 
          * @param columns 
          */
-        Matrix(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns}, elements(rows * columns, static_cast<T>(0)) {
+        inline Matrix(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns}, elements(rows * columns, static_cast<T>(0)) {
             #ifndef NDEBUG // Integrity check.
             assert((rows > 0) && (columns > 0));
             #endif
-
-            for(std::size_t j = 0; j < rows; ++j)
-                indices.emplace_back(std::array<std::size_t, 2>{j, j * columns});
         }
 
         /**
@@ -66,14 +60,11 @@ namespace pacs {
          * @param columns 
          * @param elements 
          */
-        Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements(elements.begin(), elements.end()) {
+        inline Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements(elements.begin(), elements.end()) {
             #ifndef NDEBUG // Integrity check.
             assert((rows > 0) && (columns > 0));
             assert(elements.size() == rows * columns);
             #endif
-
-            for(std::size_t j = 0; j < rows; ++j)
-                indices.emplace_back(std::array<std::size_t, 2>{j, j * columns});
         }
 
         /**
@@ -81,7 +72,7 @@ namespace pacs {
          * 
          * @param matrix 
          */
-        Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()), indices(matrix.indices.begin(), matrix.indices.end()) {}
+        inline Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()) {}
         
         /**
          * @brief Copy operator.
@@ -89,7 +80,7 @@ namespace pacs {
          * @param matrix 
          * @return Matrix& 
          */
-        Matrix &operator =(const Matrix &matrix) {
+        inline Matrix &operator =(const Matrix &matrix) {
             #ifndef NDEBUG
             assert((this->rows == matrix.rows) && (this->columns == matrix.columns));
             #endif
@@ -207,11 +198,8 @@ namespace pacs {
 
             Vector<T> column{this->rows};
 
-            #ifdef PARALLEL
-            std::transform(POLICY, this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index[1] + k]; });
-            #else
-            std::transform(this->indices.begin(), this->indices.end(), column.elements.begin(), [this, k](const auto &index){ return this->elements[index[1] + k]; });
-            #endif
+            for(std::size_t j = 0; j < this->rows; ++j)
+                column[j] = this->elements[j * this->columns + k];
 
             return column;
         }
@@ -227,11 +215,8 @@ namespace pacs {
             assert(k < this->columns);
             #endif
 
-            #ifdef PARALLEL
-            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index[1] + k] = scalar; });
-            #else
-            std::for_each(this->indices.begin(), this->indices.end(), [this, k, scalar](const auto &index){ this->elements[index[1] + k] = scalar; });
-            #endif
+            for(std::size_t j = 0; j < this->rows; ++j)
+                this->elements[j * this->columns + k] = scalar;
         }
 
         /**
@@ -246,11 +231,8 @@ namespace pacs {
             assert(vector.length == this->rows);
             #endif
 
-            #ifdef PARALLEL
-            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, k, vector](const auto &index){ this->elements[index[1] + k] = vector[index[0]]; });
-            #else
-            std::for_each(this->indices.begin(), this->indices.end(), [this, k, vector](const auto &index){ this->elements[index[1] + k] = vector[index[0]]; });
-            #endif
+            for(std::size_t j = 0; j < this->rows; ++j)
+                this->elements[j * this->columns + k] = vector.elements[j];
         }
 
         // SIZE.
@@ -304,11 +286,8 @@ namespace pacs {
 
             Matrix diagonal{this->rows, this->columns};
 
-            #ifdef PARALLEL
-            std::for_each(POLICY, this->indices.begin(), this->indices.end(), [this, diagonal](const auto &index){ diagonal.elements[index[1] + index[0]] = this->elements[index[1] + index[0]]; });
-            #else
-            std::for_each(this->indices.begin(), this->indices.end(), [this, diagonal](const auto &index){ diagonal.elements[index[1] + index[0]] = this->elements[index[1] + index[0]]; });
-            #endif
+            for(std::size_t j = 0; j < this->rows; ++j)
+                diagonal.elements[j * (this->columns + 1)] = this->elements[j * (this->columns + 1)];
 
             return diagonal;
         }
@@ -594,11 +573,8 @@ namespace pacs {
             Vector<T> result{matrix.columns};
 
             for(std::size_t j = 0; j < matrix.columns; ++j)
-                #ifdef PARALLEL
-                result.elements[j] = std::transform_reduce(POLICY, matrix.indices.begin(), matrix.indices.end(), vector.elements.begin(), static_cast<T>(0), std::plus{}, [matrix, j](const auto &index, const auto &element){ return element * matrix.elements[index[1] + j]; });
-                #else 
-                result.elements[j] = std::transform_reduce(matrix.indices.begin(), matrix.indices.end(), vector.elements.begin(), static_cast<T>(0), std::plus{}, [matrix, j](const auto &index, const auto &element){ return element * matrix.elements[index[1] + j]; });
-                #endif
+                for(std::size_t k = 0; k < matrix.rows; ++k)
+                    result.elements[j] += vector.elements[k] * matrix.elements[k * matrix.rows + j];
 
             return result;
         }
