@@ -98,7 +98,7 @@ namespace pacs {
 
             // Looks for small edges.
             for(auto &edge: diagram[index].edges()) {
-                if(std::abs(edge[0] - edge[1]) > COLLAPSE_TOLERANCE * sizes[index])
+                if(std::abs(edge) > COLLAPSE_TOLERANCE * sizes[index])
                     continue;
 
                 if(domain.contains(edge))
