@@ -37,13 +37,19 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
 
     // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 16);
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
+
+    // Polynomial degree.
+    std::size_t degree = 3;
+
+    // Elements to be refined.
+    std::size_t refine = 8;
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 6; ++j) {
+    for(std::size_t j = 0; j < 4; ++j) {
 
         // Mesh.
-        pacs::Mesh mesh{domain, diagram, 3};
+        pacs::Mesh mesh{domain, diagram, degree};
 
         // Mesh output.
         std::string polyfile = "output/square_h_" + std::to_string(j) + ".poly";
@@ -73,6 +79,6 @@ int main() {
         output << "Residual: " << norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
-        diagram = pacs::mesh_refine(mesh, pacs::highest(error.l2_errors, 3));
+        diagram = pacs::mesh_refine(mesh, pacs::highest(error.l2_errors, refine));
     }
 }
