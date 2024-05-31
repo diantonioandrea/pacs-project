@@ -117,40 +117,6 @@ namespace pacs {
 
         return result;
     }
-
-    /**
-     * @brief Returns a given number of indices of the highest elements of a Vector.
-     * 
-     * @tparam T 
-     * @param vector 
-     * @param number 
-     * @return std::vector<std::size_t> 
-     */
-    template<NumericType T>
-    std::vector<std::size_t> highest(const Vector<T> &vector, const std::size_t &number) {
-        #ifndef NDEBUG
-        assert(number < vector.length);
-        #endif
-
-        std::vector<T> sortable = vector;
-        std::vector<std::size_t> indices;
-        std::vector<std::size_t> result;
-
-        for(std::size_t j = 0; j < sortable.size(); ++j)
-            indices.emplace_back(j);
-
-        for(std::size_t j = 0; j < sortable.size(); ++j)
-            for(std::size_t k = 0; k < sortable.size() - j - 1; ++k)
-                if(sortable[k] > sortable[k + 1]) {
-                    std::swap(sortable[k], sortable[k + 1]);
-                    std::swap(indices[k], indices[k + 1]);
-                }
-
-        for(std::size_t j = 0; j < number; ++j)
-            result.emplace_back(indices[indices.size() - 1 - j]);
-            
-        return result;
-    }
     
 }
 

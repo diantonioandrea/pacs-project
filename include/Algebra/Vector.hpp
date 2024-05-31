@@ -241,6 +241,84 @@ namespace pacs {
                 this->elements[indices[j]] = values[j];
         }
 
+        // COMPARISONS.
+
+        /**
+         * @brief Vector < Scalar.
+         * 
+         */
+        Mask operator <(const T &scalar) const {
+            Mask mask(this->length, false);
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elemen, mask.begin(), [scalar](const auto &element){ return element < scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element < scalar; });
+            #endif
+
+            return mask;
+        }
+
+        /**
+         * @brief Vector > Scalar.
+         * 
+         */
+        Mask operator >(const T &scalar) const {
+            Mask mask(this->length, false);
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elemen, mask.begin(), [scalar](const auto &element){ return element > scalar; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element > scalar; });
+            #endif
+
+            return mask;
+        }
+
+        /**
+         * @brief Vector < Vector.
+         * 
+         * @param vector 
+         * @return Mask 
+         */
+        Mask operator <(const Vector &vector) const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->length == vector.length);
+            #endif
+
+            Mask mask(this->length, false);
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), mask.begin(), [](const auto &first, const auto &second){ return first < second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), mask.begin(), [](const auto &first, const auto &second){ return first < second; });
+            #endif
+
+            return mask;
+        }
+
+        /**
+         * @brief Vector > Vector.
+         * 
+         * @param vector 
+         * @return Mask 
+         */
+        Mask operator >(const Vector &vector) const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->length == vector.length);
+            #endif
+
+            Mask mask(this->length, false);
+
+            #ifdef PARALLEL
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), vector.elements.begin(), mask.begin(), [](const auto &first, const auto &second){ return first > second; });
+            #else
+            std::transform(this->elements.begin(), this->elements.end(), vector.elements.begin(), mask.begin(), [](const auto &first, const auto &second){ return first > second; });
+            #endif
+
+            return mask;
+        }
+
         // OPERATIONS.
 
         /**
