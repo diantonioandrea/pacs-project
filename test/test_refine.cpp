@@ -27,8 +27,13 @@ int main() {
     pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 32)};
 
     // Refining the first four elements.
-    std::vector<std::size_t> indices{0, 1, 2, 3};
-    std::vector<pacs::Polygon> refined = pacs::mesh_refine(mesh, indices);
+    pacs::Mask refinement(32);
+
+    refinement[0] = true;
+    refinement[1] = true;
+    refinement[2] = true;
+
+    std::vector<pacs::Polygon> refined = pacs::mesh_refine(mesh, refinement);
 
     // Constructing a new mesh.
     pacs::Mesh refined_mesh{domain, refined};
