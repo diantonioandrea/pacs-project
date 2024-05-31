@@ -129,7 +129,7 @@ namespace pacs {
 
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &reflect = false);
     std::vector<Polygon> mesh_diagram(const std::string &);
-    std::vector<Polygon> mesh_refine(const Mesh &, const std::vector<std::size_t> &);
+    std::vector<Polygon> mesh_refine(const Mesh &, const Mask &);
 
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &);

@@ -14,6 +14,9 @@
 // Concepts.
 #include <concepts>
 
+// Containers.
+#include <vector>
+
 // Math.
 #include <complex>
 #include <cmath>
@@ -43,6 +46,10 @@ namespace pacs {
     // Function alias.
     
     using Function = Real (*) (const Real &, const Real &);
+
+    // Mask.
+
+    using Mask = std::vector<bool>;
 
     // Numeric type concept for Matrix and Vector.
 

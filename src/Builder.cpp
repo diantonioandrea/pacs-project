@@ -206,11 +206,9 @@ namespace pacs {
      * @param indices 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> mesh_refine(const Mesh &mesh, const std::vector<std::size_t> &indices) {
+    std::vector<Polygon> mesh_refine(const Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
-        for(std::size_t j = 0; j < indices.size(); ++j)
-            for(std::size_t k = j + 1; k < indices.size(); ++k)
-                assert(indices[j] != indices[k]);
+        assert(mask.size() == mesh.elements.size());
         #endif
 
         #ifndef NVERBOSE
@@ -220,20 +218,11 @@ namespace pacs {
         std::vector<Polygon> diagram;
         std::vector<Polygon> refine;
 
-        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
-            bool flag = true;
-
-            for(const auto &index: indices)
-                if(index == j) {
-                    flag = false;
-                    break;
-                }
-
-            if(flag)
-                diagram.emplace_back(mesh.element(j));
-            else
+        for(std::size_t j = 0; j < mask.size(); ++j)
+            if(mask[j])
                 refine.emplace_back(mesh.element(j));
-        }
+            else
+                diagram.emplace_back(mesh.element(j));
 
         for(const auto &polygon: refine) {
 
