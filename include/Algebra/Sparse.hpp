@@ -160,6 +160,27 @@ namespace pacs {
             return *this;
         }
 
+        // CONVERSION.
+
+        /**
+         * @brief Converts the Sparse matrix into a Matrix.
+         * 
+         * @return Matrix<T> 
+         */
+        operator Matrix<T>() const {
+            Matrix<T> matrix{this->rows, this->columns};
+
+            if(!(this->compressed))
+                for(const auto &[key, element]: this->elements)
+                    matrix.elements[key[0] * this->columns + key[1]] = element;
+            else
+                for(std::size_t j = 0; j < this->rows; ++j)
+                    for(std::size_t k = this->inner[j]; k < this->inner[j + 1]; ++k)
+                        matrix.elements[j + this->columns + this->outer[k]] = this->values[k];
+
+            return matrix;
+        }
+
         // READ.
 
         /**
