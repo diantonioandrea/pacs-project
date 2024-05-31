@@ -25,7 +25,7 @@ namespace pacs {
      * @param exact 
      */
     Error::Error(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &exact):
-    l2_errors{mesh.elements.size()} {
+    l2_errors{mesh.elements.size()}, dg_errors{mesh.elements.size()} {
 
         #ifndef NVERBOSE
         std::cout << "Evaluating errors." << std::endl;
@@ -43,7 +43,7 @@ namespace pacs {
         // L2 Error.
         this->l2_error = std::sqrt(dot(error, mass * error));
 
-        // L2 Errors.
+        // L2 and DG Errors.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
@@ -56,6 +56,7 @@ namespace pacs {
                 indices.emplace_back(j * element_dofs + k);
 
             this->l2_errors[j] = std::sqrt(dot(error(indices), mass(indices, indices) * error(indices)));
+            this->dg_errors[j] = std::sqrt(dot(error(indices), dg_laplacian(indices, indices) * error(indices)));
         }
 
         // Data.

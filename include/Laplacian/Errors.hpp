@@ -35,6 +35,7 @@ namespace pacs {
         Real l2_error;
 
         Vector<Real> l2_errors;
+        Vector<Real> dg_errors;
 
         // CONSTRUCTORS.
 
