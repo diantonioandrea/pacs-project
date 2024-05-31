@@ -220,9 +220,6 @@ namespace pacs {
         std::vector<Polygon> diagram;
         std::vector<Polygon> refine;
 
-        // Convex combination coefficient.
-        Real t = 2.0 / 3.0;
-
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
             bool flag = true;
 
@@ -242,22 +239,43 @@ namespace pacs {
 
             // Refinement.
             std::vector<Polygon> subdiagram;
-            std::vector<Point> points;
+
             Point centroid = polygon.centroid();
+            std::vector<Point> points;
 
-            // Quadrilaterals.
             for(const auto &edge: polygon.edges()) {
-                Point mid_0 = edge[0] * (1.0 - t) + centroid * t, mid_1 = edge[1] * (1.0 - t) + centroid * t;
-                Polygon element{{edge[0], edge[1], mid_1, mid_0}};
 
-                subdiagram.emplace_back(element);
-                points.emplace_back(mid_1);
+                // New point.
+                Point point = (edge[0] + edge[1]) * 0.5;
+                points.emplace_back(point);
+
+                for(auto &element: diagram) {
+                    if(!(element.contains(edge)))
+                        continue;
+                    
+                    std::vector<Segment> edges = element.edges();
+
+                    for(std::size_t k = 0; k < edges.size(); ++k)
+                        if(edges[k] == edge) {
+
+                            // Diagram editing.
+                            element.points.insert(element.points.begin() + k + 1, point);
+                            break;
+                        }
+                }
             }
-            
-            // Central element.
-            Polygon element{points};
-            subdiagram.emplace_back(element);
 
+            #ifndef NDEBUG // Integrity check.
+            #endif
+
+            // Subdiagram.
+            std::vector<Segment> edges = polygon.edges();
+            for(std::size_t j = 0; j < points.size(); ++j) {
+                Polygon element{{points[j], edges[j][1], (j < points.size() - 1) ? points[j + 1] : points[0], centroid}};
+                subdiagram.emplace_back(element);
+            }
+
+            // Diagram update.
             for(const auto &refined: subdiagram)
                 diagram.emplace_back(refined);
         }
