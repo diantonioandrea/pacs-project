@@ -13,9 +13,16 @@ from matplotlib.ticker import NullFormatter
 import sys
 
 elements: list[int] = []
+elements_second: list[int] = []
 sizes: list[float] = []
+
 l2_error: list[float] = []
 dg_error: list[float] = []
+
+l2_error_second: list[float] = [] # Second file, if present.
+dg_error_second: list[float] = [] # Second file, if present.
+
+second: bool = False
 order: int = 0
 
 if len(sys.argv) <= 1:
@@ -29,6 +36,9 @@ try:
     file = open(sys.argv[1], "r+")
     lines: list[str] = file.read().split("\n")
     file.close()
+
+    # Title.
+    title: str = lines[0]
 
 except FileNotFoundError:
     print("File not found.")
@@ -60,6 +70,43 @@ for line in lines:
 
     except ValueError:
         continue
+
+for index in range(len(sys.argv)):
+    if sys.argv[index] == "-c": # Compare.
+        try:
+            if sys.argv[index + 1].split(".")[-1] != "error":
+                raise
+
+            file = open(sys.argv[index + 1], "r+")
+            lines: list[str] = file.read().split("\n")
+            file.close()
+
+        except FileNotFoundError:
+            print("File not found.")
+            sys.exit(-1)
+
+        except:
+            print("Load a .error file.")
+            sys.exit(-1)
+
+        for line in lines:
+            try:
+                data: list[str] = line.split(" ")
+                
+                if "Elements" in line:
+                    elements_second.append(int(data[-1]))
+
+                elif "L2 Error" in line:
+                    l2_error_second.append(float(data[-1]))
+
+                elif "DG Error" in line:
+                    dg_error_second.append(float(data[-1]))
+
+            except ValueError:
+                continue
+        
+        second = True
+        break
 
 # Comparisons.
 
@@ -99,11 +146,15 @@ sizes_labels = [f"{tick:1.2f}" for tick in sizes_ticks]
 errors_l2_ticks = [l2_error[0], l2_error[-1]]
 errors_dg_ticks = [dg_error[0], dg_error[-1]]
 
+if second:
+    errors_l2_ticks.append(l2_error_second[-1])
+    errors_dg_ticks.append(dg_error_second[-1])
+
+    errors_l2_ticks.sort()
+    errors_dg_ticks.sort()
+
 errors_l2_labels = [f"{tick:1.2e}" for tick in errors_l2_ticks]
 errors_dg_labels = [f"{tick:1.2e}" for tick in errors_dg_ticks]
-
-# Title.
-title: str = lines[0]
 
 if "--p" in sys.argv:
     title += f" Order: {order}."
@@ -120,11 +171,17 @@ if "--elements" in sys.argv: # Elements only.
         axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{(order + 1) / 2 + 0.5}") # Comparison.
     axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
+    if second:
+        axes[0].plot(elements_second, l2_error_second, color="green", marker="*", linewidth=1.0) # Errors.
+
     if "--p" in sys.argv:
         axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 0.5}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 0.5}") # Comparison.
-    axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[1].plot(elements_second, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+
+    if second:
+        axes[1].plot(elements_second, dg_error_second, color="green", marker="*", linewidth=1.0) # Errors.
 
     # Parameters.
     for j in range(2):
