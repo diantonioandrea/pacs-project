@@ -178,7 +178,7 @@ if "--elements" in sys.argv: # Elements only.
         axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 0.5}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 0.5}") # Comparison.
-    axes[1].plot(elements_second, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     if second:
         axes[1].plot(elements_second, dg_error_second, color="green", marker="*", linewidth=1.0) # Errors.
