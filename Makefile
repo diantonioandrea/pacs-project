@@ -1,5 +1,5 @@
 .PHONY: all test example testrun clean distclean
-CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
+CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -O3 -fPIC -I./include
 
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
@@ -10,6 +10,7 @@ CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -I./include -O3 -fPIC
 # Parallel computing using STL and modules.
 ifneq ($(mkTbbLib),)
 CPPFLAGS += -DPARALLEL
+CXXFLAGS += -I$(mkTbbInc)
 LDFLAGS += -L$(mkTbbLib)
 LDLIBS += -ltbb
 endif
