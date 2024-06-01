@@ -251,7 +251,7 @@ namespace pacs {
             Mask mask(this->length, false);
 
             #ifdef PARALLEL
-            std::transform(POLICY, this->elements.begin(), this->elemen, mask.begin(), [scalar](const auto &element){ return element < scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element < scalar; });
             #else
             std::transform(this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element < scalar; });
             #endif
@@ -267,7 +267,7 @@ namespace pacs {
             Mask mask(this->length, false);
 
             #ifdef PARALLEL
-            std::transform(POLICY, this->elements.begin(), this->elemen, mask.begin(), [scalar](const auto &element){ return element > scalar; });
+            std::transform(POLICY, this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element > scalar; });
             #else
             std::transform(this->elements.begin(), this->elements.end(), mask.begin(), [scalar](const auto &element){ return element > scalar; });
             #endif
