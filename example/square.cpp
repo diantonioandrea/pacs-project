@@ -8,6 +8,8 @@
  * 
  */
 
+#define ALGEBRA_TOLERANCE 1E-8 // Faster.
+
 #include <Fem.hpp>
 #include <Laplacian.hpp>
 
@@ -60,7 +62,7 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};

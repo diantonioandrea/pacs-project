@@ -8,6 +8,8 @@
  * 
  */
 
+#define ALGEBRA_TOLERANCE 1E-8 // Faster.
+
 #include <Fem.hpp>
 #include <Laplacian.hpp>
 
@@ -44,7 +46,7 @@ int main() {
     std::vector<std::size_t> elements;
 
     // Polynomial degree.
-    std::size_t degree = 2;
+    std::size_t degree = 3;
 
     // Refinement percentage.
     pacs::Real refine = 0.5L;
@@ -67,7 +69,7 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
@@ -86,6 +88,9 @@ int main() {
         // Refinement.
         diagram = pacs::mesh_refine(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
     }
+
+    // Closes output_h.
+    output_h.close();
 
     // Comparison.
 
@@ -106,7 +111,7 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
