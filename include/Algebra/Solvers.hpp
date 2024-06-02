@@ -26,7 +26,7 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 25E3
+#define ALGEBRA_ITER_MAX 1E4
 #endif
 
 // Algebra m limit.
