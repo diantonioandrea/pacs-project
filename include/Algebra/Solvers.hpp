@@ -26,7 +26,7 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1E3
+#define ALGEBRA_ITER_MAX 25E3
 #endif
 
 // Algebra m limit.
@@ -48,9 +48,10 @@ namespace pacs {
      * @brief Sparse solvers.
      * GMRES: Generalized Minimum Residual method.
      * CGM: Conjugate Gradient method.
+     * BICGSTAB: Biconjugate Gradient Stabilized method.
      * 
      */
-    enum SparseSolver {GMRES, CGM};
+    enum SparseSolver {GMRES, CGM, BICGSTAB};
 
     /**
      * @brief Solves a linear system Ax = b.
@@ -97,6 +98,9 @@ namespace pacs {
 
         if(S == CGM)
             return _cgm(A, b);
+
+        if(S == BICGSTAB)
+            return _bicgstab(A, b);
 
         // Default.
         return _gmres(A, b);
@@ -370,13 +374,13 @@ namespace pacs {
         Vector<T> direction = residual;
 
         // Alpha and Beta.
-        Real alpha, beta;
+        T alpha, beta;
 
         do {
             ++iterations;
 
             #ifndef NVERBOSE
-            if(!(iterations % 50))
+            if(!(iterations % 500))
                 std::cout << "\tCG, iteration: " << iterations << std::endl;
             #endif
 
@@ -407,9 +411,117 @@ namespace pacs {
         #endif
 
         // Fixes missing convergence.
-        if(iterations >= ALGEBRA_ITER_MAX) {
+        if(norm(b - A * x) >= ALGEBRA_TOLERANCE) {
             #ifndef NVERBOSE
-            std::cout << "Retrying." << std::endl;
+            std::cout << "Refining." << std::endl;
+            #endif
+            return _gmres(A, b, x);
+        }
+
+        return x;
+    }
+
+    /**
+     * @brief Biconjugate Gradient Stabilized method.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> _bicgstab(const Sparse<T> &A, const Vector<T> &b) {
+        #ifndef NDEBUG
+        assert(A.rows == A.columns);
+        assert(A.rows == b.length);
+        #endif
+
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system with BICGSTAB." << std::endl;
+        #endif
+
+        // Iterations.
+        std::size_t iterations = 0;
+
+        // Solution.
+        Vector<T> x{A.rows};
+
+        // Residual.
+        Vector<T> old_residual = b;
+        Vector<T> residual = b;
+
+        Vector<T> residual_hat = b;
+
+        // Direction.
+        Vector<T> direction = residual;
+
+        // Alpha, Beta and Rho.
+        T alpha, beta, old_rho = dot(residual_hat, residual), rho;
+
+        do {
+            ++iterations;
+
+            #ifndef NVERBOSE
+            if(!(iterations % 500))
+                std::cout << "\tBICGSTAB, iteration: " << iterations << std::endl;
+            #endif
+
+            // Nu.
+            Vector<T> nu = A * direction;
+
+            // Alpha.
+            alpha = old_rho / dot(residual_hat, nu);
+
+            // h.
+            Vector<T> h = x + alpha * direction;
+        
+            // s.
+            Vector<T> s = residual - alpha * nu;
+
+            // Exit condition.
+            if(norm(s) < ALGEBRA_TOLERANCE) {
+                x = h;
+                break;
+            }
+
+            // t.
+            Vector<T> t = A * s;
+
+            // Omega.
+            T omega = dot(t, s) / dot(t, t);
+
+            // x.
+            x = h + omega * s;
+
+            // Residual.
+            residual = s - omega * t;
+
+            // Exit condition.
+            if(norm(residual) < ALGEBRA_TOLERANCE)
+                break;
+
+            // Rho.
+            rho = dot(residual_hat, residual);
+
+            // Beta.
+            beta = (rho / old_rho) * (alpha / omega);
+            old_rho = rho;
+
+            // Direction.
+            direction = residual + beta * (direction - omega * nu);
+
+        } while(iterations < ALGEBRA_ITER_MAX);
+
+        #ifndef NVERBOSE
+        std::cout << "Results:" << std::endl;
+        std::cout << "\tIterations: " << iterations << std::endl;
+        std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
+        #endif
+
+        // Fixes missing convergence.
+        if(norm(b - A * x) >= ALGEBRA_TOLERANCE) {
+            #ifndef NVERBOSE
+            std::cout << "Refining." << std::endl;
             #endif
             return _gmres(A, b, x);
         }
