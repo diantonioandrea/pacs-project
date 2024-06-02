@@ -388,7 +388,7 @@ namespace pacs {
             // Residual.
             residual -= alpha * A * direction;
 
-            // Exit check.
+            // Exit condition.
             if(norm(residual) < ALGEBRA_TOLERANCE)
                 break;
 
