@@ -47,9 +47,10 @@ namespace pacs {
     /**
      * @brief Sparse solvers.
      * GMRES: Generalized Minimum Residual method.
+     * CGM: Conjugate Gradient method.
      * 
      */
-    enum SparseSolver {GMRES};
+    enum SparseSolver {GMRES, CGM};
 
     /**
      * @brief Solves a linear system Ax = b.
@@ -94,6 +95,9 @@ namespace pacs {
         if(S == GMRES)
             return _gmres(A, b);
 
+        if(S == CGM)
+            return _cgm(A, b);
+
         // Default.
         return _gmres(A, b);
     }
@@ -108,6 +112,10 @@ namespace pacs {
      */
     template<NumericType T>
     Vector<T> _lu(const Matrix<T> &A, const Vector<T> &b) {
+
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system by LU decomposition." << std::endl;
+        #endif
 
         // LU decomposition.
         auto [L, U] = LU(A);
@@ -147,6 +155,10 @@ namespace pacs {
      */
     template<NumericType T>
     Vector<T> _qr(const Matrix<T> &A, const Vector<T> &b) {
+
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system by QR decomposition." << std::endl;
+        #endif
         
         // QR decomposition.
         auto [Q, R] = QR(A);
@@ -170,7 +182,7 @@ namespace pacs {
     // SPARSE SOLVERS.
 
     /**
-     * @brief Restarted GMRES.
+     * @brief Guessless restarted GMRES.
      * 
      * @tparam T 
      * @param A 
@@ -179,13 +191,27 @@ namespace pacs {
      */
     template<NumericType T>
     Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b) {
+        return _gmres(A, b, Vector<T>{A.rows});
+    }
+
+    /**
+     * @brief Restarted GMRES.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @param guess 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b, const Vector<T> &guess) {
         #ifndef NDEBUG
         assert(A.rows == A.columns);
         assert(A.rows == b.length);
         #endif
 
         #ifndef NVERBOSE
-        std::cout << "Solving a linear system." << std::endl;
+        std::cout << "Solving a linear system with GMRES." << std::endl;
         #endif
 
         // Problem's size.
@@ -198,7 +224,7 @@ namespace pacs {
         std::size_t m = 1;
 
         // Solution.
-        Vector<T> x{size};
+        Vector<T> x{guess};
 
         // Residual.
         Vector<T> residual = b;
@@ -306,6 +332,87 @@ namespace pacs {
         std::cout << "\tIterations: " << iterations << std::endl;
         std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
         #endif
+
+        return x;
+    }
+
+    /**
+     * @brief Conjugate Gradient.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> _cgm(const Sparse<T> &A, const Vector<T> &b) {
+        #ifndef NDEBUG
+        assert(A.rows == A.columns);
+        assert(A.rows == b.length);
+        #endif
+
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system with CG." << std::endl;
+        #endif
+
+        // Iterations.
+        std::size_t iterations = 0;
+
+        // Solution.
+        Vector<T> x{A.rows};
+
+        // Residual.
+        Vector<T> old_residual = b;
+        Vector<T> residual = b;
+
+        // Direction.
+        Vector<T> old_direction = residual;
+        Vector<T> direction = residual;
+
+        // Alpha and Beta.
+        Real alpha, beta;
+
+        do {
+            ++iterations;
+
+            #ifndef NVERBOSE
+            if(!(iterations % 50))
+                std::cout << "\tCG, iteration: " << iterations << std::endl;
+            #endif
+
+            alpha = dot(residual, residual) / dot(direction, A * direction);
+
+            // Solution.
+            x += alpha * direction;
+
+            // Residual.
+            residual -= alpha * A * direction;
+
+            // Exit check.
+            if(norm(residual) < ALGEBRA_TOLERANCE)
+                break;
+
+            // Beta.
+            beta = dot(residual, residual) / dot(old_residual, old_residual);
+
+            // Direction.
+            direction = residual + beta * direction;
+
+        } while(iterations < ALGEBRA_ITER_MAX);
+
+        #ifndef NVERBOSE
+        std::cout << "Results:" << std::endl;
+        std::cout << "\tIterations: " << iterations << std::endl;
+        std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
+        #endif
+
+        // Fixes missing convergence.
+        if(iterations >= ALGEBRA_ITER_MAX) {
+            #ifndef NVERBOSE
+            std::cout << "Retrying." << std::endl;
+            #endif
+            return _gmres(A, b, x);
+        }
 
         return x;
     }
