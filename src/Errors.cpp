@@ -35,7 +35,7 @@ namespace pacs {
         auto [mass, dg_laplacian] = matrices;
 
         // Error vector.
-        Vector<Real> error = solve(mass, modal(mesh, exact), CGM) - numerical;
+        Vector<Real> error = solve(mass, modal(mesh, exact), CGM, 1E-12) - numerical;
 
         // DG Error.
         this->dg_error = std::sqrt(dot(error, dg_laplacian * error));

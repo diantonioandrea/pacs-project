@@ -19,11 +19,6 @@
 #include "Methods/Matrix.hpp"
 #include "Methods/Sparse.hpp"
 
-// Algebra tolerance.
-#ifndef ALGEBRA_TOLERANCE
-#define ALGEBRA_TOLERANCE 1E-12
-#endif
-
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
 #define ALGEBRA_ITER_MAX 1E4
@@ -88,22 +83,22 @@ namespace pacs {
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, const SparseSolver &S = GMRES) {
+    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, const SparseSolver &S = GMRES, const Real &TOL = 1E-8) {
         #ifndef NDEBUG // Integrity check.
         assert(A.rows == b.length);
         #endif
 
         if(S == GMRES)
-            return _gmres(A, b);
+            return _gmres(A, b, TOL);
 
         if(S == CGM)
-            return _cgm(A, b);
+            return _cgm(A, b, TOL);
 
         if(S == BICGSTAB)
-            return _bicgstab(A, b);
+            return _bicgstab(A, b, TOL);
 
         // Default.
-        return _gmres(A, b);
+        return _gmres(A, b, TOL);
     }
 
     // MATRIX SOLVERS.
@@ -191,10 +186,11 @@ namespace pacs {
      * @tparam T 
      * @param A 
      * @param b 
+     * @param TOL 
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b) {
+    Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b, const Real &TOL = 1E-8) {
         return _gmres(A, b, Vector<T>{A.rows});
     }
 
@@ -205,10 +201,11 @@ namespace pacs {
      * @param A 
      * @param b 
      * @param guess 
+     * @param TOL 
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b, const Vector<T> &guess) {
+    Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b, const Vector<T> &guess, const Real &TOL = 1E-8) {
         #ifndef NDEBUG
         assert(A.rows == A.columns);
         assert(A.rows == b.length);
@@ -323,10 +320,18 @@ namespace pacs {
             residual = b - A * x;
 
             // Exit condition.
-            if(std::abs(rhs.elements[m]) < ALGEBRA_TOLERANCE)
+            if(std::abs(rhs.elements[m]) < TOL)
                 break;
 
             // m update.
+            if(m > ALGEBRA_M_MAX) {
+                #ifndef NVERBOSE
+                std::cout << "\tRestarting, residual: " << norm(b - A * x) << std::endl;
+                #endif
+                m = 1;
+            } else
+                ++m;
+
             m = (m <= ALGEBRA_M_MAX) ? m + 1 : 1;
 
         } while(iterations < ALGEBRA_ITER_MAX);
@@ -346,10 +351,11 @@ namespace pacs {
      * @tparam T 
      * @param A 
      * @param b 
+     * @param TOL 
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _cgm(const Sparse<T> &A, const Vector<T> &b) {
+    Vector<T> _cgm(const Sparse<T> &A, const Vector<T> &b, const Real &TOL = 1E-8) {
         #ifndef NDEBUG
         assert(A.rows == A.columns);
         assert(A.rows == b.length);
@@ -393,7 +399,7 @@ namespace pacs {
             residual -= alpha * A * direction;
 
             // Exit condition.
-            if(norm(residual) < ALGEBRA_TOLERANCE)
+            if(norm(residual) < TOL)
                 break;
 
             // Beta.
@@ -411,11 +417,11 @@ namespace pacs {
         #endif
 
         // Fixes missing convergence.
-        if(norm(b - A * x) >= ALGEBRA_TOLERANCE) {
+        if(norm(b - A * x) >= TOL) {
             #ifndef NVERBOSE
             std::cout << "Refining." << std::endl;
             #endif
-            return _gmres(A, b, x);
+            return _gmres(A, b, x, TOL);
         }
 
         return x;
@@ -427,10 +433,11 @@ namespace pacs {
      * @tparam T 
      * @param A 
      * @param b 
+     * @param TOL 
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _bicgstab(const Sparse<T> &A, const Vector<T> &b) {
+    Vector<T> _bicgstab(const Sparse<T> &A, const Vector<T> &b, const Real &TOL = 1E-8) {
         #ifndef NDEBUG
         assert(A.rows == A.columns);
         assert(A.rows == b.length);
@@ -479,7 +486,7 @@ namespace pacs {
             Vector<T> s = residual - alpha * nu;
 
             // Exit condition.
-            if(norm(s) < ALGEBRA_TOLERANCE) {
+            if(norm(s) < TOL) {
                 x = h;
                 break;
             }
@@ -497,7 +504,7 @@ namespace pacs {
             residual = s - omega * t;
 
             // Exit condition.
-            if(norm(residual) < ALGEBRA_TOLERANCE)
+            if(norm(residual) < TOL)
                 break;
 
             // Rho.
@@ -519,11 +526,11 @@ namespace pacs {
         #endif
 
         // Fixes missing convergence.
-        if(norm(b - A * x) >= ALGEBRA_TOLERANCE) {
+        if(norm(b - A * x) >= TOL) {
             #ifndef NVERBOSE
             std::cout << "Refining." << std::endl;
             #endif
-            return _gmres(A, b, x);
+            return _gmres(A, b, x, TOL);
         }
 
         return x;
