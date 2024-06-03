@@ -332,8 +332,6 @@ namespace pacs {
             } else
                 ++m;
 
-            m = (m <= ALGEBRA_M_MAX) ? m + 1 : 1;
-
         } while(iterations < ALGEBRA_ITER_MAX);
 
         #ifndef NVERBOSE
