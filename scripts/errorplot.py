@@ -23,7 +23,9 @@ l2_error_second: list[float] = [] # Second file, if present.
 dg_error_second: list[float] = [] # Second file, if present.
 
 second: bool = False
-order: int = 0
+
+degrees: list[int] = []
+degree: int = 0
 
 if len(sys.argv) <= 1:
     print(f"Usage: {sys.argv[0]} /path/to/file.")
@@ -66,10 +68,12 @@ for line in lines:
             dg_error.append(float(data[-1]))
 
         elif "Degree" in line:
-            order = int(data[-1])
+            degrees.append(int(data[-1]))
 
     except ValueError:
         continue
+
+degree = max(degrees)
 
 for index in range(len(sys.argv)):
     if sys.argv[index] == "-c": # Compare.
@@ -114,27 +118,27 @@ for index in range(len(sys.argv)):
 elements_comparison_l2: list[list[float]] = [None] * 3
 sizes_comparison_l2: list[list[float]] = [None] * 3
 
-elements_comparison_l2[0] = [(value / elements[-1]) ** -((order + 1) / 2 - 0.5) * l2_error[-1] for value in elements]
-sizes_comparison_l2[0] = [(value / sizes[0]) ** order * l2_error[0] for value in sizes]
+elements_comparison_l2[0] = [(value / elements[-1]) ** -((degree + 1) / 2 - 0.5) * l2_error[-1] for value in elements]
+sizes_comparison_l2[0] = [(value / sizes[0]) ** degree * l2_error[0] for value in sizes]
 
-elements_comparison_l2[1] = [(value / elements[-1]) ** -((order + 1) / 2) * l2_error[-1] for value in elements]
-sizes_comparison_l2[1] = [(value / sizes[0]) ** (order + 1) * l2_error[0] for value in sizes]
+elements_comparison_l2[1] = [(value / elements[-1]) ** -((degree + 1) / 2) * l2_error[-1] for value in elements]
+sizes_comparison_l2[1] = [(value / sizes[0]) ** (degree + 1) * l2_error[0] for value in sizes]
 
-elements_comparison_l2[2] = [(value / elements[-1]) ** -((order + 1) / 2 + 0.5) * l2_error[-1] for value in elements]
-sizes_comparison_l2[2] = [(value / sizes[0]) ** (order + 2) * l2_error[0] for value in sizes]
+elements_comparison_l2[2] = [(value / elements[-1]) ** -((degree + 1) / 2 + 0.5) * l2_error[-1] for value in elements]
+sizes_comparison_l2[2] = [(value / sizes[0]) ** (degree + 2) * l2_error[0] for value in sizes]
 
 # DG.
 elements_comparison_dg: list[list[float]] = [None] * 3
 sizes_comparison_dg: list[list[float]] = [None] * 3
 
-elements_comparison_dg[0] = [(value / elements[-1]) ** -(order / 2 - 0.5) * dg_error[-1] for value in elements]
-sizes_comparison_dg[0] = [(value / sizes[0]) ** (order - 1) * dg_error[0] for value in sizes]
+elements_comparison_dg[0] = [(value / elements[-1]) ** -(degree / 2 - 0.5) * dg_error[-1] for value in elements]
+sizes_comparison_dg[0] = [(value / sizes[0]) ** (degree - 1) * dg_error[0] for value in sizes]
 
-elements_comparison_dg[1] = [(value / elements[-1]) ** -(order / 2) * dg_error[-1] for value in elements]
-sizes_comparison_dg[1] = [(value / sizes[0]) ** order * dg_error[0] for value in sizes]
+elements_comparison_dg[1] = [(value / elements[-1]) ** -(degree / 2) * dg_error[-1] for value in elements]
+sizes_comparison_dg[1] = [(value / sizes[0]) ** degree * dg_error[0] for value in sizes]
 
-elements_comparison_dg[2] = [(value / elements[-1]) ** -(order / 2 + 0.5) * dg_error[-1] for value in elements]
-sizes_comparison_dg[2] = [(value / sizes[0]) ** (order + 1) * dg_error[0] for value in sizes]
+elements_comparison_dg[2] = [(value / elements[-1]) ** -(degree / 2 + 0.5) * dg_error[-1] for value in elements]
+sizes_comparison_dg[2] = [(value / sizes[0]) ** (degree + 1) * dg_error[0] for value in sizes]
 
 # Ticks.
 elements_ticks = [elements[0], elements[-1]]
@@ -156,8 +160,42 @@ if second:
 errors_l2_labels = [f"{tick:1.2e}" for tick in errors_l2_ticks]
 errors_dg_labels = [f"{tick:1.2e}" for tick in errors_dg_ticks]
 
+if "--degrees" in sys.argv: # Degrees only.
+    fig, axes = plt.subplots(1, 2)
+    fig.suptitle(title)
+
+    axes[0].plot(degrees, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[1].plot(degrees, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+
+    # Parameters.
+    for j in range(2):
+
+        # Loglog scale.
+        axes[j].set_yscale("log")
+
+        # Ticks.
+        axes[j].xaxis.set_minor_formatter(NullFormatter())
+        axes[j].yaxis.set_minor_formatter(NullFormatter())
+
+        # Labels.
+        axes[j].set_xlabel("Degree")
+
+        # Legend.
+        axes[j].legend()
+
+    # Titles.
+    axes[0].set_title("L2 Error")
+    axes[1].set_title("DG Error")
+
+    # Ticks.
+    axes[0].set_yticks(errors_l2_ticks, labels=errors_l2_labels)
+    axes[1].set_yticks(errors_dg_ticks, labels=errors_dg_labels)
+
+    plt.show()
+    sys.exit(0)
+
 if "--p" in sys.argv:
-    title += f" Order: {order}."
+    title += f" Degree: {degree}."
 
 if "--elements" in sys.argv: # Elements only.
     # Plot.
@@ -166,18 +204,18 @@ if "--elements" in sys.argv: # Elements only.
 
     # Elements.
     if "--p" in sys.argv:
-        axes[0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{(order + 1) / 2 - 0.5}") # Comparison.
-        axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{(order + 1) / 2}") # Comparison.
-        axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{(order + 1) / 2 + 0.5}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{(degree + 1) / 2 - 0.5}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{(degree + 1) / 2}") # Comparison.
+        axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{(degree + 1) / 2 + 0.5}") # Comparison.
     axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     if second:
         axes[0].plot(elements_second, l2_error_second, color="green", marker="*", linewidth=1.0) # Errors.
 
     if "--p" in sys.argv:
-        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 0.5}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
-        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 0.5}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{degree / 2 - 0.5}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{degree / 2}") # Comparison.
+        axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{degree / 2 + 0.5}") # Comparison.
     axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
     if second:
@@ -219,28 +257,28 @@ fig.suptitle(title)
 
 # Elements.
 if "--p" in sys.argv:
-    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{(order + 1) / 2 -0.5}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{(order + 1) / 2}") # Comparison.
-    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{(order + 1) / 2 + 0.5}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{(degree + 1) / 2 -0.5}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{(degree + 1) / 2}") # Comparison.
+    axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{(degree + 1) / 2 + 0.5}") # Comparison.
 axes[0, 0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 if "--p" in sys.argv:
-    axes[1, 0].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: -{order / 2 - 0.5}") # Comparison.
-    axes[1, 0].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: -{order / 2}") # Comparison.
-    axes[1, 0].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: -{order / 2 + 0.5}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{degree / 2 - 0.5}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{degree / 2}") # Comparison.
+    axes[1, 0].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{degree / 2 + 0.5}") # Comparison.
 axes[1, 0].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 # Sizes.
 if "--p" in sys.argv:
-    axes[0, 1].plot(sizes, sizes_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: {order}") # Comparison.
-    axes[0, 1].plot(sizes, sizes_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: {order + 1}") # Comparison.
-    axes[0, 1].plot(sizes, sizes_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: {order + 2}") # Comparison.
+    axes[0, 1].plot(sizes, sizes_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: {degree}") # Comparison.
+    axes[0, 1].plot(sizes, sizes_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: {degree + 1}") # Comparison.
+    axes[0, 1].plot(sizes, sizes_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: {degree + 2}") # Comparison.
 axes[0, 1].plot(sizes, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 if "--p" in sys.argv:
-    axes[1, 1].plot(sizes, sizes_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Order: {order - 1}") # Comparison.
-    axes[1, 1].plot(sizes, sizes_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Order: {order}") # Comparison.
-    axes[1, 1].plot(sizes, sizes_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Order: {order + 1}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: {degree - 1}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: {degree}") # Comparison.
+    axes[1, 1].plot(sizes, sizes_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: {degree + 1}") # Comparison.
 axes[1, 1].plot(sizes, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
 # Parameters.
