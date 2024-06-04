@@ -254,15 +254,30 @@ namespace pacs {
                 }
             }
 
-            #ifndef NDEBUG // Integrity check.
-            #endif
-
             // Subdiagram.
             std::vector<Segment> edges = polygon.edges();
+            std::vector<Point> centrals;
+
             for(std::size_t j = 0; j < points.size(); ++j) {
-                Polygon element{{points[j], edges[j][1], (j < points.size() - 1) ? points[j + 1] : points[0], centroid}};
-                subdiagram.emplace_back(element);
+                Point first = points[j];
+                Point second = (j < points.size() - 1) ? points[j + 1] : points[0];
+
+                std::vector<Point> vertices{first, edges[j][1], second};
+
+                if(edges.size() <= 4)
+                    vertices.emplace_back(centroid);
+                else {
+                    vertices.emplace_back((second + centroid) * 0.5);
+                    vertices.emplace_back((first + centroid) * 0.5);
+                    centrals.emplace_back((second + centroid) * 0.5);
+                }
+
+                subdiagram.emplace_back(Polygon{vertices});
             }
+
+            // Central Polygon.
+            if(edges.size() > 4)
+                subdiagram.emplace_back(Polygon{centrals});
 
             // Diagram update.
             for(const auto &refined: subdiagram)
