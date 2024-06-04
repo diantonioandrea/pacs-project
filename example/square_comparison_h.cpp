@@ -47,10 +47,10 @@ int main() {
     std::size_t degree = 3;
 
     // Refinement percentage.
-    pacs::Real refine = 0.5L;
+    pacs::Real refine = 0.6L;
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 4; ++j) {
+    for(std::size_t j = 0; j < 8; ++j) {
 
         // Mesh.
         pacs::Mesh mesh{domain, diagram, degree};
