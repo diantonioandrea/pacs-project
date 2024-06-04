@@ -228,7 +228,11 @@ namespace pacs {
         Vector<T> x{guess};
 
         // Residual.
-        Vector<T> residual = b;
+        Vector<T> residual = b - A * x;
+
+        #ifndef NVERBOSE
+        std::cout << "\tStarting residual: " << norm(residual) << std::endl;
+        #endif
 
         do {
             ++iterations;
