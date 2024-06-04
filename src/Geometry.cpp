@@ -358,15 +358,15 @@ namespace pacs {
      * @return Polygon 
      */
     Polygon reduce(const Polygon &polygon, const Line &line, const Point &point) {
-        std::vector<Point> points = intersections(line, polygon);
+        std::vector<Point> candidates = intersections(line, polygon);
         std::vector<Point> new_vertices;
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        assert(points.size() <= 2);
+        // assert(candidates.size() <= 2);
         #endif
 
-        if(points.size() <= 1)
+        if(candidates.size() <= 1)
             return polygon;
 
         // Line's angular coefficient.
@@ -376,6 +376,32 @@ namespace pacs {
         std::vector<Point> vertices = polygon.points;
         std::vector<Segment> edges = polygon.edges();
         std::size_t index = 0;
+
+        // Points.
+        std::vector<Point> points;
+        std::array<std::size_t, 2> indices;
+
+        Real distance = 0.0L;
+
+        if(candidates.size() > 2) { // Handles candidates.size() >= 3.
+            for(std::size_t j = 0; j < candidates.size(); ++j)
+                for(std::size_t k = 0; k < candidates.size(); ++k) {
+                    if(j == k)
+                        continue;
+
+                    if(std::abs(candidates[j] - candidates[k]) > distance) {
+                        distance = std::abs(candidates[j] - candidates[k]);
+
+                        indices[0] = j;
+                        indices[1] = k;
+                    }
+                }
+
+            points.emplace_back(candidates[indices[0]]);
+            points.emplace_back(candidates[indices[1]]);
+
+        } else
+            points = candidates;
 
         if(line > point) { // Point under the Line.
 
