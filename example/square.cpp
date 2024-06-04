@@ -8,8 +8,6 @@
  * 
  */
 
-#define ALGEBRA_TOLERANCE 1E-8 // Faster.
-
 #include <Fem.hpp>
 #include <Laplacian.hpp>
 
