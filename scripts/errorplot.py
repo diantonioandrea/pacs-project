@@ -162,11 +162,15 @@ errors_l2_labels = [f"{tick:1.2e}" for tick in errors_l2_ticks]
 errors_dg_labels = [f"{tick:1.2e}" for tick in errors_dg_ticks]
 
 if "--degrees" in sys.argv: # Degrees only.
+
+    assert min(elements) == max(elements)
+    title += f" {max(elements)} elements."
+
     fig, axes = plt.subplots(1, 2)
     fig.suptitle(title)
 
-    axes[0].plot(degrees, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
-    axes[1].plot(degrees, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[0].plot(degrees, l2_error, color="black", marker="*", linewidth=1.5) # Errors.
+    axes[1].plot(degrees, dg_error, color="black", marker="*", linewidth=1.5) # Errors.
 
     if "--interp" in sys.argv:
         l2_interp = numpy.polyfit(degrees, numpy.log(l2_error), 1)
@@ -220,7 +224,7 @@ if "--elements" in sys.argv: # Elements only.
         axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{(degree + 1) / 2}") # Comparison.
         axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{(degree + 1) / 2 + 0.5}") # Comparison.
 
-    axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.5) # Errors.
 
     if "--interp" in sys.argv:
         l2_interp = numpy.polyfit(numpy.log(elements), numpy.log(l2_error), 1)
@@ -229,7 +233,7 @@ if "--elements" in sys.argv: # Elements only.
         axes[0].plot(elements, l2_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {l2_interp[0]:.2f}")
 
     if second:
-        axes[0].plot(elements_second, l2_error_second, color="green", marker="*", linewidth=1.0) # Errors.
+        axes[0].plot(elements_second, l2_error_second, color="green", marker="*", linewidth=1.5) # Errors.
 
         if "--interp" in sys.argv:
             l2_interp = numpy.polyfit(numpy.log(elements_second), numpy.log(l2_error_second), 1)
@@ -242,7 +246,7 @@ if "--elements" in sys.argv: # Elements only.
         axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{degree / 2}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{degree / 2 + 0.5}") # Comparison.
 
-    axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+    axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.5) # Errors.
 
     if "--interp" in sys.argv:
         dg_interp = numpy.polyfit(numpy.log(elements), numpy.log(dg_error), 1)
@@ -251,7 +255,7 @@ if "--elements" in sys.argv: # Elements only.
         axes[1].plot(elements, dg_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {dg_interp[0]:.2f}")
 
     if second:
-        axes[1].plot(elements_second, dg_error_second, color="green", marker="*", linewidth=1.0) # Errors.
+        axes[1].plot(elements_second, dg_error_second, color="green", marker="*", linewidth=1.5) # Errors.
 
         if "--interp" in sys.argv:
             dg_interp = numpy.polyfit(numpy.log(elements_second), numpy.log(dg_error_second), 1)
@@ -299,26 +303,26 @@ if "--p" in sys.argv:
     axes[0, 0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{(degree + 1) / 2 -0.5}") # Comparison.
     axes[0, 0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{(degree + 1) / 2}") # Comparison.
     axes[0, 0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{(degree + 1) / 2 + 0.5}") # Comparison.
-axes[0, 0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
+axes[0, 0].plot(elements, l2_error, color="black", marker="*", linewidth=1.5) # Errors.
 
 if "--p" in sys.argv:
     axes[1, 0].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{degree / 2 - 0.5}") # Comparison.
     axes[1, 0].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{degree / 2}") # Comparison.
     axes[1, 0].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{degree / 2 + 0.5}") # Comparison.
-axes[1, 0].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+axes[1, 0].plot(elements, dg_error, color="black", marker="*", linewidth=1.5) # Errors.
 
 # Sizes.
 if "--p" in sys.argv:
     axes[0, 1].plot(sizes, sizes_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: {degree}") # Comparison.
     axes[0, 1].plot(sizes, sizes_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: {degree + 1}") # Comparison.
     axes[0, 1].plot(sizes, sizes_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: {degree + 2}") # Comparison.
-axes[0, 1].plot(sizes, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
+axes[0, 1].plot(sizes, l2_error, color="black", marker="*", linewidth=1.5) # Errors.
 
 if "--p" in sys.argv:
     axes[1, 1].plot(sizes, sizes_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: {degree - 1}") # Comparison.
     axes[1, 1].plot(sizes, sizes_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: {degree}") # Comparison.
     axes[1, 1].plot(sizes, sizes_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: {degree + 1}") # Comparison.
-axes[1, 1].plot(sizes, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+axes[1, 1].plot(sizes, dg_error, color="black", marker="*", linewidth=1.5) # Errors.
 
 # Parameters.
 for j in range(2):
