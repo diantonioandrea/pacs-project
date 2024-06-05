@@ -86,6 +86,11 @@ namespace pacs {
         {std::abs(value)} -> std::convertible_to<Real>;
     };
 
+    template<typename T>
+    concept Conjugable = requires(T value) {
+        {std::conj(value)} -> std::convertible_to<T>;
+    };
+
     /**
      * @brief Numeric type.
      * 

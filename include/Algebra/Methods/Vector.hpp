@@ -58,10 +58,18 @@ namespace pacs {
         assert(first.length == second.length);
         #endif
 
+        if constexpr (Conjugable<T>) {
+            #ifdef PARALLEL
+            return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * std::conj(second); });
+            #else
+            return std::transform_reduce(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * std::conj(second); });
+            #endif
+        }
+
         #ifdef PARALLEL
         return std::transform_reduce(POLICY, first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
         #else
-        return std::inner_product(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0));
+        return std::transform_reduce(first.elements.begin(), first.elements.end(), second.elements.begin(), static_cast<T>(0), std::plus{}, [](const auto &first, const auto &second){ return first * second; });
         #endif
     }
 
