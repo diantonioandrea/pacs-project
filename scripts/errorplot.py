@@ -10,6 +10,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import NullFormatter
+import numpy
 import sys
 
 elements: list[int] = []
@@ -167,6 +168,16 @@ if "--degrees" in sys.argv: # Degrees only.
     axes[0].plot(degrees, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
     axes[1].plot(degrees, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
 
+    if "--interp" in sys.argv:
+        l2_interp = numpy.polyfit(degrees, numpy.log(l2_error), 1)
+        dg_interp = numpy.polyfit(degrees, numpy.log(dg_error), 1)
+
+        l2_comparison: list[float] = [numpy.exp(deg * l2_interp[0] + l2_interp[1]) for deg in degrees]
+        dg_comparison: list[float] = [numpy.exp(deg * dg_interp[0] + dg_interp[1]) for deg in degrees]
+
+        axes[0].plot(degrees, l2_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {l2_interp[0]:.2f}")
+        axes[1].plot(degrees, dg_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {dg_interp[0]:.2f}")
+
     # Parameters.
     for j in range(2):
 
@@ -181,7 +192,8 @@ if "--degrees" in sys.argv: # Degrees only.
         axes[j].set_xlabel("Degree")
 
         # Legend.
-        axes[j].legend()
+        if "--interp" in sys.argv:
+            axes[j].legend()
 
     # Titles.
     axes[0].set_title("L2 Error")
@@ -207,19 +219,45 @@ if "--elements" in sys.argv: # Elements only.
         axes[0].plot(elements, elements_comparison_l2[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{(degree + 1) / 2 - 0.5}") # Comparison.
         axes[0].plot(elements, elements_comparison_l2[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{(degree + 1) / 2}") # Comparison.
         axes[0].plot(elements, elements_comparison_l2[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{(degree + 1) / 2 + 0.5}") # Comparison.
+
     axes[0].plot(elements, l2_error, color="black", marker="*", linewidth=1.0) # Errors.
+
+    if "--interp" in sys.argv:
+        l2_interp = numpy.polyfit(numpy.log(elements), numpy.log(l2_error), 1)
+        l2_comparison: list[float] = [numpy.exp(l2_interp[1]) * element ** l2_interp[0] for element in elements]
+
+        axes[0].plot(elements, l2_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {l2_interp[0]:.2f}")
 
     if second:
         axes[0].plot(elements_second, l2_error_second, color="green", marker="*", linewidth=1.0) # Errors.
+
+        if "--interp" in sys.argv:
+            l2_interp = numpy.polyfit(numpy.log(elements_second), numpy.log(l2_error_second), 1)
+            l2_comparison: list[float] = [numpy.exp(l2_interp[1]) * element ** l2_interp[0] for element in elements_second]
+
+            axes[0].plot(elements_second, l2_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {l2_interp[0]:.2f}")
 
     if "--p" in sys.argv:
         axes[1].plot(elements, elements_comparison_dg[0], linewidth=1.0, alpha=0.5, linestyle=":", color="red", label=f"Degree: -{degree / 2 - 0.5}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[1], linewidth=1.0, alpha=1, linestyle="-", color="red", label=f"Degree: -{degree / 2}") # Comparison.
         axes[1].plot(elements, elements_comparison_dg[2], linewidth=1.0, alpha=0.5, linestyle="--", color="red", label=f"Degree: -{degree / 2 + 0.5}") # Comparison.
+
     axes[1].plot(elements, dg_error, color="black", marker="*", linewidth=1.0) # Errors.
+
+    if "--interp" in sys.argv:
+        dg_interp = numpy.polyfit(numpy.log(elements), numpy.log(dg_error), 1)
+        dg_comparison: list[float] = [numpy.exp(dg_interp[1]) * element ** dg_interp[0] for element in elements]
+
+        axes[1].plot(elements, dg_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {dg_interp[0]:.2f}")
 
     if second:
         axes[1].plot(elements_second, dg_error_second, color="green", marker="*", linewidth=1.0) # Errors.
+
+        if "--interp" in sys.argv:
+            dg_interp = numpy.polyfit(numpy.log(elements_second), numpy.log(dg_error_second), 1)
+            dg_comparison: list[float] = [numpy.exp(dg_interp[1]) * element ** dg_interp[0] for element in elements_second]
+
+            axes[1].plot(elements_second, dg_comparison, linewidth=1.0, alpha=0.5, linestyle="-.", color="blue", label=f"Interpolant: {dg_interp[0]:.2f}")
 
     # Parameters.
     for j in range(2):
@@ -236,7 +274,8 @@ if "--elements" in sys.argv: # Elements only.
         axes[j].set_xlabel("Elements")
 
         # Legend.
-        axes[j].legend()
+        if "--p" in sys.argv or "--interp" in sys.argv:
+            axes[j].legend()
     
     # Ticks.
     axes[0].set_xticks(elements_ticks, labels=elements_labels)
