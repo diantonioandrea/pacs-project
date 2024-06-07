@@ -200,7 +200,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Refines specified elements from a mesh.
+     * @brief Refines specified elements' size from a mesh.
      * 
      * @param mesh 
      * @param indices 
@@ -286,6 +286,17 @@ namespace pacs {
 
         return diagram;
 
+    }
+
+    /**
+     * @brief Refines specified elements' degree from a mesh.
+     * 
+     * @param mesh 
+     * @param mask 
+     * @return Mesh 
+     */
+    Mesh mesh_refine_degree(const Mesh &mesh, const Mask &mask) {
+        
     }
 
     /**

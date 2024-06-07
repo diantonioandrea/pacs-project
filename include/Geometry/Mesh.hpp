@@ -127,10 +127,15 @@ namespace pacs {
     // METHODS.
     // Implemented under src/Builder.cpp
 
+    // Diagrams.
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &reflect = false);
     std::vector<Polygon> mesh_diagram(const std::string &);
-    std::vector<Polygon> mesh_refine_size(const Mesh &, const Mask &);
 
+    // Refinement.
+    std::vector<Polygon> mesh_refine_size(const Mesh &, const Mask &);
+    Mesh mesh_refine_degree(const Mesh &, const Mask &);
+
+    // Data.
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
     std::vector<Segment> mesh_edges(const std::vector<Polygon> &);
     std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &, const std::size_t &);
