@@ -206,7 +206,7 @@ namespace pacs {
      * @param indices 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> mesh_refine(const Mesh &mesh, const Mask &mask) {
+    std::vector<Polygon> mesh_refine_size(const Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
         assert(mask.size() == mesh.elements.size());
         #endif

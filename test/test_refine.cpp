@@ -33,7 +33,7 @@ int main() {
     refinement[1] = true;
     refinement[2] = true;
 
-    std::vector<pacs::Polygon> refined = pacs::mesh_refine(mesh, refinement);
+    std::vector<pacs::Polygon> refined = pacs::mesh_refine_size(mesh, refinement);
 
     // Constructing a new mesh.
     pacs::Mesh refined_mesh{domain, refined};

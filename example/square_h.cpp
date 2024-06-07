@@ -79,6 +79,6 @@ int main() {
         output << "Residual: " << norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
-        diagram = pacs::mesh_refine(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
+        diagram = pacs::mesh_refine_size(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
     }
 }
