@@ -60,7 +60,11 @@ namespace pacs {
         }
 
         // Data.
-        this->degree = mesh.degree;
+        this->degree = 0;
+
+        for(const auto &element: mesh.elements)
+            this->degree = (element.degree > this->degree) ? element.degree : this->degree;
+
         this->size = 0.0;
         this->elements = mesh.elements.size();
 

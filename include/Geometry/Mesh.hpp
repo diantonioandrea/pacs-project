@@ -97,8 +97,7 @@ namespace pacs {
             // Entries for the solution.
             std::size_t entries;
 
-            // Mesh 'degree' and quadrature nodes.
-            std::size_t degree;
+            // Quadrature nodes.
             std::size_t quadrature;
 
             // CONSTRUCTORS.

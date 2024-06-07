@@ -26,7 +26,7 @@ namespace pacs {
      * @param domain 
      * @param mesh 
      */
-    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh, const std::size_t &degree): domain{domain}, degree{degree} {
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh, const std::size_t &degree): domain{domain} {
 
         // Building nodes and edges.
         this->nodes = mesh_nodes(mesh);
