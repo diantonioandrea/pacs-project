@@ -132,7 +132,7 @@ namespace pacs {
 
     // Refinement.
     std::vector<Polygon> mesh_refine_size(const Mesh &, const Mask &);
-    Mesh mesh_refine_degree(const Mesh &, const Mask &);
+    void mesh_refine_degree(Mesh &, const Mask &);
 
     // Data.
     std::vector<Point> mesh_nodes(const std::vector<Polygon> &);

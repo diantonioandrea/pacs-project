@@ -285,7 +285,6 @@ namespace pacs {
         }
 
         return diagram;
-
     }
 
     /**
@@ -293,10 +292,16 @@ namespace pacs {
      * 
      * @param mesh 
      * @param mask 
-     * @return Mesh 
      */
-    Mesh mesh_refine_degree(const Mesh &mesh, const Mask &mask) {
-        
+    void mesh_refine_degree(Mesh &mesh, const Mask &mask) {
+        #ifndef NDEBUG // Integrity check.
+        assert(mask.size() == mesh.elements.size());
+        #endif
+
+        for(std::size_t j = 0; j < mask.size(); ++j)
+            if(mask[j])
+                if(mesh.elements[j].degree < 6) // Artificial limitation.
+                    ++mesh.elements[j].degree;
     }
 
     /**
