@@ -40,16 +40,22 @@
 
 namespace pacs {
 
-    // Real alias.
-
+    /**
+     * @brief Real alias.
+     * 
+     */
     using Real = long double;
 
-    // Function alias.
-    
+    /**
+     * @brief Function alias.
+     * 
+     */
     using Function = Real (*) (const Real &, const Real &);
 
-    // Mask.
-
+    /**
+     * @brief Mask alias.
+     * 
+     */
     using Mask = std::vector<bool>;
 
     // Numeric type concept for Matrix and Vector.
