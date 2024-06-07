@@ -26,14 +26,19 @@ namespace pacs {
      * @param cells 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
+    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &uniform, const bool &reflect) {
         
         #ifndef NVERBOSE
         std::cout << "Generating a diagram for: " << domain << std::endl;
         #endif
 
         // Diagram.
-        std::vector<Polygon> diagram = voronoi(domain, cells, reflect);
+        std::vector<Polygon> diagram;
+        
+        if(uniform)
+            diagram = voronoi_uniform(domain, cells, reflect);
+        else
+            diagram = voronoi_random(domain, cells, reflect);
 
         #ifndef NVERBOSE
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
