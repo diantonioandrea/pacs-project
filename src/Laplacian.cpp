@@ -126,8 +126,8 @@ namespace pacs {
                 }
 
                 // Local matrix assembly.
-                local_M = local_M + scaled_phi.transpose() * phi;
-                local_A = local_A + scaled_gradx.transpose() * gradx_phi + scaled_grady.transpose() * grady_phi;
+                local_M += scaled_phi.transpose() * phi;
+                local_A += scaled_gradx.transpose() * gradx_phi + scaled_grady.transpose() * grady_phi;
             }
 
             // Global matrix assembly.
@@ -144,8 +144,8 @@ namespace pacs {
             std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
 
             // Local matrices for neighbours.
-            std::vector<Matrix<Real>> local_IAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
-            std::vector<Matrix<Real>> local_SAN(polygon.edges().size(), Matrix<Real>{element_dofs, element_dofs});
+            std::vector<Matrix<Real>> local_IAN;
+            std::vector<Matrix<Real>> local_SAN;
 
             // Penalties.
             Vector<Real> penalties = penalty(mesh, j);
@@ -225,20 +225,24 @@ namespace pacs {
 
                 if(neighbour == -1) { // Boundary edge.
 
-                    local_IA = local_IA + scaled_grad.transpose() * phi;
-                    local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
+                    local_IA += scaled_grad.transpose() * phi;
+                    local_SA +=  (penalties[k] * scaled_phi).transpose() * phi;
+
+                    // Empty small matrices.
+                    local_IAN.emplace_back(Matrix<Real>{1, 1});
+                    local_SAN.emplace_back(Matrix<Real>{1, 1});
 
                 } else {
 
-                    local_IA = local_IA + 0.5 * scaled_grad.transpose() * phi;
-                    local_SA = local_SA + (penalties[k] * scaled_phi).transpose() * phi;
+                    local_IA += 0.5 * scaled_grad.transpose() * phi;
+                    local_SA += (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Neighbour's basis function.
                     Matrix<Real> n_phi = basis_2d(mesh, neighbour, {physical_x, physical_y})[0];
 
                     // Neighbour's local matrix.
-                    local_IAN[k] = local_IAN[k] - 0.5 * scaled_grad.transpose() * n_phi;
-                    local_SAN[k] = local_SAN[k] - (penalties[k] * scaled_phi).transpose() * n_phi;
+                    local_IAN.emplace_back(- 0.5 * scaled_grad.transpose() * n_phi);
+                    local_SAN.emplace_back(- (penalties[k] * scaled_phi).transpose() * n_phi);
                 }
             }
 
@@ -252,7 +256,7 @@ namespace pacs {
 
                 std::vector<std::size_t> n_indices;
                 std::size_t n_index = element_neighbours[k][1];
-                std::size_t n_dofs = mesh.elements[n_index].dofs();
+                std::size_t n_dofs = mesh.elements[n_index].dofs(); // Neighbour's dofs.
 
                 for(std::size_t h = 0; h < n_dofs; ++h)
                     n_indices.emplace_back(n_index * n_dofs + h);

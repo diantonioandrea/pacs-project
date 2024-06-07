@@ -118,7 +118,7 @@ namespace pacs {
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
 
                 // Local forcing term.
-                local_f = local_f + scaled_phi.transpose() * local_source;
+                local_f += scaled_phi.transpose() * local_source;
             }
 
             // Face integrals.
@@ -210,8 +210,8 @@ namespace pacs {
                 Vector<Real> boundary = dirichlet(physical_x, physical_y);
 
                 // Local forcing term.
-                local_f = local_f - scaled_grad.transpose() * boundary;
-                local_f = local_f + penalties[k] * scaled_phi.transpose() * boundary;
+                local_f -= scaled_grad.transpose() * boundary;
+                local_f += penalties[k] * scaled_phi.transpose() * boundary;
             }
 
             // Global forcing term.
