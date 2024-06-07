@@ -22,7 +22,7 @@
 #endif
 
 #ifndef GEOMETRY_PADDING
-#define GEOMETRY_PADDING 5E-1
+#define GEOMETRY_PADDING 5E-2
 #endif
 
 namespace pacs {
@@ -30,7 +30,8 @@ namespace pacs {
     // VORONOI.
 
     std::vector<Polygon> voronoi(const Polygon &, const std::vector<Point> &, const bool &reflect = false);
-    std::vector<Polygon> voronoi(const Polygon &, const std::size_t &, const bool &reflect = false);
+    std::vector<Polygon> voronoi_random(const Polygon &, const std::size_t &, const bool &reflect = false);
+    std::vector<Polygon> voronoi_uniform(const Polygon &, const std::size_t &, const bool &reflect = false);
 
     // TRIANGLES.
 

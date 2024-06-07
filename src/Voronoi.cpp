@@ -99,7 +99,8 @@ namespace pacs {
      * @param reflect 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> voronoi(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
+    std::vector<Polygon> voronoi_random(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
+
         // Seeding.
         std::srand(time(0));
 
@@ -123,6 +124,58 @@ namespace pacs {
             }
 
         } while(counter < cells);
+
+        return voronoi(domain, points, reflect);
+    }
+
+    /**
+     * @brief Returns the Voronoi diagram of uniformely distributes points inside a bounded domain.
+     * 
+     * @param reflect 
+     * @return std::vector<Polygon> 
+     */
+    std::vector<Polygon> voronoi_uniform(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
+
+        // Points.
+        std::vector<Point> points;
+
+        // Grid.
+        std::size_t cells_x = std::sqrt(cells);
+        std::size_t cells_y = cells / cells_x;
+
+        // Bounds.
+        auto [xy_min, xy_max] = domain.box();
+        Real y_min = xy_min[1] + GEOMETRY_PADDING, y_max = xy_max[1] - GEOMETRY_PADDING;
+
+        // Y step.
+        Real y_step = (y_max - y_min) / static_cast<Real>(cells_y);
+
+        for(std::size_t j = 0; j < cells_y; ++j) {
+            std::vector<Point> bounds = intersections(Line{0.0, 1.0, y_min + j * y_step}, domain);
+
+            // Start and end.
+            Point start = bounds[0];
+            Point end = bounds[0];
+
+            for(const auto &bound: bounds) {
+                start = (bound[0] < start[0]) ? bound : start;
+                end = (bound[0] > end[0]) ? bound : end;
+            }
+
+            start[0] += GEOMETRY_PADDING;
+            end[0] -= GEOMETRY_PADDING;
+
+            // X step.
+            Real x_step = (end[0] - start[0]) / static_cast<Real>(cells_x);
+
+            // Points.
+            for(std::size_t k = 0; k < cells_x; ++k) {
+                Point point{start[0] + k * x_step, y_min + j * y_step};
+
+                if(domain.contains(point))
+                    points.emplace_back(point);
+            }
+        }
 
         return voronoi(domain, points, reflect);
     }

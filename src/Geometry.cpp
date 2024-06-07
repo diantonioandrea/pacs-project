@@ -118,7 +118,7 @@ namespace pacs {
 
         // Evaluation by cases.
 
-        // No (or infinite) intersections.
+        // No (or infinite) intersections due to parallelism.
         if((std::abs(s[0] - r[0]) <= GEOMETRY_TOLERANCE) && (std::abs(s[1] - r[1]) <= GEOMETRY_TOLERANCE))
             return points;
 
@@ -131,6 +131,18 @@ namespace pacs {
         // R is vertical.
         if(std::abs(r[1]) <= GEOMETRY_TOLERANCE) {
             points.emplace_back(r[2] / r[0], s.y(r[2] / r[0]));
+            return points;
+        }
+
+        // S is horizontal.
+        if(std::abs(s[0]) <= GEOMETRY_TOLERANCE) {
+            points.emplace_back(r.x(s[2] / s[1]), s[2] / s[1]);
+            return points;
+        }
+
+        // R is horizontal.
+        if(std::abs(r[0]) <= GEOMETRY_TOLERANCE) {
+            points.emplace_back(s.x(r[2] / r[1]), r[2] / r[1]);
             return points;
         }
 
@@ -176,11 +188,26 @@ namespace pacs {
      * @return std::vector<Point> 
      */
     std::vector<Point> intersections(const Line &line, const Polygon &polygon) {
+        std::vector<Point> candidates;
         std::vector<Point> points;
 
         for(const auto &segment: polygon.edges())
             for(const auto &point: intersections(line, segment))
-                points.emplace_back(point);
+                candidates.emplace_back(point);
+
+        for(std::size_t j = 0; j < candidates.size(); ++j) {
+            bool keep = true;
+
+            for(std::size_t k = 0; k < points.size(); ++k) {
+                if(candidates[j] == points[k]) {
+                    keep = false;
+                    break;
+                }
+            }
+
+            if(keep)
+                points.emplace_back(candidates[j]);
+        }
 
         return points;
     }
@@ -363,7 +390,6 @@ namespace pacs {
 
         #ifndef NDEBUG // Integrity check.
         assert(polygon.contains(point));
-        // assert(candidates.size() <= 2);
         #endif
 
         if(candidates.size() <= 1)
@@ -403,7 +429,10 @@ namespace pacs {
         } else
             points = candidates;
 
-        if(line > point) { // Point under the Line.
+        if(points[0] == points[1])
+            return polygon;
+
+        if(line > point) { // Point below the Line.
 
             if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
                 std::swap(points[0], points[1]);
@@ -418,24 +447,27 @@ namespace pacs {
             new_vertices.emplace_back(points[1]);
 
             for(std::size_t j = 0; j < edges.size(); ++j)
-                if(edges[j].contains(points[1])) {
+                if((edges[j].contains(points[1])) && (points[1] != edges[j][0])) {
                     index = j;
                     break;
                 }
 
-            if(index < vertices.size()) {
+            if(index < vertices.size() - 1) {
                 for(std::size_t j = index; j < vertices.size(); ++j)
                     if(line > vertices[j])
-                        new_vertices.emplace_back(vertices[j]);
+                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
+                            new_vertices.emplace_back(vertices[j]);
 
                 for(std::size_t j = 0; j < index; ++j)
                     if(line > vertices[j])
-                        new_vertices.emplace_back(vertices[j]);
+                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
+                            new_vertices.emplace_back(vertices[j]);
 
             } else
                 for(const auto &vertex: vertices)
                     if(line > vertex)
-                        new_vertices.emplace_back(vertex);
+                        if((vertex != points[0]) && (vertex != points[1]))
+                            new_vertices.emplace_back(vertex);
 
         } else { // Point above the Line.
 
@@ -452,24 +484,27 @@ namespace pacs {
             new_vertices.emplace_back(points[1]);
 
             for(std::size_t j = 0; j < edges.size(); ++j)
-                if(edges[j].contains(points[1])) {
+                if((edges[j].contains(points[1])) && (points[1] != edges[j][0])) {
                     index = j;
                     break;
                 }
 
-            if(index < vertices.size()) {
+            if(index < vertices.size() - 1) {
                 for(std::size_t j = index; j < vertices.size(); ++j)
                     if(line <= vertices[j])
-                        new_vertices.emplace_back(vertices[j]);
+                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
+                            new_vertices.emplace_back(vertices[j]);
 
                 for(std::size_t j = 0; j < index; ++j)
                     if(line <= vertices[j])
-                        new_vertices.emplace_back(vertices[j]);
+                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
+                            new_vertices.emplace_back(vertices[j]);
 
             } else
                 for(const auto &vertex: vertices)
                     if(line <= vertex)
-                        new_vertices.emplace_back(vertex);
+                        if((vertex != points[0]) && (vertex != points[1]))
+                            new_vertices.emplace_back(vertex);
         }
 
         return Polygon{new_vertices};

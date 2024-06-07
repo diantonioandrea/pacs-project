@@ -88,10 +88,9 @@ namespace pacs {
         Line horizonal{0.0, 1.0, point[1]};
         std::size_t points = 0;
 
-        for(const auto &intersection: intersections(horizonal, *this)) {
+        for(const auto &intersection: intersections(horizonal, *this))
             if(intersection[0] > point[0])
                 points += 1;
-        }
 
         return points % 2;
     }
