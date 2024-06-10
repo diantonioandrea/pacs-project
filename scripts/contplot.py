@@ -66,6 +66,7 @@ for line in lines:
 
 # Plot.
 fig, axes = plt.subplots(1, 3)
+fig.suptitle(lines[0])
 
 data: list[list[float]] = [numerical, exact, error]
 titles: list[str] = ["Numerical solution", "Exact solution", "Error"]
@@ -76,7 +77,7 @@ bars: list = [None] * 3
 for j in range(3):
 
     # Plot.
-    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm, levels=50)
+    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm, levels=100)
     axes[j].set_title(titles[j])
 
     # Proportions.
