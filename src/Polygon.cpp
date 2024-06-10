@@ -103,7 +103,7 @@ namespace pacs {
      */
     bool Polygon::contains(const Segment &segment) const {
         for(const auto &edge: this->edges()) {
-            if(edge.contains(segment))
+            if(edge == segment)
                 return true;
         }
 
