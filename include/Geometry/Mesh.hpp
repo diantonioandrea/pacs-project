@@ -129,6 +129,7 @@ namespace pacs {
     // Diagrams.
     std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &uniform = false, const bool &reflect = false);
     std::vector<Polygon> mesh_diagram(const std::string &);
+    std::vector<Polygon> mesh_relax(const Polygon &, const std::vector<Polygon> &, const bool &reflect = false);
 
     // Refinement.
     std::vector<Polygon> mesh_refine_size(const Mesh &, const Mask &);

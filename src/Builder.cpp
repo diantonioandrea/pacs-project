@@ -44,38 +44,8 @@ namespace pacs {
         std::cout << "\tGenerated the Voronoi diagram." << std::endl;
         #endif
 
-        // Relaxation, Lloyd's algorithm.
-        std::vector<Point> centroids(cells, Point{0.0, 0.0});
-
-        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
-
-            // Update.
-            Real residual = 0.0;
-
-            for(std::size_t k = 0; k < cells; ++k) {
-                
-                // New point.
-                Point centroid = diagram[k].centroid();
-                Real shift = distance(centroid, centroids[k]);
-
-                // Residual (biggest centroid shift).
-                residual = (shift > residual) ? shift : residual;
-
-                // Update.
-                centroids[k] = centroid;
-
-            }
-
-            // Relaxation step.
-            diagram = voronoi(domain, centroids, reflect);
-
-            #ifndef NVERBOSE
-            std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
-            #endif
-
-            if(residual < LLOYD_TOLERANCE)
-                break;
-        }
+        // Relaxation.
+        diagram = mesh_relax(domain, diagram, reflect);
 
         // Small edges collapse.
         std::vector<Real> sizes;
@@ -199,6 +169,53 @@ namespace pacs {
             }
 
             diagram.emplace_back(points);
+        }
+
+        return diagram;
+    }
+
+    /**
+     * @brief Relaxes a diagram through Lloyd's algorithm.
+     * 
+     * @param domain 
+     * @param elements 
+     * @return std::vector<Polygon> 
+     */
+    std::vector<Polygon> mesh_relax(const Polygon &domain, const std::vector<Polygon> &elements, const bool &reflect) {
+
+        std::vector<Polygon> diagram{elements};
+
+        // Relaxation, Lloyd's algorithm.
+        std::vector<Point> centroids(diagram.size(), Point{0.0, 0.0});
+
+        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
+
+            // Update.
+            Real residual = 0.0;
+
+            for(std::size_t k = 0; k < diagram.size(); ++k) {
+                
+                // New point.
+                Point centroid = diagram[k].centroid();
+                Real shift = distance(centroid, centroids[k]);
+
+                // Residual (biggest centroid shift).
+                residual = (shift > residual) ? shift : residual;
+
+                // Update.
+                centroids[k] = centroid;
+
+            }
+
+            // Relaxation step.
+            diagram = voronoi(domain, centroids, reflect);
+
+            #ifndef NVERBOSE
+            std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
+            #endif
+
+            if(residual < LLOYD_TOLERANCE)
+                break;
         }
 
         return diagram;
