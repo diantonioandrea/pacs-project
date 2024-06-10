@@ -15,6 +15,7 @@
 
 pacs::Real exact(const pacs::Real &, const pacs::Real &);
 pacs::Real source(const pacs::Real &, const pacs::Real &);
+pacs::Real dirichlet(const pacs::Real &, const pacs::Real &);
 
 int main() {
 
@@ -27,9 +28,6 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
     pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly"), 3};
 
-    // Source and exact solution.
-    pacs::Functor test_source{source};
-
     // Writes mesh informations to a file.
     mesh.write("output/poisson.poly");
 
@@ -37,7 +35,7 @@ int main() {
     auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
     // Builds the forcing term.
-    pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, test_source);
+    pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
 
     // Linear system solution.
     pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
@@ -62,7 +60,7 @@ int main() {
  * @return pacs::Real 
  */
 inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
-    return std::sin(M_PI * x) * std::sin(M_PI * y);
+    return std::sin(2 * M_PI * x) * std::cos(2 * M_PI * y);
 }
 
 /**
@@ -73,5 +71,16 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
  * @return pacs::Real 
  */
 pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
-    return 2.0 * M_PI * M_PI * exact(x, y);
+    return 8.0 * M_PI * M_PI * exact(x, y);
+}
+
+/**
+ * @brief Dirichlet BC.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real dirichlet(const pacs::Real &x, const pacs::Real &y) {
+    return exact(x, y);
 }
