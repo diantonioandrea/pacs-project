@@ -261,9 +261,6 @@ namespace pacs {
                 points.emplace_back(point);
 
                 for(auto &element: diagram) {
-                    if(!(element.contains(edge)))
-                        continue;
-                    
                     std::vector<Segment> edges = element.edges();
 
                     for(std::size_t k = 0; k < edges.size(); ++k)
