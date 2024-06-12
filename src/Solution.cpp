@@ -54,6 +54,9 @@ namespace pacs {
             // Element sub-triangulation.
             std::vector<Polygon> triangles = triangulate(polygon);
 
+            // Local coefficients.
+            Vector<Real> local_coefficients{element_dofs};
+
             // Loop over the sub-triangulation.
             for(std::size_t k = 0; k < triangles.size(); ++k) {
 
@@ -106,9 +109,12 @@ namespace pacs {
                 // Exact solution.
                 Vector<Real> local_exact = exact(physical_x, physical_y);
 
-                // Update.
-                coefficients(indices, coefficients(indices) + scaled_phi.transpose() * local_exact);
+                // Local coefficients.
+                local_coefficients += scaled_phi.transpose() * local_exact;
             }
+
+            // Update.
+            coefficients(indices, local_coefficients);
         }
 
         return coefficients;

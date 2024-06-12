@@ -24,18 +24,17 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
     
     // Constructing a mesh.
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 32)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly")};
 
     // Refining the first four elements.
-    pacs::Mask refinement(32);
+    pacs::Mask refinement(30);
 
     refinement[0] = true;
     refinement[1] = true;
     refinement[2] = true;
 
-    std::vector<pacs::Polygon> refined = pacs::mesh_refine_size(mesh, refinement);
-
     // Constructing a new mesh.
+    std::vector<pacs::Polygon> refined = pacs::mesh_refine_size(mesh, refinement);
     pacs::Mesh refined_mesh{domain, refined};
 
     // Mesh output.

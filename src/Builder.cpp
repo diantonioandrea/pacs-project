@@ -239,6 +239,7 @@ namespace pacs {
 
         std::vector<Polygon> diagram;
         std::vector<Polygon> refine;
+        std::vector<Polygon> refined;
 
         for(std::size_t j = 0; j < mask.size(); ++j)
             if(mask[j])
@@ -246,11 +247,8 @@ namespace pacs {
             else
                 diagram.emplace_back(mesh.element(j));
 
+        // Refine.
         for(const auto &polygon: refine) {
-
-            // Refinement.
-            std::vector<Polygon> subdiagram;
-
             Point centroid = polygon.centroid();
             std::vector<Point> points;
 
@@ -273,7 +271,7 @@ namespace pacs {
                 }
             }
 
-            // Subdiagram.
+            // New polygons.
             std::vector<Segment> edges = polygon.edges();
             std::vector<Point> centrals;
 
@@ -291,17 +289,17 @@ namespace pacs {
                     centrals.emplace_back((second + centroid) * 0.5);
                 }
 
-                subdiagram.emplace_back(Polygon{vertices});
+                refined.emplace_back(Polygon{vertices});
             }
 
             // Central Polygon.
             if(edges.size() > 4)
-                subdiagram.emplace_back(Polygon{centrals});
-
-            // Diagram update.
-            for(const auto &refined: subdiagram)
-                diagram.emplace_back(refined);
+                refined.emplace_back(Polygon{centrals});
         }
+
+        // Update.
+        for(const auto &polygon: refined)
+            diagram.emplace_back(polygon);
 
         return diagram;
     }
@@ -319,7 +317,7 @@ namespace pacs {
 
         for(std::size_t j = 0; j < mask.size(); ++j)
             if(mask[j])
-                if(mesh.elements[j].degree < 6) // Artificial limitation.
+                if(mesh.elements[j].degree < 6) // Artificial limitation. [!]
                     ++mesh.elements[j].degree;
     }
 
