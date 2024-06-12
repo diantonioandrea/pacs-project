@@ -338,12 +338,11 @@ namespace pacs {
             for(const auto &candidate: cell.points) {
                 bool flag = true;
 
-                for(const auto &node: nodes) {
+                for(const auto &node: nodes)
                     if(candidate == node) {
                         flag = false;
                         break;
                     }
-                }
 
                 if(flag)
                     nodes.emplace_back(candidate);

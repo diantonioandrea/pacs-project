@@ -82,7 +82,7 @@ namespace pacs {
      */
     Line bisector(const Point &p, const Point &q) {
         #ifndef NDEBUG // Checks.
-        assert(!(p - q).is_zero());
+        assert(p != q);
         #endif
 
         Real px = p[0], qx = q[0];

@@ -56,10 +56,6 @@ namespace pacs {
             bool operator ==(const Point &) const;
             bool operator !=(const Point &) const;
 
-            // METHODS.
-
-            bool is_zero() const;
-
             // OPERATORS.
 
             Point operator *(const Real &) const;

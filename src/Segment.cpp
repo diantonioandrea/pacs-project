@@ -29,7 +29,7 @@ namespace pacs {
      */
     Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {
         #ifndef NDEBUG // Integrity check.
-        assert(!(a - b).is_zero());
+        assert(a != b);
         #endif
     }
 
@@ -40,7 +40,7 @@ namespace pacs {
      */
     Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {
         #ifndef NDEBUG // Integrity check.
-        assert(!(ab[0] - ab[0]).is_zero());
+        assert(ab[0] != ab[1]);
         #endif
     }
 
@@ -107,7 +107,7 @@ namespace pacs {
      * @return false 
      */
     bool Segment::contains(const Point &point) const {
-        if((this->a - point).is_zero() || (this->b - point).is_zero())
+        if((this->a == point) || (this->b == point))
             return true;
 
         if(!(this->line().contains(point)))

@@ -92,7 +92,7 @@ namespace pacs {
      * @return false 
      */
     bool Point::operator ==(const Point &point) const {
-        return (*this - point).is_zero();
+        return (std::abs(this->x - point.x) <= GEOMETRY_TOLERANCE) && (std::abs(this->y - point.y) <= GEOMETRY_TOLERANCE);
     }
 
     /**
@@ -104,12 +104,6 @@ namespace pacs {
      */
     bool Point::operator !=(const Point &point) const {
         return !(*this == point);
-    }
-
-    // METHODS.
-
-    bool Point::is_zero() const {
-        return std::abs(*this) <= GEOMETRY_TOLERANCE;
     }
 
     // OPERATORS.
