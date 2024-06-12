@@ -366,7 +366,7 @@ namespace pacs {
                 if(domain.contains(element.edges[k])) {
                     std::array<int, 3> neighbourhood{static_cast<int>(k), -1, -1};
                     element_neighbours.emplace_back(neighbourhood);
-                    break;
+                    continue;
                 }
 
                 // Connection.
