@@ -28,6 +28,7 @@ namespace pacs {
     struct Error {
         
         std::size_t elements;
+        std::size_t dofs;
         std::size_t degree; // p.
         Real size; // h.
 
