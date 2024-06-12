@@ -1,5 +1,5 @@
 .PHONY: all test example testrun clean distclean
-CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -O3 -fPIC -I./include
+CXXFLAGS = -Wall -pedantic -std=c++20 -O3 -fPIC -I./include
 
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
