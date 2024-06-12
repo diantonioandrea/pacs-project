@@ -50,7 +50,7 @@ namespace pacs {
         const std::vector<Segment> edges;
 
         // Polynomial degree.
-        std::size_t degree;
+        mutable std::size_t degree;
 
         // CONSTRUCTORS.
 
