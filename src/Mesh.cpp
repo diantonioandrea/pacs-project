@@ -24,16 +24,16 @@ namespace pacs {
      * @brief Constructs a new Mesh from a given domain and diagram.
      * 
      * @param domain 
-     * @param mesh 
+     * @param diagram 
      */
-    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &mesh, const std::size_t &degree): domain{domain} {
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::size_t &degree): domain{domain} {
 
         // Building nodes and edges.
-        this->nodes = mesh_nodes(mesh);
-        this->edges = mesh_edges(mesh);
+        this->nodes = mesh_nodes(diagram);
+        this->edges = mesh_edges(diagram);
 
         // Elements.
-        this->elements = mesh_elements(mesh, this->nodes, this->edges, degree);
+        this->elements = mesh_elements(diagram, this->nodes, this->edges, degree);
         
         // Boundary nodes and edges.
         this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
@@ -43,8 +43,8 @@ namespace pacs {
         this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
 
         // Areas and biggest simplices.
-        this->areas = mesh_areas(mesh);
-        this->max_simplices = mesh_max_simplices(mesh);
+        this->areas = mesh_areas(diagram);
+        this->max_simplices = mesh_max_simplices(diagram);
 
         // Number of quadrature nodes and solution evaluation entries.
         std::size_t entries = 0;
