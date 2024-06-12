@@ -351,35 +351,34 @@ namespace pacs {
      */
     std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const Polygon &domain, const std::vector<Element> &elements) {
         std::vector<std::vector<std::array<int, 3>>> neighbours;
+        neighbours.resize(elements.size());
 
         #ifndef NVERBOSE
         std::cout << "Evaluating mesh neighbours." << std::endl;
         #endif
 
         for(std::size_t j = 0; j < elements.size(); ++j) {
-            std::vector<std::array<int, 3>> element_neighbours;
-
             Element element = elements[j];
+
+            std::vector<std::array<int, 3>> element_neighbours;
+            element_neighbours.resize(element.edges.size());
+
             for(std::size_t k = 0; k < element.edges.size(); ++k) {
-                
-                // Boundary.
-                if(domain.contains(element.edges[k])) {
-                    std::array<int, 3> neighbourhood{static_cast<int>(k), -1, -1};
-                    element_neighbours.emplace_back(neighbourhood);
-                    continue;
-                }
 
                 // Connection.
+                bool connection = false;
+
                 for(std::size_t h = 0; h < elements.size(); ++h) {
                     if(j == h)
                         continue;
 
-                    bool connection = false;
+                    Element other = elements[h];
 
-                    for(std::size_t l = 0; l < elements[h].edges.size(); ++l)
-                        if(elements[j].edges[k] == elements[h].edges[l]) {
-                            std::array<int, 3> neighbourhood{static_cast<int>(k), static_cast<int>(h), static_cast<int>(l)};
-                            element_neighbours.emplace_back(neighbourhood);
+                    for(std::size_t l = 0; l < other.edges.size(); ++l)
+                        if(element.edges[k] == other.edges[l]) {
+                            element_neighbours[k][0] = static_cast<int>(k);
+                            element_neighbours[k][1] = static_cast<int>(h);
+                            element_neighbours[k][2] = static_cast<int>(l);
                             connection = true;
                             break;
                         }
@@ -387,9 +386,16 @@ namespace pacs {
                     if(connection)
                         break;
                 }
+
+                // Boundary.
+                if(!connection) {
+                    element_neighbours[k][0] = static_cast<int>(k);
+                    element_neighbours[k][1] = -1;
+                    element_neighbours[k][2] = -1;
+                }
             }
 
-            neighbours.emplace_back(element_neighbours);
+            neighbours[j] = element_neighbours;
         }
 
         return neighbours;
