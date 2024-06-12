@@ -38,22 +38,24 @@ namespace pacs {
     // Element, implemented under Element.cpp
 
     /**
-     * @brief Element struct.
+     * @brief Element struct. Polygon wrapper.
      * 
      */
     struct Element {
             
-        // Indices.
-        std::vector<std::size_t> nodes;
-        std::vector<std::size_t> edges;
+        // Polygon.
+        const Polygon element;
+        
+        const std::vector<Point> nodes;
+        const std::vector<Segment> edges;
 
         // Polynomial degree.
         std::size_t degree;
 
         // CONSTRUCTORS.
 
-        Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &);
-        Element(const std::vector<std::size_t> &, const std::vector<std::size_t> &, const std::size_t &);
+        Element(const Polygon &);
+        Element(const Polygon &, const std::size_t &);
 
         // METHODS.
 
@@ -64,63 +66,48 @@ namespace pacs {
     // Mesh, implemented under Mesh.cpp
 
     /**
-     * @brief Mesh class.
+     * @brief Mesh struct.
      * 
      */
-    class Mesh {
-        protected:
+    struct Mesh {
 
-            // Geometry.
-            Polygon domain; // Polygonal domain.
-            std::vector<Point> nodes; // Unique nodes.
-            std::vector<Segment> edges; // Unique edges.
+        // Geometry.
+        Polygon domain; // Polygonal domain.
 
-        public:
+        // Elements.
+        std::vector<Element> elements;
 
-            // Elements.
-            std::vector<Element> elements;
+        // Neighbours.
+        std::vector<std::vector<std::array<int, 3>>> neighbours;
 
-            // Indices.
-            std::vector<std::size_t> boundary_nodes;
-            std::vector<std::size_t> boundary_edges;
+        // Areas.
+        std::vector<Real> areas;
+        std::vector<Vector<Real>> max_simplices;
 
-            // Neighbours.
-            std::vector<std::vector<std::array<int, 3>>> neighbours;
+        // Penalty coefficient.
+        Real penalty = 10.0;
 
-            // Areas.
-            std::vector<Real> areas;
-            std::vector<Vector<Real>> max_simplices;
+        // Entries for the solution.
+        std::size_t entries;
 
-            // Penalty coefficient.
-            Real penalty = 10.0;
+        // Quadrature nodes.
+        std::size_t quadrature;
 
-            // Entries for the solution.
-            std::size_t entries;
+        // CONSTRUCTORS.
 
-            // Quadrature nodes.
-            std::size_t quadrature;
+        Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
 
-            // CONSTRUCTORS.
+        // READ, WRAPPERS.
+    
+        Polygon element(const std::size_t &) const;
 
-            Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
+        // STATS.
 
-            // READ.
-        
-            Point node(const std::size_t &) const;
-            Polygon element(const std::size_t &) const;
-            Polygon element(const Element &) const;
+        std::size_t dofs() const;
 
-            // STATS.
+        // OUTPUT.
 
-            inline std::size_t nodes_number() const { return this->nodes.size(); }
-            inline std::size_t edges_number() const { return this->edges.size(); }
-            inline std::size_t elements_number() const { return this->elements.size(); }
-
-            std::size_t dofs() const;
-
-            // OUTPUT.
-
-            void write(const std::string &);
+        void write(const std::string &);
     };
 
     // METHODS.
@@ -136,14 +123,8 @@ namespace pacs {
     void mesh_refine_degree(Mesh &, const Mask &);
 
     // Data.
-    std::vector<Point> mesh_nodes(const std::vector<Polygon> &);
-    std::vector<Segment> mesh_edges(const std::vector<Polygon> &);
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<Point> &, const std::vector<Segment> &, const std::size_t &);
-
-    std::vector<std::size_t> mesh_boundary_nodes(const Polygon &, const std::vector<Point> &);
-    std::vector<std::size_t> mesh_boundary_edges(const Polygon &, const std::vector<Segment> &);
-
-    std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const std::vector<Element> &, const std::vector<std::size_t> &);
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::size_t &);
+    std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const Polygon &, const std::vector<Element> &);
 
     std::vector<Real> mesh_areas(const std::vector<Polygon> &);
     std::vector<Vector<Real>> mesh_max_simplices(const std::vector<Polygon> &);

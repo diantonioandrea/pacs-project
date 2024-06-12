@@ -48,7 +48,7 @@ namespace pacs {
         // Volume integrals.
 
         // Loop over the elements.
-        for(std::size_t j = 0; j < mesh.elements_number(); ++j) {
+        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
             std::size_t element_dofs = mesh.elements[j].dofs();

@@ -69,8 +69,8 @@ namespace pacs {
         this->elements = mesh.elements.size();
 
         for(const auto &element: mesh.elements)
-            for(const auto &p: mesh.element(element).points)
-                for(const auto &q: mesh.element(element).points)
+            for(const auto &p: element.element.points)
+                for(const auto &q: element.element.points)
                     this->size = (distance(p, q) > this->size) ? distance(p, q) : this->size;
     }
 

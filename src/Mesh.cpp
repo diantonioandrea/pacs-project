@@ -28,19 +28,11 @@ namespace pacs {
      */
     Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::size_t &degree): domain{domain} {
 
-        // Building nodes and edges.
-        this->nodes = mesh_nodes(diagram);
-        this->edges = mesh_edges(diagram);
-
         // Elements.
-        this->elements = mesh_elements(diagram, this->nodes, this->edges, degree);
-        
-        // Boundary nodes and edges.
-        this->boundary_nodes = mesh_boundary_nodes(domain, this->nodes);
-        this->boundary_edges = mesh_boundary_edges(domain, this->edges);
+        this->elements = mesh_elements(diagram, degree);
 
         // Neighbours.
-        this->neighbours = mesh_neighbours(this->elements, this->boundary_edges);
+        this->neighbours = mesh_neighbours(domain, this->elements);
 
         // Areas and biggest simplices.
         this->areas = mesh_areas(diagram);
@@ -50,56 +42,26 @@ namespace pacs {
         std::size_t entries = 0;
 
         for(const auto &element: this->elements)
-            entries += element.edges.size();
+            entries += element.element.points.size();
 
         this->quadrature = 7; // Arbitrary.
         this->entries = entries * this->quadrature * this->quadrature;
     }
 
     // READ.
-    
-    /**
-     * @brief Returns the j-th node.
-     * 
-     * @param j 
-     * @return Point 
-     */
-    Point Mesh::node(const std::size_t &j) const {
-        #ifndef NDEBUG // Integrity check.
-        assert(j < this->nodes.size());
-        #endif
-
-        return this->nodes[j];
-    }
 
     /**
-     * @brief Returns the j-th element.
+     * @brief Returns the j-th element's polygon.
      * 
      * @param j 
      * @return Polygon 
      */
     Polygon Mesh::element(const std::size_t &j) const {
-        std::vector<Point> nodes;
+        #ifndef NDEBUG // Integrity check.
+        assert(j < this->elements.size());
+        #endif
 
-        for(const auto &index: this->elements[j].nodes)
-            nodes.emplace_back(this->nodes[index]);
-
-        return Polygon{nodes};
-    }
-
-    /**
-     * @brief Returns an element.
-     * 
-     * @param element 
-     * @return Polygon 
-     */
-    Polygon Mesh::element(const Element &element) const {
-        std::vector<Point> nodes;
-
-        for(const auto &index: element.nodes)
-            nodes.emplace_back(this->nodes[index]);
-
-        return Polygon{nodes};
+        return this->elements[j].element;
     }
 
     // STATS.
@@ -134,15 +96,13 @@ namespace pacs {
 
         // Stats.
         file << "@ Domain: " << this->domain << "\n";
-        file << "@ Elements: " << this->elements_number() << "\n";
-        file << "@ Nodes: " << this->nodes_number() << "\n";
-        file << "@ Edges: " << this->edges_number() << "\n";
+        file << "@ Elements: " << this->elements.size() << "\n";
 
         // Polygons.
         file << "@ Elements\' coordinates: \n";
 
         for(const auto &element: this->elements) {
-            Polygon polygon{this->element(element)};
+            Polygon polygon = element.element;
 
             for(const auto &vertex: polygon.points)
                 file << vertex[0] << " " << vertex[1] << " ";
