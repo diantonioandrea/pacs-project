@@ -113,22 +113,40 @@ namespace pacs {
         if(!(this->line().contains(point)))
             return false;
 
-        Real min_x = this->a[0] <= this->b[0] ? this->a[0] : this->b[0];
-        Real max_x = this->a[0] >= this->b[0] ? this->a[0] : this->b[0];
+        // Vertical segment.
+        if(std::abs(this->a[0] - this->b[0]) <= GEOMETRY_TOLERANCE) {
+            if(std::abs(this->a[0] - point[0]) > GEOMETRY_TOLERANCE)
+                return false;
 
-        Real min_y = this->a[1] <= this->b[1] ? this->a[1] : this->b[1];
-        Real max_y = this->a[1] >= this->b[1] ? this->a[1] : this->b[1];
+            if(this->a[1] <= this->b[1])
+                return (this->a[1] <= point[1]) && (point[1] <= this->b[1]);
+            
+            return (this->b[1] <= point[1]) && (point[1] <= this->a[1]);
+        }
 
-        bool x = (min_x <= point[0]) && (point[0] <= max_x);
-        bool y = (min_y <= point[1]) && (point[1] <= max_y);
+        // Horizontal segment.
+        if(std::abs(this->a[1] - this->b[1]) <= GEOMETRY_TOLERANCE) {
+            if(std::abs(this->a[1] - point[1]) > GEOMETRY_TOLERANCE)
+                return false;
 
-        if(std::abs(this->a[0] - this->b[0]) <= GEOMETRY_TOLERANCE)
-            x = std::abs(this->a[0] - point[0]) <= GEOMETRY_TOLERANCE;
+            if(this->a[0] <= this->b[0])
+                return (this->a[0] <= point[0]) && (point[0] <= this->b[0]);
+            
+            return (this->b[0] <= point[0]) && (point[0] <= this->a[0]);
+        }
 
-        if(std::abs(this->a[1] - this->b[1]) <= GEOMETRY_TOLERANCE)
-            y = std::abs(this->a[1] - point[1]) <= GEOMETRY_TOLERANCE;
+        // General cases.
+        if(this->a[0] <= this->b[0]) {
+            if(this->a[1] <= this->b[1])
+                return (this->a[0] <= point[0]) && (point[0] <= this->b[0]) && (this->a[1] <= point[1]) && (point[1] <= this->b[1]);
 
-        return x && y;
+            return (this->a[0] <= point[0]) && (point[0] <= this->b[0]) && (this->b[1] <= point[1]) && (point[1] <= this->a[1]);
+        }
+
+        if(this->a[1] <= this->b[1])
+            return (this->b[0] <= point[0]) && (point[0] <= this->a[0]) && (this->a[1] <= point[1]) && (point[1] <= this->b[1]);
+
+        return (this->b[0] <= point[0]) && (point[0] <= this->a[0]) && (this->b[1] <= point[1]) && (point[1] <= this->a[1]);
     }
 
     bool Segment::contains(const Segment &segment) const {

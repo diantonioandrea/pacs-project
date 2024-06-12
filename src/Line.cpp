@@ -216,6 +216,15 @@ namespace pacs {
      * @return false 
      */
     bool Line::contains(const Point &point) const {
+        // Horizontal line.
+        if(std::abs(this->a) <= GEOMETRY_TOLERANCE)
+            return std::abs(point[1] - this->c / this->b) <= GEOMETRY_TOLERANCE;
+
+        // Vertical line.
+        if(std::abs(this->b) <= GEOMETRY_TOLERANCE)
+            return std::abs(point[0] - this->c / this->a) <= GEOMETRY_TOLERANCE;
+
+        // General case.
         return std::abs(this->a * point[0] + this->b * point[1] - this->c) <= GEOMETRY_TOLERANCE;
     }
 
