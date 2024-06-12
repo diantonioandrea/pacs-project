@@ -22,7 +22,7 @@ namespace pacs {
      * @param nodes 
      * @param edges 
      */
-    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges): nodes{nodes}, edges{edges}, degree{1} {}
+    Element::Element(const Polygon &element): element{element}, nodes{element.points}, edges{element.edges()}, degree{1} {}
 
     /**
      * @brief Construct a new Element:: Element object
@@ -31,6 +31,6 @@ namespace pacs {
      * @param edges 
      * @param degree 
      */
-    Element::Element(const std::vector<std::size_t> &nodes, const std::vector<std::size_t> &edges, const std::size_t &degree): nodes{nodes}, edges{edges}, degree{degree} {}
+    Element::Element(const Polygon &element, const std::size_t &degree): element{element}, nodes{element.points}, edges{element.edges()}, degree{degree} {}
 
 }

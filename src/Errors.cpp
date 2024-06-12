@@ -43,11 +43,15 @@ namespace pacs {
         // L2 Error.
         this->l2_error = std::sqrt(dot(error, mass * error));
 
+        // Dofs.
+        this->dofs = 0;
+
         // L2 and DG Errors.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
             std::size_t element_dofs = mesh.elements[j].dofs();
+            this->dofs += element_dofs;
 
             // Global matrix indices.
             std::vector<std::size_t> indices;
@@ -69,8 +73,8 @@ namespace pacs {
         this->elements = mesh.elements.size();
 
         for(const auto &element: mesh.elements)
-            for(const auto &p: mesh.element(element).points)
-                for(const auto &q: mesh.element(element).points)
+            for(const auto &p: element.element.points)
+                for(const auto &q: element.element.points)
                     this->size = (distance(p, q) > this->size) ? distance(p, q) : this->size;
     }
 
@@ -85,6 +89,7 @@ namespace pacs {
      */
     std::ostream &operator <<(std::ostream &ost, const Error &error) {
         ost << "Elements: " << error.elements << std::endl;
+        ost << "Dofs: " << error.dofs << std::endl;
         ost << "Degree (p): " << error.degree << std::endl;
         ost << "Size (h): " << error.size << std::endl;
         ost << "L2 Error: " << error.l2_error << std::endl;

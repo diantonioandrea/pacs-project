@@ -320,69 +320,6 @@ namespace pacs {
                 if(mesh.elements[j].degree < 6) // Artificial limitation. [!]
                     ++mesh.elements[j].degree;
     }
-
-    /**
-     * @brief Returns the vector of unique nodes inside a mesh.
-     * 
-     * @param mesh 
-     * @return std::vector<Point> 
-     */
-    std::vector<Point> mesh_nodes(const std::vector<Polygon> &mesh) {
-        std::vector<Point> nodes;
-
-        #ifndef NVERBOSE
-        std::cout << "Evaluating mesh nodes." << std::endl;
-        #endif
-
-        for(const auto &cell: mesh) {
-            for(const auto &candidate: cell.points) {
-                bool flag = true;
-
-                for(const auto &node: nodes)
-                    if(candidate == node) {
-                        flag = false;
-                        break;
-                    }
-
-                if(flag)
-                    nodes.emplace_back(candidate);
-            }
-        }
-
-        return nodes;
-    }
-
-    /**
-     * @brief Returns the vector of unique edges inside a mesh.
-     * 
-     * @param mesh 
-     * @return std::vector<Segment> 
-     */
-    std::vector<Segment> mesh_edges(const std::vector<Polygon> &mesh) {
-        std::vector<Segment> edges;
-
-        #ifndef NVERBOSE
-        std::cout << "Evaluating mesh edges." << std::endl;
-        #endif
-
-        for(const auto &cell: mesh) {
-            for(const auto &candidate: cell.edges()) {
-                bool flag = true;
-
-                for(const auto &edge: edges) {
-                    if(candidate == edge) {
-                        flag = false;
-                        break;
-                    }
-                }
-
-                if(flag)
-                    edges.emplace_back(candidate);
-            }
-        }
-
-        return edges;
-    }
     
     /**
      * @brief Returns the vector of Elements inside a mesh.
@@ -392,90 +329,27 @@ namespace pacs {
      * @param edges 
      * @return std::vector<Element> 
      */
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &mesh, const std::vector<Point> &nodes, const std::vector<Segment> &edges, const std::size_t &degree) {
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &diagram, const std::size_t &degree) {
         std::vector<Element> elements;
 
         #ifndef NVERBOSE
         std::cout << "Evaluating mesh elements." << std::endl;
         #endif
 
-        for(const auto &cell: mesh) {
-            std::vector<std::size_t> element_nodes;
-            std::vector<std::size_t> element_edges;
-
-            for(const auto &node: cell.points) {
-                for(std::size_t j = 0; j < nodes.size(); ++j) {
-                    if(node == nodes[j]) {
-                        element_nodes.emplace_back(j);
-                        break;
-                    }
-                }
-            }
-
-            for(const auto &edge: cell.edges()) {
-                for(std::size_t j = 0; j < edges.size(); ++j) {
-                    if(edge == edges[j]) {
-                        element_edges.emplace_back(j);
-                        break;
-                    }
-                }
-            }
-
-            elements.emplace_back(element_nodes, element_edges, degree);
-        }
+        for(const auto &polygon: diagram)
+            elements.emplace_back(polygon, degree);
 
         return elements;
     }
 
     /**
-     * @brief Returns the vector of boundary nodes in a mesh given the domain.
+     * @brief Returns the neighbouring structure.
      * 
      * @param domain 
-     * @param nodes 
-     * @return std::vector<std::size_t> 
+     * @param elements 
+     * @return std::vector<std::vector<std::array<int, 3>>> 
      */
-    std::vector<std::size_t> mesh_boundary_nodes(const Polygon &domain, const std::vector<Point> &nodes) {
-        std::vector<std::size_t> boundary_nodes;
-
-        #ifndef NVERBOSE
-        std::cout << "Evaluating mesh boundary nodes." << std::endl;
-        #endif
-
-        for(const auto &bound: domain.edges()) {
-            for(std::size_t j = 0; j < nodes.size(); ++j) {
-                if(bound.contains(nodes[j]))
-                    boundary_nodes.emplace_back(j);
-            }
-        }
-
-        return boundary_nodes;
-    }
-
-    /**
-     * @brief Returns the vector of boundary edges in a mesh given the domain.
-     * 
-     * @param domain 
-     * @param edges 
-     * @return std::vector<std::size_t> 
-     */
-    std::vector<std::size_t> mesh_boundary_edges(const Polygon &domain, const std::vector<Segment> &edges) {
-        std::vector<std::size_t> boundary_edges;
-
-        #ifndef NVERBOSE
-        std::cout << "Evaluating mesh boundary edges." << std::endl;
-        #endif
-
-        for(const auto &bound: domain.edges()) {
-            for(std::size_t j = 0; j < edges.size(); ++j) {
-                if(bound.contains(edges[j]))
-                    boundary_edges.emplace_back(j);
-            }
-        }
-
-        return boundary_edges;
-    }
-
-    std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const std::vector<Element> &elements, const std::vector<std::size_t> &boundary_edges) {
+    std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const Polygon &domain, const std::vector<Element> &elements) {
         std::vector<std::vector<std::array<int, 3>>> neighbours;
 
         #ifndef NVERBOSE
@@ -485,21 +359,17 @@ namespace pacs {
         for(std::size_t j = 0; j < elements.size(); ++j) {
             std::vector<std::array<int, 3>> element_neighbours;
 
-            for(std::size_t k = 0; k < elements[j].edges.size(); ++k) {
-                bool boundary = false;
+            Element element = elements[j];
+            for(std::size_t k = 0; k < element.edges.size(); ++k) {
+                
+                // Boundary.
+                if(domain.contains(element.edges[k])) {
+                    std::array<int, 3> neighbourhood{static_cast<int>(k), -1, -1};
+                    element_neighbours.emplace_back(neighbourhood);
+                    break;
+                }
 
-                // Boundary edge.
-                for(const auto &edge: boundary_edges)
-                    if(edge == elements[j].edges[k]) {
-                        std::array<int, 3> neighbourhood{static_cast<int>(k), -1, -1};
-                        element_neighbours.emplace_back(neighbourhood);
-                        boundary = true; break;
-                    }
-
-                if(boundary)
-                    continue;
-
-                // Connected edge.
+                // Connection.
                 for(std::size_t h = 0; h < elements.size(); ++h) {
                     if(j == h)
                         continue;
@@ -507,10 +377,11 @@ namespace pacs {
                     bool connection = false;
 
                     for(std::size_t l = 0; l < elements[h].edges.size(); ++l)
-                        if(elements[h].edges[l] == elements[j].edges[k]) {
+                        if(elements[j].edges[k] == elements[h].edges[l]) {
                             std::array<int, 3> neighbourhood{static_cast<int>(k), static_cast<int>(h), static_cast<int>(l)};
                             element_neighbours.emplace_back(neighbourhood);
-                            connection = true; break;
+                            connection = true;
+                            break;
                         }
 
                     if(connection)

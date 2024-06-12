@@ -37,7 +37,7 @@ namespace pacs {
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
 
         // Loop over the elements.
-        for(std::size_t j = 0; j < mesh.elements_number(); ++j) {
+        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
             std::size_t element_dofs = mesh.elements[j].dofs();
@@ -143,7 +143,7 @@ namespace pacs {
             local_indices.emplace_back(h);
 
         // Loop over the elements.
-        for(std::size_t j = 0; j < mesh.elements_number(); ++j) {
+        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
             std::size_t element_dofs = mesh.elements[j].dofs();

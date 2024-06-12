@@ -61,6 +61,9 @@ for line in lines:
 
         if "Elements" in line:
             elements.append(int(data[-1]))
+        
+        elif "Dofs" in line:
+            dofs.append(int(data[-1]))
 
         elif "Size" in line:
             sizes.append(float(data[-1]))
@@ -104,6 +107,9 @@ for index in range(len(sys.argv)):
                 if "Elements" in line:
                     elements_second.append(int(data[-1]))
 
+                if "Dofs" in line:
+                    dofs_second.append(int(data[-1]))
+
                 elif "L2 Error" in line:
                     l2_error_second.append(float(data[-1]))
 
@@ -145,10 +151,10 @@ elements_comparison_dg[2] = [(value / elements[-1]) ** -(degree / 2 + 0.5) * dg_
 sizes_comparison_dg[2] = [(value / sizes[0]) ** (degree + 1) * dg_error[0] for value in sizes]
 
 # Dofs.
-dofs = [(element * (degree + 1) * (degree + 2)) ** 0.5 for element in elements]
+dofs = [dof ** 0.5 for dof in dofs]
 
 if second:
-    dofs_second = [(element * (degree + 1) * (degree + 2)) ** 0.5 for element in elements_second]
+    dofs_second = [dof ** 0.5 for dof in dofs_second]
 
 # Ticks.
 elements_ticks = [elements[0], elements[-1]]
