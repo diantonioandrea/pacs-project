@@ -378,8 +378,10 @@ namespace pacs {
         minimum = distance(point, polygon.points[0]);
 
         for(std::size_t j = 1; j < polygon.points.size(); ++j)
-            if(distance(point, polygon.points[j]) < minimum)
+            if(distance(point, polygon.points[j]) < minimum) {
                 closest = j;
+                minimum = distance(point, polygon.points[0]);
+            }
 
         Point vertex_reflection = polygon.points[closest] * 2 - point;
 
