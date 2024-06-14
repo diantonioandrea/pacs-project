@@ -66,6 +66,6 @@ int main() {
         output_p << "\n" << error << "\n\n";
         
         output_p << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output_p << "Residual: " << norm(laplacian * numerical - forcing) << "\n";
+        output_p << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
     }
 }

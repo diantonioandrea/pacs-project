@@ -75,6 +75,6 @@ int main() {
         output << "\n" << error << "\n\n";
         
         output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << norm(laplacian * numerical - forcing) << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
     }
 }
