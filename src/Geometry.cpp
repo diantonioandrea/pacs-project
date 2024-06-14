@@ -373,6 +373,19 @@ namespace pacs {
                 points.emplace_back(next_reflection);
         }
 
+        // Reflection with respect to the closest vertex.
+        closest = 0;
+        minimum = distance(point, polygon.points[0]);
+
+        for(std::size_t j = 1; j < polygon.points.size(); ++j)
+            if(distance(point, polygon.points[j]) < minimum)
+                closest = j;
+
+        Point vertex_reflection = polygon.points[closest] * 2 - point;
+
+        if(!(polygon.contains(vertex_reflection)))
+            points.emplace_back(vertex_reflection);
+
         return points;
     }
 
