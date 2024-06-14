@@ -26,7 +26,7 @@ int main() {
     // Constructing a mesh.
     pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly")};
 
-    // Refining the first four elements.
+    // Refining some elements.
     pacs::Mask refinement(30);
 
     refinement[0] = true;
