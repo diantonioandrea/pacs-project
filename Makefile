@@ -1,4 +1,4 @@
-.PHONY: all test example testrun clean distclean
+.PHONY: all test example domains testrun clean distclean
 CXXFLAGS = -Wall -pedantic -std=c++20 -O3 -fPIC -I./include
 
 # Disables verbosity.
@@ -31,6 +31,7 @@ endif
 # Files.
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
 
+
 HEADERS = ./include/*.hpp
 HEADERS += ./include/Algebra/*.hpp
 HEADERS += ./include/Algebra/Methods/*.hpp
@@ -40,6 +41,10 @@ HEADERS += ./include/Laplacian/*.hpp
 
 EXAMPLE_EXECS = $(subst example/,executables/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
 EXAMPLE_OBJECTS = $(subst example/,objects/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
+HEADERS += ./example/*.hpp
+
+DOMAIN_EXECS = $(subst domains/,executables/,$(subst .cpp,.out,$(shell find domains -name "*.cpp")))
+DOMAIN_OBJECTS = $(subst domains/,objects/,$(subst .cpp,.o,$(shell find domains -name "*.cpp")))
 
 TEST_RUN = $(subst .cpp,,$(shell ls ./test))
 TEST_EXECS = $(subst test/,executables/,$(subst .cpp,.out,$(shell find test -name "*.cpp")))
@@ -51,7 +56,7 @@ OBJECT_DIR = ./objects
 EXEC_DIR = ./executables
 
 # All.
-all: test example $(OUTPUT_DIR)
+all: test example domains $(OUTPUT_DIR)
 
 # Test.
 test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
@@ -81,6 +86,18 @@ $(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS)
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
 $(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS)
+	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
+	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+
+# Domains.
+domains: $(OBJECT_DIR) $(EXEC_DIR) $(DOMAIN_EXECS)
+	@echo "Compiled domains!"
+
+$(DOMAIN_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
+	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+
+$(DOMAIN_OBJECTS): objects/%.o: domains/%.cpp $(HEADERS)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
