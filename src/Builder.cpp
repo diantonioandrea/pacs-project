@@ -34,7 +34,7 @@ namespace pacs {
 
         // Diagram.
         std::vector<Polygon> diagram;
-        
+
         if(uniform)
             diagram = voronoi_uniform(domain, cells, reflect);
         else
@@ -46,6 +46,62 @@ namespace pacs {
 
         // Relaxation.
         diagram = mesh_relax(domain, diagram, reflect);
+
+        // Reflection fixes.
+        if(reflect) {
+            for(const auto &vertex: domain.points) {
+                Point reference{vertex};
+
+                for(std::size_t j = 0; j < diagram.size(); ++j) {
+                    std::vector<Segment> edges = diagram[j].edges();
+                    bool moved = false;
+
+                    for(std::size_t k = 0; k < diagram[j].points.size(); ++k) {
+                        if((edges[k].contains(vertex)) && (edges[k][0] != vertex) && (edges[k][1] != vertex)) {
+                            std::size_t closest = (distance(edges[k][0], vertex) < distance(edges[k][1], vertex)) ? 0 : 1;
+                            std::size_t index = (closest == 1) ? ((k < diagram[j].points.size() - 1) ? k + 1 : 0) : k;
+
+                            reference = diagram[j].points[index];
+                            diagram[j].points[index] = vertex;
+
+                            moved = true;
+                            break;
+                        }
+                    }
+
+                    if(moved) {
+                        for(std::size_t i = 0; i < diagram.size(); ++i) {
+                            std::vector<Segment> edges = diagram[i].edges();
+
+                            for(std::size_t k = 0; k < diagram[i].points.size(); ++k) {
+                                if(edges[k].contains(reference)) {
+                                    if(edges[k][0] == reference) {
+                                        diagram[i].points[k] = vertex;
+                                        break;
+                                    } else if(edges[k][1] == reference) {
+                                        diagram[i].points[(k < diagram[i].points.size() - 1) ? k + 1 : 0] = vertex;
+                                        break;
+                                    } else {
+                                        std::size_t closest = (distance(edges[k][0], reference) < distance(edges[k][1], reference)) ? 0 : 1;
+                                        std::size_t index = (closest == 1) ? ((k < diagram[i].points.size() - 1) ? k + 1 : 0) : k;
+
+                                        reference = diagram[i].points[index];
+                                        diagram[i].points[index] = vertex;
+
+                                        // Restart.
+                                        i = 0;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Restart.
+                        j = 0;
+                    }
+                }    
+            }
+        }
 
         // Small edges collapse.
         std::vector<Real> sizes;
