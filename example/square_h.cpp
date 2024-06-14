@@ -43,7 +43,7 @@ int main() {
     std::size_t degree = 3;
 
     // Refinement percentage.
-    pacs::Real refine = 0.6L;
+    pacs::Real refine = 0.75L;
 
     // Sequence of meshes.
     for(std::size_t j = 0; j < 8; ++j) {
