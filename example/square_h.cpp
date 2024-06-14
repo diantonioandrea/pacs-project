@@ -37,7 +37,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
 
     // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_200.poly");
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
 
     // Polynomial degree.
     std::size_t degree = 3;
@@ -46,7 +46,7 @@ int main() {
     pacs::Real refine = 0.6L;
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 10; ++j) {
+    for(std::size_t j = 0; j < 8; ++j) {
 
         // Mesh.
         pacs::Mesh mesh{domain, diagram, degree};
