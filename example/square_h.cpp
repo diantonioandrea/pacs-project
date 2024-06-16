@@ -1,7 +1,7 @@
 /**
  * @file square_h.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief Poisson on a square domain. Element size adaptive refinement and comparison.
+ * @brief Poisson on a square domain. Element size adaptive refinement.
  * @date 2024-05-31
  * 
  * @copyright Copyright (c) 2024
