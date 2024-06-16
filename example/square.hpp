@@ -25,7 +25,7 @@
  * @return pacs::Real 
  */
 inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
-    return std::exp(std::sin(M_PI * x * y));
+    return (1.0 - std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) * (1.0 - x);
 }
 
 /**
@@ -36,7 +36,7 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
  * @return pacs::Real 
  */
 inline pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
-    return - M_PI *  M_PI * (x * x + y * y) * (std::cos(M_PI * x * y) * std::cos(M_PI * x * y) - std::sin(M_PI * x * y)) * exact(x, y);
+    return (10000.0 * std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) * (1.0 - x) + (200.0 * std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) + M_PI * M_PI * (1.0 - std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) * (1.0 - x);
 }
 
 /**
