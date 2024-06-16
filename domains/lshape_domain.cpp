@@ -16,12 +16,12 @@
 int main() {
 
     // Domain.
-    pacs::Point a{0.0, 0.0};
-    pacs::Point b{0.5, 0.0};
-    pacs::Point c{0.5, 0.5};
-    pacs::Point d{1.0, 0.5};
+    pacs::Point a{-1.0, -1.0};
+    pacs::Point b{0.0, -1.0};
+    pacs::Point c{0.0, 0.0};
+    pacs::Point d{1.0, 0.0};
     pacs::Point e{1.0, 1.0};
-    pacs::Point f{0.0, 1.0};
+    pacs::Point f{-1.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d, e, f}};
 
