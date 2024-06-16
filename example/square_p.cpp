@@ -36,7 +36,7 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d}};
 
-    // Diagrams.
+    // Diagram.
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
 
     // Test.
