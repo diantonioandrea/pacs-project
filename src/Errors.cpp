@@ -60,7 +60,7 @@ namespace pacs {
             for(std::size_t k = 0; k < element_dofs; ++k)
                 indices.emplace_back(j * element_dofs + k);
 
-            this->l2_errors[j] = dot(error(indices), mass(indices, indices) * error(indices));
+            this->l2_errors[j] = std::sqrt(dot(error(indices), mass(indices, indices) * error(indices)));
         }
 
         // Data.
