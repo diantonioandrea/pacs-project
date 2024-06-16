@@ -50,56 +50,49 @@ namespace pacs {
         // Reflection fixes.
         if(reflect) {
             for(const auto &vertex: domain.points) {
-                Point reference{vertex};
-
                 for(std::size_t j = 0; j < diagram.size(); ++j) {
-                    std::vector<Segment> edges = diagram[j].edges();
-                    bool moved = false;
+                    std::vector<Segment> edges_j = diagram[j].edges();
 
                     for(std::size_t k = 0; k < diagram[j].points.size(); ++k) {
-                        if((edges[k].contains(vertex)) && (edges[k][0] != vertex) && (edges[k][1] != vertex)) {
-                            std::size_t closest = (distance(edges[k][0], vertex) < distance(edges[k][1], vertex)) ? 0 : 1;
-                            std::size_t index = (closest == 1) ? ((k < diagram[j].points.size() - 1) ? k + 1 : 0) : k;
+                        if((edges_j[k].contains(vertex)) && (edges_j[k][0] != vertex) && (edges_j[k][1] != vertex)) {
 
-                            reference = diagram[j].points[index];
-                            diagram[j].points[index] = vertex;
+                            Segment previous = edges_j[(k > 0) ? k - 1 : diagram[j].points.size() - 1];
+                            Segment next = edges_j[(k < diagram[j].points.size() - 1) ? k + 1 : 0];
 
-                            moved = true;
-                            break;
-                        }
-                    }
+                            for(std::size_t h = 0; h < diagram.size(); ++h) {
+                                if(h == j)
+                                    continue;
 
-                    if(moved) {
-                        for(std::size_t i = 0; i < diagram.size(); ++i) {
-                            std::vector<Segment> edges = diagram[i].edges();
+                                std::vector<Segment> edges_h = diagram[h].edges();
 
-                            for(std::size_t k = 0; k < diagram[i].points.size(); ++k) {
-                                if(edges[k].contains(reference)) {
-                                    if(edges[k][0] == reference) {
-                                        diagram[i].points[k] = vertex;
+                                for(std::size_t l = 0; l < edges_h.size(); ++l) {
+                                    if(edges_h[l].contains(previous)) {
+                                        if((edges_h[l][0] != previous[0]) && (edges_h[l][0] != previous[1]))
+                                            diagram[h].points[l] = vertex;
+
+                                        if((edges_h[l][1] != previous[0]) && (edges_h[l][1] != previous[1]))
+                                            diagram[h].points[(l < edges_h.size() - 1) ? l + 1 : 0] = vertex;
+
                                         break;
-                                    } else if(edges[k][1] == reference) {
-                                        diagram[i].points[(k < diagram[i].points.size() - 1) ? k + 1 : 0] = vertex;
-                                        break;
-                                    } else {
-                                        std::size_t closest = (distance(edges[k][0], reference) < distance(edges[k][1], reference)) ? 0 : 1;
-                                        std::size_t index = (closest == 1) ? ((k < diagram[i].points.size() - 1) ? k + 1 : 0) : k;
+                                    } else if(edges_h[l].contains(next)) {
+                                        if((edges_h[l][0] != next[0]) && (edges_h[l][0] != next[1]))
+                                            diagram[h].points[l] = vertex;
 
-                                        reference = diagram[i].points[index];
-                                        diagram[i].points[index] = vertex;
+                                        if((edges_h[l][1] != next[0]) && (edges_h[l][1] != next[1]))
+                                            diagram[h].points[(l < edges_h.size() - 1) ? l + 1 : 0] = vertex;
 
-                                        // Restart.
-                                        i = 0;
                                         break;
                                     }
                                 }
                             }
-                        }
 
-                        // Restart.
-                        j = 0;
+                            diagram[j].points.erase(diagram[j].points.begin() + k);
+                            diagram[j].points[k] = vertex;
+                            break;
+
+                        }
                     }
-                }    
+                }
             }
         }
 
