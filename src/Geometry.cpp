@@ -321,72 +321,28 @@ namespace pacs {
         
         std::vector<Point> points;
 
-        // Edges.
+        // Reflections with respect to the edges.
         std::vector<Segment> edges = polygon.edges();
-        
-        int closest = -1; // Closest edge's index.
-        Real minimum = 0.0;
 
         for(std::size_t j = 0; j < polygon.points.size(); ++j) {
-            Real candidate = distance(point, edges[j]);
+            std::vector<Point> normal_intersections = intersections(normal(edges[j], point), edges[j]);
 
-            if((candidate < minimum) || (closest == -1)) {
-                if(!(intersections(normal(edges[j], point), edges[j]).size()))
-                    continue;
+            if(normal_intersections.size() == 0)
+                continue;
 
-                closest = j;
-                minimum = candidate;
-            }
+            Point reflection = normal_intersections[0] * 2 - point;
+
+            if(!(polygon.contains(reflection)))
+                points.emplace_back(reflection);
         }
 
-        #ifndef NDEBUG // Integrity check.
-        assert(closest != -1);
-        #endif
+        // Reflection with respect to the vertices.
+        for(std::size_t j = 0; j < polygon.points.size(); ++j) {
+            Point reflection = polygon.points[j] * 2 - point;
 
-        // Previous and next edges.
-        Segment previous = (closest != 0) ? edges[closest - 1] : edges[edges.size() - 1];
-        Segment next = (closest != edges.size() - 1) ? edges[closest + 1] : edges[0];
-
-        // Reflection with respect to the closest edge.
-        Point projection = intersections(normal(edges[closest], point), edges[closest])[0];
-        Point reflection = projection * 2 - point;
-
-        if(!(polygon.contains(reflection)))
-            points.emplace_back(reflection);
-
-        // Reflection with respect to previous and next edges.
-        std::vector<Point> previous_intersections = intersections(normal(previous, point), previous);
-
-        if(previous_intersections.size()) {
-            Point previous_reflection = previous_intersections[0] * 2 - point;
-
-            if(!(polygon.contains(previous_reflection)))
-                points.emplace_back(previous_reflection);
+            if(!(polygon.contains(reflection)))
+                points.emplace_back(reflection);
         }
-
-        std::vector<Point> next_intersections = intersections(normal(next, point), next);
-
-        if(next_intersections.size()) {
-            Point next_reflection = next_intersections[0] * 2 - point;
-
-            if(!(polygon.contains(next_reflection)))
-                points.emplace_back(next_reflection);
-        }
-
-        // Reflection with respect to the closest vertex.
-        closest = 0;
-        minimum = distance(point, polygon.points[0]);
-
-        for(std::size_t j = 1; j < polygon.points.size(); ++j)
-            if(distance(point, polygon.points[j]) < minimum) {
-                closest = j;
-                minimum = distance(point, polygon.points[0]);
-            }
-
-        Point vertex_reflection = polygon.points[closest] * 2 - point;
-
-        if(!(polygon.contains(vertex_reflection)))
-            points.emplace_back(vertex_reflection);
 
         return points;
     }
