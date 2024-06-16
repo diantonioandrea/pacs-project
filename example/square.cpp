@@ -57,7 +57,7 @@ int main() {
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
         // Forcing term.
-        pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
+        pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
         
         // Linear system solution.
         pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);

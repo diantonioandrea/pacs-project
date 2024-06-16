@@ -38,14 +38,3 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
 inline pacs::Real source(const pacs::Real &x, const pacs::Real &y) {
     return (10000.0 * std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) * (1.0 - x) + (200.0 * std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) + M_PI * M_PI * (1.0 - std::exp(-100.0 * x)) / (1.0 - std::exp(-100.0)) * std::sin(M_PI * y) * (1.0 - x);
 }
-
-/**
- * @brief Dirichlet boundary conditions.
- * 
- * @param x 
- * @param y 
- * @return pacs::Real 
- */
-inline pacs::Real dirichlet(const pacs::Real &x, const pacs::Real &y) {
-    return exact(x, y);
-}
