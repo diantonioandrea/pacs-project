@@ -21,9 +21,9 @@
 
 int main() {
 
-    std::ofstream output_p{"output/square_p.error"};
+    std::ofstream output{"output/square_p.error"};
 
-    output_p << "Square domain - uniform degree refinement." << "\n";
+    output << "Square domain - uniform degree refinement." << "\n";
 
     std::cout << "Square domain - uniform degree refinement." << std::endl;
     std::cout << "Output under output/square_p.error." << std::endl;
@@ -63,9 +63,9 @@ int main() {
         solution.write(contfile);
 
         // Output.
-        output_p << "\n" << error << "\n\n";
+        output << "\n" << error << "\n\n";
         
-        output_p << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output_p << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
     }
 }
