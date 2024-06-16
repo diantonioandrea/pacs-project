@@ -40,10 +40,10 @@ int main() {
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
 
     // Polynomial degree.
-    std::size_t degree = 3;
+    std::size_t degree = 2;
 
     // Refinement percentage.
-    pacs::Real refine = 0.75L;
+    pacs::Real refine = 0.5L;
 
     // Sequence of meshes.
     for(std::size_t j = 0; j < 8; ++j) {
