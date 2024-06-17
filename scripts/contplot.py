@@ -71,20 +71,20 @@ fig.suptitle(lines[0])
 data: list[list[float]] = [numerical, exact, error]
 titles: list[str] = ["Numerical solution", "Exact solution", "Error"]
 
-contours: list = [None] * 3
+scatters: list = [None] * 3
 bars: list = [None] * 3
 
 for j in range(3):
 
     # Plot.
-    contours[j] = axes[j].tricontourf(x, y, data[j], cmap=cm.coolwarm, levels=100)
+    scatters[j] = axes[j].scatter(x, y, c=data[j], cmap=cm.coolwarm, s=0.25)
     axes[j].set_title(titles[j])
 
     # Proportions.
     axes[j].set_aspect('equal', adjustable='box')
 
     # Colorbars.
-    bars[j] = fig.colorbar(contours[j], cmap=cm.coolwarm, orientation="horizontal")
+    bars[j] = fig.colorbar(scatters[j], cmap=cm.coolwarm, orientation="horizontal")
     bars[j].set_ticks([min(data[j]), max(data[j])])
 
     if j == 2:
