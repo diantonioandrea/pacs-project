@@ -8,6 +8,8 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
 - [Overview](#overview)
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
+- [Usage](#usage)
+ - [Generating a Mesh](#generating-a-mesh)
 
 ## Introduction
 
@@ -35,3 +37,33 @@ The key directories are as follows:
 To begin, clone the repository from [here](https://github.com/diantonioandrea/pacs-project):
 
     git clone git@github.com:diantonioandrea/pacs-project.git
+
+## Usage
+
+### Generating a mesh
+
+All the necessary tools are provided in `<Geometry.hpp>`.
+
+The first step is to define a domain for the mesh:
+
+```cpp
+pacs::Point a{0.0, 0.0};
+pacs::Point b{1.0, 0.0};
+pacs::Point c{1.0, 1.0};
+pacs::Point d{0.0, 1.0};
+
+pacs::Polygon square{{a, b, c, d}};
+```
+
+Next, generate a diagram consisting of, for example, 100 elements over the defined square:
+
+```cpp
+std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(square, 100);
+```
+
+This `diagram` can now be used to construct a mesh, which can be saved to a `.poly` file:
+
+```cpp
+pacs::Mesh mesh{square, diagram};
+mesh.write("output/square.poly");
+```
