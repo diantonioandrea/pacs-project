@@ -1,7 +1,7 @@
 /**
  * @file lshape.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief Poisson on a L-shaped domain. Source and Exact solution.
  * @date 2024-06-16
  * 
  * @copyright Copyright (c) 2024
