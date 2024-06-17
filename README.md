@@ -40,11 +40,11 @@ To begin, clone the repository from [here](https://github.com/diantonioandrea/pa
 
 ## Usage
 
-### Generating a mesh
+### Mesh Generation
 
-All the necessary tools are provided in `<Geometry.hpp>`.
+To generate a mesh, include `<Geometry.hpp>` which provides all necessary tools.
 
-The first step is to define a domain for the mesh:
+Start by defining a domain using points:
 
 ```cpp
 pacs::Point a{0.0, 0.0};
@@ -52,18 +52,24 @@ pacs::Point b{1.0, 0.0};
 pacs::Point c{1.0, 1.0};
 pacs::Point d{0.0, 1.0};
 
-pacs::Polygon square{{a, b, c, d}};
+pacs::Polygon domain{{a, b, c, d}};
 ```
 
-Next, generate a diagram consisting of, for example, 100 elements over the defined square:
+Next, create a diagram with 100 elements over the square domain:
 
 ```cpp
-std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(square, 100);
+std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100);
 ```
 
-This `diagram` can now be used to construct a mesh, which can be saved to a `.poly` file:
+Save the generated mesh to a `.poly` file:
 
 ```cpp
-pacs::Mesh mesh{square, diagram};
+pacs::Mesh mesh{domain, diagram};
 mesh.write("output/square.poly");
+```
+
+For non-convex domains, enable point reflection:
+
+```cpp
+std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100, reflect=true);
 ```
