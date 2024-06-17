@@ -61,7 +61,7 @@ Next, create a diagram with 100 elements over the square domain:
 std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100);
 ```
 
-Save the generated mesh to a `.poly` file:
+Generate a mesh and save it to a `.poly` file:
 
 ```cpp
 pacs::Mesh mesh{domain, diagram};
