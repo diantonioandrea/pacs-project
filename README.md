@@ -18,6 +18,10 @@ This repository presents an implementation of an adaptive HP Discontinuous Galë
 The key directories are as follows:
 
 - `include/`: Holds definitions for the structures and methods utilized in the repository.
+    - `include/Algebra/`: Structures and methods for vectors, matrices and linear solvers.
+    - `include/Geometry/`: Tools for working with polygons and meshes.
+    - `include/Fem/`: Finite element structures and methods.
+    - `include/Laplacian/`: Implementation details for the Poisson problem.
 - `src/`: Contains the primary implementations for the repository’s structures and methods.
 - `data/`: Includes sample meshes for simple domains.
 - `domains/`: Stores scripts for generating sample meshes.
