@@ -11,6 +11,7 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
     - [Compilation and Execution](#compilation-and-execution)
 - [Usage](#usage)
  - [Generating a Mesh](#generating-a-mesh)
+ - [Solving the Poisson Problem](#solving-the-poisson-problem)
 
 ## Introduction
 
@@ -98,3 +99,30 @@ For non-convex domains, enable point reflection:
 ```cpp
 std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100, reflect=true);
 ```
+
+### Solving the Poisson Problem
+
+To solve the Poisson problem, ensure you have included `<Fem.hpp>` and `<Laplacian.hpp>` for necessary functionalities.
+
+First, build the Laplacian matrix from your mesh:
+
+```cpp
+std::array<pacs::Matrix<pacs::Real>, 3> matrices = pacs::laplacian(mesh);
+pacs::Matrix<pacs::Real> laplacian = matrices[1];
+```
+
+Next, construct the forcing term using specified source and Dirichlet boundary conditions:
+
+```cpp
+pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
+```
+
+Here, `source` and `dirichlet` are functions representing the source term and Dirichlet boundary conditions, respectively.
+
+Finally, solve the linear system to find the solution vector:
+
+```cpp
+pacs::Vector<pacs::Real> solution = pacs::solve(laplacian, forcing);
+```
+
+This `solution` vector now contains the computed solution to the Poisson problem on the given mesh with specified boundary conditions and source term.
