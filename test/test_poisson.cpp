@@ -45,7 +45,7 @@ int main() {
 
     // Solution structure (output).
     pacs::Solution solution{mesh, numerical, exact};
-    solution.write("output/poisson.cont");
+    solution.write("output/poisson.sol");
 
     // Output.
     std::cout << "\n" << error << "\n" << std::endl;

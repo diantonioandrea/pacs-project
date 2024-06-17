@@ -19,8 +19,8 @@ report/output
 # polyplot.py
 /*.poly
 
-# contplot.py
-/*.cont
+# solplot.py
+/*.sol
 
 # Others
 **/*.DS_Store

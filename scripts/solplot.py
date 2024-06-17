@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-@file contplot.py
+@file solplot.py
 @author Andrea Di Antonio (github.com/diantonioandrea)
 @date 2024-05-13
 
@@ -13,11 +13,11 @@ from matplotlib import cm
 import sys
 
 if len(sys.argv) <= 1:
-    print(f"Usage: {sys.argv[0]} /path/to/file.cont.")
+    print(f"Usage: {sys.argv[0]} /path/to/file.sol.")
     sys.exit(0)
 
 try:
-    if sys.argv[1].split(".")[-1] != "cont":
+    if sys.argv[1].split(".")[-1] != "sol":
         raise
 
     file = open(sys.argv[1], "r+")
@@ -29,7 +29,7 @@ except FileNotFoundError:
     sys.exit(-1)
 
 except:
-    print("Load a .cont file.")
+    print("Load a .sol file.")
     sys.exit(-1)
 
 # Points.

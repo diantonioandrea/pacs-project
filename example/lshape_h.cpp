@@ -71,8 +71,8 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string contfile = "output/lshape_h_" + std::to_string(j) + ".cont";
-        solution.write(contfile);
+        std::string solfile = "output/lshape_h_" + std::to_string(j) + ".sol";
+        solution.write(solfile);
 
         // Output.
         output << "\n" << error << "\n\n";
