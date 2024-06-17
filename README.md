@@ -8,6 +8,7 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
 - [Overview](#overview)
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
+    - [Compilation and Execution](#compilation-and-execution)
 - [Usage](#usage)
  - [Generating a Mesh](#generating-a-mesh)
 
@@ -34,9 +35,33 @@ The key directories are as follows:
 
 ### Cloning the Repository
 
-To begin, clone the repository from [here](https://github.com/diantonioandrea/pacs-project):
+Clone the repository from [here](https://github.com/diantonioandrea/pacs-project):
 
-    git clone git@github.com:diantonioandrea/pacs-project.git
+```bash
+git clone git@github.com:diantonioandrea/pacs-project.git
+```
+
+### Compilation and Execution
+
+Compile examples with:
+
+```bash
+make examples
+```
+
+Compile tests with:
+
+```bash
+make tests
+```
+
+Compile mesh generation scripts with:
+
+```bash
+make domains
+```
+
+Executables are located in `executables/` and their outputs in `output/`.
 
 ## Usage
 
