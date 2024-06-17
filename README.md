@@ -15,9 +15,14 @@ This repository presents an implementation of an adaptive HP Discontinuous Galë
 
 ## Overview
 
-Key components include:
+The key directories are as follows:
 
-<!-- To be completed. -->
+- `include/`: Holds definitions for the structures and methods utilized in the repository.
+- `src/`: Contains the primary implementations for the repository’s structures and methods.
+- `data/`: Includes sample meshes for simple domains.
+- `domains/`: Stores scripts for generating sample meshes.
+- `example/`: Provides the main examples for using the repository.
+- `test/`: Contains scripts for testing fundamental features.
 
 ## Setup
 
@@ -26,5 +31,3 @@ Key components include:
 To begin, clone the repository from [here](https://github.com/diantonioandrea/pacs-project):
 
     git clone git@github.com:diantonioandrea/pacs-project.git
-
-<!-- To be completed. -->
