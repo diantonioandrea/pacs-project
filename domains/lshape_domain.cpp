@@ -1,7 +1,7 @@
 /**
  * @file lshape_domain.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief L-shaped domain mesh generator.
  * @date 2024-06-14
  * 
  * @copyright Copyright (c) 2024
