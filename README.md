@@ -10,8 +10,8 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
 - [Usage](#usage)
- - [Generating a Mesh](#generating-a-mesh)
- - [Solving the Poisson Problem](#solving-the-poisson-problem)
+    - [Generating a Mesh](#generating-a-mesh)
+    - [Solving the Poisson Problem](#solving-the-poisson-problem)
 
 ## Introduction
 
