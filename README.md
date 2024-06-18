@@ -95,6 +95,12 @@ pacs::Mesh mesh{domain, diagram};
 mesh.write("output/square.poly");
 ```
 
+The diagram can be retrieved using the same `mesh_diagram` function:
+
+```cpp
+std::vector<pacs::Polygon> retrieved = pacs::mesh_diagram("output/square.poly");
+```
+
 For non-convex domains, enable point reflection:
 
 ```cpp
