@@ -111,9 +111,10 @@ std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100, reflect=tru
 
 To solve the Poisson problem, ensure you have included `<Fem.hpp>` and `<Laplacian.hpp>` for necessary functionalities.
 
-First, build the Laplacian matrix from your mesh[^1]:
+First, build the Laplacian matrix from your mesh[^1][^2]:
 
 [^1]: `laplacian` also builds some other matrices used for error evaluation.
+[^2]: `pacs::Real` wraps `long double`.
 
 ```cpp
 std::array<pacs::Matrix<pacs::Real>, 3> matrices = pacs::laplacian(mesh);
