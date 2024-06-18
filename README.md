@@ -118,7 +118,11 @@ Next, construct the forcing term using specified source and Dirichlet boundary c
 pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
 ```
 
-Here, `source` and `dirichlet` are functions representing the source term and Dirichlet boundary conditions, respectively.
+Here, `source` and `dirichlet` are functions representing the source term and Dirichlet boundary conditions, respectively, which follow the following scheme:
+
+```cpp
+pacs::Real function(const pacs::Real &, const pacs::Real &);
+```
 
 Finally, solve the linear system to find the solution vector:
 
