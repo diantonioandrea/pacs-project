@@ -98,7 +98,7 @@ namespace pacs {
             return _bicgstab(A, b, TOL);
 
         // Default.
-        return _gmres(A, b, TOL);
+        return _bicgstab(A, b, TOL);
     }
 
     // MATRIX SOLVERS.
