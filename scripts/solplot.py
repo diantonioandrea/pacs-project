@@ -90,4 +90,20 @@ for j in range(3):
     if j == 2:
         bars[j].set_ticklabels([f"{min(data[j]):1.2e}", f"{max(data[j]):1.2e}"])
 
-plt.show()
+if "-s" in sys.argv:
+    index: int = sys.argv.index("-s")
+
+    try:
+        plt.savefig(sys.argv[index + 1])
+        print(f"Saved to {sys.argv[index + 1]}.")
+
+    except IndexError:
+        print("Filename not found.")
+        sys.exit(-1)
+
+    except:
+        print("Syntax error.")
+        sys.exit(-1)
+
+else:
+    plt.show()

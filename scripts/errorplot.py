@@ -234,7 +234,24 @@ if "--degrees" in sys.argv: # Degrees only.
     axes[0].set_yticks(errors_l2_ticks, labels=errors_l2_labels)
     axes[1].set_yticks(errors_dg_ticks, labels=errors_dg_labels)
 
-    plt.show()
+    if "-s" in sys.argv:
+        index: int = sys.argv.index("-s")
+
+        try:
+            plt.savefig(sys.argv[index + 1])
+            print(f"Saved to {sys.argv[index + 1]}.")
+
+        except IndexError:
+            print("Filename not found.")
+            sys.exit(-1)
+
+        except:
+            print("Syntax error.")
+            sys.exit(-1)
+
+    else:
+        plt.show()
+
     sys.exit(0)
 
 if "--p" in sys.argv:
@@ -396,7 +413,24 @@ if "--dofs" in sys.argv: # Dofs comparison.
     axes[0].set_title("L2 Error")
     axes[1].set_title("DG Error")
 
-    plt.show()
+    if "-s" in sys.argv:
+        index: int = sys.argv.index("-s")
+
+        try:
+            plt.savefig(sys.argv[index + 1])
+            print(f"Saved to {sys.argv[index + 1]}.")
+
+        except IndexError:
+            print("Filename not found.")
+            sys.exit(-1)
+
+        except:
+            print("Syntax error.")
+            sys.exit(-1)
+
+    else:
+        plt.show()
+
     sys.exit(0)
 
 # Plot.
@@ -459,4 +493,20 @@ for j in range(2):
     axes[0, j].set_title("L2 Error")
     axes[1, j].set_title("DG Error")
 
-plt.show()
+if "-s" in sys.argv:
+    index: int = sys.argv.index("-s")
+
+    try:
+        plt.savefig(sys.argv[index + 1])
+        print(f"Saved to {sys.argv[index + 1]}.")
+
+    except IndexError:
+        print("Filename not found.")
+        sys.exit(-1)
+
+    except:
+        print("Syntax error.")
+        sys.exit(-1)
+
+else:
+    plt.show()
