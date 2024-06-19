@@ -30,6 +30,7 @@ The key directories are as follows:
 - `data/`: Includes sample meshes for simple domains.
 - `domains/`: Stores scripts for generating sample meshes.
 - `example/`: Provides the main examples for using the repository.
+- `snippets/`: Simpler examples for the report.
 - `test/`: Contains scripts for testing fundamental features.
 - `scripts/`: Contains Python scripts for meshes, solutions and errors visualization.
 
