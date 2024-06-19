@@ -1,5 +1,8 @@
 \documentclass[12pt]{article}
 
+% Bibliography.
+\usepackage{cite}
+
 \newcommand{\reporttitle}{Adaptive HP Discontinuous Galërkin Algorithms}
 \newcommand{\accentcolor}{solarized-red}
 \newcommand{\urlcolor}{solarized-yellow}
@@ -122,6 +125,7 @@
 	colorlinks=true,
 	linkcolor=\accentcolor,
 	urlcolor=\urlcolor,
+	citecolor=\accentcolor,
 	pdftitle={\reporttitle},
 	pdfpagemode=FullScreen,
 	pdfauthor={Andrea Di Antonio}
@@ -166,5 +170,9 @@
 	\newpage
     \section{Polygonal Meshes Over a Polygonal Domain}
 	\input{sections/meshes.tex}
+
+	\newpage
+	\bibliography{bibliography/refs.bib}
+	\bibliographystyle{siam}
 
 \end{document}

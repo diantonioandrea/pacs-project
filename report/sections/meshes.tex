@@ -7,7 +7,7 @@
 
 Meshes are fundamental tools in Finite Element algorithms. This algorithm utilizes polygonal meshes over a polygonal domain.
 
-Meshes are typically constructed by evaluating the Voronoi diagram of a random set of points within a polygon. This diagram is then relaxed using Lloyd's algorithm, which involves re-evaluating the Voronoi diagram of the centroids of the Voronoi cells and iterating until convergence is achieved based on a specified tolerance.
+\cite{Talischi2012} Meshes are typically constructed by evaluating the Voronoi diagram of a random set of points within a polygon. This diagram is then relaxed using Lloyd's algorithm, which involves re-evaluating the Voronoi diagram of the centroids of the Voronoi cells and iterating until convergence is achieved based on a specified tolerance.
 
 Meshes require a diagram, which is created or loaded using \lstinline{mesh_diagram}.
 
@@ -22,6 +22,6 @@ After post-processing, the mesh is prepared by evaluating each element within th
 \newpage
 \subsection{A code snippet}
 
-Here's a snippet to illustrate the mesh building process:
+Here's a snippet to illustrate the mesh building process from the user's perspective:
 
 \lstinputlisting[style=cpp, firstline=11]{../snippets/square_mesh.cpp}
