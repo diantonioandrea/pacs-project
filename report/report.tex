@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt, twoside]{article}
 
 % Bibliography.
 \usepackage{cite}
@@ -135,7 +135,8 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[R]{Andrea Di Antonio}
-\fancyhead[L]{\reporttitle}
+\fancyhead[EL]{\reporttitle}
+\fancyhead[OL]{Advanced Programming for Scientific Computing}
 \fancyfoot[C]{\thepage}
 
 \title{\reporttitle}
@@ -170,6 +171,15 @@
 	\newpage
     \section{Polygonal Meshes Over a Polygonal Domain}
 	\input{sections/meshes.tex}
+
+	\newpage
+    \section{Solving the Poisson Problem}
+
+	\newpage
+    \section{Tests over a Sequence of Uniform Meshes}
+
+	\newpage
+    \section{Implementing the \textit{h-Adaptivity}}
 
 	\newpage
 	\bibliography{bibliography/refs.bib}
