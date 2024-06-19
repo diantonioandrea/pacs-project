@@ -8,9 +8,13 @@
 @copyright Copyright (c) 2024
 """
 
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import sys
+
+# Font.
+matplotlib.rcParams.update({'font.size': 18})
 
 if len(sys.argv) <= 1:
     print(f"Usage: {sys.argv[0]} /path/to/file.sol.")
@@ -66,7 +70,7 @@ for line in lines:
 
 # Plot.
 fig, axes = plt.subplots(1, 3)
-fig.suptitle(lines[0])
+fig.suptitle("Solution Scatterplot")
 
 data: list[list[float]] = [numerical, exact, error]
 titles: list[str] = ["Numerical solution", "Exact solution", "Error"]
@@ -77,7 +81,7 @@ bars: list = [None] * 3
 for j in range(3):
 
     # Plot.
-    scatters[j] = axes[j].scatter(x, y, c=data[j], cmap=cm.coolwarm, s=0.25)
+    scatters[j] = axes[j].scatter(x, y, c=data[j], cmap=cm.coolwarm, s=0.2)
     axes[j].set_title(titles[j])
 
     # Proportions.
@@ -88,22 +92,7 @@ for j in range(3):
     bars[j].set_ticks([min(data[j]), max(data[j])])
 
     if j == 2:
-        bars[j].set_ticklabels([f"{min(data[j]):1.2e}", f"{max(data[j]):1.2e}"])
+        bars[j].set_ticklabels([f"{min(data[j]):1.1e}", f"{max(data[j]):1.1e}"])
 
-if "-s" in sys.argv:
-    index: int = sys.argv.index("-s")
-
-    try:
-        plt.savefig(sys.argv[index + 1])
-        print(f"Saved to {sys.argv[index + 1]}.")
-
-    except IndexError:
-        print("Filename not found.")
-        sys.exit(-1)
-
-    except:
-        print("Syntax error.")
-        sys.exit(-1)
-
-else:
-    plt.show()
+# Output.
+plt.show()
