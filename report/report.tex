@@ -21,7 +21,9 @@
 
 \newcommand{\LT}{\mathscr{L}^2}
 \newcommand{\HO}{\mathscr{H}^1}
+
 \newcommand{\Tau}{\mathcal{T}}
+\newcommand{\F}{\mathcal{F}}
 
 % Vectors and operators.
 \newcommand{\Vector}[1]{\bm{#1}}
@@ -29,8 +31,7 @@
 
 % Matrices.
 \newcommand{\MA}{\mathcal{A}}
-\newcommand{\MB}{\mathcal{B}}
-\newcommand{\VF}{\mathcal{F}}
+\newcommand{\VB}{\mathcal{B}}
 
 % Gradient and divergence.
 \newcommand{\grad}{\Vector{\nabla}}
@@ -67,23 +68,23 @@
 	tabsize=2
 }
 
-% C++, if needed.
-
-% \lstdefinestyle{cpp}{
-% 	commentstyle=\color{solarized-green},
-% 	keywordstyle=\color{solarized-blue},
-% 	stringstyle=\color{solarized-orange},
-% 	basicstyle=\ttfamily\color{solarized-base01},
-% 	breakatwhitespace=false,
-% 	breaklines=true,
-% 	captionpos=b,
-% 	keepspaces=true,
-% 	showspaces=false,
-% 	language=cpp,
-% 	showstringspaces=false,
-% 	showtabs=false,
-% 	tabsize=4
-% }
+\lstdefinestyle{cpp}{ % C++
+	commentstyle=\color{solarized-green},
+	keywordstyle=\color{solarized-blue},
+	stringstyle=\color{solarized-orange},
+	basicstyle=\ttfamily\color{solarized-base02},
+	numberstyle=\ttfamily\color{solarized-base01},
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	showspaces=false,
+	language=c++,
+	showstringspaces=false,
+	showtabs=false,
+	numbers=left,
+	tabsize=4
+}
 
 \lstset{style=default}
 
@@ -93,8 +94,8 @@
 
 \usepackage{enumerate}
 
-% \usepackage{graphicx}
-% \graphicspath{{../gallery/}}
+\usepackage{graphicx}
+\graphicspath{{gallery/}}
 
 \usepackage{xcolor-solarized}
 \color{solarized-base02}
@@ -146,7 +147,7 @@
 
 	\begin{abstract}
 		\begin{center}
-			Report for the course \textit{Advanced Programming for Scientific Computing}.
+			Report for the course \textit{Advanced Programming for Scientific Computing} on the implementation details of an adaptive HP discontinuous Galërkin algorithm.
 		\end{center}
 	\end{abstract}
 
@@ -157,5 +158,13 @@
 	\pagenumbering{arabic}
     \section{Formulation of the Poisson Problem}
 	\input{sections/problem.tex}
+
+	\newpage
+    \section{Discontinuos Galërkin Method for the Poisson Problem}
+	\input{sections/galerkin.tex}
+
+	\newpage
+    \section{Polygonal Meshes Over a Polygonal Domain}
+	\input{sections/meshes.tex}
 
 \end{document}
