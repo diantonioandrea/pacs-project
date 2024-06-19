@@ -8,10 +8,14 @@
 @copyright Copyright (c) 2024
 """
 
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import NullFormatter
 import numpy
 import sys
+
+# Font.
+matplotlib.rcParams.update({'font.size': 18})
 
 # Sizes.
 sizes: list[float] = []
@@ -95,10 +99,10 @@ l2_ticks = [l2_errors[0], l2_errors[-1]]
 dg_ticks = [dg_errors[0], dg_errors[-1]]
 
 # Labels.
-sizes_labels = [f"{tick:.2f}" for tick in sizes_ticks]
+sizes_labels = [f"{tick:.3f}" for tick in sizes_ticks]
 
-l2_labels = [f"{tick:.2e}" for tick in l2_ticks]
-dg_labels = [f"{tick:.2e}" for tick in dg_ticks]
+l2_labels = [f"{tick:.1e}" for tick in l2_ticks]
+dg_labels = [f"{tick:.1e}" for tick in dg_ticks]
 
 # Plot.
 fig, axes = plt.subplots(1, 2)
@@ -107,12 +111,12 @@ fig.suptitle("L2 and DG errors vs. size")
 # L2.
 axes[0].plot(sizes, l2_errors, color=black, marker="*", linewidth=3, label="L2 error.") # Error.
 axes[0].plot(sizes, l2_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"Degree: {degree + 1}") # Comparison.
-axes[0].plot(sizes, l2_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.2f}") # Comparison.
+axes[0].plot(sizes, l2_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.1f}") # Comparison.
 
 # DG.
 axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=3) # Error.
 axes[1].plot(sizes, dg_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"Degree: {degree}") # Comparison.
-axes[1].plot(sizes, dg_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.2f}") # Comparison.
+axes[1].plot(sizes, dg_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f}") # Comparison.
 
 # Parameters.
 for j in range(2):
@@ -126,7 +130,7 @@ for j in range(2):
     axes[j].yaxis.set_minor_formatter(NullFormatter())
 
     # Legend.
-    axes[j].legend()
+    axes[j].legend(loc="best")
 
 # Title.
 axes[0].set_title("L2 error")
@@ -137,6 +141,9 @@ axes[0].set_xticks(sizes_ticks, labels=sizes_labels)
 axes[1].set_xticks(sizes_ticks, labels=sizes_labels)
 axes[0].set_yticks(l2_ticks, labels=l2_labels)
 axes[1].set_yticks(dg_ticks, labels=dg_labels)
+
+axes[1].yaxis.tick_right()
+axes[1].yaxis.set_label_position("right")
 
 # Output.
 plt.show()
