@@ -65,4 +65,20 @@ for line in lines:
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')
 
-plt.show()
+if "-s" in sys.argv:
+    index: int = sys.argv.index("-s")
+
+    try:
+        plt.savefig(sys.argv[index + 1])
+        print(f"Saved to {sys.argv[index + 1]}.")
+
+    except IndexError:
+        print("Filename not found.")
+        sys.exit(-1)
+
+    except:
+        print("Syntax error.")
+        sys.exit(-1)
+
+else:
+    plt.show()
