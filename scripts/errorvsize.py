@@ -114,7 +114,7 @@ axes[0].plot(sizes, l2_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"
 axes[0].plot(sizes, l2_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.1f}") # Comparison.
 
 # DG.
-axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=3) # Error.
+axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
 axes[1].plot(sizes, dg_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"Degree: {degree}") # Comparison.
 axes[1].plot(sizes, dg_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f}") # Comparison.
 
