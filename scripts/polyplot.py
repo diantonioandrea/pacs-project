@@ -8,8 +8,12 @@
 @copyright Copyright (c) 2024
 """
 
+import matplotlib
 import matplotlib.pyplot as plt
 import sys
+
+# Font.
+matplotlib.rcParams.update({'font.size': 18})
 
 if len(sys.argv) <= 1:
     print(f"Usage: {sys.argv[0]} /path/to/file.poly.")
@@ -65,20 +69,5 @@ for line in lines:
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')
 
-if "-s" in sys.argv:
-    index: int = sys.argv.index("-s")
-
-    try:
-        plt.savefig(sys.argv[index + 1])
-        print(f"Saved to {sys.argv[index + 1]}.")
-
-    except IndexError:
-        print("Filename not found.")
-        sys.exit(-1)
-
-    except:
-        print("Syntax error.")
-        sys.exit(-1)
-
-else:
-    plt.show()
+# Output.
+plt.show()
