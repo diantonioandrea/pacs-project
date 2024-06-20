@@ -1,6 +1,6 @@
 # Advanced Programming for Scientific Computing - Project
 
-_Adaptive HP Discontinuous Galërkin Algorithms_
+_hp-Adaptive Discontinuous Galërkin Algorithms_
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ _Adaptive HP Discontinuous Galërkin Algorithms_
 
 ## Introduction
 
-This repository presents an implementation of an adaptive HP Discontinuous Galërkin method.
+This repository presents an implementation of an hp-adaptive discontinuous Galërkin method.
 
 ## Overview
 
