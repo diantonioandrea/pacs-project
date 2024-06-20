@@ -89,10 +89,14 @@ for j in range(3):
 
     # Colorbars.
     bars[j] = fig.colorbar(scatters[j], cmap=cm.coolwarm, orientation="horizontal")
-    bars[j].set_ticks([min(data[j]), max(data[j])])
 
     if j == 2:
-        bars[j].set_ticklabels([f"{min(data[j]):1.1e}", f"{max(data[j]):1.1e}"])
+        bars[j].set_ticks([max(data[j])])
+        bars[j].set_ticklabels([f"{max(data[j]):1.1e}"])
+
+    else:
+        bars[j].set_ticks([min(data[j]), max(data[j])])
+        bars[j].set_ticklabels([f"{min(data[j]):.2f}", f"{max(data[j]):.2f}"])
 
 # Output.
 plt.show()
