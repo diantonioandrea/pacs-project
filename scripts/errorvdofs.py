@@ -90,12 +90,6 @@ dofs_ticks = [dofs[0], dofs[-1]]
 l2_ticks = [l2_errors[0], l2_errors[-1]]
 dg_ticks = [dg_errors[0], dg_errors[-1]]
 
-# Labels.
-dofs_labels = [f"{tick:.3f}" for tick in dofs_ticks]
-
-l2_labels = [f"{tick:.1e}" for tick in l2_ticks]
-dg_labels = [f"{tick:.1e}" for tick in dg_ticks]
-
 # Plot.
 fig, axes = plt.subplots(1, 2)
 fig.suptitle("L2 and DG errors vs. DOFs")
@@ -170,6 +164,11 @@ if len(sys.argv) == 3:
         l2_comparison.append(numpy.exp(l2_interp[1]) * dof ** l2_interp[0])
         dg_comparison.append(numpy.exp(dg_interp[1]) * dof ** dg_interp[0])
 
+    dofs_ticks.append(dofs[-1])
+
+    l2_ticks.append(l2_errors[-1])
+    dg_ticks.append(dg_errors[-1])
+
     # Plot.
 
     # L2.
@@ -179,6 +178,18 @@ if len(sys.argv) == 3:
     # DG.
     axes[1].plot(dofs, dg_errors, color=red, marker="*", linewidth=3, label="DG error (C).") # Error.
     axes[1].plot(dofs, dg_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f} (C)") # Comparison.
+
+# Ticks.
+dofs_ticks.sort()
+
+l2_ticks.sort()
+dg_ticks.sort()
+
+# Labels.
+dofs_labels = [f"{tick:.0f}" for tick in dofs_ticks]
+
+l2_labels = [f"{tick:.1e}" for tick in l2_ticks]
+dg_labels = [f"{tick:.1e}" for tick in dg_ticks]
 
 # Parameters.
 for j in range(2):
