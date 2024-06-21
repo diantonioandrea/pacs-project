@@ -2,7 +2,7 @@
 
 Tests over a sequence of uniform meshes have been conducted to verify the algorithm's performance, confirming that:
 
-\begin{gather}
+\begin{gather} \label{trends}
     \lVert u - u^k_h \rVert_{\LT(\Omega)} \approx h^{k + 1}, \\
     \lVert u - u^k_h \rVert_{DG} \approx h^k.
 \end{gather}
@@ -19,10 +19,12 @@ which leads to:
     f(x, y) = -\Delta u(x, y) = 8 \pi^2 \sin(2 \pi x) \cos(2 \pi y),
 \end{gather}
 
+and non-homogeneous Dirichlet boundary conditions given by the exact solution itself.
+
 \newpage
 \subsubsection{Errors}
 
-The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes over the square and L-shaped domains.
+The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes over the square and L-shaped domains. The relations presented in \eqref{trends} have been confirmed.
 
 \begin{figure}[!ht]
 	\centering
@@ -76,6 +78,8 @@ for which we have $f = 0$ and we know that $u$ is analytical in $\Omega \setminu
 
 \newpage
 \subsubsection{Solutions}
+
+The following plot shows that the error in these particular solutions is strongly localized, indicating that uniform refinement cannot perform optimally, also considering its rapidly growing computational cost.
 
 \begin{figure}[!ht]
 	\centering
