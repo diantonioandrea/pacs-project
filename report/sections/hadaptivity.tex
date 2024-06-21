@@ -11,26 +11,7 @@ The strategy of choice can be outlined as follows:
     \item For polygons with $N_e > 4$, the refiner adds $N_e$ new nodes at the midpoints of the segments connecting the polygon's centroid to the midpoints of its edges. The refiner then connects these points to form quadrilaterals along the polygon's edges and creates a new smaller polygon by connecting all the new internal nodes.
 \end{enumerate}
 
-Meshes and error trends in the following pages.
-
-\newpage
-\subsubsection{Meshes}
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100_h1.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100_h2.pdf}
-	\caption{Square mesh after 0, 1 and 3 refinements.}
-\end{figure}
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100_h1.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100_h2.pdf}
-	\caption{L-shaped mesh after 0, 1 and 3 refinements.}
-\end{figure}
+Error trends and refined meshes in the following pages.
 
 \newpage
 \subsubsection{Errors}
@@ -39,7 +20,26 @@ Meshes and error trends in the following pages.
 	\centering
 	\includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{square_h.pdf}
     \includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{lshape_h.pdf}
-	\caption{Comparison of $\LT$ and DG errors versus $\text{DOFs}^{1/2}$ between a sequence of uniform meshes and \textit{h-adaptively} refined meshes over a square domain (top) and an L-shaped domain (bottom), with $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
+	\caption{Comparison of $\LT$ and DG errors versus $\text{DOFs}^{1/2}$ between a sequence of uniform meshes and \textit{h-adaptively} refined meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
+\end{figure}
+
+\newpage
+\subsubsection{Meshes}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100_h0.pdf}
+    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100_h1.pdf}
+    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{square_100_h2.pdf}
+	\caption{Square mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100_h0.pdf}
+    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100_h1.pdf}
+    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=5.5cm]{lshape_100_h2.pdf}
+	\caption{L-shaped mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
 \end{figure}
 
 \newpage
