@@ -48,7 +48,7 @@ int main() {
     pacs::Real refine = 0.5L;
 
     // Test.
-    for(std::size_t j = 0; j < 4; ++j) {
+    for(std::size_t j = 0; j < 8; ++j) {
 
         // Mesh.
         pacs::Mesh mesh{domain, diagram, degree};
