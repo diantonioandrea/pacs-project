@@ -21,6 +21,8 @@ which leads to:
 
 and non-homogeneous Dirichlet boundary conditions given by the exact solution itself.
 
+Error trends and solution plots in the following pages.
+
 \newpage
 \subsubsection{Errors}
 
@@ -52,7 +54,7 @@ Tests over a sequence of uniform meshes, using pathological functions as exact s
 
 \cite{Antonietti2013} The pathological function for the square domain is:
 
-\begin{gather}
+\begin{gather} \label{pathological_square}
     u(x, y) = \frac{1 - e^{-100x}}{1 - e^{-100}} \sin(\pi y) (1 - x),
 \end{gather}
 
@@ -60,7 +62,7 @@ which exhibits a strong boundary layer along the line $x = 0$.
 
 For the L-shaped domain, the pathological function is:
 
-\begin{gather}
+\begin{gather} \label{pathological_lshape}
     u(\rho, \theta) = \rho^{2 / 3} \sin\left(\frac{2 \theta}{3}\right),
 \end{gather}
 
@@ -68,6 +70,8 @@ for which we have $f = 0$ and we know that $u$ is analytical in $\Omega \setminu
 
 \newpage
 \subsubsection{Errors}
+
+Given these pathological solutions, $u^k_h$ appears to converge to $u$ at a much slower rate than expected.
 
 \begin{figure}[!ht]
 	\centering
