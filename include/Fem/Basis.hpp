@@ -23,6 +23,8 @@ namespace pacs {
 
     std::array<Matrix<Real>, 3> basis_2d(const Mesh &, const std::size_t &, const std::array<Vector<Real>, 2> &);
 
+    Matrix<Real> lap_basis_2d(const Mesh &, const std::size_t &, const std::array<Vector<Real>, 2> &);
+
 }
 
 #endif
