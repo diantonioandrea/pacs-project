@@ -1,15 +1,15 @@
-Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$, the following holds:
+Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$ and $g \in C^2(\partial \Omega)$, the following holds:
 
 \begin{gather}
     \begin{cases} \label{strong_stokes}
         - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
-        u = 0 & \Forall \Vector{x} \in \partial \Omega.
+        u = g & \Forall \Vector{x} \in \partial \Omega.
     \end{cases}
 \end{gather}
 
 \subsection{Weak formulation}
 
-Now, seeking $u \in V$ such that, given $f \in V^*$, the following equation is satisfied:
+Now, seeking $u \in V$ such that, given $f \in V^*$ and $u |_{\partial \Omega} = g$, the following equation is satisfied:
 
 \begin{gather} \label{weak_stokes}
     \boa{u}{v} = \langle f, v \rangle \quad \Forall v \in V,
