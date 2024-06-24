@@ -46,6 +46,31 @@ namespace pacs {
             Vector<Real> operator ()(const Vector<Real> &, const Vector<Real> &) const;
     };
 
+    /**
+     * @brief TwoFunctor class.
+     * 
+     */
+    class TwoFunctor {
+        private:
+
+            // Functions.
+            Function first;
+            Function second;
+
+        public:
+
+            // CONSTRUCTORS.
+
+            TwoFunctor();
+            TwoFunctor(const Function &, const Function &);
+
+            // EVALUATION.
+
+            std::array<Real, 2> operator ()(const Real &, const Real &);
+            std::array<Vector<Real>, 2> operator ()(const Vector<Real> &, const Vector<Real> &);
+
+    };
+
 }
 
 #endif
