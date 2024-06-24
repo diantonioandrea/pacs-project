@@ -20,4 +20,7 @@
 // Errors evaluation.
 #include <Laplacian/Errors.hpp>
 
+// Estimators.
+#include <Laplacian/Estimators.hpp>
+
 #endif
