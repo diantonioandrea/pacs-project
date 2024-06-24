@@ -15,7 +15,7 @@
 namespace pacs {
 
     /**
-     * @brief Returns the evaluation of a given order Legendre polynomials over x.
+     * @brief Returns the evaluation of a given order Legendre polynomial over x.
      * 
      * @param x 
      * @param order 
@@ -67,7 +67,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Returns the evaluation of the derivative of a given order Legendre polynomials over x.
+     * @brief Returns the evaluation of the derivative of a given order Legendre polynomial over x.
      * 
      * @param x 
      * @param order 
@@ -105,6 +105,50 @@ namespace pacs {
 
             case 6:
                 evaluation = 0.125 * (693.0 * x * x * x * x * x - 630.0 * x * x * x + 105.0 * x);
+                break;
+
+            default:
+                break;
+        }
+
+        return evaluation;
+    }
+
+    /**
+     * @brief Returns the evaluation of the second derivative of a given order Legendre polynomial over x.
+     * 
+     * @param x 
+     * @param order 
+     * @return Vector<Real> 
+     */
+    Vector<Real> lap_legendre(const Vector<Real> &x, const std::size_t &order) {
+        #ifndef NDEBUG // Testing.
+        assert(order < 7);
+        #endif
+
+        // Evaluation.
+        Vector<Real> evaluation{x.length, 0.0};
+
+        // Tabled low-order Legendre polynomials.
+        switch(order) {
+            case 2:
+                evaluation = 3.0;
+                break;
+
+            case 3:
+                evaluation = 15.0 * x;
+                break;
+
+            case 4:
+                evaluation = 0.5 * (105.0  * x * x - 15.0);
+                break;
+
+            case 5:
+                evaluation = 0.25 * (630.0 * x * x * x - 210.0 * x);
+                break;
+
+            case 6:
+                evaluation = 0.125 * (3465.0 * x * x * x * x - 1890.0 * x * x + 105.0);
                 break;
 
             default:

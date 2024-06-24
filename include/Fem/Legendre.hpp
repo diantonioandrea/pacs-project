@@ -20,6 +20,7 @@ namespace pacs {
 
     Vector<Real> legendre(const Vector<Real> &, const std::size_t &);
     Vector<Real> grad_legendre(const Vector<Real> &, const std::size_t &);
+    Vector<Real> lap_legendre(const Vector<Real> &, const std::size_t &);
 
 }
 
