@@ -23,6 +23,7 @@ namespace pacs {
      * @return std::array<Vector<Real>, 3> 
      */
     std::array<Matrix<Real>, 3> basis_2d(const Mesh &mesh, const std::size_t &index, const std::array<Vector<Real>, 2> &nodes) {
+        
         // Element information.
         Element element = mesh.elements[index];
         Polygon polygon = mesh.element(index);
