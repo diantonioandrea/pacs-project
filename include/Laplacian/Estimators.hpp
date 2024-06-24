@@ -36,7 +36,7 @@ namespace pacs {
 
         // CONSTRUCTORS.
 
-        Estimator(const Mesh &, const std::array<Sparse<Real>, 2> &, const Vector<Real> &, const Functor &, const Functor &dirichlet = Functor{});
+        Estimator(const Mesh &, const std::array<Sparse<Real>, 2> &, const Vector<Real> &, const Functor &, const Functor &dirichlet = Functor{}, const TwoFunctor &dirichlet_gradient = TwoFunctor{});
 
         // OUTPUT.
 
