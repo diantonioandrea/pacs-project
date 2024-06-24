@@ -89,7 +89,7 @@ namespace pacs {
      * @param y 
      * @return Vector<Real> 
      */
-    std::array<Real, 2> TwoFunctor::operator ()(const Real &x, const Real &y) {
+    std::array<Real, 2> TwoFunctor::operator ()(const Real &x, const Real &y) const {
         return {first(x, y), second(x, y)};
     }
 
@@ -100,7 +100,7 @@ namespace pacs {
      * @param y 
      * @return std::array<Vector<Real>, 2> 
      */
-    std::array<Vector<Real>, 2> TwoFunctor::operator ()(const Vector<Real> &x, const Vector<Real> &y) {
+    std::array<Vector<Real>, 2> TwoFunctor::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {
         #ifndef NDEBUG // Integrity check.
         assert(x.length == y.length);
         #endif

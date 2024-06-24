@@ -66,8 +66,8 @@ namespace pacs {
 
             // EVALUATION.
 
-            std::array<Real, 2> operator ()(const Real &, const Real &);
-            std::array<Vector<Real>, 2> operator ()(const Vector<Real> &, const Vector<Real> &);
+            std::array<Real, 2> operator ()(const Real &, const Real &) const ;
+            std::array<Vector<Real>, 2> operator ()(const Vector<Real> &, const Vector<Real> &) const;
 
     };
 
