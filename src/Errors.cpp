@@ -48,6 +48,7 @@ namespace pacs {
         this->dofs = 0;
 
         // L2 and DG Errors.
+        // Loop over elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
             // Local dofs.
