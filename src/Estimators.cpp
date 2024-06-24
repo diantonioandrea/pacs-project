@@ -24,7 +24,7 @@ namespace pacs {
      * @param source 
      * @param dirichlet 
      */
-    Estimator::Estimator(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet):
+    Estimator::Estimator(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
     elements{mesh.elements.size()}, estimates{mesh.elements.size()} {
         
         #ifndef NVERBOSE
@@ -213,14 +213,16 @@ namespace pacs {
 
                 if(neighbour == -1) { // Boundary edge.
 
-                    // Local exact Dirichlet.
+                    // Local exact Dirichlet and gradient.
                     Vector<Real> g = dirichlet(physical_x, physical_y);
+                    auto [grad_g_x, grad_g_y] = dirichlet_gradient(physical_x, physical_y);
+                    Vector<Real> grad_g_t = edge_vector[0] * grad_g_x + edge_vector[1] * grad_g_y;
 
                     // Local estimator, R_{K, J}.
                     this->estimates[j] += penalties[k] * dot(scaled * (uh - g), uh - g);
 
                     // Local estimator, R_{K, T}.
-                    // TBA.
+                    this->estimates[j] += sizes[j] * dot(scaled * (grad_uh_t - grad_g_t), grad_uh_t - grad_g_t);
 
                 } else {
 
@@ -255,10 +257,10 @@ namespace pacs {
             }
 
             this->estimate += this->estimates[j];
-            this->estimates[j] = std::sqrt(this->estimates[j]);
+            // this->estimates[j] = std::sqrt(this->estimates[j]);
         }
 
-        this->estimate = std::sqrt(this->estimate);
+        // this->estimate = std::sqrt(this->estimate);
     }
 
     /**
