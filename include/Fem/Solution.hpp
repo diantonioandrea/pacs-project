@@ -21,10 +21,6 @@
 
 namespace pacs {
 
-    // Modal coefficients of the exact solution.
-
-    Vector<Real> modal(const Mesh &, const Functor &);
-
     /**
      * @brief Readable and plottable solution.
      * 

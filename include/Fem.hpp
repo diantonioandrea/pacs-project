@@ -23,6 +23,9 @@
 // Functors.
 #include <Fem/Functor.hpp>
 
+// Modal coefficients.
+#include <Fem/Modal.hpp>
+
 // Penalty coefficients.
 #include <Fem/Penalty.hpp>
 
