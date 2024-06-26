@@ -217,7 +217,7 @@ namespace pacs {
                 for(std::size_t l = 0; l < scaled_phi.columns; ++l)
                     scaled_phi.column(l, scaled_phi.column(l) * scaled);
 
-                // Local numerical solution and gradient.
+                // Local numerical solution and gradients.
                 Vector<Real> uh = phi * numerical(indices);
 
                 Matrix<Real> grad = normal_vector[0] * gradx_phi + normal_vector[1] * grady_phi;
