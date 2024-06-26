@@ -221,6 +221,21 @@ namespace pacs {
             lap_phi_y_evaluations.column(j, lap_phi_y);
         }
 
+        // Scaling.
+        for(std::size_t j = 0; j < lap_phi_x_evaluations.rows; ++j) {
+            for(std::size_t k = 0; k < lap_phi_x_evaluations.columns; ++k) {
+                Vector<Real> node{2};
+
+                node[0] = lap_phi_x_evaluations(j, k);
+                node[1] = lap_phi_y_evaluations(j, k);
+
+                node = jacobian_inv * (jacobian_inv * node);
+
+                lap_phi_x_evaluations(j, k) = node[0];
+                lap_phi_y_evaluations(j, k) = node[1];
+            }
+        }
+
         return lap_phi_x_evaluations + lap_phi_y_evaluations;
     }
 
