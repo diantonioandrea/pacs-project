@@ -21,8 +21,8 @@ so that we aim to find $\Vector{\upsilon} \in \R^N$ such that:
 where $\MA \in \R^{N \times N}$ and $\VB \in \R^N$ are defined as:
 
 \begin{align}
-    \MA_{ij} &= \boa{\phi_i}{\phi_j}, \\ 
-    \VB_i &= \langle f, \phi_i \rangle.
+    \MA_{ij} &= \boa{\phi_i}{\phi_j}, \label{matrix} \\ 
+    \VB_i &= \langle f, \phi_i \rangle. \label{forcing}
 \end{align}
 
 The basis of choice will be that of Legendre polynomials.
@@ -37,17 +37,19 @@ Let $\{\Tau_h\}_h$ be a sequence of polygonal meshes. Define $V^k_h$ as follows:
 
 Hence we have the following formulation for $\boa{\cdot}{\cdot}$:
 
-\begin{align}
-    \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h ~ d \omega \\
-    &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket ~ d \sigma \\
-    &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} ~ d \sigma \\
-    &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket ~ d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
+\begin{align} 
+    \begin{split} \label{boa}
+        \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h ~ d \omega \\
+        &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket ~ d \sigma  \\
+        &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} ~ d \sigma \\
+        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket ~ d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
+    \end{split}
 \end{align}
 
 \subsection{Non-homogenous Dirichlet boundary conditions}
 
 Dirichlet boundary conditions can be enforced by penalization:
 
-\begin{gather}
+\begin{gather} \label{dirichlet}
     \llbracket u \rrbracket = (u - g) \Vector{n} \quad \Forall F \in \F : F \cap \partial \Omega \neq \emptyset.
 \end{gather}
