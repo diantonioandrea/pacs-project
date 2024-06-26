@@ -24,6 +24,7 @@ namespace pacs {
     // Modal coefficients of a function.
 
     Vector<Real> modal(const Mesh &, const Functor &);
+    Vector<Real> modal_boundary(const Mesh &, const Functor &);
 
 }
 
