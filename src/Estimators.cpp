@@ -139,10 +139,10 @@ namespace pacs {
                 // Local approximate forcing.
                 Vector<Real> f_bar = phi * (scaled_phi.transpose() * f);
 
-                // Local estimator, R_{K, E}.
+                // Local estimator, R_{K, E}^2.
                 this->estimates[j] += sizes[j] * sizes[j] * dot(scaled * (f_bar + lap_uh), f_bar + lap_uh);
 
-                // Local data oscillation, O_{K, E}.
+                // Local data oscillation, O_{K, E}^2.
                 this->estimates[j] += sizes[j] * sizes[j] * dot(scaled * (f - f_bar), f - f_bar);
             }
 
@@ -237,16 +237,16 @@ namespace pacs {
                     Vector<Real> g_bar = phi * (scaled_phi.transpose() * g);
                     Vector<Real> grad_g_t_bar = grad_t * (scaled_phi.transpose() * g);
 
-                    // Local estimator, R_{K, J}.
+                    // Local estimator, R_{K, J}^2.
                     this->estimates[j] += penalties[k] * dot(scaled * (uh - g_bar), uh - g_bar);
 
-                    // Local estimator, R_{K, T}.
+                    // Local estimator, R_{K, T}^2.
                     this->estimates[j] += sizes[j] * dot(scaled * (grad_uh_t - grad_g_t_bar), grad_uh_t - grad_g_t_bar);
 
-                    // Local data oscillation, O_{K, J}.
+                    // Local data oscillation, O_{K, J}^2.
                     this->estimates[j] += penalties[k] * dot(scaled * (g - g_bar), g - g_bar);
 
-                    // Local data oscillation, O_{K, T}.
+                    // Local data oscillation, O_{K, T}^2.
                     this->estimates[j] += sizes[j] * dot(scaled * (grad_g_t - grad_g_t_bar), grad_g_t - grad_g_t_bar);
 
                 } else {
@@ -270,18 +270,19 @@ namespace pacs {
                     Matrix<Real> n_grad_t = edge_vector[0] * n_gradx_phi + edge_vector[1] * n_grady_phi;
                     Vector<Real> n_grad_uh_t = n_grad_t * numerical(n_indices);
 
-                    // Local estimator, R_{K, J}.
+                    // Local estimator, R_{K, J}^2.
                     this->estimates[j] += penalties[k] * dot(scaled * (uh - n_uh), uh - n_uh);
 
-                    // Local estimator, R_{K, N}.
+                    // Local estimator, R_{K, N}^2.
                     this->estimates[j] += sizes[j] * dot(scaled * (grad_uh - n_grad_uh), grad_uh - n_grad_uh);
 
-                    // Local estimator, R_{K, T}.
+                    // Local estimator, R_{K, T}^2.
                     this->estimates[j] += sizes[j] * dot(scaled * (grad_uh_t - n_grad_uh_t), grad_uh_t - n_grad_uh_t);
                 }
             }
 
             this->estimate += this->estimates[j];
+            this->estimates[j] = std::sqrt(this->estimates[j]);
 
         }
 
