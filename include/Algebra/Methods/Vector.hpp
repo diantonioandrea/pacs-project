@@ -126,6 +126,85 @@ namespace pacs {
         return result;
     }
     
+    /**
+     * @brief Marks the highest elements in a Vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @param number 
+     * @return Mask 
+     */
+    template<NumericType T>
+    Mask highest(const Vector<T> &vector, const std::size_t &number) {
+        #ifndef NDEBUG // Integrity check.
+        assert(number <= vector.length);
+        #endif
+
+        Mask mask(vector.length, false);
+
+        // Indices and copy of vector.
+        std::vector<T> elements;
+        std::vector<std::size_t> indices;
+
+        for(std::size_t j = 0; j < vector.length; ++j) {
+            elements.emplace_back(vector[j]);
+            indices.emplace_back(j);
+        }
+
+        // Sorting.
+        for(std::size_t j = 0; j < elements.size(); ++j) 
+            for(std::size_t k = 0; k < elements.size() - 1; ++k)
+                if(elements[k] > elements[k + 1]) {
+                    std::swap(elements[k], elements[k + 1]);
+                    std::swap(indices[k], indices[k + 1]);
+                }
+
+        // Masking.
+        for(std::size_t j = vector.length - number; j < vector.length; ++j)
+            mask[indices[j]] = true;
+
+        return mask;
+    }
+
+    /**
+     * @brief Marks the lowest elements in a Vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @param number 
+     * @return Mask 
+     */
+    template<NumericType T>
+    Mask lowest(const Vector<T> &vector, const std::size_t &number) {
+        #ifndef NDEBUG // Integrity check.
+        assert(number <= vector.length);
+        #endif
+        
+        Mask mask(vector.length, false);
+
+        // Indices and copy of vector.
+        std::vector<T> elements;
+        std::vector<std::size_t> indices;
+
+        for(std::size_t j = 0; j < vector.length; ++j) {
+            elements.emplace_back(vector[j]);
+            indices.emplace_back(j);
+        }
+
+        // Sorting.
+        for(std::size_t j = 0; j < elements.size(); ++j) 
+            for(std::size_t k = 0; k < elements.size() - 1; ++k)
+                if(elements[k] > elements[k + 1]) {
+                    std::swap(elements[k], elements[k + 1]);
+                    std::swap(indices[k], indices[k + 1]);
+                }
+
+        // Masking.
+        for(std::size_t j = 0; j < number; ++j)
+            mask[indices[j]] = true;
+
+        return mask;
+    }
 }
 
 namespace std {
