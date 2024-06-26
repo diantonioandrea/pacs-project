@@ -123,7 +123,12 @@ namespace pacs {
                 Vector<Real> scaled = jacobian_det * weights_2d;
 
                 // Basis functions.
+                Matrix<Real> phi = basis_2d(mesh, j, {physical_x, physical_y})[0];
                 Matrix<Real> lap_phi = lap_basis_2d(mesh, j, {physical_x, physical_y});
+                Matrix<Real> scaled_phi{phi};
+
+                for(std::size_t l = 0; l < scaled_phi.columns; ++l)
+                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
 
                 // Local numerical laplacian.
                 Vector<Real> lap_uh = lap_phi * numerical(indices);
@@ -131,8 +136,14 @@ namespace pacs {
                 // Local exact forcing.
                 Vector<Real> f = source(physical_x, physical_y);
 
+                // Local approximate forcing.
+                Vector<Real> f_bar = phi * (scaled_phi.transpose() * f);
+
                 // Local estimator, R_{K, E}.
-                this->estimates[j] += sizes[j] * sizes[j] * dot(scaled * (f + lap_uh), f + lap_uh);
+                this->estimates[j] += sizes[j] * sizes[j] * dot(scaled * (f_bar + lap_uh), f_bar + lap_uh);
+
+                // Local data oscillation, O_{K, E}.
+                this->estimates[j] += sizes[j] * sizes[j] * dot(scaled * (f - f_bar), f - f_bar);
             }
 
             // Element's neighbours.
@@ -201,6 +212,10 @@ namespace pacs {
 
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
+                Matrix<Real> scaled_phi{phi};
+
+                for(std::size_t l = 0; l < scaled_phi.columns; ++l)
+                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
 
                 // Local numerical solution and gradient.
                 Vector<Real> uh = phi * numerical(indices);
@@ -209,7 +224,7 @@ namespace pacs {
                 Vector<Real> grad_uh = grad * numerical(indices);
 
                 Matrix<Real> grad_t = edge_vector[0] * gradx_phi + edge_vector[1] * grady_phi;
-                Vector<Real> grad_uh_t = grad * numerical(indices);
+                Vector<Real> grad_uh_t = grad_t * numerical(indices);
 
                 if(neighbour == -1) { // Boundary edge.
 
@@ -218,11 +233,21 @@ namespace pacs {
                     auto [grad_g_x, grad_g_y] = dirichlet_gradient(physical_x, physical_y);
                     Vector<Real> grad_g_t = edge_vector[0] * grad_g_x + edge_vector[1] * grad_g_y;
 
+                    // Approximate Dirichlet and gradient.
+                    Vector<Real> g_bar = phi * (scaled_phi.transpose() * g);
+                    Vector<Real> grad_g_t_bar = grad_t * (scaled_phi.transpose() * g);
+
                     // Local estimator, R_{K, J}.
-                    this->estimates[j] += penalties[k] * dot(scaled * (uh - g), uh - g);
+                    this->estimates[j] += penalties[k] * dot(scaled * (uh - g_bar), uh - g_bar);
 
                     // Local estimator, R_{K, T}.
-                    this->estimates[j] += sizes[j] * dot(scaled * (grad_uh_t - grad_g_t), grad_uh_t - grad_g_t);
+                    this->estimates[j] += sizes[j] * dot(scaled * (grad_uh_t - grad_g_t_bar), grad_uh_t - grad_g_t_bar);
+
+                    // Local data oscillation, O_{K, J}.
+                    this->estimates[j] += penalties[k] * dot(scaled * (g - g_bar), g - g_bar);
+
+                    // Local data oscillation, O_{K, T}.
+                    this->estimates[j] += sizes[j] * dot(scaled * (grad_g_t - grad_g_t_bar), grad_g_t - grad_g_t_bar);
 
                 } else {
 
@@ -236,14 +261,14 @@ namespace pacs {
                     for(std::size_t h = 0; h < n_dofs; ++h)
                         n_indices.emplace_back(n_index * n_dofs + h);
 
-                    // Neighbour's numerical solution and gradient.
+                    // Neighbour's numerical solution and gradients.
                     Vector<Real> n_uh = n_phi * numerical(n_indices);
 
                     Matrix<Real> n_grad = normal_vector[0] * n_gradx_phi + normal_vector[1] * n_grady_phi;
-                    Vector<Real> n_grad_uh = grad * numerical(n_indices);
+                    Vector<Real> n_grad_uh = n_grad * numerical(n_indices);
 
                     Matrix<Real> n_grad_t = edge_vector[0] * n_gradx_phi + edge_vector[1] * n_grady_phi;
-                    Vector<Real> n_grad_uh_t = grad * numerical(n_indices);
+                    Vector<Real> n_grad_uh_t = n_grad_t * numerical(n_indices);
 
                     // Local estimator, R_{K, J}.
                     this->estimates[j] += penalties[k] * dot(scaled * (uh - n_uh), uh - n_uh);
@@ -257,10 +282,10 @@ namespace pacs {
             }
 
             this->estimate += this->estimates[j];
-            // this->estimates[j] = std::sqrt(this->estimates[j]);
+
         }
 
-        // this->estimate = std::sqrt(this->estimate);
+        this->estimate = std::sqrt(this->estimate);
     }
 
     /**
