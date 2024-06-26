@@ -18,31 +18,24 @@ namespace pacs {
      * @brief Construct a new Estimator structure.
      * 
      * @param mesh 
-     * @param matrices 
      * @param numerical 
      * @param forcing 
      * @param source 
      * @param dirichlet 
      */
-    Estimator::Estimator(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
+    Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
     elements{mesh.elements.size()}, estimates{mesh.elements.size()} {
         
         #ifndef NVERBOSE
         std::cout << "Evaluating estimates." << std::endl;
         #endif
 
-        // Matrices.
-        auto [mass, dg_laplacian] = matrices;
-
-        // Number of quadrature nodes.
-        std::size_t degree = mesh.quadrature;
-
         // Degrees of freedom.
         this->dofs = mesh.dofs();
 
         // Quadrature nodes.
-        auto [nodes_1d, weights_1d] = quadrature_1d(degree);
-        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
+        auto [nodes_1d, weights_1d] = quadrature_1d(mesh.quadrature);
+        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(mesh.quadrature);
 
         // Neighbours.
         std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
@@ -57,6 +50,13 @@ namespace pacs {
                 for(const auto &q: element.element.points)
                     sizes[j] = (distance(p, q) > sizes[j]) ? distance(p, q) : sizes[j];
         }
+
+        // Coefficients.
+        Vector<Real> f_modals = modal(mesh, source);
+        Vector<Real> g_modals = modal(mesh, dirichlet);
+
+        Vector<Real> f_coeff = (norm(f_modals) > TOLERANCE) ? solve(mass, modal(mesh, source), CGM, 1E-12) : Vector<Real>{mesh.dofs()};
+        Vector<Real> g_coeff = (norm(g_modals) > TOLERANCE) ? solve(mass, modal(mesh, dirichlet), CGM, 1E-12) : Vector<Real>{mesh.dofs()};
 
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
@@ -75,10 +75,6 @@ namespace pacs {
 
             // Element sub-triangulation.
             std::vector<Polygon> triangles = triangulate(polygon);
-
-            // Local matrices.
-            Matrix<Real> local_M{element_dofs, element_dofs};
-            Matrix<Real> local_A{element_dofs, element_dofs};
 
             // Loop over the sub-triangulation.
             for(std::size_t k = 0; k < triangles.size(); ++k) {
@@ -125,19 +121,15 @@ namespace pacs {
                 // Basis functions.
                 Matrix<Real> phi = basis_2d(mesh, j, {physical_x, physical_y})[0];
                 Matrix<Real> lap_phi = lap_basis_2d(mesh, j, {physical_x, physical_y});
-                Matrix<Real> scaled_phi{phi};
-
-                for(std::size_t l = 0; l < scaled_phi.columns; ++l)
-                    scaled_phi.column(l, scaled_phi.column(l) * scaled);
 
                 // Local numerical laplacian.
                 Vector<Real> lap_uh = lap_phi * numerical(indices);
 
-                // Local exact forcing.
+                // Local exact source.
                 Vector<Real> f = source(physical_x, physical_y);
 
-                // Local approximate forcing.
-                Vector<Real> f_bar = phi * (scaled_phi.transpose() * f);
+                // Local source approximation.
+                Vector<Real> f_bar = phi * f_coeff(indices);
 
                 // Local estimator, R_{K, E}^2.
                 this->estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f_bar + lap_uh) * (f_bar + lap_uh));
@@ -234,8 +226,8 @@ namespace pacs {
                     Vector<Real> grad_g_t = edge_vector[0] * grad_g_x + edge_vector[1] * grad_g_y;
 
                     // Approximate Dirichlet and gradient.
-                    Vector<Real> g_bar = phi * (scaled_phi.transpose() * g);
-                    Vector<Real> grad_g_t_bar = grad_t * (scaled_phi.transpose() * g);
+                    Vector<Real> g_bar = phi * g_coeff(indices);
+                    Vector<Real> grad_g_t_bar = grad_t * g_coeff(indices);
 
                     // Local estimator, R_{K, J}^2.
                     this->estimates[j] += penalties[k] * dot(scaled, (uh - g_bar) * (uh - g_bar));
