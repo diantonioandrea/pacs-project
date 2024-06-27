@@ -10,6 +10,7 @@
 
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib import cm
 import sys
 
 # Font.
@@ -35,7 +36,6 @@ except:
     print("Load a .poly file.")
     sys.exit(-1)
 
-
 plt.figure()
 
 for line in lines:
@@ -51,7 +51,7 @@ for line in lines:
     
     try:
 
-        for j in range(0, len(data), 2):
+        for j in range(0, len(data) if len(data) % 2 == 0 else len(data) - 1, 2):
             x.append(float(data[j]))
             y.append(float(data[j + 1]))
 
@@ -61,10 +61,11 @@ for line in lines:
     if not (x and y):
         continue
 
-    x.append(x[0])
-    y.append(y[0])
+    # Color.
+    color: tuple[int] = (1, 1, 1) if "--degrees" not in sys.argv else cm.coolwarm((int(data[-1]) - 1) * 200)
 
-    plt.plot(x, y, color = (0, 0, 0), linewidth = 0.5)
+    # Plot.
+    plt.fill(x, y, facecolor = color, edgecolor = (0, 0, 0), linewidth = 0.5)
 
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')

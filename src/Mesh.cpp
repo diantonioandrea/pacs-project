@@ -105,7 +105,7 @@ namespace pacs {
      * 
      * @param filename 
      */
-    void Mesh::write(const std::string &filename) {
+    void Mesh::write(const std::string &filename, const bool &degrees) {
         // File loading.
         std::ofstream file{filename};
 
@@ -117,14 +117,17 @@ namespace pacs {
         file << "@ Elements: " << this->elements.size() << "\n";
 
         // Polygons.
-        file << "@ Elements\' coordinates: \n";
+        file << "@ Elements\' coordinates and degree: \n";
 
         for(const auto &element: this->elements) {
             Polygon polygon = element.element;
 
             for(const auto &vertex: polygon.points)
                 file << vertex[0] << " " << vertex[1] << " ";
-            
+                        
+            if(degrees) 
+                file << element.degree;
+
             file << "\n";
         }
     }

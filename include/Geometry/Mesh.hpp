@@ -109,7 +109,7 @@ namespace pacs {
 
         // OUTPUT.
 
-        void write(const std::string &);
+        void write(const std::string &, const bool &degrees = false);
     };
 
     // METHODS.
