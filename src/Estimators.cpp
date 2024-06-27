@@ -62,8 +62,8 @@ namespace pacs {
         Vector<Real> f_modals = modal(mesh, source);
         Vector<Real> g_modals = modal(mesh, dirichlet);
 
-        Vector<Real> f_coeff = (norm(f_modals) > TOLERANCE) ? solve(mass, modal(mesh, source), CGM, 1E-12) : Vector<Real>{mesh.dofs()};
-        Vector<Real> g_coeff = (norm(g_modals) > TOLERANCE) ? solve(mass, modal(mesh, dirichlet), CGM, 1E-12) : Vector<Real>{mesh.dofs()};
+        Vector<Real> f_coeff = (norm(f_modals) > TOLERANCE) ? solve(mass, modal(mesh, source), BICGSTAB, 1E-12) : Vector<Real>{mesh.dofs()};
+        Vector<Real> g_coeff = (norm(g_modals) > TOLERANCE) ? solve(mass, modal(mesh, dirichlet), BICGSTAB, 1E-12) : Vector<Real>{mesh.dofs()};
 
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
