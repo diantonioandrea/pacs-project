@@ -47,11 +47,11 @@ int main() {
     // Refinement percentage.
     pacs::Real refine = 0.5L;
 
+    // Mesh.
+    pacs::Mesh mesh{domain, diagram, degree};
+
     // Sequence of meshes.
     for(std::size_t j = 0; j < 8; ++j) {
-
-        // Mesh.
-        pacs::Mesh mesh{domain, diagram, degree};
 
         // Mesh output.
         std::string polyfile = "output/square_eh_" + std::to_string(j) + ".poly";
@@ -87,6 +87,6 @@ int main() {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
-        diagram = pacs::mesh_refine_size(mesh, estimator.estimates > refine * pacs::max(estimator.estimates));
+        pacs::mesh_refine_size(mesh, estimator.estimates > refine * pacs::max(estimator.estimates));
     }
 }

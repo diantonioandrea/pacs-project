@@ -39,7 +39,6 @@ int main() {
     Estimator est{mesh, M, numerical, source};
 
     // Refinement.
-    Mask mask = est.estimates > 0.75 * max(est.estimates);
-    std::vector<Polygon> diagram = mesh_refine_size(mesh, mask);
+    mesh_refine_size(mesh, est.estimates > 0.75 * max(est.estimates));
 
 }

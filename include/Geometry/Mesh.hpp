@@ -44,13 +44,13 @@ namespace pacs {
     struct Element {
             
         // Polygon.
-        const Polygon element;
+        Polygon element;
         
-        const std::vector<Point> nodes;
-        const std::vector<Segment> edges;
+        std::vector<Point> nodes;
+        std::vector<Segment> edges;
 
         // Polynomial degree.
-        mutable std::size_t degree;
+        std::size_t degree;
 
         // CONSTRUCTORS.
 
@@ -87,15 +87,17 @@ namespace pacs {
         // Penalty coefficient.
         Real penalty = 10.0;
 
-        // Entries for the solution.
-        std::size_t entries;
-
         // Quadrature nodes.
         std::size_t quadrature;
 
+        // Entries for the solution.
+        std::size_t entries;
+
         // CONSTRUCTORS.
 
+        Mesh(const Polygon &, const std::vector<Polygon> &, const std::vector<std::size_t> &degrees);
         Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
+        Mesh(const Mesh &);
 
         // READ, WRAPPERS.
     
@@ -119,11 +121,11 @@ namespace pacs {
     std::vector<Polygon> mesh_relax(const Polygon &, const std::vector<Polygon> &, const bool &reflect = false);
 
     // Refinement.
-    std::vector<Polygon> mesh_refine_size(const Mesh &, const Mask &);
+    void mesh_refine_size(Mesh &, const Mask &);
     void mesh_refine_degree(Mesh &, const Mask &);
 
     // Data.
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::size_t &);
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &, const std::vector<std::size_t> &);
     std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const Polygon &, const std::vector<Element> &);
 
     std::vector<Real> mesh_areas(const std::vector<Polygon> &);

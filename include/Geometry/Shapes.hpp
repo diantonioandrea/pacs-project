@@ -81,9 +81,9 @@ namespace pacs {
         protected:
 
             // Parameters.
-            const Real a;
-            const Real b;
-            const Real c;
+            Real a;
+            Real b;
+            Real c;
 
         public:
 
@@ -132,8 +132,8 @@ namespace pacs {
         protected:
 
             // Extremes.
-            const Point a;
-            const Point b;
+            Point a;
+            Point b;
 
         public:
 

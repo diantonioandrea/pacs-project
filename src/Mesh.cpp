@@ -21,15 +21,15 @@ namespace pacs {
     // CONSTRUCTORS.
 
     /**
-     * @brief Constructs a new Mesh from a given domain and diagram.
+     * @brief Constructs a new Mesh from a given domain, diagram and degrees vector.
      * 
      * @param domain 
      * @param diagram 
      */
-    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::size_t &degree): domain{domain} {
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::vector<std::size_t> &degrees): domain{domain} {
 
         // Elements.
-        this->elements = mesh_elements(diagram, degree);
+        this->elements = mesh_elements(diagram, degrees);
 
         // Neighbours.
         this->neighbours = mesh_neighbours(domain, this->elements);
@@ -47,6 +47,24 @@ namespace pacs {
         this->quadrature = 7; // Arbitrary.
         this->entries = entries * this->quadrature * this->quadrature;
     }
+
+    /**
+     * @brief Constructs a new Mesh from a given domain, diagram and uniform degree.
+     * 
+     * @param domain 
+     * @param diagram 
+     * @param degree 
+     */
+    Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::size_t &degree): 
+    Mesh(domain, diagram, std::vector<std::size_t>(diagram.size(), degree)) {}
+
+    /**
+     * @brief Copy constructor.
+     * 
+     * @param mesh 
+     */
+    Mesh::Mesh(const Mesh &mesh):
+    domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{mesh.max_simplices}, quadrature{mesh.quadrature}, entries{mesh.entries} {}
 
     // READ.
 

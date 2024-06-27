@@ -271,13 +271,12 @@ namespace pacs {
     }
 
     /**
-     * @brief Refines specified elements' size from a mesh.
+     * @brief Refines specified elements' size for a mesh.
      * 
      * @param mesh 
-     * @param indices 
-     * @return std::vector<Polygon> 
+     * @param mask 
      */
-    std::vector<Polygon> mesh_refine_size(const Mesh &mesh, const Mask &mask) {
+    void mesh_refine_size(Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
         assert(mask.size() == mesh.elements.size());
         #endif
@@ -286,14 +285,26 @@ namespace pacs {
         std::cout << "Refining mesh." << std::endl;
         #endif
 
+        // Degrees.
+        std::vector<std::size_t> degrees;
+
+        for(std::size_t j = 0; j < mask.size(); ++j)
+            if(!(mask[j]))
+                degrees.emplace_back(mesh.elements[j].degree);
+
+        // Polygons.
         std::vector<Polygon> diagram;
         std::vector<Polygon> refine;
         std::vector<Polygon> refined;
 
         for(std::size_t j = 0; j < mask.size(); ++j)
-            if(mask[j])
+            if(mask[j]) {
                 refine.emplace_back(mesh.element(j));
-            else
+
+                for(std::size_t k = 0; k < mesh.elements[j].edges.size() + static_cast<std::size_t>(mesh.elements[j].edges.size() > 4); ++k)
+                    degrees.emplace_back(mesh.elements[j].degree);
+
+            } else
                 diagram.emplace_back(mesh.element(j));
 
         // Refine.
@@ -350,11 +361,12 @@ namespace pacs {
         for(const auto &polygon: refined)
             diagram.emplace_back(polygon);
 
-        return diagram;
+        // Refinement.
+        mesh = Mesh{mesh.domain, diagram, degrees};
     }
 
     /**
-     * @brief Refines specified elements' degree from a mesh.
+     * @brief Refines specified elements' degree for a mesh.
      * 
      * @param mesh 
      * @param mask 
@@ -378,15 +390,19 @@ namespace pacs {
      * @param edges 
      * @return std::vector<Element> 
      */
-    std::vector<Element> mesh_elements(const std::vector<Polygon> &diagram, const std::size_t &degree) {
+    std::vector<Element> mesh_elements(const std::vector<Polygon> &diagram, const std::vector<std::size_t> &degrees) {
+        #ifndef NDEBUG
+        assert(degrees.size() == diagram.size());
+        #endif
+
         std::vector<Element> elements;
 
         #ifndef NVERBOSE
         std::cout << "Evaluating mesh elements." << std::endl;
         #endif
 
-        for(const auto &polygon: diagram)
-            elements.emplace_back(polygon, degree);
+        for(std::size_t j = 0; j < diagram.size(); ++j)
+            elements.emplace_back(diagram[j], degrees[j]);
 
         return elements;
     }
