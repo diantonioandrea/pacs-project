@@ -24,7 +24,7 @@ namespace pacs {
      * @param dirichlet 
      */
     Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
-    elements{mesh.elements.size()}, h_estimates{mesh.elements.size()} {
+    h_estimates{mesh.elements.size()}, p_estimates{mesh.elements.size()} {
         
         #ifndef NVERBOSE
         std::cout << "Evaluating estimates." << std::endl;
@@ -289,9 +289,9 @@ namespace pacs {
      * @return std::ostream& 
      */
     std::ostream &operator <<(std::ostream &ost, const Estimator &estimator) {
-        ost << "Elements: " << estimator.elements << std::endl;
         ost << "Dofs: " << estimator.dofs << std::endl;
-        return ost << "h-Estimate: " << estimator.h_estimate << std::endl;
+        ost << "h-Estimate: " << estimator.h_estimate << std::endl;
+        return ost << "p-Estimate: " << estimator.p_estimate;
     }
 
 }

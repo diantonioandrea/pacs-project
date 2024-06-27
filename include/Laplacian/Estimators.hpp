@@ -27,12 +27,16 @@ namespace pacs {
      */
     struct Estimator {
 
-        std::size_t elements;
+        // DOFs.
         std::size_t dofs;
 
         // h-Adaptivity.
-        Real h_estimate;
+        Real h_estimate = 0.0L;
         Vector<Real> h_estimates;
+
+        // p-Adaptivity.
+        Real p_estimate = 0.0L;
+        Vector<Real> p_estimates;
 
         // CONSTRUCTORS.
 
