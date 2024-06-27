@@ -73,6 +73,9 @@ namespace pacs {
             // Polygon.
             Polygon polygon = mesh.element(j);
 
+            // Degree.
+            std::size_t degree = mesh.elements[j].degree;
+
             // Element sub-triangulation.
             std::vector<Polygon> triangles = triangulate(polygon);
 
@@ -131,11 +134,14 @@ namespace pacs {
                 // Local source approximation.
                 Vector<Real> f_bar = phi * f_coeff(indices);
 
-                // Local estimator, R_{K, E}^2.
+                // Local h-estimator, R_{K, E}^2.
                 this->h_estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f_bar + lap_uh) * (f_bar + lap_uh));
 
-                // Local data oscillation, O_{K, E}^2.
+                // Local h-data oscillation, O_{K, E}^2.
                 this->h_estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f - f_bar) * (f - f_bar));
+
+                // Local p-estimator, eta_{B_K}^2.
+                this->p_estimates[j] += (sizes[j] * sizes[j] / degree / degree) * dot(scaled, (f_bar + lap_uh) * (f_bar + lap_uh));
             }
 
             // Element's neighbours.
@@ -218,6 +224,9 @@ namespace pacs {
                 Matrix<Real> grad_t = edge_vector[0] * gradx_phi + edge_vector[1] * grady_phi;
                 Vector<Real> grad_uh_t = grad_t * numerical(indices);
 
+                // Local p-estimator, eta_{B_K}^2.
+                this->p_estimates[j] += (sizes[j] / (2 * degree)) * dot(scaled, grad_uh * grad_uh);
+
                 if(neighbour == -1) { // Boundary edge.
 
                     // Local exact Dirichlet and gradient.
@@ -229,16 +238,19 @@ namespace pacs {
                     Vector<Real> g_bar = phi * g_coeff(indices);
                     Vector<Real> grad_g_t_bar = grad_t * g_coeff(indices);
 
-                    // Local estimator, R_{K, J}^2.
+                    // Local h-estimator, R_{K, J}^2.
                     this->h_estimates[j] += penalties[k] * dot(scaled, (uh - g_bar) * (uh - g_bar));
 
-                    // Local estimator, R_{K, T}^2.
+                    // Local h-estimator, R_{K, N}^2.
+                    this->h_estimates[j] += sizes[j] * dot(scaled, grad_uh * grad_uh);
+
+                    // Local h-estimator, R_{K, T}^2.
                     this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - grad_g_t_bar) * (grad_uh_t - grad_g_t_bar));
 
-                    // Local data oscillation, O_{K, J}^2.
+                    // Local h-data oscillation, O_{K, J}^2.
                     this->h_estimates[j] += penalties[k] * dot(scaled, (g - g_bar) * (g - g_bar));
 
-                    // Local data oscillation, O_{K, T}^2.
+                    // Local h-data oscillation, O_{K, T}^2.
                     this->h_estimates[j] += sizes[j] * dot(scaled, (grad_g_t - grad_g_t_bar) * (grad_g_t - grad_g_t_bar));
 
                 } else {
@@ -262,13 +274,13 @@ namespace pacs {
                     Matrix<Real> n_grad_t = edge_vector[0] * n_gradx_phi + edge_vector[1] * n_grady_phi;
                     Vector<Real> n_grad_uh_t = n_grad_t * numerical(n_indices);
 
-                    // Local estimator, R_{K, J}^2.
+                    // Local h-estimator, R_{K, J}^2.
                     this->h_estimates[j] += penalties[k] * dot(scaled, (uh - n_uh) * (uh - n_uh));
 
-                    // Local estimator, R_{K, N}^2.
+                    // Local h-estimator, R_{K, N}^2.
                     this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh - n_grad_uh) * (grad_uh - n_grad_uh));
 
-                    // Local estimator, R_{K, T}^2.
+                    // Local h-estimator, R_{K, T}^2.
                     this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - n_grad_uh_t) * (grad_uh_t - n_grad_uh_t));
                 }
             }
@@ -276,9 +288,13 @@ namespace pacs {
             this->h_estimate += this->h_estimates[j];
             this->h_estimates[j] = std::sqrt(this->h_estimates[j]);
 
+            this->p_estimate += this->p_estimates[j];
+            this->p_estimates[j] = std::sqrt(this->p_estimates[j]);
+
         }
 
         this->h_estimate = std::sqrt(this->h_estimate);
+        this->p_estimate = std::sqrt(this->p_estimate);
     }
 
     /**
