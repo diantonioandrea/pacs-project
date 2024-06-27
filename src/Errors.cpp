@@ -47,6 +47,13 @@ namespace pacs {
         // Dofs.
         this->dofs = mesh.dofs();
 
+        // Starting indices.
+        std::vector<std::size_t> starts;
+        starts.emplace_back(0);
+
+        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
+            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+
         // L2 and DG Errors.
         // Loop over elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
@@ -58,7 +65,7 @@ namespace pacs {
             std::vector<std::size_t> indices;
 
             for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(j * element_dofs + k);
+                indices.emplace_back(starts[j] + k);
 
             this->l2_errors[j] = std::sqrt(dot(error(indices), mass(indices, indices) * error(indices)));
         }

@@ -36,6 +36,13 @@ namespace pacs {
         // Quadrature nodes.
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);
 
+        // Starting indices.
+        std::vector<std::size_t> starts;
+        starts.emplace_back(0);
+
+        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
+            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
 
@@ -46,7 +53,7 @@ namespace pacs {
             std::vector<std::size_t> indices;
 
             for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(j * element_dofs + k);
+                indices.emplace_back(starts[j] + k);
             
             // Polygon.
             Polygon polygon = mesh.element(j);

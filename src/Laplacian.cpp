@@ -45,6 +45,13 @@ namespace pacs {
         Sparse<Real> IA{dofs, dofs};
         Sparse<Real> SA{dofs, dofs};
 
+        // Starting indices.
+        std::vector<std::size_t> starts;
+        starts.emplace_back(0);
+
+        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
+            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+
         // Volume integrals.
 
         // Loop over the elements.
@@ -57,7 +64,7 @@ namespace pacs {
             std::vector<std::size_t> indices;
 
             for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(j * element_dofs + k);
+                indices.emplace_back(starts[j] + k);
 
             // Polygon.
             Polygon polygon = mesh.element(j);
@@ -259,7 +266,7 @@ namespace pacs {
                 std::size_t n_dofs = mesh.elements[n_index].dofs(); // Neighbour's dofs.
 
                 for(std::size_t h = 0; h < n_dofs; ++h)
-                    n_indices.emplace_back(n_index * n_dofs + h);
+                    n_indices.emplace_back(starts[n_index] + h);
 
                 IA.add(indices, n_indices, local_IAN[k]);
                 SA.add(indices, n_indices, local_SAN[k]);

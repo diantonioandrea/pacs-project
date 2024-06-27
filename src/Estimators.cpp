@@ -33,6 +33,13 @@ namespace pacs {
         // Degrees of freedom.
         this->dofs = mesh.dofs();
 
+        // Starting indices.
+        std::vector<std::size_t> starts;
+        starts.emplace_back(0);
+
+        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
+            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(mesh.quadrature);
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(mesh.quadrature);
@@ -68,7 +75,7 @@ namespace pacs {
             std::vector<std::size_t> indices;
 
             for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(j * element_dofs + k);
+                indices.emplace_back(starts[j] + k);
 
             // Polygon.
             Polygon polygon = mesh.element(j);
@@ -254,7 +261,7 @@ namespace pacs {
                     std::size_t n_dofs = mesh.elements[n_index].dofs(); // Neighbour's dofs.
 
                     for(std::size_t h = 0; h < n_dofs; ++h)
-                        n_indices.emplace_back(n_index * n_dofs + h);
+                        n_indices.emplace_back(starts[n_index] + h);
 
                     // Neighbour's numerical solution and gradients.
                     Vector<Real> n_uh = n_phi * numerical(n_indices);
