@@ -38,7 +38,7 @@ namespace pacs {
         starts.emplace_back(0);
 
         for(std::size_t j = 1; j < mesh.elements.size(); ++j)
-            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+            starts.emplace_back(starts[j - 1] + mesh.elements[j - 1].dofs());
 
         // Quadrature nodes.
         auto [nodes_1d, weights_1d] = quadrature_1d(mesh.quadrature);

@@ -41,7 +41,7 @@ namespace pacs {
         starts.emplace_back(0);
 
         for(std::size_t j = 1; j < mesh.elements.size(); ++j)
-            starts.emplace_back(starts[j - 1] + mesh.elements[j].dofs());
+            starts.emplace_back(starts[j - 1] + mesh.elements[j - 1].dofs());
 
         // Neighbours.
         std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
