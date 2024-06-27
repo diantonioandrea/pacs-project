@@ -21,7 +21,7 @@ namespace pacs {
     void mesh_refine(Mesh &mesh, const Estimator &estimator) {
 
         // Refinement steps.
-        std::array<Real, 2> steps{0.25, 0.5};
+        std::array<Real, 2> steps{0.5, 0.7};
 
         // Estimates and maximum estimate.
         Vector<Real> estimates = estimator.estimates;
@@ -36,7 +36,7 @@ namespace pacs {
             p_mask[j] = lower_p_mask[j] && upper_p_mask[j];
 
         // h-Mask.
-        Mask h_mask = estimates > steps[0] * maximum;
+        Mask h_mask = estimates > steps[1] * maximum;
 
         // Refinements.
         mesh_refine_degree(mesh, p_mask);
