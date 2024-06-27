@@ -99,6 +99,8 @@ namespace pacs {
         Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
         Mesh(const Mesh &);
 
+        Mesh &operator =(const Mesh &);
+
         // READ, WRAPPERS.
     
         Polygon element(const std::size_t &) const;

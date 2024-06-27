@@ -64,7 +64,25 @@ namespace pacs {
      * @param mesh 
      */
     Mesh::Mesh(const Mesh &mesh):
-    domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{mesh.max_simplices}, quadrature{mesh.quadrature}, entries{mesh.entries} {}
+    domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{std::vector<Vector<Real>>(mesh.max_simplices)}, quadrature{mesh.quadrature}, entries{mesh.entries} {}
+
+    /**
+     * @brief Copy operator.
+     * 
+     * @param mesh 
+     * @return Mesh& 
+     */
+    Mesh &Mesh::operator =(const Mesh &mesh) {
+        this->domain = mesh.domain;
+        this->elements = mesh.elements;
+        this->neighbours = mesh.neighbours;
+        this->areas = mesh.areas;
+        this->max_simplices = std::vector<Vector<Real>>(mesh.max_simplices);
+        this->quadrature = mesh.quadrature;
+        this->entries = mesh.entries;
+
+        return *this;
+    }
 
     // READ.
 

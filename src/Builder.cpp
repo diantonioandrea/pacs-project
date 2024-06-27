@@ -282,7 +282,7 @@ namespace pacs {
         #endif
 
         #ifndef NVERBOSE
-        std::cout << "Refining mesh." << std::endl;
+        std::cout << "Refining mesh size." << std::endl;
         #endif
 
         // Degrees.
@@ -374,6 +374,10 @@ namespace pacs {
     void mesh_refine_degree(Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
         assert(mask.size() == mesh.elements.size());
+        #endif
+
+        #ifndef NVERBOSE
+        std::cout << "Refining mesh degree." << std::endl;
         #endif
 
         for(std::size_t j = 0; j < mask.size(); ++j)
