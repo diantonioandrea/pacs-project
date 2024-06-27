@@ -24,7 +24,7 @@ namespace pacs {
      * @param dirichlet 
      */
     Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
-    elements{mesh.elements.size()}, estimates{mesh.elements.size()} {
+    elements{mesh.elements.size()}, h_estimates{mesh.elements.size()} {
         
         #ifndef NVERBOSE
         std::cout << "Evaluating estimates." << std::endl;
@@ -132,10 +132,10 @@ namespace pacs {
                 Vector<Real> f_bar = phi * f_coeff(indices);
 
                 // Local estimator, R_{K, E}^2.
-                this->estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f_bar + lap_uh) * (f_bar + lap_uh));
+                this->h_estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f_bar + lap_uh) * (f_bar + lap_uh));
 
                 // Local data oscillation, O_{K, E}^2.
-                this->estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f - f_bar) * (f - f_bar));
+                this->h_estimates[j] += sizes[j] * sizes[j] * dot(scaled, (f - f_bar) * (f - f_bar));
             }
 
             // Element's neighbours.
@@ -230,16 +230,16 @@ namespace pacs {
                     Vector<Real> grad_g_t_bar = grad_t * g_coeff(indices);
 
                     // Local estimator, R_{K, J}^2.
-                    this->estimates[j] += penalties[k] * dot(scaled, (uh - g_bar) * (uh - g_bar));
+                    this->h_estimates[j] += penalties[k] * dot(scaled, (uh - g_bar) * (uh - g_bar));
 
                     // Local estimator, R_{K, T}^2.
-                    this->estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - grad_g_t_bar) * (grad_uh_t - grad_g_t_bar));
+                    this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - grad_g_t_bar) * (grad_uh_t - grad_g_t_bar));
 
                     // Local data oscillation, O_{K, J}^2.
-                    this->estimates[j] += penalties[k] * dot(scaled, (g - g_bar) * (g - g_bar));
+                    this->h_estimates[j] += penalties[k] * dot(scaled, (g - g_bar) * (g - g_bar));
 
                     // Local data oscillation, O_{K, T}^2.
-                    this->estimates[j] += sizes[j] * dot(scaled, (grad_g_t - grad_g_t_bar) * (grad_g_t - grad_g_t_bar));
+                    this->h_estimates[j] += sizes[j] * dot(scaled, (grad_g_t - grad_g_t_bar) * (grad_g_t - grad_g_t_bar));
 
                 } else {
 
@@ -263,22 +263,22 @@ namespace pacs {
                     Vector<Real> n_grad_uh_t = n_grad_t * numerical(n_indices);
 
                     // Local estimator, R_{K, J}^2.
-                    this->estimates[j] += penalties[k] * dot(scaled, (uh - n_uh) * (uh - n_uh));
+                    this->h_estimates[j] += penalties[k] * dot(scaled, (uh - n_uh) * (uh - n_uh));
 
                     // Local estimator, R_{K, N}^2.
-                    this->estimates[j] += sizes[j] * dot(scaled, (grad_uh - n_grad_uh) * (grad_uh - n_grad_uh));
+                    this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh - n_grad_uh) * (grad_uh - n_grad_uh));
 
                     // Local estimator, R_{K, T}^2.
-                    this->estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - n_grad_uh_t) * (grad_uh_t - n_grad_uh_t));
+                    this->h_estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - n_grad_uh_t) * (grad_uh_t - n_grad_uh_t));
                 }
             }
 
-            this->estimate += this->estimates[j];
-            this->estimates[j] = std::sqrt(this->estimates[j]);
+            this->h_estimate += this->h_estimates[j];
+            this->h_estimates[j] = std::sqrt(this->h_estimates[j]);
 
         }
 
-        this->estimate = std::sqrt(this->estimate);
+        this->h_estimate = std::sqrt(this->h_estimate);
     }
 
     /**
@@ -291,7 +291,7 @@ namespace pacs {
     std::ostream &operator <<(std::ostream &ost, const Estimator &estimator) {
         ost << "Elements: " << estimator.elements << std::endl;
         ost << "Dofs: " << estimator.dofs << std::endl;
-        return ost << "Estimate: " << estimator.estimate << std::endl;
+        return ost << "h-Estimate: " << estimator.h_estimate << std::endl;
     }
 
 }

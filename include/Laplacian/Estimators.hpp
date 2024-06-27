@@ -30,9 +30,9 @@ namespace pacs {
         std::size_t elements;
         std::size_t dofs;
 
-        // Estimates.
-        Real estimate;
-        Vector<Real> estimates;
+        // h-Adaptivity.
+        Real h_estimate;
+        Vector<Real> h_estimates;
 
         // CONSTRUCTORS.
 
