@@ -224,7 +224,7 @@ namespace pacs {
                 Matrix<Real> grad_t = edge_vector[0] * gradx_phi + edge_vector[1] * grady_phi;
                 Vector<Real> grad_uh_t = grad_t * numerical(indices);
 
-                // Local p-estimator, eta_{B_K}^2.
+                // Local p-estimator, eta_{E_K}^2.
                 this->p_estimates[j] += (sizes[j] / (2 * degree)) * dot(scaled, grad_uh * grad_uh);
 
                 if(neighbour == -1) { // Boundary edge.
