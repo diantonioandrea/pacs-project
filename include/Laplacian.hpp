@@ -23,4 +23,7 @@
 // Estimators.
 #include <Laplacian/Estimators.hpp>
 
+// Refine.
+#include <Laplacian/Refine.hpp>
+
 #endif
