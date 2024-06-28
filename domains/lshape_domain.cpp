@@ -13,7 +13,7 @@
 #include <cmath>
 #include <string>
 
-int main() {
+int main(int argc, char **argv) {
 
     // Domain.
     pacs::Point a{-1.0, -1.0};
@@ -25,17 +25,18 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d, e, f}};
 
-    // Meshes.
-    for(std::size_t j = 0; j < 6; ++j) {
-        
-        // Elements.
-        std::size_t elements = 100 * std::pow(2, j);
-
-        // Mesh.
-        pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements, false, true)};
-
-        // Output.
-        mesh.write("output/lshape_" + std::to_string(elements) + ".poly");
+    // Elements.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " ELEMENTS." << std::endl;
+        std::exit(-1);
     }
+
+    std::size_t elements = static_cast<std::size_t>(std::stoi(argv[1]));
+
+    // Mesh.
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
+
+    // Output.
+    mesh.write("output/lshape_" + std::to_string(elements) + ".poly");
 
 }
