@@ -44,10 +44,10 @@ int main() {
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape_100.poly");
 
     // Mesh.
-    pacs::Mesh mesh{domain, diagram, 2};
+    pacs::Mesh mesh{domain, diagram};
 
     // Test.
-    for(std::size_t j = 0; j < 6; ++j) {
+    for(std::size_t j = 0; j < 8; ++j) {
 
         // Mesh output.
         std::string polyfile = "output/lshape_hp_" + std::to_string(j) + ".poly";
