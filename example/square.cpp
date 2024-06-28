@@ -39,15 +39,15 @@ int main() {
     // Diagrams.
     std::vector<std::vector<pacs::Polygon>> diagrams;
 
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_100.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_200.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_400.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_800.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_1600.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_3200.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_1000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_2000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_3000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_4000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_5000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square_6000.poly"));
 
     // Polynomial degree.
-    std::size_t degree = 2;
+    std::size_t degree = 1;
 
     // Test.
     for(std::size_t j = 0; j < diagrams.size(); ++j) {
@@ -62,7 +62,7 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-10);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};

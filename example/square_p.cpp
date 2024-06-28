@@ -37,7 +37,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
 
     // Diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
 
     // Test.
     for(std::size_t degree = 1; degree <= 6; ++degree) {

@@ -39,7 +39,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
 
     // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
 
     // Polynomial degree.
     std::size_t degree = 2;
