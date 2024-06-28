@@ -43,16 +43,16 @@ int main() {
     std::size_t degree = 2;
 
     // Refinement percentage.
-    pacs::Real refine = 0.5L;
+    pacs::Real refine = 0.25L;
 
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 8; ++j) {
+    while(mesh.elements.size() < 20000) {
 
         // Mesh output.
-        std::string polyfile = "output/square_h_" + std::to_string(j) + ".poly";
+        std::string polyfile = "output/square_h_" + std::to_string(mesh.elements.size()) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
