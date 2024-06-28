@@ -21,12 +21,12 @@
 
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
-#define ALGEBRA_ITER_MAX 1E4
+#define ALGEBRA_ITER_MAX 25E3
 #endif
 
 // Algebra m limit.
 #ifndef ALGEBRA_M_MAX
-#define ALGEBRA_M_MAX 2E2
+#define ALGEBRA_M_MAX 25E1
 #endif
 
 namespace pacs {
