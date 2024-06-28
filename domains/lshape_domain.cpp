@@ -26,7 +26,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d, e, f}};
 
     // Meshes.
-    for(std::size_t j = 0; j < 4; ++j) {
+    for(std::size_t j = 0; j < 6; ++j) {
         
         // Elements.
         std::size_t elements = 100 * std::pow(2, j);
