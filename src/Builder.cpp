@@ -101,78 +101,104 @@ namespace pacs {
         sizes.resize(diagram.size(), 0.0);
 
         for(std::size_t j = 0; j < diagram.size(); ++j)
-            for(const auto &edge: diagram[j].edges())
-                sizes[j] = (std::abs(edge[1] - edge[0]) > sizes[j]) ? std::abs(edge[1] - edge[0]) : sizes[j];
+            for(const auto &p: diagram[j].points)
+                for(const auto &q: diagram[j].points)
+                    sizes[j] = (distance(p, q) > sizes[j]) ? distance(p, q) : sizes[j];
 
         #ifndef NVERBOSE
-        std::cout << "Evaluated elements sizes." << std::endl;
+        std::cout << "Collapsing small edges." << std::endl;
         #endif
 
-        std::size_t index = 0;
-        while(index < diagram.size()) {
-            bool flag = true;
+        for(std::size_t j = 0; j < diagram.size(); ++j) {
+            std::vector<Segment> edges_j = diagram[j].edges();
 
-            #ifndef NVERBOSE
-            std::cout << "\tCollapsing element " << index << "." << std::endl;
-            #endif
+            for(std::size_t ej = 0; ej < edges_j.size(); ++ej) {
 
-            // Cannot collapse triangles.
-            if(diagram[index].edges().size() == 3)
-                continue;
+                // Edge.
+                Segment edge_j = edges_j[ej];
 
-            // Looks for small edges.
-            for(auto &edge: diagram[index].edges()) {
-                if(std::abs(edge) > COLLAPSE_TOLERANCE * sizes[index])
+                // Triangles.
+                if(edges_j.size() == 3)
                     continue;
 
-                if(domain.contains(edge))
+                // Boundary edge.
+                if(domain.contains(edge_j))
                     continue;
 
+                // Long edge.
+                if(std::abs(edge_j) > COLLAPSE_TOLERANCE * sizes[j])
+                    continue;
+
+                // "Boundary" edge.
+                bool bound = false;
+
+                for(const auto &edge_d: domain.edges())
+                    if((edge_d.contains(edge_j[0])) || (edge_d.contains(edge_j[1])))
+                        bound = true;
+
+                if(bound)
+                    continue;
+
+                #ifndef NVERBOSE
+                std::cout << "\tCollapsing element " << j << "." << std::endl;
+                #endif
+                
+                // Midpoint.
+                Point midpoint = (edge_j[0] + edge_j[1]) * 0.5;
+
+                // Other elements fix.
                 for(std::size_t k = 0; k < diagram.size(); ++k) {
-                    if(index == k)
+                    if(j == k)
                         continue;
 
-                    // Collapses small edges.
-                    if(diagram[k].contains(edge)) {
-                        diagram[index] = collapse(diagram[index], edge);
-                        diagram[k] = collapse(diagram[k], edge);
-                        flag = false;
+                    std::vector<Segment> edges_k = diagram[k].edges();
 
-                        // Collapse target.
-                        Point target = (edge[0] + edge[1]) * 0.5;
+                    // Same edge.
+                    bool edge = false;
 
-                        // Avoids domain distortion.
-                        for(const auto &boundary_edge: domain.edges()) {
-                            if(boundary_edge.contains(edge[0])) {
-                                target = edge[0];
-                                break;
+                    for(std::size_t ek = 0; ek < edges_k.size(); ++ek) {
+
+                        // Edge.
+                        Segment edge_k = edges_k[ek];
+
+                        if(edge_j == edge_k) {
+                            edge = true;
+
+                            // Edit.
+                            if(ek == edges_k.size() - 1) {
+                                diagram[k].points.erase(diagram[k].points.begin() + edges_k.size() - 1);
+                                diagram[k].points[0] = midpoint;
+                            } else {
+                                diagram[k].points.erase(diagram[k].points.begin() + ek + 1);
+                                diagram[k].points[ek] = midpoint;
                             }
 
-                            if(boundary_edge.contains(edge[1])) {
-                                target = edge[1];
-                                break;
-                            }
-                        }
-
-                        // Moves vertices.
-                        for(std::size_t h = 0; h < diagram.size(); ++h) {
-                            if((index  == h) || (k == h))
-                                continue;
-
-                            for(std::size_t l = 0; l < diagram[h].points.size(); ++l) {
-                                if((diagram[h].points[l] == edge[0]) || (diagram[h].points[l] == edge[1]))
-                                    diagram[h].points[l] = target;
-                            }
+                            break;
                         }
                     }
+
+                    if(edge)
+                        continue;
+
+                    // Same point.
+                    for(std::size_t pk = 0; pk < diagram[k].points.size(); ++pk)
+                        if((diagram[k].points[pk] == edge_j[0]) || (diagram[k].points[pk] == edge_j[1])) {
+                            diagram[k].points[pk] = midpoint;
+                            break;
+                        }
                 }
 
-                if(!flag)
-                    break;
-            }
+                // Element fix.
+                if(ej == edges_j.size() - 1) {
+                    diagram[j].points.erase(diagram[j].points.begin() + edges_j.size() - 1);
+                    diagram[j].points[0] = midpoint;
+                } else {
+                    diagram[j].points.erase(diagram[j].points.begin() + ej + 1);
+                    diagram[j].points[ej] = midpoint;
+                }
 
-            if(flag)
-                ++index;
+                break;
+            }
         }
 
         return diagram;
