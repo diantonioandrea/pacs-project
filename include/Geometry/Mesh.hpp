@@ -22,7 +22,7 @@
 #include <string>
 
 #ifndef COLLAPSE_TOLERANCE
-#define COLLAPSE_TOLERANCE 1E-1
+#define COLLAPSE_TOLERANCE 5E-2
 #endif
 
 #ifndef LLOYD_TOLERANCE
