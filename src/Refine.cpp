@@ -21,7 +21,7 @@ namespace pacs {
     void mesh_refine(Mesh &mesh, const Estimator &estimator) {
 
         // Refinement steps.
-        std::array<Real, 2> steps{0.5, 0.7};
+        std::array<Real, 2> steps{0.5, 0.75};
 
         // Estimates and maximum estimate.
         Vector<Real> estimates = estimator.estimates;
