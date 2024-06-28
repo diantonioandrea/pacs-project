@@ -69,7 +69,7 @@ int main() {
 
         // Solution structure (output).
         pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/square_h_" + std::to_string(j) + ".sol";
+        std::string solfile = "output/square_h_" + std::to_string(mesh.elements.size()) + ".sol";
         solution.write(solfile);
 
         // Output.
