@@ -39,46 +39,49 @@ int main() {
     // Initial diagram.
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
 
-    // Polynomial degree.
-    std::size_t degree = 2;
-
     // Refinement percentage.
     pacs::Real refine = 0.25L;
 
-    // Mesh.
-    pacs::Mesh mesh{domain, diagram, degree};
-
     // Sequence of meshes.
-    while(mesh.elements.size() < 20000) {
-
-        // Mesh output.
-        std::string polyfile = "output/square_h_" + std::to_string(mesh.elements.size()) + ".poly";
-        mesh.write(polyfile);
-
-        // Matrices.
-        auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
-
-        // Forcing term.
-        pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
+    for(std::size_t degree = 1; degree <= 3; ++degree) {
         
-        // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        // Mesh.
+        pacs::Mesh mesh{domain, diagram, degree};
 
-        // Errors.
-        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+        for(std::size_t index = 0; index < 15; ++index) {
 
-        // Solution structure (output).
-        pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/square_h_" + std::to_string(mesh.elements.size()) + ".sol";
-        solution.write(solfile);
+            // Verbosity.
+            std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
-        // Output.
-        output << "\n" << error << "\n\n";
-        
-        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+            // Mesh output.
+            std::string polyfile = "output/square_h_" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
+            mesh.write(polyfile);
 
-        // Refinement.
-        pacs::mesh_refine_size(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
+            // Matrices.
+            auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
+
+            // Forcing term.
+            pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
+            
+            // Linear system solution.
+            pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+
+            // Errors.
+            pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+
+            // // Solution structure (output).
+            // pacs::Solution solution{mesh, numerical, exact};
+            // std::string solfile = "output/square_h_" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+            // solution.write(solfile);
+
+            // Output.
+            output << "\n" << error << "\n\n";
+            
+            output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+            output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+
+            // Refinement.
+            pacs::mesh_refine_size(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
+        }
     }
 }

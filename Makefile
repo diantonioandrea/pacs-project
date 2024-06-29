@@ -7,13 +7,13 @@ CXXFLAGS = -Wall -pedantic -std=c++20 -O3 -fPIC -I./include
 # Disables debugging.
 # CPPFLAGS += -DNDEBUG
 
-# Parallel computing using STL and modules.
-ifneq ($(mkTbbLib),)
-CPPFLAGS += -DPARALLEL
-CXXFLAGS += -I$(mkTbbInc)
-LDFLAGS += -L$(mkTbbLib)
-LDLIBS += -ltbb
-endif
+# # Parallel computing using STL and modules.
+# ifneq ($(mkTbbLib),)
+# CPPFLAGS += -DPARALLEL
+# CXXFLAGS += -I$(mkTbbInc)
+# LDFLAGS += -L$(mkTbbLib)
+# LDLIBS += -ltbb
+# endif
 
 # # Parallel computing using OpenMP.
 # ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
@@ -30,7 +30,6 @@ endif
 
 # Files.
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
-
 
 HEADERS = ./include/*.hpp
 HEADERS += ./include/Algebra/*.hpp

@@ -41,52 +41,55 @@ int main() {
     // Initial diagram.
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
 
-    // Polynomial degree.
-    std::size_t degree = 2;
-
     // Refinement percentage.
-    pacs::Real refine = 0.5L;
-
-    // Mesh.
-    pacs::Mesh mesh{domain, diagram, degree};
+    pacs::Real refine = 0.25L;
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 8; ++j) {
+    for(std::size_t degree = 1; degree <= 3; ++degree) {
 
-        // Mesh output.
-        std::string polyfile = "output/square_eh_" + std::to_string(j) + ".poly";
-        mesh.write(polyfile);
+        // Mesh.
+        pacs::Mesh mesh{domain, diagram, degree};
 
-        // Matrices.
-        auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
+        for(std::size_t index = 0; index < 15; ++index) {
 
-        // Forcing term.
-        pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
-        
-        // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+            // Verbosity.
+            std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
-        // Solution structure (output).
-        pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/square_eh_" + std::to_string(j) + ".sol";
-        solution.write(solfile);
+            // Mesh output.
+            std::string polyfile = "output/square_eh_" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
+            mesh.write(polyfile);
 
-        // Errors.
-        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+            // Matrices.
+            auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
 
-        // Output.
-        output << "\n" << error << "\n\n";
+            // Forcing term.
+            pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
+            
+            // Linear system solution.
+            pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
-        // Estimator.
-        pacs::Estimator estimator{mesh, mass, numerical, source};
+            // // Solution structure (output).
+            // pacs::Solution solution{mesh, numerical, exact};
+            // std::string solfile = "output/square_eh_" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+            // solution.write(solfile);
 
-        // Output.
-        estimates_output << "\n" << estimator << "\n\n";
-        
-        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+            // Errors.
+            pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
-        // Refinement.
-        pacs::mesh_refine_size(mesh, estimator.estimates > refine * pacs::max(estimator.estimates));
+            // Output.
+            output << "\n" << error << "\n\n";
+
+            // Estimator.
+            pacs::Estimator estimator{mesh, mass, numerical, source};
+
+            // Output.
+            estimates_output << "\n" << estimator << "\n\n";
+            
+            output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+            output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+
+            // Refinement.
+            pacs::mesh_refine_size(mesh, estimator.estimates > refine * pacs::max(estimator.estimates));
+        }
     }
 }
