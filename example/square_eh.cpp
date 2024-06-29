@@ -52,14 +52,6 @@ int main(int argc, char **argv) {
     // Refinement percentage.
     pacs::Real refine = 0.25L;
 
-    // Degree.
-    if(argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " DEGREE." << std::endl;
-        std::exit(-1);
-    }
-
-    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
-
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
 
