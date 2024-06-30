@@ -86,8 +86,8 @@ fig, axes = plt.subplots()
 fig.suptitle("Errors vs. DOFs")
 
 # DG.
-axes.plot(dofs, errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
-axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^-{degree}/2") # Comparison.
+axes.plot(dofs, errors, color=black, marker="*", linewidth=1, label="DG error.") # Error.
+axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label=f"DOFs^-{degree}/2") # Comparison.
 
 # Comparison.
 if len(sys.argv) == 3:
@@ -140,8 +140,8 @@ if len(sys.argv) == 3:
     dg_ticks.append(errors[-1])
 
     # DG.
-    axes.plot(dofs, errors, color=red, marker="*", linewidth=3, label="DG error (C).") # Error.
-    axes.plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^-{degree}/2 (C)") # Comparison.
+    axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG error (C).") # Error.
+    axes.plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=0.5, alpha=0.5, label=f"DOFs^-{degree}/2 (C)") # Comparison.
 
 # Ticks.
 dofs_ticks.sort()
