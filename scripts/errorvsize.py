@@ -82,15 +82,9 @@ dg_comparison: list[float] = []
 l2_interp_comparison: list[float] = []
 dg_interp_comparison: list[float] = []
 
-l2_interp = numpy.polyfit(numpy.log(sizes), numpy.log(l2_errors), 1)
-dg_interp = numpy.polyfit(numpy.log(sizes), numpy.log(dg_errors), 1)
-
 for size in sizes:
-    l2_comparison.append((size / sizes[0]) ** (degree + 1) * l2_errors[0])
-    dg_comparison.append((size / sizes[0]) ** degree * dg_errors[0])
-
-    l2_interp_comparison.append(numpy.exp(l2_interp[1]) * size ** l2_interp[0])
-    dg_interp_comparison.append(numpy.exp(dg_interp[1]) * size ** dg_interp[0])
+    l2_comparison.append((size / sizes[-1]) ** (degree + 1) * l2_errors[-1])
+    dg_comparison.append((size / sizes[-1]) ** degree * dg_errors[-1])
 
 # Ticks.
 sizes_ticks = [sizes[0], sizes[-1]]
@@ -109,14 +103,12 @@ fig, axes = plt.subplots(1, 2)
 fig.suptitle("L2 and DG errors vs. size")
 
 # L2.
-axes[0].plot(sizes, l2_errors, color=black, marker="*", linewidth=3, label="L2 error.") # Error.
-axes[0].plot(sizes, l2_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"Degree: {degree + 1}") # Comparison.
-axes[0].plot(sizes, l2_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.1f}") # Comparison.
+axes[0].plot(sizes, l2_errors, color=black, marker="*", linewidth=1, label="$L^2$ error") # Error.
+axes[0].plot(sizes, l2_comparison, color=red, linestyle="--", linewidth=0.5, label=f"$h^{degree + 1}$") # Comparison.
 
 # DG.
-axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
-axes[1].plot(sizes, dg_comparison, color=red, linewidth=1.5, alpha=0.5, label=f"Degree: {degree}") # Comparison.
-axes[1].plot(sizes, dg_interp_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f}") # Comparison.
+axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=1, label="$DG$ error") # Error.
+axes[1].plot(sizes, dg_comparison, color=red, linestyle="--", linewidth=0.5, label=f"$h^{degree}$") # Comparison.
 
 # Parameters.
 for j in range(2):
@@ -136,11 +128,11 @@ for j in range(2):
 axes[0].set_title("L2 error")
 axes[1].set_title("DG error")
 
-# Labels.
-axes[0].set_xticks(sizes_ticks, labels=sizes_labels)
-axes[1].set_xticks(sizes_ticks, labels=sizes_labels)
-axes[0].set_yticks(l2_ticks, labels=l2_labels)
-axes[1].set_yticks(dg_ticks, labels=dg_labels)
+# # Labels.
+# axes[0].set_xticks(sizes_ticks, labels=sizes_labels)
+# axes[1].set_xticks(sizes_ticks, labels=sizes_labels)
+# axes[0].set_yticks(l2_ticks, labels=l2_labels)
+# axes[1].set_yticks(dg_ticks, labels=dg_labels)
 
 axes[1].yaxis.tick_right()
 axes[1].yaxis.set_label_position("right")
