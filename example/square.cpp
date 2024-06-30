@@ -39,15 +39,17 @@ int main() {
     // Diagrams.
     std::vector<std::vector<pacs::Polygon>> diagrams;
 
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_1000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_2000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_3000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_4000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_5000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square_6000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_125.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_250.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_500.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_1000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_2000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_4000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_8000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_16000.poly"));
 
     // Polynomial degree.
-    std::size_t degree = 1;
+    std::size_t degree = 2;
 
     // Test.
     for(std::size_t j = 0; j < diagrams.size(); ++j) {
