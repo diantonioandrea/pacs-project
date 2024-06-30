@@ -132,10 +132,10 @@ namespace pacs {
 
         // Stats.
         file << "@ Domain: " << this->domain << "\n";
-        file << "@ Elements: " << this->elements.size() << "\n";
+        file << "@ Elements number: " << this->elements.size() << "\n";
 
         // Polygons.
-        file << "@ Elements\' coordinates and degree: \n";
+        file << "@ Elements: \n";
 
         for(const auto &element: this->elements) {
             Polygon polygon = element.element;
