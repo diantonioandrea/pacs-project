@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Test.
-    for(std::size_t index = 0; index < 10; ++index) {
+    for(std::size_t index = 0; index < 15; ++index) {
 
         // Verbosity.
         std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
