@@ -26,7 +26,7 @@
 #endif
 
 #ifndef LLOYD_TOLERANCE
-#define LLOYD_TOLERANCE 1E-3
+#define LLOYD_TOLERANCE 1E-4
 #endif
 
 #ifndef LLOYD_MAX_ITER

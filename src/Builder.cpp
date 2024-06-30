@@ -272,10 +272,9 @@ namespace pacs {
                 
                 // New point.
                 Point centroid = diagram[k].centroid();
-                Real shift = distance(centroid, centroids[k]);
 
-                // Residual (biggest centroid shift).
-                residual = (shift > residual) ? shift : residual;
+                // Residual (Centroid shift).
+                residual += distance(centroid, centroids[k]);
 
                 // Update.
                 centroids[k] = centroid;
@@ -289,7 +288,7 @@ namespace pacs {
             std::cout << "\tCompleted step " << j + 1 << " of the Lloyd's algorithm. Residual: " << residual << std::endl;
             #endif
 
-            if(residual < LLOYD_TOLERANCE)
+            if(residual < LLOYD_TOLERANCE * diagram.size())
                 break;
         }
 
