@@ -85,10 +85,10 @@ int main(int argc, char **argv) {
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
         // Output.
-        output << "\n" << error << "\n\n";
+        output << "\n" << error << "\n";
         
         output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
         if(index == 9)
