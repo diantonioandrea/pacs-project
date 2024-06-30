@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     std::size_t elements = static_cast<std::size_t>(std::stoi(argv[1]));
 
     // Mesh.
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, elements, false, true)};
 
     // Output.
     mesh.write("output/lshape_" + std::to_string(elements) + ".poly");
