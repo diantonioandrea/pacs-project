@@ -19,14 +19,22 @@
 #include <iomanip>
 #include <filesystem>
 
-int main() {
+int main(int argc, char **argv) {
 
-    std::ofstream output{"output/lshape_h.error"};
+    // Degree.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " DEGREE." << std::endl;
+        std::exit(-1);
+    }
+
+    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
+
+    std::ofstream output{"output/lshape_h_" + std::to_string(degree) + ".error"};
 
     output << "L-shaped domain - element size adaptive refinement." << "\n";
 
     std::cout << "L-shaped domain - element size adaptive refinement." << std::endl;
-    std::cout << "Output under output/lshape_h.error." << std::endl;
+    std::cout << "Output under output/lshape_h_DEGREE.error." << std::endl;
 
     // Domain.
     pacs::Point a{-1.0, -1.0};
@@ -41,20 +49,20 @@ int main() {
     // Initial diagram.
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape_100.poly");
 
-    // Polynomial degree.
-    std::size_t degree = 2;
-
     // Refinement percentage.
-    pacs::Real refine = 0.5L;
+    pacs::Real refine = 0.25L;
 
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Test.
-    for(std::size_t j = 0; j < 8; ++j) {
+    for(std::size_t index = 0; index < 10; ++index) {
+
+        // Verbosity.
+        std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh output.
-        std::string polyfile = "output/lshape_h_" + std::to_string(j) + ".poly";
+        std::string polyfile = "output/lshape_h_" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
@@ -69,10 +77,10 @@ int main() {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
-        // Solution structure (output).
-        pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/lshape_h_" + std::to_string(j) + ".sol";
-        solution.write(solfile);
+        // // Solution structure (output).
+        // pacs::Solution solution{mesh, numerical, exact};
+        // std::string solfile = "output/lshape_h_" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        // solution.write(solfile);
 
         // Output.
         output << "\n" << error << "\n\n";
