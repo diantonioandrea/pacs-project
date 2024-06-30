@@ -64,7 +64,7 @@ inline pacs::Real dirichlet_x(const pacs::Real &x, const pacs::Real &y) {
     pacs::Real rho = std::sqrt(x * x + y * y);
     pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
 
-    return (2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * (std::cos(theta) * std::sin(2.0L * theta / 3.0L) - std::sin(theta) * std::cos(2.0L * theta / 3.0L));
+    return -(2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::sin(theta / 3.0L);
 }
 
 /**
@@ -78,5 +78,5 @@ inline pacs::Real dirichlet_y(const pacs::Real &x, const pacs::Real &y) {
     pacs::Real rho = std::sqrt(x * x + y * y);
     pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
 
-    return (2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * (std::sin(theta) * std::sin(2.0L * theta / 3.0L) + std::cos(theta) * std::cos(2.0L * theta / 3.0L));
+    return (2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::cos(theta / 3.0L);
 }
