@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Tests.
-    std::size_t tests = 15;
+    std::size_t tests = 30;
 
     // Test.
     for(std::size_t index = 0; index < tests; ++index) {
