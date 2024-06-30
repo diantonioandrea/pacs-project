@@ -18,7 +18,7 @@
 #include <vector>
 
 #ifndef GEOMETRY_SAFE
-#define GEOMETRY_SAFE 1E-2
+#define GEOMETRY_SAFE 1E-6
 #endif
 
 #ifndef GEOMETRY_PADDING
