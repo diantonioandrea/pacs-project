@@ -75,19 +75,15 @@ for line in lines:
 exponent: float = -degree / 2
 
 # Dofs.
-dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
-
-# Ticks.
-dofs_ticks = [dofs[0], dofs[-1]]
-dg_ticks = [errors[0], errors[-1]]
+dofs_comparison = [errors[0] * (dof / dofs[0]) ** exponent for dof in dofs]
 
 # Plot.
 fig, axes = plt.subplots()
 fig.suptitle("Errors vs. DOFs")
 
 # DG.
-axes.plot(dofs, errors, color=black, marker="*", linewidth=1, label="DG error.") # Error.
-axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label=f"DOFs^-{degree}/2") # Comparison.
+axes.plot(dofs, errors, color=black, marker="*", linewidth=1, label="DG") # Error.
+axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$") # Comparison.
 
 # Comparison.
 if len(sys.argv) == 3:
@@ -133,23 +129,8 @@ if len(sys.argv) == 3:
         except ValueError:
             continue
 
-    # Dofs.
-    dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
-
-    dofs_ticks.append(dofs[-1])
-    dg_ticks.append(errors[-1])
-
     # DG.
-    axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG error (C).") # Error.
-    axes.plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=0.5, alpha=0.5, label=f"DOFs^-{degree}/2 (C)") # Comparison.
-
-# Ticks.
-dofs_ticks.sort()
-dg_ticks.sort()
-
-# Labels.
-dofs_labels = [f"{tick:.0f}" for tick in dofs_ticks]
-dg_labels = [f"{tick:.1e}" for tick in dg_ticks]
+    axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG (C)") # Error.
 
 # Parameters.
 
@@ -163,13 +144,6 @@ axes.yaxis.set_minor_formatter(NullFormatter())
 
 # Legend.
 axes.legend(loc="best")
-
-# Title.
-axes.set_title("DG error")
-
-# # Labels.
-# axes.set_xticks(dofs_ticks, labels=dofs_labels)
-# axes.set_yticks(dg_ticks, labels=dg_labels)
 
 # Output.
 plt.show()
