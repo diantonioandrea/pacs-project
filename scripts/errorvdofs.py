@@ -72,17 +72,7 @@ for line in lines:
 
 # Dofs.
 dofs = [dof ** 0.5 for dof in dofs]
-
-# Comparison.
-l2_comparison: list[float] = []
-dg_comparison: list[float] = []
-
-l2_interp = numpy.polyfit(numpy.log(dofs), numpy.log(l2_errors), 1)
-dg_interp = numpy.polyfit(numpy.log(dofs), numpy.log(dg_errors), 1)
-
-for dof in dofs:
-    l2_comparison.append(numpy.exp(l2_interp[1]) * dof ** l2_interp[0])
-    dg_comparison.append(numpy.exp(dg_interp[1]) * dof ** dg_interp[0])
+dofs_comparison = [dof ** -1 for dof in dofs]
 
 # Ticks.
 dofs_ticks = [dofs[0], dofs[-1]]
@@ -96,11 +86,10 @@ fig.suptitle("L2 and DG errors vs. DOFs")
 
 # L2.
 axes[0].plot(dofs, l2_errors, color=black, marker="*", linewidth=3, label="L2 error.") # Error.
-axes[0].plot(dofs, l2_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.1f}") # Comparison.
 
 # DG.
 axes[1].plot(dofs, dg_errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
-axes[1].plot(dofs, dg_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f}") # Comparison.
+axes[1].plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^1/2") # Comparison.
 
 # Comparison.
 if len(sys.argv) == 3:
@@ -153,17 +142,6 @@ if len(sys.argv) == 3:
     # Dofs.
     dofs = [dof ** 0.5 for dof in dofs]
 
-    # Comparison.
-    l2_comparison: list[float] = []
-    dg_comparison: list[float] = []
-
-    l2_interp = numpy.polyfit(numpy.log(dofs), numpy.log(l2_errors), 1)
-    dg_interp = numpy.polyfit(numpy.log(dofs), numpy.log(dg_errors), 1)
-
-    for dof in dofs:
-        l2_comparison.append(numpy.exp(l2_interp[1]) * dof ** l2_interp[0])
-        dg_comparison.append(numpy.exp(dg_interp[1]) * dof ** dg_interp[0])
-
     dofs_ticks.append(dofs[-1])
 
     l2_ticks.append(l2_errors[-1])
@@ -173,11 +151,10 @@ if len(sys.argv) == 3:
 
     # L2.
     axes[0].plot(dofs, l2_errors, color=red, marker="*", linewidth=3, label="L2 error (C).") # Error.
-    axes[0].plot(dofs, l2_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {l2_interp[0]:.1f} (C)") # Comparison.
 
     # DG.
     axes[1].plot(dofs, dg_errors, color=red, marker="*", linewidth=3, label="DG error (C).") # Error.
-    axes[1].plot(dofs, dg_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"Interpolant, degree: {dg_interp[0]:.1f} (C)") # Comparison.
+    axes[1].plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^1/2 (C)") # Comparison.
 
 # Ticks.
 dofs_ticks.sort()
