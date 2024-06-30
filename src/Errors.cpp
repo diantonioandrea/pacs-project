@@ -95,12 +95,12 @@ namespace pacs {
      * @return std::ostream& 
      */
     std::ostream &operator <<(std::ostream &ost, const Error &error) {
-        ost << "Elements: " << error.elements << std::endl;
-        ost << "Dofs: " << error.dofs << std::endl;
-        ost << "Degree (p): " << error.degree << std::endl;
-        ost << "Size (h): " << error.size << std::endl;
-        ost << "L2 Error: " << error.l2_error << std::endl;
-        return ost << "DG Error: " << error.dg_error;
+        ost << "Elements: " << error.elements << "\n";
+        ost << "Dofs: " << error.dofs << "\n";
+        ost << "Degree (p): " << error.degree << "\n";
+        ost << "Size (h): " << error.size << "\n";
+        ost << "L2 Error: " << error.l2_error << "\n";
+        return ost << "DG Error: " << error.dg_error << std::endl;
     }
 
 }
