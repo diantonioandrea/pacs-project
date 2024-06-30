@@ -11,7 +11,6 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import NullFormatter
-import numpy
 import sys
 
 # Font.
@@ -25,8 +24,10 @@ red: list[float] = [220 / 255, 50 / 255, 47 / 255]
 dofs: list[float] = []
 
 # Errors.
-l2_errors: list[float] = []
-dg_errors: list[float] = []
+errors: list[float] = []
+
+# Degree.
+degree: int = -1
 
 # File.
 if len(sys.argv) <= 1:
@@ -61,35 +62,32 @@ for line in lines:
         if "Dofs" in line:
             dofs.append(int(data[-1]))
 
-        elif "L2 Error" in line:
-            l2_errors.append(float(data[-1]))
-
         elif "DG Error" in line:
-            dg_errors.append(float(data[-1]))
+            errors.append(float(data[-1]))
+
+        elif "Degree" in line:
+            degree = int(data[-1])
 
     except ValueError:
         continue
 
+# Exponent.
+exponent: float = -degree / 2
+
 # Dofs.
-dofs = [dof ** 0.5 for dof in dofs]
-dofs_comparison = [dof ** -1 for dof in dofs]
+dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
 
 # Ticks.
 dofs_ticks = [dofs[0], dofs[-1]]
-
-l2_ticks = [l2_errors[0], l2_errors[-1]]
-dg_ticks = [dg_errors[0], dg_errors[-1]]
+dg_ticks = [errors[0], errors[-1]]
 
 # Plot.
-fig, axes = plt.subplots(1, 2)
-fig.suptitle("L2 and DG errors vs. DOFs")
-
-# L2.
-axes[0].plot(dofs, l2_errors, color=black, marker="*", linewidth=3, label="L2 error.") # Error.
+fig, axes = plt.subplots()
+fig.suptitle("Errors vs. DOFs")
 
 # DG.
-axes[1].plot(dofs, dg_errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
-axes[1].plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^1/2") # Comparison.
+axes.plot(dofs, errors, color=black, marker="*", linewidth=3, label="DG error.") # Error.
+axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^-{degree}/2") # Comparison.
 
 # Comparison.
 if len(sys.argv) == 3:
@@ -120,8 +118,7 @@ if len(sys.argv) == 3:
     dofs: list[float] = []
 
     # Errors.
-    l2_errors: list[float] = []
-    dg_errors: list[float] = []
+    errors: list[float] = []
 
     for line in lines:
         try:
@@ -130,70 +127,49 @@ if len(sys.argv) == 3:
             if "Dofs" in line:
                 dofs.append(int(data[-1]))
 
-            elif "L2 Error" in line:
-                l2_errors.append(float(data[-1]))
-
             elif "DG Error" in line:
-                dg_errors.append(float(data[-1]))
+                errors.append(float(data[-1]))
 
         except ValueError:
             continue
 
     # Dofs.
-    dofs = [dof ** 0.5 for dof in dofs]
+    dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
 
     dofs_ticks.append(dofs[-1])
-
-    l2_ticks.append(l2_errors[-1])
-    dg_ticks.append(dg_errors[-1])
-
-    # Plot.
-
-    # L2.
-    axes[0].plot(dofs, l2_errors, color=red, marker="*", linewidth=3, label="L2 error (C).") # Error.
+    dg_ticks.append(errors[-1])
 
     # DG.
-    axes[1].plot(dofs, dg_errors, color=red, marker="*", linewidth=3, label="DG error (C).") # Error.
-    axes[1].plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^1/2 (C)") # Comparison.
+    axes.plot(dofs, errors, color=red, marker="*", linewidth=3, label="DG error (C).") # Error.
+    axes.plot(dofs, dofs_comparison, color=red, linestyle="--", linewidth=1.5, alpha=0.5, label=f"DOFs^-{degree}/2 (C)") # Comparison.
 
 # Ticks.
 dofs_ticks.sort()
-
-l2_ticks.sort()
 dg_ticks.sort()
 
 # Labels.
 dofs_labels = [f"{tick:.0f}" for tick in dofs_ticks]
-
-l2_labels = [f"{tick:.1e}" for tick in l2_ticks]
 dg_labels = [f"{tick:.1e}" for tick in dg_ticks]
 
 # Parameters.
-for j in range(2):
 
-    # Loglog scale.
-    axes[j].set_xscale("log")
-    axes[j].set_yscale("log")
+# Loglog scale.
+axes.set_xscale("log")
+axes.set_yscale("log")
 
-    # Ticks.
-    axes[j].xaxis.set_minor_formatter(NullFormatter())
-    axes[j].yaxis.set_minor_formatter(NullFormatter())
+# Ticks.
+axes.xaxis.set_minor_formatter(NullFormatter())
+axes.yaxis.set_minor_formatter(NullFormatter())
 
-    # Legend.
-    axes[j].legend(loc="best")
+# Legend.
+axes.legend(loc="best")
 
 # Title.
-axes[0].set_title("L2 error")
-axes[1].set_title("DG error")
+axes.set_title("DG error")
 
-# Labels.
-axes[0].set_xticks(dofs_ticks, labels=dofs_labels)
-axes[1].set_xticks(dofs_ticks, labels=dofs_labels)
-axes[0].set_yticks(l2_ticks, labels=l2_labels)
-axes[1].set_yticks(dg_ticks, labels=dg_labels)
-
-axes[1].yaxis.tick_right()
-axes[1].yaxis.set_label_position("right")
+# # Labels.
+# axes.set_xticks(dofs_ticks, labels=dofs_labels)
+# axes.set_yticks(dg_ticks, labels=dg_labels)
 
 # Output.
 plt.show()
