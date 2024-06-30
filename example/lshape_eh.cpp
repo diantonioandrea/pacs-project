@@ -86,19 +86,19 @@ int main(int argc, char **argv) {
 
         // Output.
         output << "\n" << error << "\n\n";
+        
+        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+
+        // Exit.
+        if(index == 9)
+            break;
 
         // Estimator.
         pacs::Estimator estimator{mesh, mass, numerical, source, dirichlet, {dirichlet_x, dirichlet_y}};
 
         // Output.
         estimates_output << "\n" << estimator << "\n\n";
-        
-        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
-        
-        // Exit.
-        if(index == 9)
-            break;
 
         // Refinement.
         pacs::mesh_refine_size(mesh, estimator.estimates > refine * pacs::max(estimator.estimates));
