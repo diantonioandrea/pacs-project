@@ -50,46 +50,84 @@ namespace pacs {
         // Reflection fixes.
         if(reflect) {
             for(const auto &vertex: domain.points) {
+
+                // On-edge vertex.
                 for(std::size_t j = 0; j < diagram.size(); ++j) {
                     std::vector<Segment> edges_j = diagram[j].edges();
 
-                    for(std::size_t k = 0; k < diagram[j].points.size(); ++k) {
-                        if((edges_j[k].contains(vertex)) && (edges_j[k][0] != vertex) && (edges_j[k][1] != vertex)) {
+                    for(std::size_t ej = 0; ej < edges_j.size(); ++ej) {
 
-                            Segment previous = edges_j[(k > 0) ? k - 1 : diagram[j].points.size() - 1];
-                            Segment next = edges_j[(k < diagram[j].points.size() - 1) ? k + 1 : 0];
+                        // Edge.
+                        Segment edge_j = edges_j[ej];
 
-                            for(std::size_t h = 0; h < diagram.size(); ++h) {
-                                if(h == j)
-                                    continue;
+                        if(!(edge_j.contains(vertex)) || (edge_j[0] == vertex) || (edge_j[1] == vertex))
+                            continue;
 
-                                std::vector<Segment> edges_h = diagram[h].edges();
+                        // Pathologies.
+                        std::size_t counter = 0;
+                        std::size_t index_j = ej;
+                        std::vector<std::array<std::size_t, 2>> edges;
 
-                                for(std::size_t l = 0; l < edges_h.size(); ++l) {
-                                    if(edges_h[l].contains(previous)) {
-                                        if((edges_h[l][0] != previous[0]) && (edges_h[l][0] != previous[1]))
-                                            diagram[h].points[l] = vertex;
+                        for(std::size_t k = 0; k < diagram.size(); ++k) {
+                            if(j == k)
+                                continue;
 
-                                        if((edges_h[l][1] != previous[0]) && (edges_h[l][1] != previous[1]))
-                                            diagram[h].points[(l < edges_h.size() - 1) ? l + 1 : 0] = vertex;
+                            std::vector<Segment> edges_k = diagram[k].edges();
 
-                                        break;
-                                    } else if(edges_h[l].contains(next)) {
-                                        if((edges_h[l][0] != next[0]) && (edges_h[l][0] != next[1]))
-                                            diagram[h].points[l] = vertex;
+                            for(std::size_t ek = 0; ek < edges_k.size(); ++ek) {
 
-                                        if((edges_h[l][1] != next[0]) && (edges_h[l][1] != next[1]))
-                                            diagram[h].points[(l < edges_h.size() - 1) ? l + 1 : 0] = vertex;
+                                // Edge.
+                                Segment edge_k = edges_k[ek];
 
-                                        break;
-                                    }
+                                if((edge_k.contains(edge_j[0])) && (edge_k[0] != edge_j[0]) && (edge_k[1] != edge_j[0])) {
+                                    edges.emplace_back(std::array<std::size_t, 2>{k, ek});
+                                    ++counter;
+                                    break;
+                                }
+
+                                if((edge_k.contains(edge_j[1])) && (edge_k[0] != edge_j[1]) && (edge_k[1] != edge_j[1])) {
+                                    edges.emplace_back(std::array<std::size_t, 2>{k, ek});
+                                    index_j = (ej == diagram[j].points.size() - 1) ? 0 : ej + 1;
+                                    ++counter;
+                                    break;
                                 }
                             }
+                        }
 
-                            diagram[j].points.erase(diagram[j].points.begin() + k);
-                            diagram[j].points[k] = vertex;
-                            break;
+                        // Controlled pathology.
+                        assert(counter <= 2);
+                        
+                        // Neighbours' fix.
+                        for(auto &[k, ek]: edges) {
+                            std::size_t index_k_0 = ek;
+                            std::size_t index_k_1 = (ek == diagram[k].points.size() - 1) ? 0 : ek + 1;
 
+                            // Move.
+                            bool moved = false;
+
+                            for(const auto &edge: edges_j)
+                                if(edge.contains(diagram[k].points[index_k_0])) {
+                                    diagram[k].points[index_k_1] = vertex;
+                                    moved = true;
+                                    break;
+                                }
+
+                            if(moved)
+                                continue;
+
+                            for(const auto &edge: edges_j)
+                                if(edge.contains(diagram[k].points[index_k_1]))
+                                    diagram[k].points[index_k_0] = vertex;
+                        }
+
+                        if(counter == 1) { // Single error.
+
+                            diagram[j].points[index_j] = vertex;
+
+                        } else if(counter == 2) { // Double error.
+
+                            diagram[j].points.erase(diagram[j].points.begin() + ej);
+                            diagram[j].points[ej] = vertex;
                         }
                     }
                 }
