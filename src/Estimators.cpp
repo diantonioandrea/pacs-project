@@ -275,8 +275,8 @@ namespace pacs {
                     // Local estimator, R_{K, J}^2.
                     this->estimates[j] += penalties[k] * dot(scaled, (uh - n_uh) * (uh - n_uh));
 
-                    // // Local estimator, R_{K, N}^2.
-                    // this->estimates[j] += sizes[j] * dot(scaled, (grad_uh - n_grad_uh) * (grad_uh - n_grad_uh));
+                    // Local estimator, R_{K, N}^2.
+                    this->estimates[j] += sizes[j] * dot(scaled, (grad_uh - n_grad_uh) * (grad_uh - n_grad_uh));
 
                     // Local estimator, R_{K, T}^2.
                     this->estimates[j] += sizes[j] * dot(scaled, (grad_uh_t - n_grad_uh_t) * (grad_uh_t - n_grad_uh_t));
