@@ -53,8 +53,11 @@ int main(int argc, char **argv) {
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
 
+    // Tests.
+    std::size_t tests = 15;
+
     // Sequence of meshes.
-    for(std::size_t index = 0; index < 15; ++index) {
+    for(std::size_t index = 0; index < tests; ++index) {
 
         // Verbosity.
         std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
@@ -87,7 +90,7 @@ int main(int argc, char **argv) {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
-        if(index == 9)
+        if(index == tests - 1)
             break;
 
         // Refinement.
