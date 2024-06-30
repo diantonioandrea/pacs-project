@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     pacs::Polygon domain{{a, b, c, d}};
 
     // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
 
     // Refinement percentage.
     pacs::Real refine = 0.25L;
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Sequence of meshes.
-    for(std::size_t index = 0; index < 15; ++index) {
+    for(std::size_t index = 0; index < 10; ++index) {
 
         // Verbosity.
         std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
