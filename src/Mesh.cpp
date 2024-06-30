@@ -141,7 +141,7 @@ namespace pacs {
             Polygon polygon = element.element;
 
             for(const auto &vertex: polygon.points)
-                file << vertex[0] << " " << vertex[1] << " ";
+                file << std::setprecision(12) << vertex[0] << " " << std::setprecision(12) << vertex[1] << " ";
                         
             if(degrees) 
                 file << element.degree;
