@@ -129,7 +129,7 @@ if len(sys.argv) == 3:
     axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG (C)") # Error.
 
 # Comparison.
-dofs_comparison = [errors[0] * (dof / dofs[0]) ** exponent for dof in dofs]
+dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
 axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$")
 
 # Parameters.
