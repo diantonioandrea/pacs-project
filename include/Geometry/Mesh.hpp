@@ -30,7 +30,7 @@
 #endif
 
 #ifndef LLOYD_MAX_ITER
-#define LLOYD_MAX_ITER 256
+#define LLOYD_MAX_ITER 2E2
 #endif
 
 namespace pacs {
