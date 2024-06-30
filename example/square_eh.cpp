@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_100.poly");
 
     // Refinement percentage.
-    pacs::Real refine = 0.25L;
+    pacs::Real refine = 0.75L;
 
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
