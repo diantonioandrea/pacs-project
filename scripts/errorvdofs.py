@@ -74,16 +74,12 @@ for line in lines:
 # Exponent.
 exponent: float = -degree / 2
 
-# Dofs.
-dofs_comparison = [errors[0] * (dof / dofs[0]) ** exponent for dof in dofs]
-
 # Plot.
 fig, axes = plt.subplots()
 fig.suptitle("Errors vs. DOFs")
 
 # DG.
 axes.plot(dofs, errors, color=black, marker="*", linewidth=1, label="DG") # Error.
-axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$") # Comparison.
 
 # Comparison.
 if len(sys.argv) == 3:
@@ -131,6 +127,10 @@ if len(sys.argv) == 3:
 
     # DG.
     axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG (C)") # Error.
+
+# Comparison.
+dofs_comparison = [errors[0] * (dof / dofs[0]) ** exponent for dof in dofs]
+axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$")
 
 # Parameters.
 
