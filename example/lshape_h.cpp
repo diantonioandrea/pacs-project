@@ -88,6 +88,10 @@ int main(int argc, char **argv) {
         output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
 
+        // Exit.
+        if(index == 9)
+            break;
+
         // Refinement.
         pacs::mesh_refine_size(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
     }
