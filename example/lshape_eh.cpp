@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
     pacs::Mesh mesh{domain, diagram, degree};
 
     // Tests.
-    std::size_t tests = 30;
+    std::size_t tests = 100;
 
     // Test.
     for(std::size_t index = 0; index < tests; ++index) {
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
-        if(index == tests - 1)
+        if(error.dofs > 1E5)
             break;
 
         // Estimator.
