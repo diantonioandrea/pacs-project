@@ -70,6 +70,10 @@ namespace pacs {
             box = Polygon{{a, b, c, d}};
         }
 
+        #ifndef NVERBOSE
+        std::cout << "\t\tVoronoi: [";
+        #endif
+
         for(std::size_t j = 0; j < points.size(); ++j) {
             Point point{points[j]};
             Polygon cell = box;
@@ -86,7 +90,16 @@ namespace pacs {
                     cell = reduce(cell, bisector(point, reflection), point);
 
             cells.emplace_back(cell);
+
+            #ifndef NVERBOSE
+            if((j + 1) % (points.size() / 20) == 0)
+                std::cout << "-" << std::flush;
+            #endif
         }
+
+        #ifndef NVERBOSE
+        std::cout << "]" << std::endl;
+        #endif
 
         return cells;
     }
