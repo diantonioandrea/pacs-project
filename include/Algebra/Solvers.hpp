@@ -46,7 +46,7 @@ namespace pacs {
      * BICGSTAB: Biconjugate Gradient Stabilized method.
      * 
      */
-    enum SparseSolver {GMRES, CGM, BICGSTAB};
+    enum SparseSolver {GMRES, CGM, BICGSTAB, BLOCK};
 
     /**
      * @brief Solves a linear system Ax = b.
@@ -97,6 +97,9 @@ namespace pacs {
         if(S == BICGSTAB)
             return _bicgstab(A, b, TOL);
 
+        if(S == BLOCK)
+            return _block(A, b);
+
         // Default.
         return _bicgstab(A, b, TOL);
     }
@@ -104,17 +107,13 @@ namespace pacs {
     // MATRIX SOLVERS.
 
     /**
-     * @brief LU solver.
+     * @brief LU solver. No verbosity.
      * 
      * @param vector 
      * @return Vector<T> 
      */
     template<NumericType T>
     Vector<T> _lu(const Matrix<T> &A, const Vector<T> &b) {
-
-        #ifndef NVERBOSE
-        std::cout << "Solving a linear system by LU decomposition." << std::endl;
-        #endif
 
         // LU decomposition.
         auto [L, U] = LU(A);
@@ -147,17 +146,13 @@ namespace pacs {
     }
     
     /**
-     * @brief QR solver.
+     * @brief QR solver. No verbosity.
      * 
      * @param vector 
      * @return Vector<T> 
      */
     template<NumericType T>
     Vector<T> _qr(const Matrix<T> &A, const Vector<T> &b) {
-
-        #ifndef NVERBOSE
-        std::cout << "Solving a linear system by QR decomposition." << std::endl;
-        #endif
         
         // QR decomposition.
         auto [Q, R] = QR(A);
@@ -536,6 +531,53 @@ namespace pacs {
         }
 
         return x;
+    }
+
+    /**
+     * @brief Block diagonal method.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> _block(const Sparse<T> &A, const Vector<T> &b) {
+
+        // Includes checks.
+        std::vector<Matrix<T>> blocks = A.blocks();
+
+        // Solution.
+        Vector<T> x{A.rows};
+
+        // Starting index.
+        std::size_t start = 0;
+
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system with BLOCK." << std::endl;
+        #endif
+
+        for(const auto &block: blocks) {
+
+            // Indices.
+            std::vector<std::size_t> indices;
+
+            for(std::size_t j = 0; j < block.rows; ++j)
+                indices.emplace_back(start + j);
+
+            // Start update.
+            start += block.rows;
+
+            // Local solution.
+            x(indices, solve(block, b(indices)));
+        }
+
+        #ifndef NVERBOSE
+        std::cout << "Results:" << std::endl;
+        std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
+        #endif
+
+        return x;        
     }
 
 }

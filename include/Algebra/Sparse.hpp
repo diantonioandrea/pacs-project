@@ -565,6 +565,57 @@ namespace pacs {
             return upper;
         }
 
+        /**
+         * @brief Returns the blocks of the block diagonal Sparse matrix.
+         * 
+         * @return std::vector<Matrix<T>> 
+         */
+        std::vector<Matrix<T>> blocks() const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->is_block_diagonal());
+            #endif
+
+            std::vector<Matrix<T>> blocks;
+            
+            // Simpler but does not check for compression.
+            std::size_t start = 0;
+            int end = -1;
+
+            std::size_t last_row = 0;
+            std::size_t last_column = 0;
+
+            for(std::size_t j = 0; j < this->rows; ++j) {
+                for(std::size_t k = j; k < this->columns; ++k)
+                    if(std::abs((*this)(j, k)) > TOLERANCE)
+                        last_row = (last_row < k) ? k : last_row;
+
+                for(std::size_t k = j; k < this->rows; ++k)
+                    if(std::abs((*this)(k, j)) > TOLERANCE)
+                        last_column = (last_column < k) ? k : last_column;
+
+                if((last_row == j) && (last_column == j))
+                    end = j;
+                else
+                    continue;
+
+                // Block found.
+                if(end >= start) {
+                    std::vector<std::size_t> indices;
+
+                    for(std::size_t k = start; k <= end; ++k)
+                        indices.emplace_back(k);
+
+                    blocks.emplace_back((*this)(indices, indices));
+                    
+                    last_row = j;
+                    last_column = j;
+                    start = j + 1;
+                }
+            }
+
+            return blocks;
+        }
+
         // SHAPE CHECKS.
 
         /**
@@ -658,6 +709,56 @@ namespace pacs {
                             return false;
                         } else 
                             return false;
+            }
+
+            return true;
+        }
+        
+        /**
+         * @brief Checks whether the Sparse matrix is block diagonal.
+         * 
+         * @return true 
+         * @return false 
+         */
+        bool is_block_diagonal() const {
+            if(this->rows != this->columns)
+                return false;
+
+            // Simpler but does not check for compression.
+            std::size_t start = 0;
+            int end = -1;
+
+            std::size_t last_row = 0;
+            std::size_t last_column = 0;
+
+            for(std::size_t j = 0; j < this->rows; ++j) {
+                for(std::size_t k = j; k < this->columns; ++k)
+                    if(std::abs((*this)(j, k)) > TOLERANCE)
+                        last_row = (last_row < k) ? k : last_row;
+
+                for(std::size_t k = j; k < this->rows; ++k)
+                    if(std::abs((*this)(k, j)) > TOLERANCE)
+                        last_column = (last_column < k) ? k : last_column;
+
+                if(last_row != last_column)
+                    return false;
+
+                if((j == this->rows - 1) && (end == 0))
+                    return false;
+
+                if((last_row == j) && (last_column == j))
+                    end = j;
+                else
+                    continue;
+
+                if(end >= start) { // Block analysis.
+                    if((last_row > end) || (last_column > end))
+                        return false;
+
+                    last_row = j;
+                    last_column = j;
+                    start = j + 1;
+                }
             }
 
             return true;
