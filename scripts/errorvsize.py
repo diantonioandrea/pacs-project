@@ -124,9 +124,9 @@ for j in range(2):
     # Legend.
     axes[j].legend(loc="best")
 
-# Title.
-axes[0].set_title("L2 error")
-axes[1].set_title("DG error")
+# # Title.
+# axes[0].set_title("L2 error")
+# axes[1].set_title("DG error")
 
 # # Labels.
 # axes[0].set_xticks(sizes_ticks, labels=sizes_labels)
