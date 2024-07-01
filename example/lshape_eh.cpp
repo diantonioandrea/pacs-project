@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 
     // Degree.
     if(argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " DEGREE ELEMENTS." << std::endl;
+        std::cout << "Usage: " << argv[0] << " DEGREE [ELEMENTS]." << std::endl;
         std::exit(-1);
     }
 
@@ -38,8 +38,8 @@ int main(int argc, char **argv) {
     std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape/lshape_" + std::to_string(elements) + ".poly");
 
     // "Splash".
-    std::ofstream output{"output/lshape_eh_" + std::to_string(degree) + ".error"};
-    std::ofstream estimates_output{"output/lshape_eh_" + std::to_string(degree) + ".estimator"};
+    std::ofstream output{"output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + ".error"};
+    std::ofstream estimates_output{"output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + ".estimator"};
 
     output << "L-shaped domain - element size adaptive refinement with estimator." << "\n";
     estimates_output << "L-shaped domain - element size adaptive refinement with estimator." << "\n";
@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
         std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh output.
-        std::string polyfile = "output/lshape_eh_" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
+        std::string polyfile = "output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
         mesh.write(polyfile);
 
         // Matrices.
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 
         // // Solution structure (output).
         // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/lshape_eh_" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        // std::string solfile = "output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
         // solution.write(solfile);
 
         // Errors.
