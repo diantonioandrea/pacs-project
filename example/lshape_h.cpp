@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     pacs::Polygon domain{{a, b, c, d, e, f}};
 
     // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape_100.poly");
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape/lshape_125.poly");
 
     // Refinement percentage.
     pacs::Real refine = 0.75L;
