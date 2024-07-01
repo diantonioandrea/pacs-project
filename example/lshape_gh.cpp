@@ -102,6 +102,6 @@ int main(int argc, char **argv) {
             break;
 
         // Refinement.
-        pacs::mesh_refine_size(mesh, error.l2_errors > refine * pacs::max(error.l2_errors));
+        pacs::mesh_refine_size(mesh, error.h1_errors > refine * pacs::max(error.h1_errors));
     }
 }
