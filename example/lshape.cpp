@@ -19,14 +19,22 @@
 #include <iomanip>
 #include <filesystem>
 
-int main() {
+int main(int argc, char **argv) {
 
-    std::ofstream output{"output/lshape.error"};
+    // Degree.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " DEGREE." << std::endl;
+        std::exit(-1);
+    }
+
+    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
+
+    std::ofstream output{"output/lshape_" + std::to_string(degree) + ".error"};
 
     output << "L-shaped domain - uniform refinement." << "\n";
 
     std::cout << "L-shaped domain - uniform refinement." << std::endl;
-    std::cout << "Output under output/lshape.error." << std::endl;
+    std::cout << "Output under output/lshape_DEGREE.error." << std::endl;
 
     // Domain.
     pacs::Point a{-1.0, -1.0};
@@ -41,13 +49,13 @@ int main() {
     // Diagrams.
     std::vector<std::vector<pacs::Polygon>> diagrams;
 
-    diagrams.emplace_back(pacs::mesh_diagram("data/lshape_100.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/lshape_200.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/lshape_400.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/lshape_800.poly"));
-
-    // Polynomial degree.
-    std::size_t degree = 2;
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_125.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_250.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_500.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_1000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_2000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_4000.poly"));
+    diagrams.emplace_back(pacs::mesh_diagram("data/lshape/lshape_8000.poly"));
 
     // Test.
     for(std::size_t j = 0; j < diagrams.size(); ++j) {
@@ -67,15 +75,15 @@ int main() {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
-        // Solution structure (output).
-        pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/lshape_" + std::to_string(j) + ".sol";
-        solution.write(solfile);
+        // // Solution structure (output).
+        // pacs::Solution solution{mesh, numerical, exact};
+        // std::string solfile = "output/lshape_" + std::to_string(degree) + "_" + std::to_string(j) + ".sol";
+        // solution.write(solfile);
 
         // Output.
-        output << "\n" << error << "\n\n";
+        output << "\n" << error << "\n";
         
         output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
     }
 }

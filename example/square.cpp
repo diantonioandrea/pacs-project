@@ -19,14 +19,22 @@
 #include <iomanip>
 #include <filesystem>
 
-int main() {
+int main(int argc, char **argv) {
 
-    std::ofstream output{"output/square.error"};
+    // Degree.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " DEGREE." << std::endl;
+        std::exit(-1);
+    }
+
+    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
+
+    std::ofstream output{"output/square_" + std::to_string(degree) + ".error"};
 
     output << "Square domain - uniform refinement." << "\n";
 
     std::cout << "Square domain - uniform refinement." << std::endl;
-    std::cout << "Output under output/square.error." << std::endl;
+    std::cout << "Output under output/square_DEGREE.error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -48,9 +56,6 @@ int main() {
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_8000.poly"));
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_16000.poly"));
 
-    // Polynomial degree.
-    std::size_t degree = 2;
-
     // Test.
     for(std::size_t j = 0; j < diagrams.size(); ++j) {
 
@@ -69,10 +74,10 @@ int main() {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
 
-        // Solution structure (output).
-        pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/square_" + std::to_string(j) + ".sol";
-        solution.write(solfile);
+        // // Solution structure (output).
+        // pacs::Solution solution{mesh, numerical, exact};
+        // std::string solfile = "output/square_" + std::to_string(degree) + "_" + std::to_string(j) + ".sol";
+        // solution.write(solfile);
 
         // Output.
         output << "\n" << error << "\n";
