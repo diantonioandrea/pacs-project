@@ -29,6 +29,15 @@ int main(int argc, char **argv) {
 
     std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
 
+    // Initial diagram.
+    std::size_t elements = 125;
+
+    if(argc == 3)
+        elements = static_cast<std::size_t>(std::stoi(argv[2]));
+
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square/square_" + std::to_string(elements) + ".poly");
+
+    // "Splash".
     std::ofstream output{"output/square_eh_" + std::to_string(degree) + ".error"};
     std::ofstream estimates_output{"output/square_eh_" + std::to_string(degree) + ".estimator"};
 
@@ -45,9 +54,6 @@ int main(int argc, char **argv) {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-
-    // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square/square_125.poly");
 
     // Refinement percentage.
     pacs::Real refine = 0.75L;
