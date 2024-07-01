@@ -16,80 +16,38 @@ import sys
 # Font.
 matplotlib.rcParams.update({'font.size': 18})
 
-# Colors.
+# Colours.
 black: list[float] = [7 / 255, 54 / 255, 66 / 255]
 red: list[float] = [220 / 255, 50 / 255, 47 / 255]
 
-# Dofs.
-dofs: list[float] = []
-
-# Errors.
-errors: list[float] = []
-
-# Degree.
-degree: int = -1
+colours: list[list[float]] = [black, red]
 
 # File.
 if len(sys.argv) <= 1:
     print(f"Usage: {sys.argv[0]} /path/to/file.")
     sys.exit(0)
 
-try:
-    if sys.argv[1].split(".")[-1] != "error":
-        raise
-
-    file = open(sys.argv[1], "r+")
-    lines: list[str] = file.read().split("\n")
-    file.close()
-
-    # Title.
-    title: str = lines[0]
-
-except FileNotFoundError:
-    print("File not found.")
-    sys.exit(-1)
-
-except:
-    print("Load a .error file.")
-    sys.exit(-1)
-
-
-# Simple scraping.
-for line in lines:
-    try:
-        data: list[str] = line.split(" ")
-
-        if "Dofs" in line:
-            dofs.append(int(data[-1]))
-
-        elif "DG Error" in line:
-            errors.append(float(data[-1]))
-
-        elif "Degree" in line:
-            degree = int(data[-1])
-
-    except ValueError:
-        continue
-
-# Exponent.
-exponent: float = -degree / 2
-
 # Plot.
 fig, axes = plt.subplots()
 fig.suptitle("Errors vs. DOFs")
 
-# DG.
-axes.plot(dofs, errors, color=black, marker="*", linewidth=1, label="DG") # Error.
+# Multiple data.
+for index in range(1, len(sys.argv)):
 
-# Comparison.
-if len(sys.argv) == 3:
+    # Dofs.
+    dofs: list[float] = []
 
-    # File.
+    # Errors.
+    errors: list[float] = []
+
+    # Degree.
+    degree: int = -1
+
     try:
-        if sys.argv[2].split(".")[-1] != "error":
+        if sys.argv[index].split(".")[-1] != "error":
             raise
 
-        file = open(sys.argv[2], "r+")
+        file = open(sys.argv[index], "r+")
         lines: list[str] = file.read().split("\n")
         file.close()
 
@@ -104,14 +62,7 @@ if len(sys.argv) == 3:
         print("Load a .error file.")
         sys.exit(-1)
 
-    # Reset.
-
-    # Dofs.
-    dofs: list[float] = []
-
-    # Errors.
-    errors: list[float] = []
-
+    # Simple scraping.
     for line in lines:
         try:
             data: list[str] = line.split(" ")
@@ -122,15 +73,21 @@ if len(sys.argv) == 3:
             elif "DG Error" in line:
                 errors.append(float(data[-1]))
 
+            elif "Degree" in line:
+                degree = int(data[-1])
+
         except ValueError:
             continue
 
-    # DG.
-    axes.plot(dofs, errors, color=red, marker="*", linewidth=1, label="DG (C)") # Error.
+    # Exponent.
+    exponent: float = -degree / 2
 
-# Comparison.
-dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
-axes.plot(dofs, dofs_comparison, color=black, linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$")
+    # DG.
+    axes.plot(dofs, errors, color=colours[index - 1], marker="*", linewidth=1, label="DG") # Error.
+
+    # Comparison.
+    dofs_comparison = [errors[-1] * (dof / dofs[-1]) ** exponent for dof in dofs]
+    axes.plot(dofs, dofs_comparison, color=colours[index - 1], linestyle="--", linewidth=0.5, alpha=0.5, label="$DOFs^{" + str(exponent) + "}$")
 
 # Parameters.
 
