@@ -1,5 +1,5 @@
 .PHONY: all test example domains testrun clean distclean
-CXXFLAGS = -Wall -pedantic -std=c++20 -O3 -fPIC -I./include
+CXXFLAGS = -Wall -pedantic -std=c++20 -march=native -O2 -fPIC -I./include
 
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
