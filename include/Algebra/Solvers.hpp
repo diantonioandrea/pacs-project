@@ -46,10 +46,18 @@ namespace pacs {
      * BICGSTAB: Biconjugate Gradient Stabilized method.
      * 
      */
-    enum SparseSolver {GMRES, CGM, BICGSTAB, BLOCK};
+    enum SparseSolver {GMRES, CGM, BICGSTAB};
 
     /**
-     * @brief Solves a linear system Ax = b.
+     * @brief Sparse direct solvers.
+     * QRB: QR block decomposition method.
+     * DB: Diagonal Block method.
+     * 
+     */
+    enum SparseDSolver {QRB, DB};
+
+    /**
+     * @brief Directly solves a linear system Ax = b.
      * 
      * @tparam T 
      * @param A 
@@ -97,11 +105,34 @@ namespace pacs {
         if(S == BICGSTAB)
             return _bicgstab(A, b, TOL);
 
-        if(S == BLOCK)
-            return _block(A, b);
-
         // Default.
         return _bicgstab(A, b, TOL);
+    }
+
+    /**
+     * @brief Directly solves a sparse linear system Ax = b.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @param blocks 
+     * @param S 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, std::vector<std::array<std::vector<std::size_t>, 2>> &blocks, const SparseDSolver &S = QRB) {
+        #ifndef NDEBUG // Integrity check.
+        assert(A.rows == b.length);
+        #endif
+
+        if(S == QRB)
+            return _qrb(A, b, blocks);
+
+        if(S == DB)
+            return _db(A, b, blocks);
+
+        // Default.
+        return _qrb(A, b, blocks);
     }
 
     // MATRIX SOLVERS.
@@ -534,42 +565,54 @@ namespace pacs {
     }
 
     /**
-     * @brief Block diagonal method.
+     * @brief QR block decomposition method.
      * 
      * @tparam T 
      * @param A 
      * @param b 
+     * @param blocks 
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> _block(const Sparse<T> &A, const Vector<T> &b) {
-
-        // Includes checks.
-        std::vector<Matrix<T>> blocks = A.blocks();
+    Vector<T> _qrb(const Sparse<T> &A, const Vector<T> &b, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
 
         // Solution.
         Vector<T> x{A.rows};
 
-        // Starting index.
-        std::size_t start = 0;
-
         #ifndef NVERBOSE
-        std::cout << "Solving a linear system with BLOCK." << std::endl;
+        std::cout << "Solving a linear system with QRB." << std::endl;
         #endif
 
-        for(const auto &block: blocks) {
+        #ifndef NVERBOSE
+        std::cout << "Results:" << std::endl;
+        std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
+        #endif
 
-            // Indices.
-            std::vector<std::size_t> indices;
+        return x;
+    }
 
-            for(std::size_t j = 0; j < block.rows; ++j)
-                indices.emplace_back(start + j);
+    /**
+     * @brief Diagonal block method.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @param blocks 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> _db(const Sparse<T> &A, const Vector<T> &b, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
 
-            // Start update.
-            start += block.rows;
+        // Solution.
+        Vector<T> x{A.rows};
 
-            // Local solution.
-            x(indices, solve(block, b(indices)));
+        #ifndef NVERBOSE
+        std::cout << "Solving a linear system with DB." << std::endl;
+        #endif
+
+        // Local solutions.
+        for(const auto &[rows, columns]: blocks) {
+            x(rows, solve(A(rows, columns), b(columns)));
         }
 
         #ifndef NVERBOSE
@@ -577,7 +620,7 @@ namespace pacs {
         std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
         #endif
 
-        return x;        
+        return x;
     }
 
 }

@@ -58,12 +58,15 @@ namespace pacs {
                     sizes[j] = (distance(p, q) > sizes[j]) ? distance(p, q) : sizes[j];
         }
 
+        // Mass blocks.
+        auto blocks = block_mass(mesh);
+
         // Coefficients.
         Vector<Real> f_modals = modal(mesh, source);
         Vector<Real> g_modals = modal(mesh, dirichlet);
 
-        Vector<Real> f_coeff = (norm(f_modals) > TOLERANCE) ? solve(mass, modal(mesh, source), BLOCK, 1E-12) : Vector<Real>{mesh.dofs()};
-        Vector<Real> g_coeff = (norm(g_modals) > TOLERANCE) ? solve(mass, modal(mesh, dirichlet), BLOCK, 1E-12) : Vector<Real>{mesh.dofs()};
+        Vector<Real> f_coeff = (norm(f_modals) > TOLERANCE) ? solve(mass, modal(mesh, source), blocks, DB) : Vector<Real>{mesh.dofs()};
+        Vector<Real> g_coeff = (norm(g_modals) > TOLERANCE) ? solve(mass, modal(mesh, dirichlet), blocks, DB) : Vector<Real>{mesh.dofs()};
 
         // Loop over the elements.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {

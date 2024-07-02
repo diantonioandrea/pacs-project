@@ -21,6 +21,10 @@ namespace pacs {
 
     std::array<Sparse<Real>, 3> laplacian(const Mesh &);
 
+    // Blocks.
+
+    std::vector<std::array<std::vector<std::size_t>, 2>> block_laplacian(const Mesh &);
+    std::vector<std::array<std::vector<std::size_t>, 2>> block_mass(const Mesh &);
 }
 
 #endif

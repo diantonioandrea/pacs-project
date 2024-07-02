@@ -34,9 +34,12 @@ namespace pacs {
         // Matrices.
         auto [mass, dg_laplacian] = matrices;
 
+        // Mass blocks.
+        auto blocks = block_mass(mesh);
+
         // Error vector.
         Vector<Real> u_modals = modal(mesh, exact);
-        Vector<Real> u_coeff = solve(mass, u_modals, BLOCK);
+        Vector<Real> u_coeff = solve(mass, u_modals, blocks, DB);
 
         Vector<Real> error = u_coeff - numerical;
 
