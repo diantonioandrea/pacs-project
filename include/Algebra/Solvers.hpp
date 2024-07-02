@@ -561,6 +561,8 @@ namespace pacs {
         return x;
     }
 
+    // SPARSE DIRECT SOLVERS.
+
     /**
      * @brief Diagonal block method.
      * 
