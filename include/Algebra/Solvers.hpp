@@ -54,7 +54,7 @@ namespace pacs {
      * DB: Diagonal Block method.
      * 
      */
-    enum SparseDSolver {QRB, DB};
+    enum SparseDSolver {DB};
 
     /**
      * @brief Directly solves a linear system Ax = b.
