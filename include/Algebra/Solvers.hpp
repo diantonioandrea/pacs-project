@@ -120,19 +120,16 @@ namespace pacs {
      * @return Vector<T> 
      */
     template<NumericType T>
-    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, std::vector<std::array<std::vector<std::size_t>, 2>> &blocks, const SparseDSolver &S = QRB) {
+    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, std::vector<std::array<std::vector<std::size_t>, 2>> &blocks, const SparseDSolver &S = DB) {
         #ifndef NDEBUG // Integrity check.
         assert(A.rows == b.length);
         #endif
-
-        if(S == QRB)
-            return _qrb(A, b, blocks);
 
         if(S == DB)
             return _db(A, b, blocks);
 
         // Default.
-        return _qrb(A, b, blocks);
+        return _db(A, b, blocks);
     }
 
     // MATRIX SOLVERS.
@@ -560,33 +557,6 @@ namespace pacs {
             #endif
             return _gmres(A, b, x, TOL);
         }
-
-        return x;
-    }
-
-    /**
-     * @brief QR block decomposition method.
-     * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param blocks 
-     * @return Vector<T> 
-     */
-    template<NumericType T>
-    Vector<T> _qrb(const Sparse<T> &A, const Vector<T> &b, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
-
-        // Solution.
-        Vector<T> x{A.rows};
-
-        #ifndef NVERBOSE
-        std::cout << "Solving a linear system with QRB." << std::endl;
-        #endif
-
-        #ifndef NVERBOSE
-        std::cout << "Results:" << std::endl;
-        std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
-        #endif
 
         return x;
     }
