@@ -21,31 +21,20 @@ which leads to:
 
 and non-homogeneous Dirichlet boundary conditions given by the exact solution itself.
 
-Error trends and solution plots in the following pages.
+Error trends in the following pages.
 
 \newpage
 \subsubsection{Errors}
 
 The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes over the square and L-shaped domains. The relations presented in \eqref{trends} have been confirmed.
 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{square_uniform.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{lshape_uniform.pdf}
-	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
-\end{figure}
+% \begin{figure}[!ht]
+% 	\centering
 
-\newpage
-\subsubsection{Solutions}
+%     % TBA
 
-The following shows a scatter plot of the numerical solution $u^k_h$, the exact solution $u$, and the error $|u - u^k_h|$ over the quadrature nodes.
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 2.5cm 0cm 5cm, clip, width=16cm]{square_200_sol.pdf}
-    \includegraphics[trim=0cm 2.5cm 0cm 5cm, clip, width=16cm]{lshape_200_sol.pdf}
-	\caption{Solution plot over a square domain (top) and an L-shaped domain (bottom), $N = 200$ and $k = 2$.}
-\end{figure}
+% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
+% \end{figure}
 
 \newpage
 \subsection{Pathological solutions}
@@ -68,26 +57,29 @@ For the L-shaped domain, the pathological function is:
 
 for which we have $f = 0$ and we know that $u$ is analytical in $\Omega \setminus \Vector{0}$, but $\grad{u}$ is singular at the origin.
 
+Error trends in the following pages.
+
 \newpage
 \subsubsection{Errors}
 
-Given these pathological solutions, $u^k_h$ appears to converge to $u$ at a much slower rate than expected.
+Given the pathological solution over the square, given its smoothness, the expected convergence rate is reached but at a slower rate.
 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{square_uniform_pat.pdf}
-    \includegraphics[trim=0cm 0.5cm 0cm 2cm, clip, width=16cm]{lshape_uniform_pat.pdf}
-	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
-\end{figure}
+% \begin{figure}[!ht]
+% 	\centering
+	
+%     % TBA
+
+% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain, $k = 3$, $N \in \{125, \dots, 16000\}$ (top) and $k = 4$, $N \in \{125, \dots, 8000\}$ (bottom).}
+% \end{figure}
 
 \newpage
-\subsubsection{Solutions}
 
-The following plot shows that the error in these particular solutions is strongly localized, indicating that uniform refinement cannot perform optimally, also considering its rapidly growing computational cost.
+Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate.
 
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 2.5cm 0cm 5cm, clip, width=16cm]{square_200_pat.pdf}
-    \includegraphics[trim=0cm 2.5cm 0cm 5cm, clip, width=16cm]{lshape_200_pat.pdf}
-	\caption{Solution plot over a square domain (top) and an L-shaped domain (bottom), $N = 200$ and $k = 2$.}
-\end{figure}
+% \begin{figure}[!ht]
+% 	\centering
+	
+%     % TBA
+
+% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain, $k = 3$ (top) and $k = 4$ (bottom). $N \in \{125, \dots, 8000\}$.}
+% \end{figure}
