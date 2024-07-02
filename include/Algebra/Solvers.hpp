@@ -147,7 +147,7 @@ namespace pacs {
         auto [L, U] = LU(A);
 
         // Solves Ly = b using forward substitution.
-        Vector<T> y{A.rows};
+        Vector<T> y{A.columns};
 
         for (std::size_t i = 0; i < A.rows; ++i) {
             T sum = static_cast<T>(0);
@@ -165,9 +165,9 @@ namespace pacs {
             T sum = static_cast<T>(0);
 
             for (std::size_t j = i; j < A.columns; ++j)
-                sum += U(i - 1, j) * x[j];
+                sum += U(i - 1, j) * x.elements[j];
 
-            x[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
+            x.elements[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
         }
 
         return x;
@@ -189,13 +189,13 @@ namespace pacs {
         Vector<T> x{A.columns};
         Vector<T> Qb{Q.transpose() * b};
 
-        for (std::size_t i = A.columns; i > 0; --i) {
+        for (std::size_t i = R.columns; i > 0; --i) {
             T sum = static_cast<T>(0);
 
-            for (std::size_t j = i; j < A.columns; ++j)
-                sum += R(i - 1, j) * x[j];
+            for (std::size_t j = i; j < R.columns; ++j)
+                sum += R(i - 1, j) * x.elements[j];
 
-            x[i - 1] = (Qb[i - 1] - sum) / R(i - 1, i - 1);
+            x.elements[i - 1] = (Qb[i - 1] - sum) / R(i - 1, i - 1);
         }
 
         return x;
@@ -394,7 +394,7 @@ namespace pacs {
         std::size_t iterations = 0;
 
         // Solution.
-        Vector<T> x{A.rows};
+        Vector<T> x{A.columns};
 
         // Residual.
         Vector<T> old_residual = b;
@@ -476,7 +476,7 @@ namespace pacs {
         std::size_t iterations = 0;
 
         // Solution.
-        Vector<T> x{A.rows};
+        Vector<T> x{A.columns};
 
         // Residual.
         Vector<T> old_residual = b;
@@ -574,7 +574,7 @@ namespace pacs {
     Vector<T> _db(const Sparse<T> &A, const Vector<T> &b, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
 
         // Solution.
-        Vector<T> x{A.rows};
+        Vector<T> x{A.columns};
 
         #ifndef NVERBOSE
         std::cout << "Solving a linear system with DB." << std::endl;
