@@ -28,13 +28,18 @@ Error trends in the following pages.
 
 The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes over the square and L-shaped domains. The relations presented in \eqref{trends} have been confirmed.
 
-% \begin{figure}[!ht]
-% 	\centering
+\begin{figure}[!ht]
+    \input{tikz/square_s_2_evs.tex}
+    \input{tikz/square_s_3_evs.tex}
+    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+\end{figure}
 
-%     % TBA
-
-% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
-% \end{figure}
+\newpage
+\begin{figure}[!ht]
+    \input{tikz/lshape_s_2_evs.tex}
+    \input{tikz/lshape_s_3_evs.tex}
+    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+\end{figure}
 
 \newpage
 \subsection{Pathological solutions}
@@ -62,7 +67,7 @@ Error trends in the following pages.
 \newpage
 \subsubsection{Errors}
 
-Given the pathological solution over the square, given its smoothness, the expected convergence rate is reached but at a slower rate.
+Despite being a smooth function, the pathological solution over the square achieves the expected convergence rate, albeit at a slower pace.
 
 % \begin{figure}[!ht]
 % 	\centering

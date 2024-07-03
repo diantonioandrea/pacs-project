@@ -1,0 +1,35 @@
+% Errors v Size template for TikZ.
+
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{tikzpicture}
+\begin{loglogaxis}[
+    xlabel={$h$},
+    legend pos=north west,
+]
+
+\addplot[black, mark=*] coordinates {(0.236846,0.00236589) (0.162063,0.000476832) (0.125487,0.000110835) (0.0834066,2.72149e-05) (0.0598985,6.75002e-06) (0.0458041,1.74035e-06)};
+\addlegendentry{$\LT$ Error}
+
+\addplot[black, dashed] coordinates {(0.236846,0.0012441805245544592) (0.0458041,1.74035e-06)};
+\addlegendentry{$\mathcal{O}(h^{4})$}
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{tikzpicture}
+\begin{loglogaxis}[
+    xlabel={$h$},
+    legend pos=north west,
+]
+
+\addplot[black, mark=*] coordinates {(0.236846,0.354304) (0.162063,0.112679) (0.125487,0.0379581) (0.0834066,0.0128848) (0.0598985,0.00442298) (0.0458041,0.0015715)};
+\addlegendentry{$DG$ Error}
+
+\addplot[black, dashed] coordinates {(0.236846,0.2172698609297559) (0.0458041,0.0015715)};
+\addlegendentry{$\mathcal{O}(h^{3})$}
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{subfigure}
