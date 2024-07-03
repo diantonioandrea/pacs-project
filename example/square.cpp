@@ -54,7 +54,6 @@ int main(int argc, char **argv) {
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_2000.poly"));
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_4000.poly"));
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_8000.poly"));
-    diagrams.emplace_back(pacs::mesh_diagram("data/square/square_16000.poly"));
 
     // Test.
     for(std::size_t j = 0; j < diagrams.size(); ++j) {
