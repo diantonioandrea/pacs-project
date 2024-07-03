@@ -15,23 +15,35 @@
 int main() {
 
     // Constructing a matrix.
-    pacs::Matrix<pacs::Real> matrix{3, 2};
+    pacs::Matrix<pacs::Real> matrix{3, 3};
 
     // Write.
     matrix(0, 0) = 1;
     matrix(0, 1) = 2;
-    matrix(1, 0) = 3;
-    matrix(1, 1) = 4;
-    matrix(2, 0) = 5;
-    matrix(2, 1) = 6;
+    matrix(0, 2) = 3;
+    matrix(1, 0) = 2;
+    matrix(1, 1) = 3;
+    matrix(1, 2) = 4;
+    matrix(2, 0) = -2;
+    matrix(2, 1) = 7;
+    matrix(2, 2) = 12;
     
     // QR decomposition.
-    auto [Q, R] = QR(matrix.transpose());
+    auto [Q, R] = pacs::QR(matrix);
 
     // Output.
-    std::cout << matrix.transpose() << std::endl << std::endl;
+    std::cout << matrix << std::endl << std::endl;
     std::cout << Q << std::endl << std::endl;
     std::cout << R << std::endl << std::endl;
-    std::cout << Q * Q.transpose() << std::endl << std::endl;
-    std::cout << Q * R << std::endl;
+    std::cout << Q * Q.transpose() << std::endl;
+    std::cout << Q * R << std::endl << std::endl;
+
+    // LU decomposition.
+    auto [L, U] = pacs::LU(matrix);
+
+    // Output.
+    std::cout << matrix << std::endl << std::endl;
+    std::cout << L << std::endl << std::endl;
+    std::cout << U << std::endl << std::endl;
+    std::cout << L * U << std::endl << std::endl;
 }
