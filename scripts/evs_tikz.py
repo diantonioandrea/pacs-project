@@ -93,7 +93,7 @@ l2_errors_string += "\n"
 l2_errors_string += "\\addlegendentry{$\\LT$ Error}\n"
 
 dg_errors_string: str = "\n\\addplot[black, mark=*] coordinates "
-dg_errors_string += "{" + " ".join((f"({sizes[j]},{l2_errors[j]})" for j in range(len(sizes)))) + "};"
+dg_errors_string += "{" + " ".join((f"({sizes[j]},{dg_errors[j]})" for j in range(len(sizes)))) + "};"
 dg_errors_string += "\n"
 dg_errors_string += "\\addlegendentry{$DG$ Error}\n"
 
