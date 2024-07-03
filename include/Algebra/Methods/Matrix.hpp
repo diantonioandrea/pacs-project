@@ -31,11 +31,11 @@ namespace pacs {
         Matrix<T> L{matrix.rows, matrix.columns};
         Matrix<T> U{matrix.rows, matrix.columns};
 
-        for (std::size_t j = 0; j < matrix.columns; ++j) {
+        for(std::size_t j = 0; j < matrix.columns; ++j) {
             L(j, j) = static_cast<T>(1);
 
             // Compute elements of U
-            for (std::size_t i = 0; i <= j; ++i) {
+            for(std::size_t i = 0; i <= j; ++i) {
                 T sum = static_cast<T>(0);
 
                 for (std::size_t k = 0; k < i; ++k)
@@ -45,7 +45,7 @@ namespace pacs {
             }
 
             // Compute elements of L
-            for (std::size_t i = j + 1; i < matrix.rows; ++i) {
+            for(std::size_t i = j + 1; i < matrix.rows; ++i) {
                 T sum = static_cast<T>(0);
 
                 for (std::size_t k = 0; k < j; ++k)

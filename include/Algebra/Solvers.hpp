@@ -82,6 +82,23 @@ namespace pacs {
     }
 
     /**
+     * @brief Directly solves a linear system Ax = B.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param B 
+     * @return Matrix<T> 
+     */
+    template<NumericType T>
+    Matrix<T> solve(const Matrix<T> &A, const Matrix<T> &B, const DenseSolver &S = QRD) {
+        #ifndef NDEBUG // Integrity check.
+        assert(A.rows == B.rows);
+        #endif
+
+        return _ms(A, B, S);
+    }
+
+    /**
      * @brief Solves a sparse linear system Ax = b.
      * 
      * @tparam T 
@@ -199,6 +216,27 @@ namespace pacs {
         }
 
         return x;
+    }
+
+    /**
+     * @brief Matrix solver. No verbosity.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @return Matrix<T> 
+     */
+    template<NumericType T>
+    Matrix<T> _ms(const Matrix<T> &A, const Matrix<T> &B, const DenseSolver &S) {
+
+        // Solution.
+        Matrix<T> X{A.columns, B.columns};
+
+        // Solves by column.
+        for(std::size_t j = 0; j < X.columns; ++j)
+            X.column(j, solve(A, B.column(j), S));
+
+        return X;
     }
 
     // SPARSE SOLVERS.
@@ -591,6 +629,10 @@ namespace pacs {
         std::cout << "Results:" << std::endl;
         std::cout << "\tResidual: " << norm(b - A * x) << std::endl;
         #endif
+
+        // Possible error.
+        if(std::isnan(norm(b - A * x)))
+            std::exit(-1);
 
         return x;
     }
