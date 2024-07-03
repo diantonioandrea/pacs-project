@@ -341,7 +341,7 @@ namespace pacs {
                     n_indices.emplace_back(starts[n_index] + h);
 
                 // Neighbour's block.
-                blocks.emplace_back(std::array<std::vector<std::size_t>, 2>{indices, indices});
+                blocks.emplace_back(std::array<std::vector<std::size_t>, 2>{indices, n_indices});
             }
         }
 
