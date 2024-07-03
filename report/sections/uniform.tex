@@ -69,22 +69,18 @@ Error trends in the following pages.
 
 Despite being a smooth function, the pathological solution over the square achieves the expected convergence rate, albeit at a slower pace.
 
-% \begin{figure}[!ht]
-% 	\centering
-	
-%     % TBA
-
-% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain, $k = 3$, $N \in \{125, \dots, 16000\}$ (top) and $k = 4$, $N \in \{125, \dots, 8000\}$ (bottom).}
-% \end{figure}
+\begin{figure}[!ht]
+    \input{tikz/square_2_evs.tex}
+    \input{tikz/square_3_evs.tex}
+    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+\end{figure}
 
 \newpage
 
 Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate.
 
-% \begin{figure}[!ht]
-% 	\centering
-	
-%     % TBA
-
-% 	\caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain, $k = 3$ (top) and $k = 4$ (bottom). $N \in \{125, \dots, 8000\}$.}
-% \end{figure}
+\begin{figure}[!ht]
+    \input{tikz/lshape_2_evs.tex}
+    \input{tikz/lshape_3_evs.tex}
+    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+\end{figure}
