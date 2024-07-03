@@ -141,14 +141,14 @@ namespace pacs {
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
                 // Solutions.
-                Vector<Real> u = phi * u_coeff(indices);
+                Vector<Real> u = exact(physical_x, physical_y);
                 Vector<Real> uh = phi * numerical(indices);
 
                 Vector<Real> grad_u = (gradx_phi + grady_phi) * u_coeff(indices);
                 Vector<Real> grad_uh = (gradx_phi + grady_phi) * numerical(indices);
 
                 // Local L2 error.
-                this->l2_errors[j] += dot(scaled, (grad_u - grad_uh) * (grad_u - grad_uh));
+                this->l2_errors[j] += dot(scaled, (u - uh) * (u - uh));
 
                 // Local H1 error.
                 this->h1_errors[j] += dot(scaled, (grad_u - grad_uh) * (grad_u - grad_uh));
