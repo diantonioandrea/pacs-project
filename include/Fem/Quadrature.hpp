@@ -20,7 +20,7 @@
 
 // Quadrature tolerance.
 #ifndef QUADRATURE_TOLERANCE
-#define QUADRATURE_TOLERANCE 1E-14
+#define QUADRATURE_TOLERANCE 1E-16
 #endif
 
 namespace pacs {

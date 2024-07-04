@@ -23,7 +23,7 @@
 
 // Zero tolerance.
 #ifndef TOLERANCE
-#define TOLERANCE 1E-14
+#define TOLERANCE 1E-20
 #endif
 
 // STL Parallelism.
