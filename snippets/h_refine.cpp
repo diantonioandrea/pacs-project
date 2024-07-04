@@ -37,8 +37,9 @@ int main() {
 
     // Estimates.
     Estimator est{mesh, M, numerical, source};
+    Vector<Real> estimates = est.estimates;
 
     // Refinement.
-    mesh_refine_size(mesh, est.estimates > 0.75 * max(est.estimates));
+    mesh_refine_size(mesh, estimates > 0.75 * max(estimates));
 
 }

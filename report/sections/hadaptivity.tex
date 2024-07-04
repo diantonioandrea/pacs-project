@@ -31,6 +31,17 @@ The following plots demonstrate that the adaptive approach (red) significantly o
     \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over a square domain. $k = 2$ (left), $k = 3$ (right).}
 \end{figure}
 
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_3_evd.tex}
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over an L-shaped domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
 \newpage
 \subsubsection{Meshes}
 
@@ -105,26 +116,37 @@ These error trends demonstrate that the \textit{a posteriori} error estimates (r
     \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes over a square domain. $k = 2$ (left), $k = 3$ (right).}
 \end{figure}
 
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_h_125@2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_h_125@3_evd.tex}
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes over an L-shaped domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
 \newpage
 \subsubsection{Meshes}
 
 These meshes exhibit a more concentrated refinement compared to those refined using \textit{a priori} error estimates.
 
-% \begin{figure}[!ht]
-% 	\centering
-	
-% 	% TBA
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/square_eh_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_eh_10.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_eh_20.pdf}
+	\caption{Square mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
 
-% 	\caption{Square mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
-% \end{figure}
-
-% \begin{figure}[!ht]
-% 	\centering
-	
-% 	% TBA
-
-% 	\caption{L-shaped mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
-% \end{figure}
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_eh_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_eh_10.pdf}
+	% \includegraphics[width=6cm]{meshes/adaptive/lshape_h_20.pdf}
+	\caption{L-shaped mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
 
 \newpage
 \subsection{A code snippet}
