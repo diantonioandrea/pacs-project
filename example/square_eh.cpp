@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
         // // Solution structure (output).
         // pacs::Solution solution{mesh, numerical, exact};
