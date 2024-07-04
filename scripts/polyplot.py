@@ -65,7 +65,7 @@ for line in lines:
     color: tuple[int] = (1, 1, 1) if "--degrees" not in sys.argv else cm.coolwarm((int(data[-1]) - 1) * 200)
 
     # Plot.
-    plt.fill(x, y, facecolor = color, edgecolor = (0, 0, 0), linewidth = 0.5)
+    plt.fill(x, y, facecolor = color, edgecolor = (0, 0, 0), linewidth = 0.25)
 
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')
