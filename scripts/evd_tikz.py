@@ -30,7 +30,7 @@ except FileNotFoundError:
 plots: list[str] = []
 
 # Colours.
-colours: list[str] = ["black", "blue", "red"]
+colours: list[str] = ["black", "red", "blue"]
 
 # Multiple data.
 for index in range(1, len(sys.argv)):
