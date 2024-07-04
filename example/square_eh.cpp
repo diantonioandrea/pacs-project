@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
-        if(error.dofs > 1E5)
+        if(error.dofs > 25E3)
             break;
 
         // Estimator.

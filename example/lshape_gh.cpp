@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
-        if(error.dofs > 1E5)
+        if(error.dofs > 25E3)
             break;
 
         // Refinement.
