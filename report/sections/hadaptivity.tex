@@ -18,15 +18,17 @@ Error trends and refined meshes in the following pages.
 \newpage
 \subsubsection{Errors}
 
-The following plots demonstrate that the adaptive approach (red) significantly outperforms uniform refinement (black) when handling these pathological solutions.
+The following plots demonstrate that the adaptive approach (black) significantly outperforms uniform refinement (blue) when handling these pathological solutions\footnote{$N \in \{125, 250, \dots, 8000\}$ for the uniform meshes.}.
 
-% \begin{figure}[!ht]
-% 	\centering
-
-% 	% TBA
-
-% 	\caption{Comparison of $\LT$ and DG errors versus $\text{DOFs}^{1/2}$ between a sequence of uniform meshes and \textit{h-adaptively} refined meshes over a square domain (top) and an L-shaped domain (bottom), $k = 2$ and $N \in \{100, 200, 400, 800\}$.}
-% \end{figure}
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_h_125@2_evd.tex}
+	\end{subfigure}
+	% \begin{subfigure}[b]{0.45\textwidth}
+	% 	\input{tikz/square_h_125@3_evd.tex}
+	% \end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over a square domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
 
 \newpage
 \subsubsection{Meshes}
