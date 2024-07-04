@@ -36,21 +36,21 @@ The following plots demonstrate that the adaptive approach (red) significantly o
 
 Due to localized errors, the meshes are refined in areas where the error is greatest, thereby minimizing the number of degrees of freedom in regions where the solution is already well-approximated.
 
-% \begin{figure}[!ht]
-% 	\centering
-	
-% 	% TBA
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/square_h_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_h_10.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_h_20.pdf}
+	\caption{Square mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
 
-% 	\caption{Square mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
-% \end{figure}
-
-% \begin{figure}[!ht]
-% 	\centering
-	
-% 	% TBA
-
-% 	\caption{L-shaped mesh after 2, 4 and 6 refinements, $N_0 = 100$.}
-% \end{figure}
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_10.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_20.pdf}
+	\caption{L-shaped mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
 
 \newpage
 \subsection{A posteriori error estimates}
