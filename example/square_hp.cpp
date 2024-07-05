@@ -19,16 +19,33 @@
 #include <iomanip>
 #include <filesystem>
 
-int main() {
+int main(int argc, char **argv) {
+    
+    // Degree.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " DEGREE [ELEMENTS]." << std::endl;
+        std::exit(-1);
+    }
 
-    std::ofstream output{"output/square_hp.error"};
-    std::ofstream estimates_output{"output/square_hp.estimator"};
+    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
 
-    output << "Square domain - hp-adaptive refinement with estimator." << "\n";
-    estimates_output << "Square domain - hp-adaptive refinement with estimator." << "\n";
+    // Initial diagram.
+    std::size_t elements = 125;
 
-    std::cout << "Square domain - hp-adaptive refinement with estimator." << std::endl;
-    std::cout << "Output under output/square_hp.estimator." << std::endl;
+    if(argc == 3)
+        elements = static_cast<std::size_t>(std::stoi(argv[2]));
+
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square/square_" + std::to_string(elements) + ".poly");
+
+    // "Splash".
+    std::ofstream output{"output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".error"};
+    std::ofstream estimates_output{"output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".estimator"};
+
+    output << "Square domain - element hp-adaptive refinement with estimator." << "\n";
+    estimates_output << "Square domain - element hp-adaptive refinement with estimator." << "\n";
+
+    std::cout << "Square domain - element hp-adaptive refinement with estimator." << std::endl;
+    std::cout << "Output under output/square_hp_" + std::to_string(degree) + ".error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -38,18 +55,21 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d}};
 
-    // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/square_1000.poly");
-
     // Mesh.
-    pacs::Mesh mesh{domain, diagram};
+    pacs::Mesh mesh{domain, diagram, degree};
+
+    // Tests.
+    std::size_t tests = 100;
 
     // Sequence of meshes.
-    for(std::size_t j = 0; j < 8; ++j) {
+    for(std::size_t index = 0; index < tests; ++index) {
+
+        // Verbosity.
+        std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh output.
-        std::string polyfile = "output/square_hp_" + std::to_string(j) + ".poly";
-        mesh.write(polyfile, true);
+        std::string polyfile = "output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
+        mesh.write(polyfile);
 
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
@@ -58,12 +78,12 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
         // Solution structure (output).
         #ifndef NSOLUTIONS
         pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/square_hp_" + std::to_string(j) + ".sol";
+        std::string solfile = "output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
         solution.write(solfile);
         #endif
 
@@ -71,16 +91,20 @@ int main() {
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
         // Output.
-        output << "\n" << error << "\n\n";
+        output << "\n" << error << "\n";
+        
+        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
+
+        // Exit.
+        if(error.dofs > 25E3)
+            break;
 
         // Estimator.
         pacs::Estimator estimator{mesh, mass, numerical, source};
 
         // Output.
         estimates_output << "\n" << estimator << "\n\n";
-        
-        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
         pacs::mesh_refine(mesh, estimator);
