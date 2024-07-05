@@ -68,7 +68,7 @@ namespace pacs {
                 break;
 
             case 6:
-                evaluation = 0.0L625L * (231.0L * x * x * x * x * x * x - 315.0L * x * x * x * x + 105.0L * x * x - 5.0L);
+                evaluation = 0.0625L * (231.0L * x * x * x * x * x * x - 315.0L * x * x * x * x + 105.0L * x * x - 5.0L);
                 break;
 
             default:
