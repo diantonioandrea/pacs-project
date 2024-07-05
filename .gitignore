@@ -25,3 +25,25 @@ report/output
 # Others
 **/*.DS_Store
 **/.DS_Store
+
+# Latex.
+report/*.pdf
+**/*.aux
+**/*.lof
+**/*.log
+**/*.lot
+**/*.fls
+**/*.out
+**/*.toc
+**/*.fmt
+**/*.fot
+**/*.cb
+**/*.cb2
+**/.*.lb
+**/*.bbl
+**/*.bcf
+**/*.blg
+**/*-blx.aux
+**/*-blx.bib
+**/*.run.xml
+**/*.fdb_latexmk
