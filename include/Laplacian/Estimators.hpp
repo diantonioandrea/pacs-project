@@ -34,6 +34,9 @@ namespace pacs {
         Real estimate = 0.0L;
         Vector<Real> estimates;
 
+        // Fits.
+        Vector<Real> fits;
+
         // CONSTRUCTORS.
 
         Estimator(const Mesh &, const Sparse<Real> &, const Vector<Real> &, const Functor &, const Functor &dirichlet = Functor{}, const TwoFunctor &dirichlet_gradient = TwoFunctor{});

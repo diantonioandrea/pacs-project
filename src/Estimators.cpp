@@ -11,6 +11,7 @@
 #include <Algebra.hpp>
 #include <Fem.hpp>
 #include <Laplacian.hpp>
+#include <Statistics.hpp>
 
 namespace pacs {
 
@@ -24,7 +25,7 @@ namespace pacs {
      * @param dirichlet 
      */
     Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
-    estimates{mesh.elements.size()} {
+    estimates{mesh.elements.size()}, fits{mesh.elements.size()} {
         
         #ifndef NVERBOSE
         std::cout << "Evaluating estimates." << std::endl;
@@ -289,6 +290,16 @@ namespace pacs {
             this->estimate += this->estimates[j];
             this->estimates[j] = std::sqrt(this->estimates[j]);
 
+            // Fits.
+            std::vector<Real> degrees;
+            Vector<Real> fit{2};
+
+            for(std::size_t i = 0; i < mesh.elements[j].degree + 1; ++i)
+                for(std::size_t k = 0; k < mesh.elements[j].degree + 1 - i; ++k)
+                    degrees.emplace_back(static_cast<Real>(i + k));
+
+            fit = polyfit(Vector<Real>(degrees.size(), degrees), numerical(indices), 1);
+            this->fits[j] = -fit[1];
         }
 
         this->estimate = std::sqrt(this->estimate);
