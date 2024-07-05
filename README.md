@@ -111,15 +111,18 @@ Examples are divided into the following categories based on their domains and me
     - `square.cpp`
     - `lshape_smooth.cpp`
     - `lshape.cpp`
-2. _h_-adaptively refined meshes with _a priori_ estimates based on $L^2$ error:
+2. _h-adaptively_ refined meshes with _a priori_ estimates based on $L^2$ error:
     - `square_h.cpp`
     - `lshape_h.cpp`
-3. _h_-adaptively refined meshes with _a priori_ estimates based on $H^1$ error:
+3. _h-adaptively_ refined meshes with _a priori_ estimates based on $H^1$ error:
     - `square_gh.cpp`
     - `lshape_gh.cpp`
-4. _h_-adaptively refined meshes with _a posteriori_ estimates:
+4. _h-adaptively_ refined meshes with _a posteriori_ estimates:
     - `square_eh.cpp`
     - `lshape_eh.cpp`
+5. _hp-adaptively_ refined meshes with _a posteriori_ estimates:
+    - `square_hp.cpp`
+    - `lshape_hp.cpp`
 
 Category _1_ requires the user to specify the polynomial degree. An example command is:
 
@@ -127,7 +130,7 @@ Category _1_ requires the user to specify the polynomial degree. An example comm
 ./executables/square.cpp 3
 ```
 
-Categories _2, 3, and 4_ require the user to specify the polynomial degree and a starting mesh identified by its elements. An example command is:
+Categories from _2, ..., 5_ require the user to specify the polynomial degree and a starting mesh identified by its elements. An example command is:
 
 ```bash
 ./executables/square_h.cpp 3 250
