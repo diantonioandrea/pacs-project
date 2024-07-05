@@ -32,6 +32,34 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
 }
 
 /**
+ * @brief Exact solution, x derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_x(const pacs::Real &x, const pacs::Real &y) {
+    pacs::Real rho = std::sqrt(x * x + y * y);
+    pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
+
+    return -(2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::sin(theta / 3.0L);
+}
+
+/**
+ * @brief Exact solution, y derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_y(const pacs::Real &x, const pacs::Real &y) {
+    pacs::Real rho = std::sqrt(x * x + y * y);
+    pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
+
+    return (2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::cos(theta / 3.0L);
+}
+
+/**
  * @brief Source.
  * 
  * @param x 
@@ -61,10 +89,7 @@ inline pacs::Real dirichlet(const pacs::Real &x, const pacs::Real &y) {
  * @return pacs::Real 
  */
 inline pacs::Real dirichlet_x(const pacs::Real &x, const pacs::Real &y) {
-    pacs::Real rho = std::sqrt(x * x + y * y);
-    pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
-
-    return -(2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::sin(theta / 3.0L);
+    return exact_x(x, y);
 }
 
 /**
@@ -75,8 +100,5 @@ inline pacs::Real dirichlet_x(const pacs::Real &x, const pacs::Real &y) {
  * @return pacs::Real 
  */
 inline pacs::Real dirichlet_y(const pacs::Real &x, const pacs::Real &y) {
-    pacs::Real rho = std::sqrt(x * x + y * y);
-    pacs::Real theta = (std::atan2(y, x) >= 0) ? std::atan2(y, x) : std::atan2(y, x) + 2.0L * M_PI;
-
-    return (2.0L / 3.0L) * std::pow(rho, -1.0L / 3.0L) * std::cos(theta / 3.0L);
+    return exact_y(x, y);
 }

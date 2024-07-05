@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
         // solution.write(solfile);
 
         // Errors.
-        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
         // Output.
         output << "\n" << error << "\n";

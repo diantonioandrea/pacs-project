@@ -29,6 +29,28 @@ inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
 }
 
 /**
+ * @brief Exact solution, x derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_x(const pacs::Real &x, const pacs::Real &y) {
+    return 2.0L * M_PI * std::cos(2.0L * M_PI * x) * std::cos(2.0L * M_PI * y);
+}
+
+/**
+ * @brief Exact solution, y derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_y(const pacs::Real &x, const pacs::Real &y) {
+    return -2.0L * M_PI * std::sin(2.0L * M_PI * x) * std::sin(2.0L * M_PI * y);
+}
+
+/**
  * @brief Source.
  * 
  * @param x 

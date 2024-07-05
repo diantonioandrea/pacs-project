@@ -14,6 +14,8 @@
 #include <iostream>
 
 pacs::Real exact(const pacs::Real &, const pacs::Real &);
+pacs::Real exact_x(const pacs::Real &, const pacs::Real &);
+pacs::Real exact_y(const pacs::Real &, const pacs::Real &);
 pacs::Real source(const pacs::Real &, const pacs::Real &);
 pacs::Real dirichlet(const pacs::Real &, const pacs::Real &);
 
@@ -41,7 +43,7 @@ int main() {
     pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
     // Errors.
-    pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+    pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
     // Solution structure (output).
     pacs::Solution solution{mesh, numerical, exact};
@@ -61,6 +63,28 @@ int main() {
  */
 inline pacs::Real exact(const pacs::Real &x, const pacs::Real &y) {
     return std::sin(2 * M_PI * x) * std::cos(2 * M_PI * y);
+}
+
+/**
+ * @brief Exact solution, x derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_x(const pacs::Real &x, const pacs::Real &y) {
+    return 2.0L * M_PI * std::cos(2.0L * M_PI * x) * std::cos(2.0L * M_PI * y);
+}
+
+/**
+ * @brief Exact solution, y derivative.
+ * 
+ * @param x 
+ * @param y 
+ * @return pacs::Real 
+ */
+inline pacs::Real exact_y(const pacs::Real &x, const pacs::Real &y) {
+    return -2.0L * M_PI * std::sin(2.0L * M_PI * x) * std::sin(2.0L * M_PI * y);
 }
 
 /**

@@ -24,7 +24,7 @@ namespace pacs {
      * @param numerical 
      * @param exact 
      */
-    Error::Error(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &exact):
+    Error::Error(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &exact, const TwoFunctor &exact_gradient):
     elements{mesh.elements.size()}, l2_errors{mesh.elements.size()}, h1_errors{mesh.elements.size()} {
 
         #ifndef NVERBOSE
@@ -140,11 +140,13 @@ namespace pacs {
                 // Basis functions.
                 auto [phi, gradx_phi, grady_phi] = basis_2d(mesh, j, {physical_x, physical_y});
 
+
                 // Solutions.
                 Vector<Real> u = exact(physical_x, physical_y);
                 Vector<Real> uh = phi * numerical(indices);
 
-                Vector<Real> grad_u = (gradx_phi + grady_phi) * u_coeff(indices);
+                auto [grad_x, grad_y] = exact_gradient(physical_x, physical_y);
+                Vector<Real> grad_u = grad_x + grad_y;
                 Vector<Real> grad_uh = (gradx_phi + grady_phi) * numerical(indices);
 
                 // Local L2 error.

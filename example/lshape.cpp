@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
         pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
         // Errors.
-        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact};
+        pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
         // // Solution structure (output).
         // pacs::Solution solution{mesh, numerical, exact};

@@ -48,6 +48,6 @@ int main() {
     Vector<Real> numerical = solve(A, B);
 
     // Errors.
-    Error error{mesh, {M, DGA}, numerical, exact};
+    Error error{mesh, {M, DGA}, numerical, exact, {exact_x, exact_y}};
 
 }

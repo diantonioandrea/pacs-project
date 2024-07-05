@@ -40,7 +40,7 @@ namespace pacs {
 
         // CONSTRUCTORS.
 
-        Error(const Mesh &, const std::array<Sparse<Real>, 2> &, const Vector<Real> &, const Functor &);
+        Error(const Mesh &, const std::array<Sparse<Real>, 2> &, const Vector<Real> &, const Functor &, const TwoFunctor &);
 
         // OUTPUT.
 
