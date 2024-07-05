@@ -28,7 +28,7 @@ int main() {
     pacs::Point d{0.0, 1.0};
 
     pacs::Polygon domain{{a, b, c, d}};
-    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly"), 3};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square/square_30.poly"), 3};
 
     // Writes mesh informations to a file.
     mesh.write("output/poisson.poly");

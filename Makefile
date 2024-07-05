@@ -1,6 +1,9 @@
 .PHONY: all test example domains testrun clean distclean
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include
 
+# Disables solution output.
+# CPPFLAGS += -DNSOLUTIONS
+
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
 

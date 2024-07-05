@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     output << "Square domain - uniform refinement." << "\n";
 
     std::cout << "Square domain - uniform refinement." << std::endl;
-    std::cout << "Output under output/square_DEGREE.error." << std::endl;
+    std::cout << "Output under output/square_" + std::to_string(degree) + ".error.\n" << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -56,10 +56,13 @@ int main(int argc, char **argv) {
     diagrams.emplace_back(pacs::mesh_diagram("data/square/square_8000.poly"));
 
     // Test.
-    for(std::size_t j = 0; j < diagrams.size(); ++j) {
+    for(std::size_t index = 0; index < diagrams.size(); ++index) {
+
+        // Verbosity.
+        std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh.
-        pacs::Mesh mesh{domain, diagrams[j], degree};
+        pacs::Mesh mesh{domain, diagrams[index], degree};
 
         // Matrices.
         auto [mass, laplacian, dg_laplacian] = pacs::laplacian(mesh);
@@ -73,10 +76,12 @@ int main(int argc, char **argv) {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
-        // // Solution structure (output).
-        // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/square_" + std::to_string(degree) + "_" + std::to_string(j) + ".sol";
-        // solution.write(solfile);
+        // Solution structure (output).
+        #ifndef NSOLUTIONS
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string solfile = "output/square_" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        solution.write(solfile);
+        #endif
 
         // Output.
         output << "\n" << error << "\n";

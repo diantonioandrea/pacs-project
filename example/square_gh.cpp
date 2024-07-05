@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
     output << "Square domain - element size adaptive refinement." << "\n";
 
     std::cout << "Square domain - element size adaptive refinement." << std::endl;
-    std::cout << "Output under output/square_gh_DEGREE.error." << std::endl;
+    std::cout << "Output under output/square_gh_" + std::to_string(degree) + ".error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -84,10 +84,12 @@ int main(int argc, char **argv) {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
-        // // Solution structure (output).
-        // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/square_gh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
-        // solution.write(solfile);
+        // Solution structure (output).
+        #ifndef NSOLUTIONS
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string solfile = "output/square_gh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        solution.write(solfile);
+        #endif
 
         // Output.
         output << "\n" << error << "\n";

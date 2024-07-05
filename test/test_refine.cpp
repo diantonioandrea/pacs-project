@@ -24,7 +24,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d}};
     
     // Constructing a mesh.
-    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square_30.poly")};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram("data/square/square_30.poly")};
 
     // Refining some elements.
     pacs::Mask refinement(30);

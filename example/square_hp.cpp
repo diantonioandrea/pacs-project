@@ -61,9 +61,11 @@ int main() {
         pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
 
         // Solution structure (output).
+        #ifndef NSOLUTIONS
         pacs::Solution solution{mesh, numerical, exact};
         std::string solfile = "output/square_hp_" + std::to_string(j) + ".sol";
         solution.write(solfile);
+        #endif
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};

@@ -85,10 +85,12 @@ int main(int argc, char **argv) {
         // Linear system solution.
         pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
-        // // Solution structure (output).
-        // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
-        // solution.write(solfile);
+        // Solution structure (output).
+        #ifndef NSOLUTIONS
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string solfile = "output/lshape_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        solution.write(solfile);
+        #endif
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};

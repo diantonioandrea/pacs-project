@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     output << "Square domain - uniform refinement." << "\n";
 
     std::cout << "Square domain - uniform refinement." << std::endl;
-    std::cout << "Output under output/square_DEGREE.error." << std::endl;
+    std::cout << "Output under output/square_" + std::to_string(degree) + ".error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -72,10 +72,12 @@ int main(int argc, char **argv) {
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
-        // // Solution structure (output).
-        // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/square_s_" + std::to_string(degree) + "_" + std::to_string(j) + ".sol";
-        // solution.write(solfile);
+        // Solution structure (output).
+        #ifndef NSOLUTIONS
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string solfile = "output/square_s_" + std::to_string(degree) + "_" + std::to_string(j) + ".sol";
+        solution.write(solfile);
+        #endif
 
         // Output.
         output << "\n" << error << "\n";

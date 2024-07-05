@@ -24,7 +24,7 @@ int main() {
     Point c{1.0, 1.0};
     Point d{0.0, 1.0};
 
-    Mesh mesh{{{a, b, c, d}}, mesh_diagram("data/square_30.poly")};
+    Mesh mesh{{{a, b, c, d}}, mesh_diagram("data/square/square_30.poly")};
 
     // Matrices.
     auto [M, A, DGA] = laplacian(mesh);

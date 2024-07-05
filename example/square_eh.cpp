@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     estimates_output << "Square domain - element size adaptive refinement with estimator." << "\n";
 
     std::cout << "Square domain - element size adaptive refinement with estimator." << std::endl;
-    std::cout << "Output under output/square_eh_DEGREE.error." << std::endl;
+    std::cout << "Output under output/square_eh_" + std::to_string(degree) + ".error." << std::endl;
 
     // Domain.
     pacs::Point a{0.0, 0.0};
@@ -83,10 +83,12 @@ int main(int argc, char **argv) {
         // Linear system solution.
         pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
-        // // Solution structure (output).
-        // pacs::Solution solution{mesh, numerical, exact};
-        // std::string solfile = "output/square_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
-        // solution.write(solfile);
+        // Solution structure (output).
+        #ifndef NSOLUTIONS
+        pacs::Solution solution{mesh, numerical, exact};
+        std::string solfile = "output/square_eh_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
+        solution.write(solfile);
+        #endif
 
         // Errors.
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
