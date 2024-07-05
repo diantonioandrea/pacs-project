@@ -36,6 +36,9 @@ except:
     print("Load a .poly file.")
     sys.exit(-1)
 
+# Black.
+black: list[float] = [7 / 255, 54 / 255, 66 / 255]
+
 plt.figure()
 
 for line in lines:
@@ -65,7 +68,7 @@ for line in lines:
     color: tuple[int] = (1, 1, 1) if "--degrees" not in sys.argv else cm.coolwarm((int(data[-1]) - 1) * 200)
 
     # Plot.
-    plt.fill(x, y, facecolor = color, edgecolor = (0, 0, 0), linewidth = 0.25)
+    plt.fill(x, y, facecolor = color, edgecolor = black, linewidth = 0.25)
 
 ax = plt.gca()
 ax.set_aspect('equal', adjustable='box')
