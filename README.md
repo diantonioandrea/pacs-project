@@ -9,6 +9,7 @@ _hp-Adaptive Discontinuous Galërkin Algorithms_
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [Compilation and Execution](#compilation-and-execution)
+    - [Compiling the Report](#compilation-and-execution)
 - [Usage](#usage)
     - [Generating a Mesh](#generating-a-mesh)
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
@@ -65,6 +66,15 @@ make domains
 ```
 
 Executables are located in `executables/` and their outputs in `output/`.
+
+### Compiling the Report
+
+The report for the project can be compiled by:
+
+```
+cd report
+make
+```
 
 ## Usage
 
