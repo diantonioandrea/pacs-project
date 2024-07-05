@@ -671,7 +671,7 @@ namespace pacs {
          * @param vector 
          * @return T 
          */
-        Vector operator *=(const Vector &vector) const {
+        Vector &operator *=(const Vector &vector) {
             #ifndef NDEBUG // Integrity check.
             assert(this->length == vector.length);
             #endif
@@ -713,7 +713,7 @@ namespace pacs {
          * @param vector 
          * @return T 
          */
-        Vector operator /=(const Vector &vector) const {
+        Vector &operator /=(const Vector &vector) {
             #ifndef NDEBUG // Integrity check.
             assert(this->length == vector.length);
             #endif
