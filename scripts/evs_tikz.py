@@ -87,22 +87,22 @@ for size in sizes:
 # Plots.
 
 # Errors.
-l2_errors_string: str = "\n\\addplot[black, mark=*] coordinates "
+l2_errors_string: str = "\n\\addplot[solarized-base02, mark=*] coordinates "
 l2_errors_string += "{" + " ".join((f"({sizes[j]},{l2_errors[j]})" for j in range(len(sizes)))) + "};"
 l2_errors_string += "\n"
 l2_errors_string += "\\addlegendentry{$\\LT$ Error}\n"
 
-dg_errors_string: str = "\n\\addplot[black, mark=*] coordinates "
+dg_errors_string: str = "\n\\addplot[solarized-base02, mark=*] coordinates "
 dg_errors_string += "{" + " ".join((f"({sizes[j]},{dg_errors[j]})" for j in range(len(sizes)))) + "};"
 dg_errors_string += "\n"
 dg_errors_string += "\\addlegendentry{$DG$ Error}\n"
 
 # Comparison.
-l2_comparison_string: str = f"\n\\addplot[black, dashed] coordinates "
+l2_comparison_string: str = f"\n\\addplot[solarized-base02, dashed] coordinates "
 l2_comparison_string += "{"+ f"({sizes[0]},{l2_comparison[0]}) ({sizes[-1]},{l2_comparison[-1]})" + "};\n"
 l2_comparison_string += "\\addlegendentry{$\\mathcal{O}(h^{" + str(degree + 1) + "})$}\n"
 
-dg_comparison_string: str = f"\n\\addplot[black, dashed] coordinates "
+dg_comparison_string: str = f"\n\\addplot[solarized-base02, dashed] coordinates "
 dg_comparison_string += "{"+ f"({sizes[0]},{dg_comparison[0]}) ({sizes[-1]},{dg_comparison[-1]})" + "};\n"
 dg_comparison_string += "\\addlegendentry{$\\mathcal{O}(h^{" + str(degree) + "})$}\n"
 
