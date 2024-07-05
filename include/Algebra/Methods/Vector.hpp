@@ -46,6 +46,22 @@ namespace pacs {
     }
 
     /**
+     * @brief Sum of the elements inside a Vector.
+     * 
+     * @tparam T 
+     * @param vector 
+     * @return T 
+     */
+    template<NumericType T>
+    inline T sum(const Vector<T> &vector) {
+        #ifdef PARALLEL
+        return std::reduce(POLICY, vector.elements.begin(), vector.elements.end(), static_cast<T>(0));
+        #else
+        return std::reduce(vector.elements.begin(), vector.elements.end(), static_cast<T>(0));
+        #endif
+    }
+
+    /**
      * @brief Vector dot product.
      * 
      * @param first 
