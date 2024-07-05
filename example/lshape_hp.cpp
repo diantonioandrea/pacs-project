@@ -19,10 +19,27 @@
 #include <iomanip>
 #include <filesystem>
 
-int main() {
+int main(int argc, char **argv) {
 
-    std::ofstream output{"output/lshape_hp.error"};
-    std::ofstream estimates_output{"output/lshape_hp.estimator"};
+    // Degree.
+    if(argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " DEGREE [ELEMENTS]." << std::endl;
+        std::exit(-1);
+    }
+
+    std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
+
+    // Initial diagram.
+    std::size_t elements = 125;
+
+    if(argc == 3)
+        elements = static_cast<std::size_t>(std::stoi(argv[2]));
+
+    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape/lshape_" + std::to_string(elements) + ".poly");
+
+    // "Splash".
+    std::ofstream output{"output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".error"};
+    std::ofstream estimates_output{"output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".estimator"};
 
     output << "L-shaped domain - hp-adaptive refinement with estimator." << "\n";
     estimates_output << "L-shaped domain - hp-adaptive refinement with estimator." << "\n";
@@ -40,17 +57,20 @@ int main() {
 
     pacs::Polygon domain{{a, b, c, d, e, f}};
 
-    // Initial diagram.
-    std::vector<pacs::Polygon> diagram = pacs::mesh_diagram("data/lshape_100.poly");
-
     // Mesh.
-    pacs::Mesh mesh{domain, diagram};
+    pacs::Mesh mesh{domain, diagram, degree};
+
+    // Tests.
+    std::size_t tests = 100;
 
     // Test.
-    for(std::size_t j = 0; j < 8; ++j) {
+    for(std::size_t index = 0; index < tests; ++index) {
+
+        // Verbosity.
+        std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh output.
-        std::string polyfile = "output/lshape_hp_" + std::to_string(j) + ".poly";
+        std::string polyfile = "output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
         mesh.write(polyfile, true);
 
         // Matrices.
@@ -60,12 +80,12 @@ int main() {
         pacs::Vector<pacs::Real> forcing = pacs::forcing(mesh, source, dirichlet);
         
         // Linear system solution.
-        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB);
+        pacs::Vector<pacs::Real> numerical = pacs::solve(laplacian, forcing, pacs::BICGSTAB, 1E-12);
 
         // Solution structure (output).
         #ifndef NSOLUTIONS
         pacs::Solution solution{mesh, numerical, exact};
-        std::string solfile = "output/lshape_hp_" + std::to_string(j) + ".sol";
+        std::string solfile = "output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".sol";
         solution.write(solfile);
         #endif
 
@@ -73,16 +93,20 @@ int main() {
         pacs::Error error{mesh, {mass, dg_laplacian}, numerical, exact, {exact_x, exact_y}};
 
         // Output.
-        output << "\n" << error << "\n\n";
+        output << "\n" << error << "\n";
+        
+        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
+        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
+
+        // Exit.
+        if(error.dofs > 25E3)
+            break;
 
         // Estimator.
         pacs::Estimator estimator{mesh, mass, numerical, source, dirichlet, {dirichlet_x, dirichlet_y}};
 
         // Output.
         estimates_output << "\n" << estimator << "\n\n";
-        
-        output << "Laplacian: " << laplacian.rows << " x " << laplacian.columns << "\n";
-        output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << "\n";
 
         // Refinement.
         pacs::mesh_refine(mesh, estimator);
