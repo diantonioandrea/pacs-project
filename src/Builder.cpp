@@ -345,7 +345,8 @@ namespace pacs {
         #endif
 
         #ifndef NVERBOSE
-        std::cout << "Refining mesh size." << std::endl;
+        std::cout << "Refining mesh size: " << std::flush;
+        std::size_t counter = 0;
         #endif
 
         // Degrees.
@@ -424,6 +425,10 @@ namespace pacs {
         for(const auto &polygon: refined)
             diagram.emplace_back(polygon);
 
+        #ifndef NVERBOSE
+        std::cout << refine.size() << " elements." << std::endl;
+        #endif
+
         // Refinement.
         mesh = Mesh{mesh.domain, diagram, degrees};
     }
@@ -440,13 +445,22 @@ namespace pacs {
         #endif
 
         #ifndef NVERBOSE
-        std::cout << "Refining mesh degree." << std::endl;
+        std::cout << "Refining mesh degree: " << std::flush;
+        std::size_t counter = 0;
         #endif
 
         for(std::size_t j = 0; j < mask.size(); ++j)
-            if(mask[j])
-                if(mesh.elements[j].degree < 6) // Artificial limitation. [!]
-                    ++mesh.elements[j].degree;
+            if(mask[j]) {
+                ++mesh.elements[j].degree;
+                
+                #ifndef NVERBOSE
+                ++counter;
+                #endif
+            }
+
+        #ifndef NVERBOSE
+        std::cout << counter << " elements." << std::endl;
+        #endif
     }
     
     /**

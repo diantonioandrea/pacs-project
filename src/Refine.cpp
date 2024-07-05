@@ -21,22 +21,28 @@ namespace pacs {
     void mesh_refine(Mesh &mesh, const Estimator &estimator) {
 
         // Refinement steps.
-        std::array<Real, 2> steps{0.5, 0.75};
+        Real refine = 0.75;
+        Real speed = 1.0;
 
-        // Estimates and maximum estimate.
+        // Estimates, maximum estimate and fits.
         Vector<Real> estimates = estimator.estimates;
         Real maximum = max(estimates);
+        Vector<Real> fits = estimator.fits;
 
-        // p-Mask.
-        Mask p_mask = Mask(estimates.length);
-        Mask lower_p_mask = estimates > steps[0] * maximum;
-        Mask upper_p_mask = estimates < steps[1] * maximum;
+        // Mask.
+        Mask mask = estimates > refine * maximum;
 
-        for(std::size_t j = 0; j < estimates.length; ++j)
-            p_mask[j] = lower_p_mask[j] && upper_p_mask[j];
+        // Masks.
+        Mask p_mask(mask.size(), false);
+        Mask h_mask(mask.size(), false);
 
-        // h-Mask.
-        Mask h_mask = estimates > steps[1] * maximum;
+        for(std::size_t j = 0; j < mask.size(); ++j)
+            if(mask[j]) {
+                if(fits[j] > speed)
+                    p_mask[j] = true;
+                else
+                    h_mask[j] = true;
+            }
 
         // Refinements.
         mesh_refine_degree(mesh, p_mask);
