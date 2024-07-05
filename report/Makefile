@@ -16,3 +16,4 @@ report.pdf: report.tex
 # Clean.
 clean:
 	@latexmk -CA
+	@$(RM) -r *.bbl
