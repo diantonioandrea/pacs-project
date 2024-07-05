@@ -2,7 +2,7 @@
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include
 
 # Disables solution output.
-# CPPFLAGS += -DNSOLUTIONS
+CPPFLAGS += -DNSOLUTIONS
 
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
