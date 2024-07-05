@@ -30,6 +30,7 @@ namespace pacs {
 
         // X.
         Matrix<Real> X{x.length, p + 1};
+        X.column(0, Vector<Real>{x.length, 1.0});
 
         // Building X.
         for(std::size_t j = 0; j < p + 1; ++j) {
