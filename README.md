@@ -34,6 +34,7 @@ The key directories are as follows:
 - `snippets/`: Simpler examples for the report.
 - `test/`: Contains scripts for testing fundamental features.
 - `scripts/`: Contains Python scripts for meshes, solutions and errors visualization.
+- `templates/`: Contains TikZ templates.
 
 ## Setup
 
