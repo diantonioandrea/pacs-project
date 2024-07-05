@@ -1,0 +1,22 @@
+% Errors v DOFs template for TikZ.
+
+\begin{tikzpicture}
+\begin{loglogaxis}[
+    xlabel={$DOFs$},
+    legend pos=north east,
+]
+
+\addplot[black, mark=*] coordinates {(750,6.12566) (1500,5.25995) (3000,4.30988) (6000,2.91652) (12000,1.85839) (24000,1.02974) (48000,0.5601)};
+\addlegendentry{$DG$ Error}
+
+\addplot[black, dashed] coordinates {(750,35.8464) (48000,0.5601)};
+\addlegendentry{$\mathcal{O}(DOFs^{-1.0})$}
+
+\addplot[red, mark=*] coordinates {(750,6.12566) (870,4.38193) (942,3.60957) (1014,3.20899) (1266,1.93506) (1506,1.16987) (1620,0.987314) (1926,0.773812) (1962,0.752143) (2310,0.715501) (2670,0.648814) (3240,0.520831) (3912,0.419024) (5232,0.304942) (5982,0.234997) (6378,0.212735) (8268,0.165754) (9882,0.141861) (11436,0.123541) (13848,0.107573) (17484,0.0891911) (21156,0.0771805) (27078,0.0625627)};
+\addlegendentry{$DG$ Error}
+
+\addplot[red, dashed] coordinates {(750,2.2587637207999998) (27078,0.0625627)};
+\addlegendentry{$\mathcal{O}(DOFs^{-1.0})$}
+
+\end{loglogaxis}
+\end{tikzpicture}

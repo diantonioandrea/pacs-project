@@ -43,6 +43,30 @@ The following plots demonstrate that the adaptive approach (red) significantly o
 \end{figure}
 
 \newpage
+
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_g2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_g3_evd.tex}
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over a square domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_g2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_g3_evd.tex} % Incomplete.
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over an L-shaped domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
+\newpage
 \subsubsection{Meshes}
 
 Due to localized errors, the meshes are refined in areas where the error is greatest, thereby minimizing the number of degrees of freedom in regions where the solution is already well-approximated.
@@ -60,6 +84,24 @@ Due to localized errors, the meshes are refined in areas where the error is grea
 	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_5.pdf}
 	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_10.pdf}
 	\includegraphics[width=6cm]{meshes/adaptive/lshape_h_20.pdf}
+	\caption{L-shaped mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
+
+\newpage
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/square_gh_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_gh_10.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/square_gh_20.pdf}
+	\caption{Square mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_gh_5.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_gh_10.pdf}
+	\includegraphics[width=6cm]{meshes/adaptive/lshape_gh_20.pdf}
 	\caption{L-shaped mesh after 5, 10 and 20 refinements, $N_0 = 125$.}
 \end{figure}
 
@@ -123,6 +165,30 @@ These error trends demonstrate that the \textit{a posteriori} error estimates (r
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\input{tikz/lshape_h_125@3_evd.tex} % Incomplete.
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes over an L-shaped domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
+\newpage
+
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_gh_125@2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_gh_125@3_evd.tex}
+	\end{subfigure}
+    \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes over a square domain. $k = 2$ (left), $k = 3$ (right).}
+\end{figure}
+
+\begin{figure}[!ht]
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_gh_125@2_evd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_gh_125@3_evd.tex} % Incomplete.
 	\end{subfigure}
     \caption{$DG$ errors vs $DOFs$ comparison between adaptively refined meshes over an L-shaped domain. $k = 2$ (left), $k = 3$ (right).}
 \end{figure}
