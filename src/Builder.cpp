@@ -346,7 +346,6 @@ namespace pacs {
 
         #ifndef NVERBOSE
         std::cout << "Refining mesh size: " << std::flush;
-        std::size_t counter = 0;
         #endif
 
         // Degrees.
