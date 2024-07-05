@@ -14,6 +14,7 @@ _hp-Adaptive Discontinuous Galërkin Algorithms_
 - [Using the Code](#using-the-code)
     - [Generating a Mesh](#generating-a-mesh)
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
+    - [Mesh Refinement](#mesh-refinement)
 
 ## Introduction
 
@@ -207,3 +208,22 @@ pacs::Vector<pacs::Real> solution = pacs::solve(laplacian, forcing);
 ```
 
 This `solution` vector now contains the computed solution to the Poisson problem on the given mesh with specified boundary conditions and source term.
+
+### Mesh refinement
+
+After solving the Poisson problem, you can evaluate _a posteriori_ error estimates, allowing for adaptive mesh refinement.
+
+First, evaluate the estimates:
+
+```cpp
+pacs::Estimator est{mesh, M, numerical, source, dirichlet, {dirichlet_x, dirichlet_y}};
+pacs::Vector<pacs::Real> estimates = est.estimates;
+```
+
+Pass the current mesh, the mass matrix, the source, and the Dirichlet boundary condition along with its derivatives to the `pacs::Estimator` constructor.
+
+Choose a refinement strategy of your liking and use the `mesh_refine_size` function to refine the mesh:
+
+```cpp
+mesh_refine_size(mesh, estimates > 0.75 * max(estimates));
+```
