@@ -252,7 +252,7 @@ namespace pacs {
      */
     template<NumericType T>
     Vector<T> _gmres(const Sparse<T> &A, const Vector<T> &b, const Real &TOL = 1E-8) {
-        return _gmres(A, b, Vector<T>{A.rows});
+        return _gmres(A, b, Vector<T>{A.rows}, TOL);
     }
 
     /**
