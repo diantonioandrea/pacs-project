@@ -224,6 +224,26 @@ namespace pacs {
         }
 
         /**
+         * @brief Returns a sub-Vector given a Mask.
+         * 
+         * @param mask 
+         * @return Vector 
+         */
+        Vector operator ()(const Mask &mask) const {
+            #ifndef NDEBUG // Integrity check.
+            assert(this->length == mask.size());
+            #endif
+
+            std::vector<T> result;
+
+            for(std::size_t j = 0; j < this->length; ++j)
+                if(mask[j])
+                    result.emplace_back(this->elements[j]);
+
+            return {result.size(), result};
+        }
+
+        /**
          * @brief Sets a sub-Vector given a std::vector of indices and a Vector of values.
          * 
          * @param indices 
