@@ -233,7 +233,7 @@ namespace pacs {
                 if(neighbour == -1) { // Boundary edge.
 
                     local_IA += scaled_grad.transpose() * phi;
-                    local_SA +=  (penalties[k] * scaled_phi).transpose() * phi;
+                    local_SA += (penalties[k] * scaled_phi).transpose() * phi;
 
                     // Empty small matrices.
                     local_IAN.emplace_back(Matrix<Real>{1, 1});
