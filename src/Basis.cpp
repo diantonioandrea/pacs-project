@@ -26,7 +26,7 @@ namespace pacs {
 
         // Element information.
         Element element = mesh.elements[index];
-        Polygon polygon = mesh.element(index);
+        Polygon polygon = element.element;
         std::size_t degree = element.degree;
 
         #ifndef NDEBUG // Integrity checks.
