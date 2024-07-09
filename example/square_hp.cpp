@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     for(std::size_t index = 0; index < tests; ++index) {
 
         // Verbosity.
-        std::cout << "\nDEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
+        std::cout << "\nSTARTING DEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
 
         // Mesh output.
         std::string polyfile = "output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + "_" + std::to_string(index) + ".poly";
