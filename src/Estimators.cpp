@@ -290,15 +290,21 @@ namespace pacs {
             this->estimate += this->estimates[j];
             this->estimates[j] = std::sqrt(this->estimates[j]);
 
-            // Fits.
-            std::vector<Real> degrees;
-            Vector<Real> fit{2};
+            // Degrees.
+            Vector<Real> degrees{element_dofs};
+            std::size_t counter = 0;
 
             for(std::size_t i = 0; i < mesh.elements[j].degree + 1; ++i)
-                for(std::size_t k = 0; k < mesh.elements[j].degree + 1 - i; ++k)
-                    degrees.emplace_back(static_cast<Real>(i + k));
+                for(std::size_t k = 0; k < mesh.elements[j].degree + 1 - i; ++k) {
+                    degrees[counter] = static_cast<Real>(i + k);
+                    ++counter;
+                }
+            
+            // Coefficients.
+            Vector<Real> coefficients = std::abs(numerical(indices));
 
-            fit = polyfit(Vector<Real>(degrees.size(), degrees), numerical(indices), 1);
+            // Fit.
+            Vector<Real> fit = polyfit(degrees, coefficients, 1);
             this->fits[j] = -fit[1];
         }
 
