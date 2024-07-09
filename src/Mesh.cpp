@@ -44,7 +44,7 @@ namespace pacs {
         for(const auto &element: this->elements)
             entries += element.element.points.size();
 
-        this->quadrature = 15; // Arbitrary.
+        this->quadrature = 21; // Arbitrary.
         this->entries = entries * this->quadrature * this->quadrature;
     }
 

@@ -83,7 +83,7 @@ namespace pacs {
                 for(std::size_t h = 0; h < k; ++h)
                     base *= (x - 1.0L) / 2.0L;
 
-                evaluation += binomial(order, k) * binomial(order + k, order) * base;
+                evaluation += binomial(order, k) * binomial(order + k, k) * base;
             }
         }
 
@@ -140,7 +140,7 @@ namespace pacs {
                 for(std::size_t h = 0; h < k - 1; ++h)
                     base *= (x - 1.0L) / 2.0L;
 
-                evaluation += k * binomial(order, k) * binomial(order + k, order) * base;
+                evaluation += k * binomial(order, k) * binomial(order + k, k) * base / 2.0L;
             }
         }
 
@@ -193,7 +193,7 @@ namespace pacs {
                 for(std::size_t h = 0; h < k - 2; ++h)
                     base *= (x - 1.0L) / 2.0L;
 
-                evaluation += k * (k - 1) * binomial(order, k) * binomial(order + k, order) * base;
+                evaluation += k * (k - 1) * binomial(order, k) * binomial(order + k, k) * base / 4.0L;
             }
         }
 
