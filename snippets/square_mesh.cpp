@@ -26,5 +26,4 @@ int main() {
 
     // Mesh.
     Mesh mesh{domain, diagram};
-
 }

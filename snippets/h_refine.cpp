@@ -41,5 +41,4 @@ int main() {
 
     // Refinement.
     mesh_refine_size(mesh, estimates > 0.75 * max(estimates));
-
 }

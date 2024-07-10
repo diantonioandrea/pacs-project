@@ -1,8 +1,8 @@
 /**
- * @file poisson.cpp
+ * @file hp_refine.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
- * @date 2024-06-19
+ * @date 2024-07-10
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -13,20 +13,8 @@
 #include <Fem.hpp>
 using namespace pacs;
 
-// Exact solution.
-inline Real exact(const Real &x, const Real &y) {
-    return std::sin(2 * M_PI * x) * std::cos(2 * M_PI * y);
-}
-
-// Source.
-Real source(const Real &x, const Real &y) {
-    return 8.0 * M_PI * M_PI * exact(x, y);
-}
-
-// Dirichlet BC.
-inline Real dirichlet(const Real &x, const Real &y) {
-    return exact(x, y);
-}
+// Exact solution and source.
+#include "../example/square.hpp"
 
 int main() {
 
@@ -42,11 +30,14 @@ int main() {
     auto [M, A, DGA] = laplacian(mesh);
 
     // Forcing term.
-    Vector<Real> B = forcing(mesh, source, dirichlet);
+    Vector<Real> B = forcing(mesh, source);
 
     // Numerical solution.
     Vector<Real> numerical = solve(A, B);
 
-    // Errors.
-    Error error{mesh, {M, DGA}, numerical, exact, {exact_x, exact_y}};
+    // Estimates.
+    Estimator est{mesh, M, numerical, source};
+
+    // Refinement.
+    mesh_refine(mesh, est);
 }
