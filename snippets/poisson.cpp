@@ -45,8 +45,8 @@ int main() {
     Vector<Real> B = forcing(mesh, source, dirichlet);
 
     // Numerical solution.
-    Vector<Real> numerical = solve(A, B);
+    Vector<Real> num = solve(A, B);
 
     // Errors.
-    Error error{mesh, {M, DGA}, numerical, exact, {exact_x, exact_y}};
+    Error error{mesh, {M, DGA}, num, exact, {exact_x, exact_y}};
 }
