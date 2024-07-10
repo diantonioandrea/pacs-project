@@ -39,10 +39,7 @@ int main(int argc, char **argv) {
 
     // "Splash".
     std::ofstream output{"output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".error"};
-    std::ofstream estimates_output{"output/lshape_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".estimator"};
-
     output << "L-shaped domain - hp-adaptive refinement with estimator." << "\n";
-    estimates_output << "L-shaped domain - hp-adaptive refinement with estimator." << "\n";
 
     std::cout << "L-shaped domain - hp-adaptive refinement." << std::endl;
     std::cout << "Output under output/lshape_hp.error." << std::endl;
@@ -104,9 +101,6 @@ int main(int argc, char **argv) {
 
         // Estimator.
         pacs::Estimator estimator{mesh, mass, numerical, source, dirichlet, {dirichlet_x, dirichlet_y}};
-
-        // Output.
-        estimates_output << "\n" << estimator << "\n\n";
 
         // Refinement.
         pacs::mesh_refine(mesh, estimator);

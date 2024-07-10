@@ -39,10 +39,7 @@ int main(int argc, char **argv) {
 
     // "Splash".
     std::ofstream output{"output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".error"};
-    std::ofstream estimates_output{"output/square_hp_" + std::to_string(elements) + "@" + std::to_string(degree) + ".estimator"};
-
     output << "Square domain - hp-adaptive refinement with estimator." << "\n";
-    estimates_output << "Square domain - hp-adaptive refinement with estimator." << "\n";
 
     std::cout << "Square domain - hp-adaptive refinement with estimator." << std::endl;
     std::cout << "Output under output/square_hp_" + std::to_string(degree) + ".error." << std::endl;
@@ -102,9 +99,6 @@ int main(int argc, char **argv) {
 
         // Estimator.
         pacs::Estimator estimator{mesh, mass, numerical, source};
-
-        // Output.
-        estimates_output << "\n" << estimator << "\n\n";
 
         // Refinement.
         pacs::mesh_refine(mesh, estimator);
