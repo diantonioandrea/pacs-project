@@ -22,7 +22,7 @@ namespace pacs {
 
         // Refinement steps.
         Real refine = 0.75L;
-        Real speed = 1.0;
+        Real speed = 1.5;
 
         // Masks.
         Mask p_mask = estimator.fits > speed;
@@ -33,7 +33,7 @@ namespace pacs {
             if(!h_mask[j]) // p-Refine only error-marked elements.
                 p_mask[j] = false;
                 
-            if(p_mask[j] && h_mask[j]) // p > h.
+            if(p_mask[j] && h_mask[j])
                 h_mask[j] = false;
         }
 

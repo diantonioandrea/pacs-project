@@ -301,7 +301,10 @@ namespace pacs {
                 }
             
             // Coefficients.
-            Vector<Real> coefficients = std::abs(numerical(indices));
+            Vector<Real> coefficients = numerical(indices);
+
+            for(auto &coefficient: coefficients.elements)
+                coefficient = std::log(std::abs(coefficient));
 
             // Fit.
             Vector<Real> fit = polyfit(degrees, coefficients, 1);
