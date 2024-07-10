@@ -259,6 +259,9 @@ namespace pacs {
          */
         void insert(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
             #ifndef NDEBUG // Integrity checks.
+            assert(J.size() == elements.rows);
+            assert(K.size() == elements.columns);
+            
             for(std::size_t j = 0; j < J.size(); ++j)
                 assert((J[j] < this->rows) && (j < elements.rows));
             for(std::size_t k = 0; k < K.size(); ++k)
@@ -303,6 +306,9 @@ namespace pacs {
          */
         void add(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
             #ifndef NDEBUG // Integrity checks.
+            assert(J.size() == elements.rows);
+            assert(K.size() == elements.columns);
+
             for(std::size_t j = 0; j < J.size(); ++j)
                 assert((J[j] < this->rows) && (j < elements.rows));
             for(std::size_t k = 0; k < K.size(); ++k)
