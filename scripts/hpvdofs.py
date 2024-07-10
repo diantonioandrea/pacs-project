@@ -75,7 +75,8 @@ for index in range(1, len(sys.argv)):
             continue
 
     # Scaling.
-    dofs = [dof ** 0.5 for dof in dofs]
+    denominator: int = 3 if "lshape" in sys.argv[index] else 2
+    dofs = [dof ** (1 / denominator) for dof in dofs]
 
     # DG.
     axes.plot(dofs, errors, color=colours[index - 1], marker="*", linewidth=1, label="DG") # Error.
