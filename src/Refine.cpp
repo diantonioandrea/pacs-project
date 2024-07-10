@@ -26,7 +26,7 @@ namespace pacs {
 
         // Masks.
         Mask p_mask = estimator.fits > speed;
-        Mask h_mask = estimator.estimates > refine * max(estimator.estimates);
+        Mask h_mask = (estimator.estimates * estimator.estimates) > refine * sum(estimator.estimates * estimator.estimates) / mesh.elements.size();
 
         // Strategy.
         for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
