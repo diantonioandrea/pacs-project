@@ -41,6 +41,12 @@ the \textit{hp-adaptive} code uses an expensive preconditioned solver based on t
 \newpage
 \subsubsection{Error and meshes}
 
+\cite{Eibner2007} The following plot confirms the expected convergence rate over the L-shaped domain of:
+
+\begin{gather}
+    \lVert u - u^k_h \rVert_{DG} \approx e^{-C \, \text{DOFs}^{1/3}}.
+\end{gather}
+
 \begin{figure}[!ht]
     \centering
     \input{tikz/lshape_hp_25@3_hpvd.tex}
