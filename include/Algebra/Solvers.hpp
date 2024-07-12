@@ -722,9 +722,6 @@ namespace pacs {
             #endif
 
             // Inverting blocks.
-            Matrix<Real> inverse = solve(A(rows, columns), identity<T>(rows.size()));
-
-            // Inverting blocks.
             inverses[j] = solve(A(rows, columns), identity<T>(rows.size()));
         }
 
