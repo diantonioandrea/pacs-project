@@ -46,4 +46,10 @@ int main() {
     std::cout << L << std::endl << std::endl;
     std::cout << U << std::endl << std::endl;
     std::cout << L * U << std::endl << std::endl;
+
+    // Inversion.
+    auto I = pacs::solve(matrix, pacs::identity<pacs::Real>(3));
+
+    // Output.
+    std::cout << matrix * I << std::endl << std::endl;
 }
