@@ -102,6 +102,9 @@ namespace pacs {
         assert(A.rows == B.rows);
         #endif
 
+        if(S == LUD)
+            return _lu(A, B);
+
         if(S == QRD)
             return _qr(A, B);
 
@@ -228,6 +231,57 @@ namespace pacs {
         return x;
     }
     
+    /**
+     * @brief LU Matrix solver. No verbosity.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param B 
+     * @return Matrix<T> 
+     */
+    template<NumericType T>
+    Matrix<T> _lu(const Matrix<T> &A, const Matrix<T> &B) {
+
+        // LU decomposition.
+        auto [L, U] = LU(A);
+
+        // Solution.
+        Matrix<T> X{A.columns, B.columns};
+
+        for(std::size_t k = 0; k < B.columns; ++k) {
+
+            // Solves Ly = b using forward substitution.
+            Vector<T> y{A.columns};
+            Vector<T> b = B.column(k);
+
+            for (std::size_t i = 0; i < A.rows; ++i) {
+                T sum = static_cast<T>(0);
+
+                for (std::size_t j = 0; j < i; ++j)
+                    sum += L(i, j) * y[j];
+
+                y[i] = (b[i] - sum) / L(i, i);
+            }
+
+            // Solves Ux = y using backward substitution.
+            Vector<T> x{A.columns};
+
+            for (std::size_t i = A.columns; i > 0; --i) {
+                T sum = static_cast<T>(0);
+
+                for (std::size_t j = i; j < A.columns; ++j)
+                    sum += U(i - 1, j) * x.elements[j];
+
+                x.elements[i - 1] = (y[i - 1] - sum) / U(i - 1, i - 1);
+            }
+
+            // Update X.
+            X.column(k, x);
+        }
+
+        return X;
+    }
+
     /**
      * @brief QR solver. No verbosity.
      * 
@@ -722,7 +776,7 @@ namespace pacs {
             #endif
 
             // Inverting blocks.
-            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()));
+            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()), LUD);
         }
 
         // Building M.
