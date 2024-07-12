@@ -704,19 +704,34 @@ namespace pacs {
         std::cout << "Computing the DBI preconditioner." << std::endl;
         #endif
 
+        // Pre-allocating space for inverses.
+        std::vector<Matrix<T>> inverses;
+
+        for(const auto &[rows, columns]: blocks)
+            inverses.emplace_back(Matrix<T>{rows.size(), columns.size()});
+
         // Computing blocks.
-        for(const auto &[rows, columns]: blocks) {
-            Matrix<Real> block = A(rows, columns);
+        #pragma omp parallel for
+        for(std::size_t j = 0; j < blocks.size(); ++j) {
+
+            // Coordinates.
+            auto &[rows, columns] = blocks[j];
 
             #ifndef NDEBUG // Integrity check.
-            assert(block.rows == block.columns);
+            assert(rows.size() == columns.size());
             #endif
 
             // Inverting blocks.
-            Matrix<Real> inverse = solve(block, identity<T>(block.rows));
+            Matrix<Real> inverse = solve(A(rows, columns), identity<T>(rows.size()));
 
-            // Writing into M.
-            M.insert(rows, columns, inverse);
+            // Inverting blocks.
+            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()));
+        }
+
+        // Building M.
+        for(std::size_t j = 0; j < blocks.size(); ++j) {
+            auto &[rows, columns] = blocks[j];
+            M.insert(rows, columns, inverses[j]);
         }
 
         return M;
