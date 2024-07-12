@@ -287,68 +287,6 @@ namespace pacs {
     }
 
     /**
-     * @brief Extrapolates blocks (indices) based on laplacian structure.
-     * 
-     * @param mesh 
-     * @return std::vector<std::array<std::vector<std::size_t>, 2>> 
-     */
-    std::vector<std::array<std::vector<std::size_t>, 2>> block_laplacian(const Mesh &mesh) {
-
-        #ifndef NVERBOSE
-        std::cout << "Evaluating the laplacian blocks." << std::endl;
-        #endif
-
-        // Neighbours.
-        std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;
-
-        std::vector<std::array<std::vector<std::size_t>, 2>> blocks;
-
-        // Starting indices.
-        std::vector<std::size_t> starts;
-        starts.emplace_back(0);
-
-        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
-            starts.emplace_back(starts[j - 1] + mesh.elements[j - 1].dofs());
-
-        // Loop over the elements.
-        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
-
-            // Local dofs.
-            std::size_t element_dofs = mesh.elements[j].dofs();
-
-            // Global matrix indices.
-            std::vector<std::size_t> indices;
-
-            for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(starts[j] + k);
-
-            // Diagonal block.
-            blocks.emplace_back(std::array<std::vector<std::size_t>, 2>{indices, indices});
-
-            // Element's neighbours.
-            std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
-
-            // Neighbours' blocks.
-            for(std::size_t k = 0; k < element_neighbours.size(); ++k) {
-                if(element_neighbours[k][1] == -1)
-                    continue;
-
-                std::vector<std::size_t> n_indices;
-                std::size_t n_index = element_neighbours[k][1];
-                std::size_t n_dofs = mesh.elements[n_index].dofs(); // Neighbour's dofs.
-
-                for(std::size_t h = 0; h < n_dofs; ++h)
-                    n_indices.emplace_back(starts[n_index] + h);
-
-                // Neighbour's block.
-                blocks.emplace_back(std::array<std::vector<std::size_t>, 2>{indices, n_indices});
-            }
-        }
-
-        return blocks;
-    }
-
-    /**
      * @brief Extrapolates blocks (indices) based on mass structure.
      * 
      * @param mesh 
