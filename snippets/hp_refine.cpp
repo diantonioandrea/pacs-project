@@ -33,7 +33,7 @@ int main() {
     Vector<Real> B = forcing(mesh, source);
 
     // Numerical solution.
-    Vector<Real> numerical = solve(A, B);
+    Vector<Real> numerical = lapsolver(mesh, A, B);
 
     // Estimates.
     Estimator est{mesh, M, numerical, source};
