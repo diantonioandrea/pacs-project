@@ -102,7 +102,11 @@ namespace pacs {
         assert(A.rows == B.rows);
         #endif
 
-        return _ms(A, B, S);
+        if(S == QRD)
+            return _qr(A, B);
+
+        // Default.
+        return _qr(A, B);
     }
 
     /**
@@ -253,22 +257,39 @@ namespace pacs {
     }
 
     /**
-     * @brief Matrix solver. No verbosity.
+     * @brief QR Matrix solver. No verbosity.
      * 
      * @tparam T 
      * @param A 
-     * @param b 
+     * @param B 
      * @return Matrix<T> 
      */
     template<NumericType T>
-    Matrix<T> _ms(const Matrix<T> &A, const Matrix<T> &B, const DenseSolver &S) {
+    Matrix<T> _qr(const Matrix<T> &A, const Matrix<T> &B) {
+        
+        // QR decomposition.
+        auto [Q, R] = QR(A);
 
         // Solution.
         Matrix<T> X{A.columns, B.columns};
 
-        // Solves by column.
-        for(std::size_t j = 0; j < X.columns; ++j)
-            X.column(j, solve(A, B.column(j), S));
+        // Solves Rx = QTb for every b using backward substitution.
+        for(std::size_t k = 0; k < B.columns; ++k) {
+            Vector<T> x{A.columns};
+            Vector<T> Qb{Q.transpose() * B.column(k)};
+
+            for (std::size_t i = R.columns; i > 0; --i) {
+                T sum = static_cast<T>(0);
+
+                for (std::size_t j = i; j < R.columns; ++j)
+                    sum += R(i - 1, j) * x.elements[j];
+
+                x.elements[i - 1] = (Qb[i - 1] - sum) / R(i - 1, i - 1);
+            }
+
+            // Update X.
+            X.column(k, x);
+        }
 
         return X;
     }
