@@ -360,29 +360,31 @@ namespace pacs {
         std::cout << "Evaluating the mass blocks." << std::endl;
         #endif
 
+        // Elements.
+        std::size_t elements = mesh.elements.size();
+
+        // Blocks.
         std::vector<std::array<std::vector<std::size_t>, 2>> blocks;
+        blocks.resize(elements);
+        std::size_t start = 0;
 
-        // Starting indices.
-        std::vector<std::size_t> starts;
-        starts.emplace_back(0);
+        // Precomputing dofs.
+        std::vector<std::size_t> dofs;
+        dofs.resize(elements);
 
-        for(std::size_t j = 1; j < mesh.elements.size(); ++j)
-            starts.emplace_back(starts[j - 1] + mesh.elements[j - 1].dofs());
+        for(std::size_t j = 0; j < elements; ++j)
+            dofs[j] = mesh.elements[j].dofs();
 
-        // Loop over the elements.
-        for(std::size_t j = 0; j < mesh.elements.size(); ++j) {
-
-            // Local dofs.
-            std::size_t element_dofs = mesh.elements[j].dofs();
-
-            // Global matrix indices.
+        // Evaluating blocks.
+        for(std::size_t j = 0; j < elements; ++j) {
             std::vector<std::size_t> indices;
+            indices.resize(dofs[j]);
 
-            for(std::size_t k = 0; k < element_dofs; ++k)
-                indices.emplace_back(starts[j] + k);
-
-            // Diagonal block.
-            blocks.emplace_back(std::array<std::vector<std::size_t>, 2>{indices, indices});
+            for(std::size_t k = 0; k < dofs[j]; ++k)
+                indices[k] = start + k;
+            
+            blocks[j] = std::array<std::vector<std::size_t>, 2>{indices, indices};
+            start += dofs[j];
         }
 
         return blocks;
