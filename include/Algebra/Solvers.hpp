@@ -57,6 +57,13 @@ namespace pacs {
     enum SparseDSolver {DB};
 
     /**
+     * @brief Block sparse preconditioners.
+     * DBI: Diagonal Block Inverse method.
+     * 
+     */
+    enum Preconditioner {DBI};
+
+    /**
      * @brief Directly solves a linear system Ax = b.
      * 
      * @tparam T 
@@ -124,6 +131,33 @@ namespace pacs {
 
         // Default.
         return _bicgstab(A, b, TOL);
+    }
+
+    /**
+     * @brief Solves a sparse linear system MAx = Mb.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param b 
+     * @param blocks 
+     * @param S 
+     * @param P 
+     * @param TOL 
+     * @return Vector<T> 
+     */
+    template<NumericType T>
+    Vector<T> solve(const Sparse<T> &A, const Vector<T> &b, std::vector<std::array<std::vector<std::size_t>, 2>> &blocks, const SparseSolver &S = GMRES, const Preconditioner &P = DBI, const Real &TOL = 1E-8) {
+        #ifndef NDEBUG // Integrity check.
+        assert(A.rows == b.length);
+        #endif
+
+        if(P == DBI) {
+            Sparse<T> M = _dbi(A, blocks);
+            return solve(M * A, M * b, S, TOL);
+        }
+
+        // Default, no preconditioner.
+        return solve(A, b, S, TOL);
     }
 
     /**
@@ -635,6 +669,36 @@ namespace pacs {
             std::exit(-1);
 
         return x;
+    }
+
+    // BLOCK PRECONDITIONERS.
+
+    template<NumericType T>
+    Sparse<T> _dbi(const Sparse<T> &A, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
+        
+        // Precondiyioning matrix.
+        Sparse<T> M{A.rows, A.columns};
+
+        #ifndef NVERBOSE
+        std::cout << "Computing the DBI preconditioner." << std::endl;
+        #endif
+
+        // Computing blocks.
+        for(const auto &[rows, columns]: blocks) {
+            Matrix<Real> block = A(rows, columns);
+
+            #ifndef NDEBUG // Integrity check.
+            assert(block.rows == block.columns);
+            #endif
+
+            // Inverting blocks.
+            Matrix<Real> inverse = solve(block, identity<T>(block.rows));
+
+            // Writing into M.
+            M.insert(rows, columns, inverse);
+        }
+
+        return M;
     }
 
 }
