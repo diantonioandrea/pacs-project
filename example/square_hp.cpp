@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     std::size_t degree = static_cast<std::size_t>(std::stoi(argv[1]));
 
     // Initial diagram.
-    std::size_t elements = 125;
+    std::size_t elements = 25;
 
     if(argc == 3)
         elements = static_cast<std::size_t>(std::stoi(argv[2]));
