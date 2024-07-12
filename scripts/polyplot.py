@@ -11,6 +11,7 @@
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from matplotlib.colors import Normalize
 import sys
 
 # Font.
@@ -39,7 +40,30 @@ except:
 # Black.
 black: list[float] = [7 / 255, 54 / 255, 66 / 255]
 
-plt.figure()
+# Create a figure and axis
+fig, ax = plt.subplots()
+
+# Normalize the colormap
+degrees: list[int] = []
+
+if "--degrees" in sys.argv:
+    for line in lines:
+        if line:
+            if line[0] == "@":
+                continue
+
+        data: list[str] = line.split(" ")
+        
+        try:
+            degrees.append(int(data[-1]))
+
+        except ValueError:
+            continue
+
+if not degrees:
+    degrees = [1, 2]
+
+norm = Normalize(vmin=min(degrees), vmax=max(degrees))
 
 for line in lines:
     if line:
@@ -53,7 +77,6 @@ for line in lines:
     data: list[float] = [float(number) for number in data if number]
     
     try:
-
         for j in range(0, len(data) if len(data) % 2 == 0 else len(data) - 1, 2):
             x.append(float(data[j]))
             y.append(float(data[j + 1]))
@@ -65,12 +88,20 @@ for line in lines:
         continue
 
     # Color.
-    color: tuple[int] = (1, 1, 1) if "--degrees" not in sys.argv else cm.coolwarm((int(data[-1]) - 1) * 200)
+    color: tuple[int] = [1, 1, 1, 1] if "--degrees" not in sys.argv else list(cm.Blues(norm(int(data[-1]))))
+    color[3] = 0.75 # Reduces alpha.
 
     # Plot.
-    plt.fill(x, y, facecolor = color, edgecolor = black, linewidth = 0.25)
+    ax.fill(x, y, facecolor=color, edgecolor=black, linewidth=0.25)
 
-ax = plt.gca()
+# Create a ScalarMappable for the colorbar
+sm = plt.cm.ScalarMappable(cmap=cm.Blues, norm=norm)
+sm.set_array([])
+
+# Add colorbar
+if "--degrees" in sys.argv:
+    fig.colorbar(sm, ax=ax, ticks=range(min(degrees), max(degrees) + 1), alpha=0.75)
+
 ax.set_aspect('equal', adjustable='box')
 
 # Output.
