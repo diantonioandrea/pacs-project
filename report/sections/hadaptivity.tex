@@ -11,16 +11,20 @@ The strategy of choice can be outlined as follows:
     \item For polygons with $N_e > 4$, the refiner adds $N_e$ new nodes at the midpoints of the segments connecting the polygon's centroid to the midpoints of its edges. The refiner then connects these points to form quadrilaterals along the polygon's edges and creates a new smaller polygon by connecting all the new internal nodes.
 \end{enumerate}
 
-Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error.
+Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error. Let $\sigma$ be this percentage, the elements $K$ to be refined are those such that:
 
-Error trends and refined meshes in the following pages.
+\begin{gather}
+	\eta_K > \sigma \eta_{M},
+\end{gather}
+
+where $\eta_K$ is the local error and $\eta_M$ is the highest error.
+
+Error trends and refined meshes in the following pages. For all the following examples, $\sigma$ is set to $75\%$.
 
 \newpage
 \subsubsection{Errors}
 
 The following plots demonstrate that the adaptive approach (red) significantly outperforms uniform refinement (black) when handling these pathological solutions\footnote{$N \in \{125, 250, \dots, 8000\}$ for the uniform meshes.}.
-
-For all the following examples, the refinement percentage is set to $25\%$.
 
 \begin{figure}[!ht]
 	\begin{subfigure}[b]{0.45\textwidth}
