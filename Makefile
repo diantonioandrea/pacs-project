@@ -28,7 +28,13 @@ CPPFLAGS += -I$(OpenMP)/include
 LDFLAGS += -L$(OpenMP)/lib
 LDLIBS += -lomp
 else
+ifneq ($(mkPrefix),) # Parallel computing using OpenMP and modules.
+CXXFLAGS += -fopenmp
+LDFLAGS += -L$(mkToolchainPrefix)/lib
+LDLIBS += -lgomp
+else
 CXXFLAGS += -Wno-unknown-pragmas
+endif
 endif
 
 # Files.
