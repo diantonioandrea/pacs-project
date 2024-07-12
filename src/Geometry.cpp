@@ -376,7 +376,7 @@ namespace pacs {
 
         // Points.
         std::vector<Point> points;
-        std::array<std::size_t, 2> indices;
+        std::array<std::size_t, 2> indices{0, 1};
 
         Real distance = 0.0L;
 
