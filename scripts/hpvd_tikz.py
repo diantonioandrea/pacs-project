@@ -18,10 +18,7 @@ import sys
 matplotlib.rcParams.update({'font.size': 18})
 
 # Colours.
-black: list[float] = [7 / 255, 54 / 255, 66 / 255]
-red: list[float] = [220 / 255, 50 / 255, 47 / 255]
-
-colours: list[list[float]] = [black, red]
+colours: list[str] = ["solarized-base02", "\\accentcolor"]
 
 # File.
 if len(sys.argv) <= 1:
@@ -30,7 +27,7 @@ if len(sys.argv) <= 1:
 
 # Template.
 try:
-    file = open("templates/dofs_tikz.tex", "r+")
+    file = open("templates/hp_tikz.tex", "r+")
     template: str = file.read()
     file.close()
 
@@ -101,6 +98,6 @@ for index in range(1, len(sys.argv)):
 template = template.replace("% PLOTS", "".join(plots))
 
 # Output.
-file = open(sys.argv[1].replace(".error", "_evd.tex"), "w+")
+file = open(sys.argv[1].replace(".error", "_hpvd.tex"), "w+")
 file.write(template)
 file.close()
