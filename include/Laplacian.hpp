@@ -26,4 +26,7 @@
 // Refine.
 #include <Laplacian/Refine.hpp>
 
+// Solver.
+#include <Laplacian/Solvers.hpp>
+
 #endif
