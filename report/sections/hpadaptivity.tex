@@ -31,12 +31,13 @@ where:
 \end{gather}
 
 \newpage
-\subsubsection{Error and meshes}
+\subsubsection{Errors}
 
-\cite{Eibner2007} The following plot confirms the expected convergence rate over the L-shaped domain of:
+\cite{Eibner2007} The following plot confirms the expected convergence rate over the L-shaped domain, up to some points, and over the square domain for a smooth, albeit pathological, function:
 
 \begin{gather}
-    \lVert u - u^k_h \rVert_{DG} \approx e^{-C \, \text{DOFs}^{1/3}}.
+    \lVert u - u^k_h \rVert_{DG, \, \text{L-shape}} \approx a \, e^{-b \, \text{DOFs}^{1/3}}, \\
+    \lVert u - u^k_h \rVert_{DG, \, \text{Square}} \approx a \, e^{-b \, \text{DOFs}^{1/2}}.
 \end{gather}
 
 \begin{figure}[!ht]
@@ -46,11 +47,34 @@ where:
 \end{figure}
 
 \begin{figure}[!ht]
+    \centering
+    \input{tikz/square_hp_25@3_hpvd.tex}
+    \caption{DG error versus $DOFs^{1/2}$ on a sequence of \textit{hp-adaptively} refined meshes over a square domain. $k_0 = 3$, $N_0 = 25$.}
+\end{figure}
+
+\newpage
+\subsubsection{Meshes}
+
+\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_2.pdf}
+    \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_2.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_5.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_10.pdf}
+    % \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_2.pdf}
+	% \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_5.pdf}
+	% \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_10.pdf}
+	\caption{Square mesh after 2, 5 and 10 refinements, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
+\end{figure}
+
+\begin{figure}[!ht]
+	\centering
 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_5.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_10.pdf}
-	\caption{L-shaped mesh after 2, 5 and 10 refinements, $N_0 = 25$.}
+	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_15.pdf}
+    % \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_5.pdf}
+	% \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_10.pdf}
+	% \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_15.pdf}
+	\caption{L-shaped mesh after 5, 10 and 15 refinements, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
 \end{figure}
 
 \newpage
