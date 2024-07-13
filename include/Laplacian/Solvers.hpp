@@ -20,7 +20,7 @@ namespace pacs {
 
     // Custom Laplacian solver.
 
-    Vector<Real> lapsolver(const Mesh &, const Sparse<Real> &, const Vector<Real> &, const Real &TOL = 1E-12);
+    Vector<Real> lapsolver(const Mesh &, const Sparse<Real> &, const Vector<Real> &, const Real &TOL = 1E-15);
 
 }
 
