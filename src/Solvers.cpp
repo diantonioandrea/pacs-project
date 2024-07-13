@@ -26,7 +26,7 @@ namespace pacs {
         auto blocks = block_mass(mesh);
         
         // Solves using BICGSTAB and DBI preconditioner.
-        return solve(A, b, blocks, BICGSTAB, DBI, TOL);
+        return solve(A, b, blocks, GMRES, DBI, TOL);
     }
 
 }
