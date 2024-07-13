@@ -58,10 +58,11 @@ namespace pacs {
 
     /**
      * @brief Block sparse preconditioners.
-     * DBI: Diagonal Block Inverse method.
+     * DI: Diagonal Inverse preconditioner.
+     * DBI: Diagonal Block Inverse preconditioner.
      * 
      */
-    enum Preconditioner {DBI};
+    enum Preconditioner {DI, DBI};
 
     /**
      * @brief Directly solves a linear system Ax = b.
@@ -141,7 +142,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Solves a sparse linear system MAx = Mb.
+     * @brief Solves a sparse linear system (MA)x = Mb.
      * 
      * @tparam T 
      * @param A 
@@ -157,6 +158,11 @@ namespace pacs {
         #ifndef NDEBUG // Integrity check.
         assert(A.rows == b.length);
         #endif
+
+        if(P == DI) {
+            Sparse<T> M = _di(A);
+            return solve(M * A, M * b, S, TOL);
+        }
 
         if(P == DBI) {
             Sparse<T> M = _dbi(A, blocks);
@@ -746,8 +752,34 @@ namespace pacs {
         return x;
     }
 
-    // BLOCK PRECONDITIONERS.
+    // PRECONDITIONERS.
 
+    /**
+     * @brief Diagonal Inverse preconditioner.
+     * 
+     * @tparam T 
+     * @param A 
+     * @return Sparse<T> 
+     */
+    template<NumericType T>
+    Sparse<T> _di(const Sparse<T> &A) {
+
+        #ifndef NVERBOSE
+        std::cout << "Computing the DI preconditioner." << std::endl;
+        #endif
+
+        // Precondiyioning matrix.
+        return static_cast<T>(1) / A.diagonal();
+    }
+
+    /**
+     * @brief Diagonal Block Inverse preconditioner.
+     * 
+     * @tparam T 
+     * @param A 
+     * @param blocks 
+     * @return Sparse<T> 
+     */
     template<NumericType T>
     Sparse<T> _dbi(const Sparse<T> &A, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
         
