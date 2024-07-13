@@ -161,11 +161,15 @@ namespace pacs {
 
         if(P == DI) {
             Sparse<T> M = _di(A);
+            M.compress();
+            
             return solve(M * A, M * b, S, TOL);
         }
 
         if(P == DBI) {
             Sparse<T> M = _dbi(A, blocks);
+            M.compress();
+
             return solve(M * A, M * b, S, TOL);
         }
 
