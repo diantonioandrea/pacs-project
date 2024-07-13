@@ -30,14 +30,6 @@ where:
     \bar{\eta}^2 = \frac{1}{\lvert \Tau \rvert} \sum_{K \in \Tau} \eta_K^2.
 \end{gather}
 
-Due to:
-
-\begin{gather}
-    \kappa(\MA) \approx k^4 h^{-2},
-\end{gather}
-
-the \textit{hp-adaptive} code uses an expensive preconditioned solver based on the inverse of the diagonal block part of $\MA$. This is why the following example starts with a coarser mesh.
-
 \newpage
 \subsubsection{Error and meshes}
 

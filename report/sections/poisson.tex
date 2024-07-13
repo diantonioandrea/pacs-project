@@ -6,6 +6,8 @@ The \lstinline{forcing} function constructs the forcing term by evaluating \eqre
 
 \cite{Saad2003} The solution to the matrix equation $\MA \Vector{\upsilon}^k_h = \VB$ is obtained using the \lstinline{BICGSTAB} algorithm, with the \lstinline{GMRES} algorithm used if the first one fails to converge within a fixed number of steps. Both of these iterative algorithms for sparse matrices have been implemented in the \textit{algebra} section of the code.
 
+On adaptively refined meshes, $\kappa(\MA)$ rapidly grows, necessitating the use of a preconditioner within the custom solver \lstinline{lapsolver}.
+
 Let $\MM$ and $\MA_{DG}$ be the mass and $DG$ matrices. The $L^2$ and $DG$ errors are then evaluated by first computing the modal coefficients $\Vector{\upsilon}_m$ for the exact solution $u$ and solving $\MM \Vector{u} = \Vector{\upsilon}_m$ using the \lstinline{DB}\footnote{Block diagonal algorithm.} algorithm. Thus, the error vector is $\Vector{e} = \Vector{\upsilon} - \Vector{\upsilon}^k_h$. Hence:
 
 \begin{gather}
