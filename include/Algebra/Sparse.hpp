@@ -1065,6 +1065,62 @@ namespace pacs {
         }
 
         /**
+         * @brief Sparse matrix scalar division.
+         * 
+         * @param scalar 
+         * @return Sparse 
+         */
+        Sparse operator /(const T &scalar) const {
+            Sparse result{*this};
+
+            if(!(result.compressed)) 
+                for(auto &[key, element]: result.elements)
+                    element /= scalar;
+            else
+                for(auto &value: result.values)
+                    value /= scalar;
+
+            return result;
+        }
+
+        /**
+         * @brief Friend Sparse matrix scalar division.
+         * 
+         * @param scalar 
+         * @param sparse 
+         * @return Sparse 
+         */
+        friend Sparse operator /(const T &scalar, const Sparse &sparse) {
+            Sparse result{sparse};
+
+            if(!(result.compressed)) 
+                for(auto &[key, element]: result.elements)
+                    element = scalar / element;
+            else
+                for(auto &value: result.values)
+                    value = scalar / value;
+
+            return result;
+        }
+
+        /**
+         * @brief Sparse matrix scalar division and assignation.
+         * 
+         * @param scalar 
+         * @return Sparse& 
+         */
+        Sparse &operator /=(const T &scalar) {
+            if(!(this->compressed)) 
+                for(auto &[key, element]: this->elements)
+                    element /= scalar;
+            else
+                for(auto &value: this->values)
+                    value /= scalar;
+
+            return *this;
+        }
+
+        /**
          * @brief Sparse matrix * Vector product.
          * 
          * @param vector 
