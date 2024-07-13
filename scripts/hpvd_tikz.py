@@ -81,7 +81,7 @@ for index in range(1, len(sys.argv)):
             continue
 
     # Scaling.
-    dofs = [dof ** (1/3) for dof in dofs]
+    dofs = [dof ** (1/(3 if "lshape" in sys.argv[index] else 2)) for dof in dofs]
 
     # Plots.
 
