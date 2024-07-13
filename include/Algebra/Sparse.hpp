@@ -1145,26 +1145,52 @@ namespace pacs {
         }
 
         /**
-         * @brief Sparse matrix * Sparse matrix.
+         * @brief Sparse Matrix * Sparse Matrix.
          * 
          * @param sparse 
          * @return Sparse 
          */
         Sparse operator *(const Sparse &sparse) const {
-            #ifndef NDEBUG // Integrity check.
+            // Integrity check
+            #ifndef NDEBUG
             assert(this->columns == sparse.rows);
+
+            // Compression.
+            assert(this->compressed);
+            assert(sparse.compressed);
             #endif
 
             Sparse result{this->rows, sparse.columns};
+            std::vector<std::map<std::size_t, T>> row_values(this->rows);
 
-            for(std::size_t j = 0; j < this->rows; ++j) {
-                for(std::size_t k = 0; k < sparse.columns; ++k) {
+            result.compressed = true;
+            result.inner.resize(this->rows + 1, 0);
 
-                    // Inefficient.
-                    result.insert(j, k, dot(this->row(j), sparse.column(k)));
+            for (std::size_t i = 0; i < this->rows; ++i) {
+                for (std::size_t k = this->inner[i]; k < this->inner[i + 1]; ++k) {
+                    std::size_t colA = this->outer[k];
+                    T valueA = this->values[k];
+
+                    for (std::size_t j = sparse.inner[colA]; j < sparse.inner[colA + 1]; ++j) {
+                        std::size_t colB = sparse.outer[j];
+                        T valueB = sparse.values[j];
+                        row_values[i][colB] += valueA * valueB;
+                    }
                 }
             }
-            
+
+            for (std::size_t i = 0; i < this->rows; ++i) {
+                result.inner[i] = result.outer.size();
+                for (const auto &[col, value] : row_values[i]) {
+                    if (std::abs(value) > TOLERANCE) {
+                        result.outer.emplace_back(col);
+                        result.values.emplace_back(value);
+                    }
+                }
+            }
+
+            result.inner[this->rows] = result.outer.size();
+
             return result;
         }
 
