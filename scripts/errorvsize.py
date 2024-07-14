@@ -79,9 +79,6 @@ red: list[float] = [220 / 255, 50 / 255, 47 / 255]
 l2_comparison: list[float] = []
 dg_comparison: list[float] = []
 
-l2_interp_comparison: list[float] = []
-dg_interp_comparison: list[float] = []
-
 for size in sizes:
     l2_comparison.append((size / sizes[-1]) ** (degree + 1) * l2_errors[-1])
     dg_comparison.append((size / sizes[-1]) ** degree * dg_errors[-1])
@@ -110,6 +107,14 @@ axes[0].plot(sizes, l2_comparison, color=red, linestyle="--", linewidth=0.5, lab
 axes[1].plot(sizes, dg_errors, color=black, marker="*", linewidth=1, label="$DG$ error") # Error.
 axes[1].plot(sizes, dg_comparison, color=red, linestyle="--", linewidth=0.5, label=f"$h^{degree}$") # Comparison.
 
+if "lshape" in sys.argv[1]:
+    dg_comparison: list[float] = []
+
+    for size in sizes:
+        dg_comparison.append((size / sizes[-1]) ** (2 / 3) * dg_errors[-1])
+
+    axes[1].plot(sizes, dg_comparison, color=red, linestyle="--", linewidth=0.5, label="$h^{2/3}$") # Comparison.
+
 # Parameters.
 for j in range(2):
 
@@ -123,16 +128,6 @@ for j in range(2):
 
     # Legend.
     axes[j].legend(loc="best")
-
-# # Title.
-# axes[0].set_title("L2 error")
-# axes[1].set_title("DG error")
-
-# # Labels.
-# axes[0].set_xticks(sizes_ticks, labels=sizes_labels)
-# axes[1].set_xticks(sizes_ticks, labels=sizes_labels)
-# axes[0].set_yticks(l2_ticks, labels=l2_labels)
-# axes[1].set_yticks(dg_ticks, labels=dg_labels)
 
 axes[1].yaxis.tick_right()
 axes[1].yaxis.set_label_position("right")

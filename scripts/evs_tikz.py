@@ -97,21 +97,33 @@ dg_errors_string += "{" + " ".join((f"({sizes[j]},{dg_errors[j]})" for j in rang
 dg_errors_string += "\n"
 dg_errors_string += "\\addlegendentry{$DG$ Error}\n"
 
+l2_plots.append(l2_errors_string)
+dg_plots.append(dg_errors_string)
+
 # Comparison.
 l2_comparison_string: str = f"\n\\addplot[solarized-base02, dashed] coordinates "
 l2_comparison_string += "{"+ f"({sizes[0]},{l2_comparison[0]}) ({sizes[-1]},{l2_comparison[-1]})" + "};\n"
 l2_comparison_string += "\\addlegendentry{$\\mathcal{O}(h^{" + str(degree + 1) + "})$}\n"
 
+l2_plots.append(l2_comparison_string)
+
 dg_comparison_string: str = f"\n\\addplot[solarized-base02, dashed] coordinates "
 dg_comparison_string += "{"+ f"({sizes[0]},{dg_comparison[0]}) ({sizes[-1]},{dg_comparison[-1]})" + "};\n"
 dg_comparison_string += "\\addlegendentry{$\\mathcal{O}(h^{" + str(degree) + "})$}\n"
 
-# Strings.
-l2_plots.append(l2_errors_string)
-l2_plots.append(l2_comparison_string)
-
-dg_plots.append(dg_errors_string)
 dg_plots.append(dg_comparison_string)
+
+if "lshape" in sys.argv[1]:
+    dg_comparison: list[float] = []
+
+    for size in sizes:
+        dg_comparison.append((size / sizes[-1]) ** (2/3) * dg_errors[-1])
+
+    dg_comparison_string: str = f"\n\\addplot[solarized-base02, dotted] coordinates "
+    dg_comparison_string += "{"+ f"({sizes[0]},{dg_comparison[0]}) ({sizes[-1]},{dg_comparison[-1]})" + "};\n"
+    dg_comparison_string += "\\addlegendentry{$\\mathcal{O}(h^{2/3})$}\n"
+
+    dg_plots.append(dg_comparison_string)
 
 # Text.
 template = template.replace("% PLOTS_L2", "".join(l2_plots))

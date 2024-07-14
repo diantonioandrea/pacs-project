@@ -7,10 +7,10 @@
     legend pos=north west,
 ]
 
-\addplot[solarized-base02, mark=*] coordinates {(0.236846,0.00261101) (0.162063,0.00162784) (0.125487,0.000513351) (0.0834066,0.000699775) (0.0598985,0.000454436) (0.0458041,0.000154546) (0.0320544,7.87801e-05)};
+\addplot[solarized-base02, mark=*] coordinates {(0.236846,0.00261101) (0.162063,0.00162784) (0.125487,0.000513351) (0.0834066,0.000699775) (0.0598985,0.000454435) (0.0458041,0.000154545) (0.0320544,7.87786e-05)};
 \addlegendentry{$\LT$ Error}
 
-\addplot[solarized-base02, dashed] coordinates {(0.236846,0.2348173255514031) (0.0320544,7.87801e-05)};
+\addplot[solarized-base02, dashed] coordinates {(0.236846,0.23481285454935658) (0.0320544,7.87786e-05)};
 \addlegendentry{$\mathcal{O}(h^{4})$}
 
 \end{loglogaxis}
@@ -24,11 +24,14 @@
     legend pos=north west,
 ]
 
-\addplot[solarized-base02, mark=*] coordinates {(0.236846,0.119546) (0.162063,0.0940843) (0.125487,0.0594572) (0.0834066,0.0630071) (0.0598985,0.050544) (0.0458041,0.0336455) (0.0320544,0.0267768)};
+\addplot[solarized-base02, mark=*] coordinates {(0.236846,0.119546) (0.162063,0.0940845) (0.125487,0.0594576) (0.0834066,0.0630073) (0.0598985,0.0505441) (0.0458041,0.0336456) (0.0320544,0.0267768)};
 \addlegendentry{$DG$ Error}
 
 \addplot[solarized-base02, dashed] coordinates {(0.236846,10.801744041106874) (0.0320544,0.0267768)};
 \addlegendentry{$\mathcal{O}(h^{3})$}
+
+\addplot[solarized-base02, dotted] coordinates {(0.236846,0.10158063960750381) (0.0320544,0.0267768)};
+\addlegendentry{$\mathcal{O}(h^{2/3})$}
 
 \end{loglogaxis}
 \end{tikzpicture}
