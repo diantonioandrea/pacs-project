@@ -142,7 +142,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Solves a sparse linear system (MA)x = Mb.
+     * @brief Solves a (right) preconditioned sparse linear system Ax = b.
      * 
      * @tparam T 
      * @param A 
@@ -163,14 +163,14 @@ namespace pacs {
             Sparse<T> M = _di(A);
             M.compress();
             
-            return solve(M * A, M * b, S, TOL);
+            return M * solve(A * M, b, S, TOL);
         }
 
         if(P == DBI) {
             Sparse<T> M = _dbi(A, blocks);
             M.compress();
 
-            return solve(M * A, M * b, S, TOL);
+            return M * solve(A * M, b, S, TOL);
         }
 
         // Default, no preconditioner.
@@ -812,7 +812,7 @@ namespace pacs {
             #endif
 
             // Inverting blocks.
-            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()), LUD);
+            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()));
         }
 
         // Building M.
