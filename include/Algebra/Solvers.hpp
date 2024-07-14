@@ -142,7 +142,7 @@ namespace pacs {
     }
 
     /**
-     * @brief Solves a (right) preconditioned sparse linear system Ax = b.
+     * @brief Solves a (left) preconditioned sparse linear system Ax = b.
      * 
      * @tparam T 
      * @param A 
@@ -162,15 +162,15 @@ namespace pacs {
         if(P == DI) {
             Sparse<T> M = _di(A);
             M.compress();
-            
-            return M * solve(A * M, b, S, TOL);
+
+            return solve(M * A, M * b, S, TOL);
         }
 
         if(P == DBI) {
             Sparse<T> M = _dbi(A, blocks);
             M.compress();
 
-            return M * solve(A * M, b, S, TOL);
+            return solve(M * A, M * b, S, TOL);
         }
 
         // Default, no preconditioner.
