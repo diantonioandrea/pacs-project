@@ -50,7 +50,6 @@ namespace pacs {
 
     /**
      * @brief Sparse direct solvers.
-     * QRB: QR block decomposition method.
      * DB: Diagonal Block method.
      * 
      */
