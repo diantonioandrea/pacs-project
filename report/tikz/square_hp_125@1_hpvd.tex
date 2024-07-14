@@ -1,0 +1,14 @@
+% HP v DOFs template for TikZ.
+
+\begin{tikzpicture}
+\begin{axis}[
+    xlabel={$DOFs^{1/2}$}, % Edit if needed.
+    legend pos=north east,
+    ymode=log
+]
+
+\addplot[solarized-base02, mark=*] coordinates {(19.364916731037084,2.12045) (20.566963801203133,6.75433) (22.64950330581225,5.0392) (28.635642126552707,1.86658) (33.704599092705436,0.525591) (38.3275357934736,0.303298) (46.04345773288535,0.196046) (57.3149195236284,0.116661) (65.0,0.0525396) (72.40856302952021,0.0318316)};
+\addlegendentry{$DG$ Error}
+
+\end{axis}
+\end{tikzpicture}

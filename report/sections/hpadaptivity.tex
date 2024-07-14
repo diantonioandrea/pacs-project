@@ -30,15 +30,41 @@ where:
     \bar{\eta}^2 = \frac{1}{\lvert \Tau \rvert} \sum_{K \in \Tau} \eta_K^2.
 \end{gather}
 
-\newpage
-\subsubsection{Errors}
-
-\cite{Eibner2007} The following plot confirms the expected convergence rate over the L-shaped domain, up to some points, and over the square domain for a smooth, albeit pathological, function:
+\cite{Eibner2007} The expected convergence rates over the L-shaped domain for a singularity-bearing solution and the square domain for a smooth, albeit pathological, solution are:
 
 \begin{gather}
     \lVert u - u^k_h \rVert_{DG, \, \text{Square}} \approx a \, e^{-b \, \text{DOFs}^{1/2}}, \\
     \lVert u - u^k_h \rVert_{DG, \, \text{L-shape}} \approx a \, e^{-b \, \text{DOFs}^{1/3}}.
 \end{gather}
+
+This method, given the approximation phase for the decay rate of the Legendre coefficients, works best when starting with a high polynomial order such as $k = 3$.
+
+\newpage
+\subsubsection{Errors}
+
+\begin{figure}[!ht]
+    \begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_hp_25@1_hpvd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_hp_125@1_hpvd.tex}
+	\end{subfigure}
+    \caption{DG error versus $DOFs^{1/2}$ on a sequence of \textit{hp-adaptively} refined meshes over a square domain. $k_0 = 1$, $N_0 = 25$ (left) and $N_0 = 125$ (right).}
+\end{figure}
+
+% \begin{figure}[!ht]
+%     \begin{subfigure}[b]{0.45\textwidth}
+% 		\input{tikz/lshape_hp_25@1_hpvd.tex}
+% 	\end{subfigure}
+% 	\hfill
+% 	\begin{subfigure}[b]{0.45\textwidth}
+% 		\input{tikz/lshape_hp_125@1_hpvd.tex}
+% 	\end{subfigure}
+%     \caption{DG error versus $DOFs^{1/3}$ on a sequence of \textit{hp-adaptively} refined meshes over a L-shaped domain. $k_0 = 1$, $N_0 = 25$ (left) and $N_0 = 125$ (right).}
+% \end{figure}
+
+\newpage
 
 \begin{figure}[!ht]
     \begin{subfigure}[b]{0.45\textwidth}
@@ -67,13 +93,37 @@ where:
 
 \begin{figure}[!ht]
 	\centering
+    \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_1_2.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_1_5.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_1_10.pdf}
+    \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_1_2.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_1_5.pdf}
+	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_1_10.pdf}
+	\caption{Square mesh after 2, 5 and 10 refinements. $k_0 = 1$, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
+\end{figure}
+
+% \begin{figure}[!ht]
+% 	\centering
+% 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_1_5.pdf}
+% 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_1_10.pdf}
+% 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_1_15.pdf}
+%     \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_1_5.pdf}
+% 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_1_10.pdf}
+% 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_1_15.pdf}
+% 	\caption{L-shaped mesh after 2, 5 and 10 refinements. $k_0 = 1$, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
+% \end{figure}
+
+\newpage
+
+\begin{figure}[!ht]
+	\centering
     \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_2.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_5.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_10.pdf}
     \includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_2.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_5.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/square_hp_125_10.pdf}
-	\caption{Square mesh after 2, 5 and 10 refinements, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
+	\caption{Square mesh after 2, 5 and 10 refinements. $k_0 = 3$, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
 \end{figure}
 
 \begin{figure}[!ht]
@@ -84,7 +134,7 @@ where:
     \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_5.pdf}
 	\includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_10.pdf}
 	% \includegraphics[width=5.5cm]{meshes/adaptive/lshape_hp_125_15.pdf}
-	\caption{L-shaped mesh after 5, 10 and 15 refinements, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
+	\caption{L-shaped mesh after 5, 10 and 15 refinements. $k_0 = 3$, $N_0 = 25$ (top) and $N_0 = 125$ (bottom).}
 \end{figure}
 
 \newpage
