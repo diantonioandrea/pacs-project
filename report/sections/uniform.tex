@@ -77,7 +77,11 @@ Despite being a smooth function, the pathological solution over the square achie
 
 \newpage
 
-Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate.
+Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate. In fact, due to its singularity at the origin, the expected convergence rate, given its Sobolev regularity, is:
+
+\begin{gather}
+    \lVert u - u^k_h \rVert_{DG} \approx h^{2/3}.
+\end{gather}
 
 \begin{figure}[!ht]
     \input{tikz/lshape_2_evs.tex}
