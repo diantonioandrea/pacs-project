@@ -1,5 +1,9 @@
 .PHONY: all test example domains testrun clean distclean
-CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include
+CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include -O2
+
+ifeq ($(shell uname),Darwin) # Apple's clang.
+CXXFLAGS += -ffp-model=precise -fno-unsafe-math-optimizations -fno-fast-math
+endif
 
 # Disables solution output.
 CPPFLAGS += -DNSOLUTIONS
