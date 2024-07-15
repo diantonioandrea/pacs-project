@@ -16,6 +16,7 @@ _hp-Adaptive Discontinuous Galërkin Algorithms_
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
     - [Mesh Refinement](#mesh-refinement)
 - [Notes to the Reader](#notes-to-the-reader)
+    -[On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
 
@@ -255,3 +256,8 @@ mesh_refine(mesh, estimator);
 
 ## Notes to the Reader
 
+### On the Custom Laplacian Solver
+
+All the adaptive examples use `pacs::lapsolver` instead of a manual `pacs::solve`. This is a wrapper for `GMRES` with a `DBI`[^dbi] preconditioner, which is particularly useful given the ill-conditioning that _hp-adaptive_ methods suffer from.
+
+[^dbi]: A generic name for a Block-Jacobi preconditioner.
