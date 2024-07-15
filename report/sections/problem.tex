@@ -1,3 +1,5 @@
+\subsection{Formulation of the Poisson problem}
+
 Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$ and $g \in C^2(\partial \Omega)$, the following holds:
 
 \begin{gather}
@@ -7,7 +9,7 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2
     \end{cases}
 \end{gather}
 
-\subsection{Weak formulation}
+\subsection{Deriving the Weak Formulation}
 
 Now, seeking $u \in V$ such that, given $f \in V^*$ and $u |_{\partial \Omega} = g$, the following equation is satisfied:
 
@@ -20,3 +22,57 @@ where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is defined as foll
 \begin{gather}
     \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v ~ d \omega. \label{a}
 \end{gather}
+
+\subsection{Interior penalty DG method}
+
+Consider now a symmetric interior penalty method for this problem, for which the objective is to find $u^k_h \in V^k_h$ such that the following holds:
+
+\begin{gather}
+    \boa{u^k_h}{v^k_h} = \langle f, v^k_h \rangle \quad \Forall v^k_h \in V^k_h.
+\end{gather}
+
+Let $\{\Tau_h\}_h$ be a sequence of polygonal meshes and define $V^k_h$ as follows:
+
+\begin{gather}
+    V^k_h = \left\{ v^k_h \in \LT(\Omega): v^k_h \vert_K \in \PK{k}(K) ~ \Forall K \in \Tau_h \right\},
+\end{gather}
+
+if follows:
+
+\begin{align} 
+    \begin{split} \label{boa}
+        \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h ~ d \omega \\
+        &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket ~ d \sigma  \\
+        &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} ~ d \sigma \\
+        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket ~ d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
+    \end{split}
+\end{align}
+
+Dirichlet boundary conditions are enforced by penalization by saying:
+
+\begin{gather} \label{dirichlet}
+    \llbracket u \rrbracket = (u - g) \Vector{n} \quad \Forall F \in \F : F \cap \partial \Omega \neq \emptyset.
+\end{gather}
+
+\subsection{Polynomial basis}
+
+Let $\left\{ \phi_i \right\}_{i = 1}^N$ denote a basis for the space $V^k_h$, we then have:
+
+\begin{gather} \label{decomposition}
+    u^k_h = \sum_{i = 1}^N \upsilon_i \phi_i \quad \Forall u^k_h \in V^k_h
+\end{gather}
+
+so that we aim to find $\Vector{\upsilon} \in \R^N$ such that:
+
+\begin{gather}
+    \MA \Vector{\upsilon} = \VB,
+\end{gather}
+
+where $\MA \in \R^{N \times N}$ and $\VB \in \R^N$ are defined as:
+
+\begin{align}
+    \MA_{ij} &= \boa{\phi_i}{\phi_j}, \label{matrix} \\ 
+    \VB_i &= \langle f, \phi_i \rangle. \label{forcing}
+\end{align}
+
+The basis of choice will be that of Legendre polynomials.
