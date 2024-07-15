@@ -16,7 +16,7 @@ _hp-Adaptive Discontinuous Galërkin Algorithms_
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
     - [Mesh Refinement](#mesh-refinement)
 - [Notes to the Reader](#notes-to-the-reader)
-    -[On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
+    - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
 
