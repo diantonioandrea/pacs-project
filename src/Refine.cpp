@@ -21,6 +21,10 @@ namespace pacs {
      * @param speed Solution's smoothness.
      */
     void mesh_refine(Mesh &mesh, const Estimator &estimator, const Real &refine, const Real &speed) {
+        #ifndef NDEBUG // Integrity check.
+        assert((refine > 0.0L) && (refine < 1.0L));
+        assert(speed > 0.0L);
+        #endif
 
         // Masks.
         Mask p_mask = estimator.fits > speed;
