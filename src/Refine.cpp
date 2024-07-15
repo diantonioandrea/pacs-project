@@ -17,12 +17,10 @@ namespace pacs {
      * 
      * @param mesh 
      * @param estimator 
+     * @param refine Refinement percentage.
+     * @param speed Solution's smoothness.
      */
-    void mesh_refine(Mesh &mesh, const Estimator &estimator) {
-
-        // Refinement steps.
-        Real refine = 0.75L;
-        Real speed = 1.5;
+    void mesh_refine(Mesh &mesh, const Estimator &estimator, const Real &refine, const Real &speed) {
 
         // Masks.
         Mask p_mask = estimator.fits > speed;
@@ -33,7 +31,7 @@ namespace pacs {
             if(!h_mask[j]) // p-Refine only error-marked elements.
                 p_mask[j] = false;
                 
-            if(p_mask[j] && h_mask[j])
+            if(p_mask[j] && h_mask[j]) // p > h.
                 h_mask[j] = false;
         }
 
