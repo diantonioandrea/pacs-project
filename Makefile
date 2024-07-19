@@ -1,4 +1,4 @@
-.PHONY: all test example domains testrun clean distclean
+.PHONY: all test examples domains testrun clean distclean
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include -O2 -fno-unsafe-math-optimizations -fno-fast-math
 
 ifeq ($(shell uname),Darwin) # Apple's clang.
@@ -68,10 +68,10 @@ OBJECT_DIR = ./objects
 EXEC_DIR = ./executables
 
 # All.
-all: test example domains $(OUTPUT_DIR)
+all: tests examples domains $(OUTPUT_DIR)
 
 # Test.
-test: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
+tests: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
 	@echo "Compiled tests!"
 
 testrun: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
@@ -90,7 +90,7 @@ $(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Examples.
-example: $(OBJECT_DIR) $(EXEC_DIR) $(EXAMPLE_EXECS)
+examples: $(OBJECT_DIR) $(EXEC_DIR) $(EXAMPLE_EXECS)
 	@echo "Compiled examples!"
 
 $(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
