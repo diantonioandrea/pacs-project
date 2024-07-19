@@ -1,6 +1,6 @@
 # Advanced Programming for Scientific Computing - Project
 
-_hp-Adaptive Discontinuous Galërkin Algorithms_
+_The hp-Adaptive Discontinuous Galërkin Method_
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ _hp-Adaptive Discontinuous Galërkin Algorithms_
 
 ## Introduction
 
-This repository presents an implementation of an hp-adaptive discontinuous Galërkin method.
+This repository presents an implementation of the hp-adaptive discontinuous Galërkin method applied to the Poisson problem.
 
 ## Overview
 
