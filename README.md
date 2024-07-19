@@ -11,6 +11,9 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Compilation and Execution](#compilation-and-execution)
     - [Compiling the Report](#compiling-the-report)
 - [Using the Reporitory](#using-the-repository)
+    -[Domains](#domains)
+    -[**Examples**](#examples)
+    -[Scripts](#scripts)
 - [Using the Code](#using-the-code)
     - [Generating a Mesh](#generating-a-mesh)
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
@@ -85,6 +88,8 @@ make domains
 
 Executables are located in `executables/` and their outputs in `output/`.
 
+:warning: Make sure to take a look at the [Makefile](./Makefile) as it provides more options to modify the code's behavior.
+
 ### Compiling the Report
 
 The report for the project can be compiled by:
@@ -158,6 +163,25 @@ Categories _2, ..., 5_ require the user to specify the polynomial degree and opt
 ```
 
 The polynomial degree specified for _hp-adaptively_ refined meshes is treated as the starting degree.
+
+### Scripts
+
+This repository includes some Python scripts to help visualize error trends, meshes and solutions.
+
+Scripts are divided into the following categories based on their function:
+
+1. Mesh-related:
+    - `polyplot.py`: Requires a `.poly` file from which it plots a mesh. Accepts `--degrees` for _hp-adaptively_ refined meshes.
+2. Solution-related:
+    - `solplot.py`: Requires a `.sol` file from which it plots a solution.
+3. Error trends:
+    - `errorvsize.py`: Requires *one* `.error` file from which it plots error trends versus mesh size.
+    - `errorvdofs.py`: Requires *one or two* `.error` files from which it plots error trends versus DOFs.
+    - `hpvdofs.py`: Requires *one or two* `.error` files from which it plots error trends versus DOFs. Works for _hp-adaptively_ refined meshes.
+4. TikZ wrappers:
+    - `evs_tikz.py`: `errorvsize.py` TikZ wrapper.
+    - `evd_tikz.py`: `errorvdofs.py` TikZ wrapper.
+    - `hpvd_tikz.py`: `hpvdofs.py` TikZ wrapper.
 
 ## Using the Code
 
