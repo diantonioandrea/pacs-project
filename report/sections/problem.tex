@@ -13,7 +13,7 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The goal is to find $u \in C^
 
 \subsection{Deriving the Weak Formulation}
 
-We seek $u \in \{v \in V : v \vert_{\partial \Omega} = g \}$ such that, given $f \in V^*$, the following equation is satisfied:
+The goal is to find $u \in \{v \in V : v \vert_{\partial \Omega} = g \}$ such that, for any $f \in V^*$, the following equation is satisfied:
 
 \begin{gather} \label{weak_stokes}
     \boa{u}{v} = \langle f, v \rangle \quad \Forall v \in V,
@@ -25,11 +25,11 @@ where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is a bilinear form
     \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v \, d\omega, \label{a}
 \end{gather}
 
-The weak formulation is the foundation for numerical approximation methods like the Discontinuous Galërkin method.
+This weak formulation serves as the foundation for numerical approximation methods, such as the Discontinuous Galërkin method.
 
 \subsection{Interior Penalty DG Method}
 
-The Interior Penalty DG method is a popular choice for solving elliptic partial differential equations, like the Poisson problem, due to its flexibility in handling complex geometries and its ability to accommodate discontinuities in the solution. Specifically, we employ a symmetric interior penalty method, which balances stability and accuracy by introducing penalty terms that enforce continuity between elements. The symmetric variant is chosen for its ability to ensure both coercivity and consistency, leading to better stability properties compared to non-symmetric formulations.
+The Interior Penalty DG method is chosen for solving elliptic partial differential equations like the Poisson problem due to its flexibility in handling complex geometries and its capability to manage discontinuities in the solution. Specifically, a symmetric interior penalty method is employed, which balances stability and accuracy by introducing penalty terms to enforce continuity between elements. This symmetric variant ensures coercivity and consistency, leading to improved stability properties.
 
 Consider a symmetric interior penalty method for this problem, where the objective is to find $ u^k_h \in V^k_h $ such that:
 
@@ -37,28 +37,24 @@ Consider a symmetric interior penalty method for this problem, where the objecti
     \boa{u^k_h}{v^k_h} = \langle f, v^k_h \rangle \quad \Forall v^k_h \in V^k_h.
 \end{gather}
 
-Let $\{\Tau_h\}_h$ be a sequence of polygonal meshes and define $ V^k_h $ as follows:
+Let $\{\Tau_h\}_h$ denote a sequence of polygonal meshes and define $ V^k_h $ as follows:
 
 \begin{gather}
     V^k_h = \left\{ v^k_h \in \LT(\Omega): v^k_h \vert_K \in \PK{k}(K) ~ \Forall K \in \Tau_h \right\},
 \end{gather}
 
-The bilinear form $\boa{\cdot}{\cdot}$ includes additional terms that account for the discontinuities between elements, defined as:
+The bilinear form $\boa{\cdot}{\cdot}$ includes terms to account for discontinuities between elements, defined as:
 
 \begin{align} 
     \begin{split} \label{boa}
-        \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h ~ d \omega \\
-        &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket ~ d \sigma  \\
-        &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} ~ d \sigma \\
-        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket ~ d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
+        \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h \, d \omega \\
+        &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d \sigma  \\
+        &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} \, d \sigma \\
+        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
     \end{split}
 \end{align}
 
-In the expressions above, $\llbracket \cdot \rrbracket$ and $\{\!\!\{\cdot\}\!\!\}$ denote the jump and average operators, respectively, which are used to handle the discontinuities across element boundaries.
-
-The penalty parameter $\gamma$ is introduced to penalize the discontinuities, thereby ensuring stability.
-
-Despite its advantages, the DG method can be more complex to implement than traditional finite element methods. The formulation involves additional terms, such as jump and average operators, which must be carefully handled.
+Here, $\llbracket \cdot \rrbracket$ and $\{\!\!\{\cdot\}\!\!\}$ represent the jump and average operators, respectively, used to handle discontinuities across element boundaries. The penalty parameter $\gamma$ is introduced to penalize discontinuities, thus ensuring stability.
 
 Dirichlet boundary conditions are enforced by penalization:
 
@@ -66,17 +62,17 @@ Dirichlet boundary conditions are enforced by penalization:
     \llbracket u \rrbracket = (u - g) \Vector{n} \quad \Forall F \in \F : F \cap \partial \Omega \neq \emptyset.
 \end{gather}
 
-This approach allows for a consistent treatment of boundary conditions within the DG framework, ensuring that the solution adheres to the prescribed Dirichlet conditions.
+This approach ensures a consistent treatment of boundary conditions within the DG framework.
 
 \subsection{Polynomial Basis}
 
-Let $\left\{ \phi_i \right\}_{i = 1}^N$ denote a basis for the space $V^k_h$. We can express the approximate solution as:
+Let $\left\{ \phi_i \right\}_{i = 1}^N$ denote a basis for the space $V^k_h$. The approximate solution can be expressed as:
 
 \begin{gather} \label{decomposition}
     u^k_h = \sum_{i = 1}^N \upsilon_i \phi_i \quad \Forall u^k_h \in V^k_h,
 \end{gather}
 
-where $\left\{\phi_i\right\}$ are the basis functions, and $\left\{\upsilon_i\right\}$ are the corresponding coefficients to be determined. 
+where $\left\{\phi_i\right\}$ are the basis functions and $\left\{\upsilon_i\right\}$ are the coefficients to be determined. 
 
 The goal is to find $\Vector{\upsilon} \in \mathbb{R}^N$ such that:
 
@@ -91,6 +87,6 @@ where $\MA \in \mathbb{R}^{N \times N}$ and $\VB \in \mathbb{R}^N$ are defined a
     \VB_i &= \langle f, \phi_i \rangle. \label{forcing}
 \end{align}
 
-Here, $\MA_{ij}$ represents the matrix of bilinear forms computed using the basis functions $\phi_i$ and $\phi_j$, and $\VB_i$ is the vector of the actions of the linear functional $f$ on the basis functions $\phi_i$.
+Here, $\MA_{ij}$ represents the matrix of bilinear forms computed using the basis functions $\phi_i$ and $\phi_j$, while $\VB_i$ denotes the vector of the actions of the linear functional $f$ on the basis functions $\phi_i$.
 
-Legendre polynomials are utilized as the basis functions for $V^k_h$.
+Legendre polynomials are used as the basis functions for $V^k_h$ due to their orthogonality and numerical properties.
