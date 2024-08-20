@@ -1,8 +1,8 @@
-\subsection{Formulation of the Poisson problem}
+\subsection{The Poisson problem}
 
-This problem is chosen for its simplicity, which allows us to focus on the formulation and implementation of the \textit{hp-Adaptive} Discontinuous Galërkin (DG) method without the complexities introduced by more intricate problems.
+This problem is chosen for its simplicity, which allows us to focus on the formulation and implementation of the \textit{hp-Adaptive} Discontinuous Galërkin (DG) method without the complexities introduced by more intricate problems. The Poisson equation is a fundamental elliptic partial differential equation that arises in various fields, such as electrostatics, heat transfer, and fluid dynamics. Its relatively simple form makes it an ideal candidate for testing numerical methods like the DG method, especially when exploring advanced features such as hp-adaptivity.
 
-Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$ and $g \in C^2(\partial \Omega)$, the following holds:
+Consider the domain $\Omega \subset \mathbb{R}^2$. The goal is to find $u \in C^2(\Omega)$ such that, for any source function $f \in C(\Omega)$ and boundary condition $g \in C^2(\partial \Omega)$, the following strong form of the Poisson equation holds:
 
 \begin{gather}
     \begin{cases} \label{strong_stokes}
@@ -11,17 +11,21 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2
     \end{cases}
 \end{gather}
 
-Now, seeking $u \in \{v \in V : v |_{\partial \Omega} = g \}$ such that given $f \in V^*$ the following is satisfied:
+\subsection{Deriving the Weak Formulation}
+
+We seek $u \in \{v \in V : v \vert_{\partial \Omega} = g \}$ such that, given $f \in V^*$, the following equation is satisfied:
 
 \begin{gather} \label{weak_stokes}
     \boa{u}{v} = \langle f, v \rangle \quad \Forall v \in V,
 \end{gather}
 
-where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is defined as follows:
+where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is a bilinear form defined as follows:
 
 \begin{gather}
-    \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v ~ d \omega. \label{a}
+    \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v \, d\omega, \label{a}
 \end{gather}
+
+The weak formulation is the foundation for numerical approximation methods like the Discontinuous Galërkin method.
 
 \subsection{Interior penalty DG method}
 
