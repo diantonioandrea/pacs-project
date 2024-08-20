@@ -8,7 +8,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
 - [Overview](#overview)
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
-    - [Compilation and Execution](#compilation-and-execution)
+    - [**Compilation and Execution**](#compilation-and-execution)
     - [Compiling the Report](#compiling-the-report)
 - [Using the Reporitory](#using-the-repository)
     - [Domains](#domains)
@@ -133,22 +133,24 @@ This command generates an L-shaped mesh over $[-1, 1] \times [-1, 1] \setminus [
 Examples are divided into the following categories based on their domains and meshes:
 
 1. Uniform meshes:
-    - `square_smooth.cpp`
-    - `square.cpp`
-    - `lshape_smooth.cpp`
-    - `lshape.cpp`
+    - `square_smooth.cpp` Square domain, smooth solution[^solutions].
+    - `square.cpp` Square domain, non-smooth solution.
+    - `lshape_smooth.cpp` L-shaped domain, smooth solution.
+    - `lshape.cpp` L-shaped domain, non-smooth solution.
 2. _h-adaptively_ refined meshes with _a priori_ estimates based on $L^2$ error:
-    - `square_h.cpp`
-    - `lshape_h.cpp`
+    - `square_h.cpp` Square domain, non-smooth solution.
+    - `lshape_h.cpp` L-shaped domain, non-smooth solution.
 3. _h-adaptively_ refined meshes with _a priori_ estimates based on $H^1$ error:
-    - `square_gh.cpp`
-    - `lshape_gh.cpp`
+    - `square_gh.cpp` Square domain, non-smooth solution.
+    - `lshape_gh.cpp` L-shaped domain, non-smooth solution.
 4. _h-adaptively_ refined meshes with _a posteriori_ estimates:
-    - `square_eh.cpp`
-    - `lshape_eh.cpp`
+    - `square_eh.cpp` Square domain, non-smooth solution.
+    - `lshape_eh.cpp` L-shaped domain, non-smooth solution.
 5. _hp-adaptively_ refined meshes with _a posteriori_ estimates:
-    - `square_hp.cpp`
-    - `lshape_hp.cpp`
+    - `square_hp.cpp` Square domain, non-smooth solution.
+    - `lshape_hp.cpp` L-shaped domain, non-smooth solution.
+
+[^solutions]: Smooth and non-smooth solutions are discussed in the report.
 
 Category _1_ requires the user to specify the polynomial degree. An example command is:
 
@@ -156,7 +158,7 @@ Category _1_ requires the user to specify the polynomial degree. An example comm
 ./executables/square.cpp 3
 ```
 
-Categories _2, ..., 5_ require the user to specify the polynomial degree and optionally a starting mesh identified by its elements. An example command is:
+Categories _2, ..., 5_ require the user to specify the polynomial degree and optionally a starting mesh identified by its elements. Meshes are stored under `data/square/` or `data/lshape/`. An example command is:
 
 ```bash
 ./executables/square_h.cpp 3 250
