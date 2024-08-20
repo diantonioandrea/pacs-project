@@ -7,7 +7,7 @@ Tests over a sequence of uniform meshes have been conducted to verify the algori
     \lVert u - u^k_h \rVert_{DG} \approx h^k.
 \end{gather}
 
-These results were obtained by selecting a smooth function as exact solution such as the following:
+These results were obtained by selecting a smooth function as the exact solution, such as:
 
 \begin{gather}
     u(x, y) = \sin(2 \pi x) \cos(2 \pi y),
@@ -19,26 +19,26 @@ which leads to:
     f(x, y) = -\Delta u(x, y) = 8 \pi^2 \sin(2 \pi x) \cos(2 \pi y),
 \end{gather}
 
-and non-homogeneous Dirichlet boundary conditions given by the exact solution itself.
+with non-homogeneous Dirichlet boundary conditions given by the exact solution itself.
 
-Error trends in the following pages.
+Error trends are presented in the following sections.
 
 \newpage
 \subsubsection{Errors}
 
-The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes over the square and L-shaped domains. The relations presented in \eqref{trends} have been confirmed.
+The following shows the error trends for the $\LT$ and $DG$ errors over sequences of uniform meshes on square and L-shaped domains. The relations presented in \eqref{trends} have been confirmed.
 
 \begin{figure}[!ht]
     \input{tikz/square_s_2_evs.tex}
     \input{tikz/square_s_3_evs.tex}
-    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+    \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom), with $N \in \{125, 250, \dots, 4000\}$.}
 \end{figure}
 
 \newpage
 \begin{figure}[!ht]
     \input{tikz/lshape_s_2_evs.tex}
     \input{tikz/lshape_s_3_evs.tex}
-    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 4000\}$.}
+    \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom), with $N \in \{125, 250, \dots, 4000\}$.}
 \end{figure}
 
 \newpage
@@ -49,7 +49,7 @@ The following shows the error trends for the $\LT$ and $DG$ errors over sequence
 	\includegraphics[width=5.5cm]{meshes/uniform/square_500.pdf}
 	\includegraphics[width=5.5cm]{meshes/uniform/square_2000.pdf}
 	\includegraphics[width=5.5cm]{meshes/uniform/square_8000.pdf}
-	\caption{Square uniform meshes, $N \in \{ 500, 2000, 8000 \}$.}
+	\caption{Square uniform meshes, with $N \in \{500, 2000, 8000\}$.}
 \end{figure}
 
 \begin{figure}[!ht]
@@ -57,7 +57,7 @@ The following shows the error trends for the $\LT$ and $DG$ errors over sequence
 	\includegraphics[width=5.5cm]{meshes/uniform/lshape_500.pdf}
 	\includegraphics[width=5.5cm]{meshes/uniform/lshape_2000.pdf}
 	\includegraphics[width=5.5cm]{meshes/uniform/lshape_8000.pdf}
-	\caption{L-shaped uniform meshes, $N \in \{ 500, 2000, 8000 \}$.}
+	\caption{L-shaped uniform meshes, with $N \in \{500, 2000, 8000\}$.}
 \end{figure}
 
 \newpage
@@ -79,24 +79,24 @@ For the L-shaped domain, the pathological function is:
     u(\rho, \theta) = \rho^{2 / 3} \sin\left(\frac{2 \theta}{3}\right),
 \end{gather}
 
-for which $f = 0$ and $u$ is analytical in $\Omega \setminus \Vector{0}$, but $\grad{u}$ is singular at the origin.
+where $f = 0$ and $u$ is analytical in $\Omega \setminus \Vector{0}$, but $\grad{u}$ is singular at the origin.
 
-Error trends in the following pages.
+Error trends are discussed in the following sections.
 
 \newpage
 \subsubsection{Errors}
 
-Despite being a smooth function, the pathological solution over the square achieves the expected convergence rate, albeit at a slower pace.
+Despite being a smooth function, the pathological solution over the square domain achieves the expected convergence rate, albeit at a slower pace.
 
 \begin{figure}[!ht]
     \input{tikz/square_2_evs.tex}
     \input{tikz/square_3_evs.tex}
-    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 8000\}$.}
+    \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 2$ (top), $k = 3$ (bottom), with $N \in \{125, 250, \dots, 8000\}$.}
 \end{figure}
 
 \newpage
 
-Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate. In fact, due to its singularity at the origin, the expected convergence rate, given its Sobolev regularity, is:
+Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate. The expected convergence rate, given its Sobolev regularity, is:
 
 \begin{gather}
     \lVert u - u^k_h \rVert_{DG} \approx h^{2/3}.
@@ -105,5 +105,5 @@ Due to its nature, the pathological solution on the L-shaped domain does not rea
 \begin{figure}[!ht]
     \input{tikz/lshape_2_evs.tex}
     \input{tikz/lshape_3_evs.tex}
-    \caption{$\LT$ and DG errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom) and $N \in \{125, 250, \dots, 8000\}$.}
+    \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 2$ (top), $k = 3$ (bottom), with $N \in \{125, 250, \dots, 8000\}$.}
 \end{figure}
