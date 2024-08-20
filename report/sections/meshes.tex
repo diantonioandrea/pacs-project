@@ -19,12 +19,12 @@ The mesh-building strategy, adapted from \cite{Talischi2012}, involves the follo
     \item Calculate properties such as element areas and the largest simplices to ensure mesh quality. This step verifies that the mesh meets the necessary criteria for accurate numerical analysis and simulations.
 \end{enumerate}
 
-The  \lstinline{mesh_diagram} function plays a crucial role in this process. It requires:
+The \lstinline{mesh_diagram} function plays a crucial role in this process. It requires:
 
 \begin{enumerate}
     \item A polygon defining the mesh's domain. This polygon represents the boundary within which the mesh will be generated.
     \item A number of points specifying the density of the mesh. The quantity of points determines how densely the mesh is populated within the domain.
-    \item A reflection flag for accommodating non-convex polygons by reflecting points relative to the boundary and vertices. This flag is used to adjust the mesh generation process for complex polygon shapes.
+    \item A reflection flag for accommodating non-convex\footnote{\lstinline{mesh_diagram} may fail to produce a mesh for a non-convex domain, despite the checks that are performed.} polygons by reflecting points relative to the boundary and vertices. This flag is used to adjust the mesh generation process for complex polygon shapes.
 \end{enumerate}
 
 The function initializes each cell with the polygon (or bounding box for non-convex domains) and refines it using bisectors of all points. Lloyd's algorithm is used for relaxation to enhance mesh quality.
