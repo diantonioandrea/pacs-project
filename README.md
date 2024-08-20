@@ -44,7 +44,7 @@ The key directories are as follows:
 - `test/`: Contains scripts for testing fundamental features.
 - `scripts/`: Contains Python scripts for meshes, solutions and errors visualization.
 - `templates/`: Contains TikZ templates.
-- `report/`: Contains a LaTeX report.
+- `report/`: Contains the LaTeX report on the project.
 
 ## Setup
 
