@@ -1,5 +1,7 @@
 \subsection{Formulation of the Poisson problem}
 
+This problem is chosen for its simplicity, which allows us to focus on the formulation and implementation of the \textit{hp-Adaptive} Discontinuous Galërkin (DG) method without the complexities introduced by more intricate problems.
+
 Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2(\Omega)$ such that, for any $f \in C(\Omega)$ and $g \in C^2(\partial \Omega)$, the following holds:
 
 \begin{gather}
@@ -8,8 +10,6 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The aim is to find $u \in C^2
         u = g & \Forall \Vector{x} \in \partial \Omega.
     \end{cases}
 \end{gather}
-
-\subsection{Deriving the Weak Formulation}
 
 Now, seeking $u \in \{v \in V : v |_{\partial \Omega} = g \}$ such that given $f \in V^*$ the following is satisfied:
 
@@ -24,6 +24,8 @@ where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is defined as foll
 \end{gather}
 
 \subsection{Interior penalty DG method}
+
+The Interior Penalty DG method is a popular choice for solving elliptic partial differential equations, like the Poisson problem, due to its flexibility in handling complex geometries and its ability to accommodate discontinuities in the solution. Specifically, we employ a symmetric interior penalty method, which balances stability and accuracy by introducing penalty terms that enforce continuity between elements.
 
 Consider a symmetric interior penalty method for this problem, where the objective is to find $ u^k_h \in V^k_h $ such that:
 
@@ -47,6 +49,8 @@ it follows that:
         &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket ~ d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
     \end{split}
 \end{align}
+
+Despite its advantages, the DG method can be more complex to implement than traditional finite element methods. The formulation involves additional terms, such as jump and average operators, which must be carefully handled.
 
 Dirichlet boundary conditions are enforced by penalization:
 
