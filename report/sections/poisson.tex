@@ -1,4 +1,4 @@
-Having built a mesh over a polygonal domain, the Poisson problem can be solved by first constructing the problem's matrix $\MA$ and the forcing term $\VB$ as shown in \eqref{matrix} and \eqref{forcing}.
+Having built a mesh over a polygonal domain, the Poisson problem can be solved by first constructing the problem's matrix $\MA$ and the forcing term $\VB$ as described in \eqref{matrix} and \eqref{forcing}.
 
 The \lstinline{laplacian} function constructs the matrices used for solving the problem and evaluating errors by computing all terms in \eqref{boa} for each element. The resulting matrices are in sparse form.
 
@@ -15,7 +15,7 @@ Let $\MM$ and $\MA_{DG}$ be the mass and $DG$ matrices. The $L^2$ and $DG$ error
     \lVert u - u^k_h \rVert_{DG} = \sqrt{\Vector{e}^\intercal \MA_{DG} \Vector{e}}.
 \end{gather}
 
-Some examples in the following sections.
+Some examples are provided in the following sections.
 
 \newpage
 \subsection{A code snippet}
