@@ -16,11 +16,11 @@
 namespace pacs {
 
     /**
-     * @brief Multiplicative trace.
+     * @brief Product of diagonal elements.
      * 
-     * @tparam T 
-     * @param matrix 
-     * @return T 
+     * @tparam T Numeric type.
+     * @param sparse Sparse matrix.
+     * @return T
      */
     template<NumericType T>
     T mtrace(const Sparse<T> &sparse) {
@@ -31,7 +31,7 @@ namespace pacs {
         T product = static_cast<T>(1);
 
         for(std::size_t j = 0; j < sparse.rows; ++j)
-            product *= sparse(j, j); // Slow.
+            product *= sparse(j, j);
 
         return product;
     }

@@ -16,25 +16,23 @@
 namespace pacs {
 
     /**
-     * @brief Returns the LU decomposition of the Matrix<T>.
+     * @brief LU decomposition of a square matrix.
      * 
-     * @tparam T 
+     * @tparam T Numeric type.
      * @return std::array<Matrix<T>, 2> 
      */
     template<NumericType T>
     std::array<Matrix<T>, 2> LU(const Matrix<T> &matrix) {
         #ifndef NDEBUG
-        assert(matrix.rows == matrix.columns);
+        assert(matrix.rows == matrix.columns); // Integrity check.
         #endif
 
-        // LU decomposition
         Matrix<T> L{matrix.rows, matrix.columns};
         Matrix<T> U{matrix.rows, matrix.columns};
 
         for(std::size_t j = 0; j < matrix.columns; ++j) {
             L(j, j) = static_cast<T>(1);
 
-            // Compute elements of U
             for(std::size_t i = 0; i <= j; ++i) {
                 T sum = static_cast<T>(0);
 
@@ -44,7 +42,6 @@ namespace pacs {
                 U(i, j) = matrix(i, j) - sum;
             }
 
-            // Compute elements of L
             for(std::size_t i = j + 1; i < matrix.rows; ++i) {
                 T sum = static_cast<T>(0);
 
@@ -59,28 +56,24 @@ namespace pacs {
     }
 
     /**
-     * @brief Returns the QR decomposition of the Matrix.
+     * @brief QR decomposition of a matrix.
      * 
-     * @tparam T 
+     * @tparam T Numeric type.
      * @return std::array<Matrix<T>, 2> 
      */
     template<NumericType T>
     std::array<Matrix<T>, 2> QR(const Matrix<T> &matrix) {
 
-        // Identity matrix.
         Matrix<T> I{matrix.rows, matrix.rows};
 
         for(std::size_t j = 0; j < matrix.rows; ++j)
             I.elements[j * (matrix.rows + 1)] = static_cast<T>(1);
 
-        // QR decomposition.
         Matrix<T> Q{I};
         Matrix<T> R{matrix};
 
-        // Algorithm, real case.
         for(std::size_t j = 0; j < ((matrix.rows > matrix.columns) ? matrix.columns : matrix.rows); ++j) {
 
-            // Householder vector.
             Vector<T> vector{matrix.rows - j};
 
             for(std::size_t k = 0; k < matrix.rows - j; ++k)
@@ -89,14 +82,12 @@ namespace pacs {
             vector[0] += (vector[0] > 0 ? static_cast<T>(1) : static_cast<T>(-1)) * norm(vector);
             vector /= norm(vector);
 
-            // Householder matrix.
             Matrix<T> H{I};
 
             for(std::size_t k = 0; k < matrix.rows - j; ++k)
                 for(std::size_t l = 0; l < matrix.rows - j; ++l)
                     H.elements[(j + k) * matrix.rows + (j + l)] -= 2 * vector[k] * vector[l];
 
-            // QR.
             R = H * R;
             Q = Q * H.transpose();
         }
@@ -104,6 +95,13 @@ namespace pacs {
         return {Q, R};
     }
 
+    /**
+     * @brief Creates an identity matrix.
+     * 
+     * @tparam T Numeric type.
+     * @param size Size of the matrix.
+     * @return Matrix<T> 
+     */
     template<NumericType T>
     inline Matrix<T> identity(const std::size_t &size) {
         #ifndef NDEBUG // Integrity check.
@@ -119,10 +117,10 @@ namespace pacs {
     }
 
     /**
-     * @brief Squashes a matrix to a vector.
+     * @brief Flattens a matrix to a vector.
      * 
-     * @tparam T 
-     * @param matrix 
+     * @tparam T Numeric type.
+     * @param matrix Input matrix.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -137,10 +135,10 @@ namespace pacs {
     }
 
     /**
-     * @brief Multiplicative trace.
+     * @brief Product of diagonal elements.
      * 
-     * @tparam T 
-     * @param matrix 
+     * @tparam T Numeric type.
+     * @param matrix Input matrix.
      * @return T 
      */
     template<NumericType T>

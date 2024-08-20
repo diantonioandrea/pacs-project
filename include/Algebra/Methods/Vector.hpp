@@ -1,7 +1,7 @@
 /**
  * @file Vector.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief Vector operations and utilities.
  * @date 2024-05-26
  * 
  * @copyright Copyright (c) 2024
@@ -16,9 +16,9 @@
 namespace pacs {
 
     /**
-     * @brief Minimum value of a Vector.
+     * @brief Get the minimum value from a vector.
      * 
-     * @param vector 
+     * @param vector Input vector.
      * @return T 
      */
     template<NumericType T>
@@ -31,9 +31,9 @@ namespace pacs {
     }
 
     /**
-     * @brief Maximum value of a Vector.
+     * @brief Get the maximum value from a vector.
      * 
-     * @param vector 
+     * @param vector Input vector.
      * @return T 
      */
     template<NumericType T>
@@ -46,10 +46,9 @@ namespace pacs {
     }
 
     /**
-     * @brief Sum of the elements inside a Vector.
+     * @brief Calculate the sum of all elements in a vector.
      * 
-     * @tparam T 
-     * @param vector 
+     * @param vector Input vector.
      * @return T 
      */
     template<NumericType T>
@@ -62,16 +61,16 @@ namespace pacs {
     }
 
     /**
-     * @brief Vector dot product.
+     * @brief Compute the dot product of two vectors.
      * 
-     * @param first 
-     * @param second 
+     * @param first First vector.
+     * @param second Second vector.
      * @return T 
      */
     template<NumericType T>
     inline T dot(const Vector<T> &first, const Vector<T> &second) {
         #ifndef NDEBUG
-        assert(first.length == second.length);
+        assert(first.length == second.length); // Integrity check.
         #endif
 
         if constexpr (Conjugable<T>) {
@@ -90,9 +89,9 @@ namespace pacs {
     }
 
     /**
-     * @brief Returns the l2 norm of the Vector.
+     * @brief Compute the L2 norm of a vector.
      * 
-     * @param vector 
+     * @param vector Input vector.
      * @return Real 
      */
     template<NumericType T>
@@ -105,11 +104,10 @@ namespace pacs {
     }
 
     /**
-     * @brief Stacks two vectors.
+     * @brief Concatenate two vectors.
      * 
-     * @tparam T 
-     * @param first 
-     * @param second 
+     * @param first First vector.
+     * @param second Second vector.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -126,10 +124,9 @@ namespace pacs {
     }
 
     /**
-     * @brief Flips a vector.
+     * @brief Reverse a vector.
      * 
-     * @tparam T 
-     * @param vector 
+     * @param vector Input vector.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -141,13 +138,12 @@ namespace pacs {
 
         return result;
     }
-    
+
     /**
-     * @brief Marks the highest elements in a Vector.
+     * @brief Create a mask for the highest elements in a vector.
      * 
-     * @tparam T 
-     * @param vector 
-     * @param number 
+     * @param vector Input vector.
+     * @param number Number of elements to mask.
      * @return Mask 
      */
     template<NumericType T>
@@ -158,7 +154,6 @@ namespace pacs {
 
         Mask mask(vector.length, false);
 
-        // Indices and copy of vector.
         std::vector<T> elements;
         std::vector<std::size_t> indices;
 
@@ -167,7 +162,6 @@ namespace pacs {
             indices.emplace_back(j);
         }
 
-        // Sorting.
         for(std::size_t j = 0; j < elements.size(); ++j) 
             for(std::size_t k = 0; k < elements.size() - 1; ++k)
                 if(elements[k] > elements[k + 1]) {
@@ -175,7 +169,6 @@ namespace pacs {
                     std::swap(indices[k], indices[k + 1]);
                 }
 
-        // Masking.
         for(std::size_t j = vector.length - number; j < vector.length; ++j)
             mask[indices[j]] = true;
 
@@ -183,11 +176,10 @@ namespace pacs {
     }
 
     /**
-     * @brief Marks the lowest elements in a Vector.
+     * @brief Create a mask for the lowest elements in a vector.
      * 
-     * @tparam T 
-     * @param vector 
-     * @param number 
+     * @param vector Input vector.
+     * @param number Number of elements to mask.
      * @return Mask 
      */
     template<NumericType T>
@@ -198,7 +190,6 @@ namespace pacs {
         
         Mask mask(vector.length, false);
 
-        // Indices and copy of vector.
         std::vector<T> elements;
         std::vector<std::size_t> indices;
 
@@ -207,7 +198,6 @@ namespace pacs {
             indices.emplace_back(j);
         }
 
-        // Sorting.
         for(std::size_t j = 0; j < elements.size(); ++j) 
             for(std::size_t k = 0; k < elements.size() - 1; ++k)
                 if(elements[k] > elements[k + 1]) {
@@ -215,7 +205,6 @@ namespace pacs {
                     std::swap(indices[k], indices[k + 1]);
                 }
 
-        // Masking.
         for(std::size_t j = 0; j < number; ++j)
             mask[indices[j]] = true;
 
@@ -226,10 +215,9 @@ namespace pacs {
 namespace std {
 
     /**
-     * @brief std::abs overload for Vectors.
+     * @brief Overload of std::abs for vectors.
      * 
-     * @tparam T 
-     * @param vector 
+     * @param vector Input vector.
      * @return pacs::Vector<T> 
      */
     template<pacs::NumericType T>
