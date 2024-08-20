@@ -9,6 +9,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
     - [**Compilation and Execution**](#compilation-and-execution)
+        - [Compilation Flags](#compilation-flags)
     - [Compiling the Report](#compiling-the-report)
 - [Using the Reporitory](#using-the-repository)
     - [Domains](#domains)
@@ -88,7 +89,14 @@ make domains
 
 Executables are located in `executables/` and their outputs in `output/`.
 
-:warning: Make sure to take a look at the [Makefile](./Makefile) as it provides more options to modify the code's behavior.
+#### Compilation Flags
+
+:warning: Be sure to review the [Makefile](./Makefile) for additional options to customize the code's behavior.
+
+The code uses the following custom compilation flags:
+
+- `-DNVERBOSE`: Disables verbose output.
+- `-DNSOLUTIONS`: Disables solution output.
 
 ### Compiling the Report
 
