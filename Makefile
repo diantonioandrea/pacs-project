@@ -5,16 +5,22 @@ ifeq ($(shell uname),Darwin) # Apple's clang.
 CXXFLAGS += -ffp-model=precise
 endif
 
+
+# FLAGS.
+
 # Disables solution output.
 CPPFLAGS += -DNSOLUTIONS
 
 # Disables verbosity.
 # CPPFLAGS += -DNVERBOSE
 
-# Disables debugging.
+# Disables debugging. Enhances performance.
 # CPPFLAGS += -DNDEBUG
 
-# # Parallel computing using STL and modules.
+
+# PARALLEL COMPUTING.
+
+# # Parallel computing using STL and modules. Disabled by default.
 # ifneq ($(mkTbbLib),)
 # CPPFLAGS += -DPARALLEL
 # CXXFLAGS += -I$(mkTbbInc)
@@ -22,7 +28,7 @@ CPPFLAGS += -DNSOLUTIONS
 # LDLIBS += -ltbb
 # endif
 
-# Parallel computing using OpenMP.
+# Parallel computing using OpenMP. Enabled by default.
 ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
 ifeq ($(shell uname),Darwin) # Apple's clang.
 CXXFLAGS += -Xclang
@@ -40,6 +46,7 @@ else
 CXXFLAGS += -Wno-unknown-pragmas
 endif
 endif
+
 
 # Files.
 OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
