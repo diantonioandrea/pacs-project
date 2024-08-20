@@ -1,31 +1,41 @@
-Meshes are fundamental tools in Finite Element algorithms. This particular algorithm utilizes polygonal meshes over a polygonal domain.
+\subsection{Meshes in Finite Element Algorithms}
+
+Meshes are fundamental tools in Finite Element algorithms. Polygonal meshes are particularly useful for their flexibility in representing complex geometries. This section describes a mesh-building strategy using polygonal meshes over polygonal domains.
 
 \begin{figure}[!ht]
-	\centering
-	\includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=7.5cm]{meshes/uniform/square_1000.pdf}
+    \centering
+    \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=7.5cm]{meshes/uniform/square_1000.pdf}
     \includegraphics[trim=0cm 0.5cm 0cm 0.5cm, clip, width=7.5cm]{meshes/uniform/lshape_1000.pdf}
-	\caption{Square and L-shaped meshes over polygonal domains, $N = 1000$.}
+    \caption{Square and L-shaped meshes over polygonal domains with $N = 1000$ elements. These examples illustrate the mesh quality and structure.}
 \end{figure}
 
-\cite{Talischi2012} The mesh-building strategy follows these steps:
+The mesh-building strategy, adapted from \cite{Talischi2012}, involves the following steps:
 
 \begin{enumerate}
-	\item Evaluate the Voronoi diagram.
-	\item Perform relaxation using the Lloyd algorithm.
-	\item Collapse excessively small edges.
-	\item Assess the neighboring structure.
-	\item Compute mesh properties, including element areas and largest simplices.
+    \item Generate a Voronoi diagram to partition the domain into regions based on point locations. This step divides the domain into regions, each associated with one of the points, thereby laying the foundation for the mesh structure.
+    \item Refine the mesh by adjusting point positions to minimize element distortion. Lloyd's algorithm iteratively relocates points to achieve a more regular mesh, reducing irregularities and improving mesh quality.
+    \item Remove or adjust very small edges to enhance mesh quality and stability. This step addresses elements that are too small, which could negatively impact the mesh's performance and accuracy.
+    \item Analyze the connectivity and arrangement of mesh elements to ensure proper structure. This evaluation ensures that the mesh elements are appropriately connected and organized.
+    \item Calculate properties such as element areas and the largest simplices to ensure mesh quality. This step verifies that the mesh meets the necessary criteria for accurate numerical analysis and simulations.
 \end{enumerate}
 
-The \lstinline{mesh_diagram} function requires a polygon (serving as the mesh's domain), a number of points (determining how many points are generated inside the polygon), and a reflection flag (which instructs the \lstinline{voronoi} function to reflect each point relative to the polygon's boundary and vertices to accommodate non-convex polygons). The function evaluates each cell by starting with the polygon\footnote{For non-convex domains, the initial cell is the bounding box.} as the initial cell for a point, then reduces it with respect to every other point using their respective bisectors. This process continues using Lloyd's algorithm.
+The  \lstinline{mesh_diagram} function plays a crucial role in this process. It requires:
 
-Diagrams are then post-processed to collapse excessively small edges while preserving their overall shape and properties, and to correct any errors caused by reflection.
+\begin{enumerate}
+    \item A polygon defining the mesh's domain. This polygon represents the boundary within which the mesh will be generated.
+    \item A number of points specifying the density of the mesh. The quantity of points determines how densely the mesh is populated within the domain.
+    \item A reflection flag for accommodating non-convex polygons by reflecting points relative to the boundary and vertices. This flag is used to adjust the mesh generation process for complex polygon shapes.
+\end{enumerate}
 
-After post-processing, the mesh is prepared by evaluating each element within the diagram, assessing the neighboring structure, and computing various properties of the mesh, such as the areas of the elements and the largest simplices.
+The function initializes each cell with the polygon (or bounding box for non-convex domains) and refines it using bisectors of all points. Lloyd's algorithm is used for relaxation to enhance mesh quality.
+
+Post-processing involves collapsing small edges to maintain the overall shape and correcting reflection-induced errors. The final mesh is then evaluated by checking element areas and simplices to ensure desired properties.
 
 \newpage
-\subsection{A code snippet}
+\subsection{Code Snippet}
 
-Here's a snippet to illustrate the mesh building process from the user's perspective:
+The following code snippet demonstrates the mesh-building process:
 
 \lstinputlisting[style=cpp, firstline=11]{../snippets/square_mesh.cpp}
+
+This snippet illustrates how to set up and execute the mesh-building procedure from the user's perspective, showing the key functions and their application in practice.
