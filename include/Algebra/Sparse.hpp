@@ -1146,16 +1146,14 @@ namespace pacs {
 
         /**
          * @brief Sparse Matrix * Sparse Matrix.
+         * Manual construction of the result matrix as performance oriented.
          * 
          * @param sparse 
          * @return Sparse 
          */
         Sparse operator *(const Sparse &sparse) const {
-            // Integrity check
-            #ifndef NDEBUG
+            #ifndef NDEBUG // Integrity check.
             assert(this->columns == sparse.rows);
-
-            // Compression.
             assert(this->compressed);
             assert(sparse.compressed);
             #endif
