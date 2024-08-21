@@ -366,119 +366,77 @@ namespace pacs {
         if(candidates.size() <= 1)
             return polygon;
 
-        // Line's angular coefficient.
-        Real angular = -(line[0] / line[1]);
-
         // Building.
         std::vector<Point> vertices = polygon.points;
         std::vector<Segment> edges = polygon.edges();
-        std::size_t index = 0;
-
-        // Points.
-        std::vector<Point> points;
         std::array<std::size_t, 2> indices{0, 1};
 
-        Real distance = 0.0L;
+        // Points.
+        std::array<Point, 2> points{candidates[0], candidates[1]};
 
-        if(candidates.size() > 2) { // Handles candidates.size() >= 3.
+        if(candidates.size() > 2) // Handles candidates.size() >= 3.
             for(std::size_t j = 0; j < candidates.size(); ++j)
                 for(std::size_t k = 0; k < candidates.size(); ++k) {
                     if(j == k)
                         continue;
 
-                    if(std::abs(candidates[j] - candidates[k]) > distance) {
-                        distance = std::abs(candidates[j] - candidates[k]);
-
-                        indices[0] = j;
-                        indices[1] = k;
-                    }
+                    if(std::abs(candidates[j] - candidates[k]) > std::abs(points[0] - points[1]))
+                        points = {candidates[j], candidates[k]};
                 }
 
-            points.emplace_back(candidates[indices[0]]);
-            points.emplace_back(candidates[indices[1]]);
+        // Indices.
+        for(std::size_t j = 0; j < edges.size(); ++j) {
+            Segment edge = edges[j];
 
-        } else
-            points = candidates;
+            if(edge.contains(points[0]) && edge.contains(points[1])) // Shouldn't happen.
+                return polygon;
 
-        if(points[0] == points[1])
-            return polygon;
-
-        if(line > point) { // Point below the Line.
-
-            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] < points[1][0]))
-                std::swap(points[0], points[1]);
-            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] > points[1][1]))
-                std::swap(points[0], points[1]);
-            else if((angular > 0.0) && (points[0][1] < points[1][1]))
-                std::swap(points[0], points[1]);
-            else if((angular < 0.0) && (points[0][1] > points[1][1]))
-                std::swap(points[0], points[1]);
-
-            new_vertices.emplace_back(points[0]);
-            new_vertices.emplace_back(points[1]);
-
-            for(std::size_t j = 0; j < edges.size(); ++j)
-                if((edges[j].contains(points[1])) && (points[1] != edges[j][0])) {
-                    index = j;
-                    break;
-                }
-
-            if(index < vertices.size() - 1) {
-                for(std::size_t j = index; j < vertices.size(); ++j)
-                    if(line > vertices[j])
-                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
-                            new_vertices.emplace_back(vertices[j]);
-
-                for(std::size_t j = 0; j < index; ++j)
-                    if(line > vertices[j])
-                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
-                            new_vertices.emplace_back(vertices[j]);
-
-            } else
-                for(const auto &vertex: vertices)
-                    if(line > vertex)
-                        if((vertex != points[0]) && (vertex != points[1]))
-                            new_vertices.emplace_back(vertex);
-
-        } else { // Point above the Line.
-
-            if((std::abs(line[0]) <= GEOMETRY_TOLERANCE) && (points[0][0] > points[1][0]))
-                std::swap(points[0], points[1]);
-            else if((std::abs(line[1]) <= GEOMETRY_TOLERANCE) && (points[0][1] < points[1][1]))
-                std::swap(points[0], points[1]);
-            else if((angular > 0.0) && (points[0][1] > points[1][1]))
-                std::swap(points[0], points[1]);
-            else if((angular < 0.0) && (points[0][1] < points[1][1]))
-                std::swap(points[0], points[1]);
-
-            new_vertices.emplace_back(points[0]);
-            new_vertices.emplace_back(points[1]);
-
-            for(std::size_t j = 0; j < edges.size(); ++j)
-                if((edges[j].contains(points[1])) && (points[1] != edges[j][0])) {
-                    index = j;
-                    break;
-                }
-
-            if(index < vertices.size() - 1) {
-                for(std::size_t j = index; j < vertices.size(); ++j)
-                    if(line <= vertices[j])
-                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
-                            new_vertices.emplace_back(vertices[j]);
-
-                for(std::size_t j = 0; j < index; ++j)
-                    if(line <= vertices[j])
-                        if((vertices[j] != points[0]) && (vertices[j] != points[1]))
-                            new_vertices.emplace_back(vertices[j]);
-
-            } else
-                for(const auto &vertex: vertices)
-                    if(line <= vertex)
-                        if((vertex != points[0]) && (vertex != points[1]))
-                            new_vertices.emplace_back(vertex);
+            if(edge.contains(points[0]) && (edge[1] != points[0]))
+                indices[0] = j;
+            
+            if(edge.contains(points[1]) && (edge[1] != points[1]))
+                indices[1] = j;
         }
 
-        return Polygon{new_vertices};
+        if(indices[0] > indices[1]) {
+            std::swap(indices[0], indices[1]);
+            std::swap(points[0], points[1]);
+        }
+
+        // New polygons.
+        std::vector<Point> a_points, b_points;
+
+        for(std::size_t j = 0; j < vertices.size(); ++j) {
+            if((j <= indices[0]) || (j > indices[1]))
+                a_points.emplace_back(vertices[j]);
+
+            if(j == indices[0]) {
+                if(points[0] != *--a_points.end()) // Avoids duplicates.
+                    a_points.emplace_back(points[0]);
+
+                b_points.emplace_back(points[0]);
+            }
+
+            if((j > indices[0]) && (j <= indices[1]))
+                if(vertices[j] != *--b_points.end()) // Avoids duplicates.
+                    b_points.emplace_back(vertices[j]);
+
+            if(j == indices[1]) {
+                a_points.emplace_back(points[1]);
+                b_points.emplace_back(points[1]);
+            }
+        }
+
+        Polygon a_polygon{a_points}, b_polygon{b_points};
+
+        if(a_polygon.contains(point))
+            return a_polygon;
+
+        #ifndef NDEBUG // Integrity check.
+        assert(b_polygon.contains(point));
+        #endif
+
+        return b_polygon;
     }
 
 }
