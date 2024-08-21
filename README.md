@@ -134,7 +134,7 @@ This command generates a square mesh over $[0, 1] \times [0, 1]$ with $N = 250$.
 ./executables/lshape_domain 125
 ```
 
-This command generates an L-shaped mesh over $[-1, 1] \times [-1, 1] \setminus [0, 1] \times [-1, 0] $ with $N = 125$.
+This command generates an L-shaped mesh over $[-1, 1] \times [-1, 1] \setminus [0, 1] \times [-1, 0]$ with $N = 125$.
 
 ### Examples
 
