@@ -37,12 +37,10 @@ where:
     \lVert u - u^k_h \rVert_{DG, \, \text{L-shape}} \approx a \, e^{-b \, \text{DOFs}^{1/3}}. \label{lshape-hp}
 \end{gather}
 
-This method, given the approximation phase for the decay rate of the Legendre coefficients, works best when starting with a high polynomial order such as $k = 3$.
-
 \newpage
 \subsubsection{Errors}
 
-Tests with $k_0 = 1$ show the correct error trends for the square domain, confirming \eqref{square-hp}, but fail to show a satisfying trend for the L-shaped domain, likely due to the difficulty encountered when estimating the local smoothness of the solution given low-order polynomials.
+Tests with an initial polynomial degree of $k_0 = 1$ exhibit exponential error trends, confirming both \eqref{square-hp} and \eqref{lshape-hp}.
 
 \begin{figure}[!ht]
     \begin{subfigure}[b]{0.45\textwidth}
@@ -68,7 +66,7 @@ Tests with $k_0 = 1$ show the correct error trends for the square domain, confir
 
 \newpage
 
-Tests with $k_0 = 3$ show better error trends and confirm both \eqref{square-hp} and \eqref{lshape-hp}.
+Tests with an initial polynomial degree of $k_0 = 3$ exhibit an exponential error trend earlier than those with $k_0 = 1$, which is significant. However, this trend later deviates, most likely due to the worse ill-conditioning of $\MA$.
 
 \begin{figure}[!ht]
     \begin{subfigure}[b]{0.45\textwidth}
