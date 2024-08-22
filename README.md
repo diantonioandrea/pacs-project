@@ -20,8 +20,8 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
     - [Mesh Refinement](#mesh-refinement)
 - [**Notes to the Reader**](#notes-to-the-reader)
-    - [On the Adaptation from **lymph**](#on-the-adaptation-from-lymph)
     - [On the Implementation of Basic Objects](#on-the-implementation-of-basic-objects)
+    - [On the Adaptation from **lymph**](#on-the-adaptation-from-lymph)
     - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
