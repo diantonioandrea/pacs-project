@@ -38,7 +38,7 @@ The key components are as follows:
     - [`include/Geometry/`](./include/Geometry/README.md): Tools for working with polygons and meshes.
     - [`include/Fem/`](./include/Fem/README.md): Finite element structures and methods.
     - [`include/Laplacian/`](./include/Laplacian/README.md): Implementation details for the Poisson problem.
-    - `include/Statistics/`: Statistics related tools.
+    - [`include/Statistics/`](): Statistics related tools.
 - `src/`: Contains the primary implementations for the repository’s structures and methods.
 - `data/`: Includes sample meshes for simple domains.
 - `domains/`: Stores scripts for generating sample meshes.
