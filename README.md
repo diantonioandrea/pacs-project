@@ -10,7 +10,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Cloning the Repository](#cloning-the-repository)
     - [**Compilation and Execution**](#compilation-and-execution)
         - [Compilation Flags](#compilation-flags)
-    - [Compiling the Report](#compiling-the-report)
+    - [**Compiling the Report**](#compiling-the-report)
 - [Using the Reporitory](#using-the-repository)
     - [Domains](#domains)
     - [**Examples**](#examples)
@@ -19,8 +19,8 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Generating a Mesh](#generating-a-mesh)
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
     - [Mesh Refinement](#mesh-refinement)
-- [Notes to the Reader](#notes-to-the-reader)
-    - [**On the Implementation of Basic Objects**](#on-the-implementation-of-basic-objects)
+- [**Notes to the Reader**](#notes-to-the-reader)
+    - [On the Implementation of Basic Objects](#on-the-implementation-of-basic-objects)
     - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
