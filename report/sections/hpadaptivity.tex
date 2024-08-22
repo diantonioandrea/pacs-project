@@ -142,7 +142,7 @@ Tests with an initial polynomial degree of $k_0 = 3$ exhibit an exponential erro
 \newpage
 \subsection{\textit{h-refinement} versus \textit{hp-refinement}}
 
-\subsubsection{Errors}
+The final step in implementing \textit{hp-adaptivity} is to compare the results of \textit{h-refinement} and \textit{hp-refinement}. One approach is to choose a basic starting mesh, using a low polynomial degree and a small number of elements.
 
 \begin{figure}[!ht]
     \begin{subfigure}[b]{0.45\textwidth}
@@ -154,6 +154,8 @@ Tests with an initial polynomial degree of $k_0 = 3$ exhibit an exponential erro
 	\end{subfigure}
     \caption{$DG$ error versus $DOFs^{1/2}$ (left) and $DOFs^{1/3}$ (right) on sequences of \textit{h-adaptively} (black) and \textit{hp-adaptively} (blue) refined meshes over a square (left) and an L-shaped domain (right). $k_0 = 1$, $N_0 = 25$.}
 \end{figure}
+
+This comparison highlights the superiority of the \textit{hp-adaptive} method over the \textit{h-adaptive} approach, greatly reducing the error while utilizing significantly fewer $DOFs$.
 
 \newpage
 \subsection{A code snippet}
