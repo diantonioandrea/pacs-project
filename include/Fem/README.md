@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This directory contains the implementation of Fem-related components for the project.
+This directory contains the implementation of FEM-related components for the project.
 
 ## Classes and structs
 
