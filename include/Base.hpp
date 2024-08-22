@@ -52,6 +52,11 @@
 
 // CONSTANTS.
 
+// Quadrature order.
+#ifndef GAUSS_ORDER
+#define GAUSS_ORDER 15
+#endif
+
 // Algebra iterations limit.
 #ifndef ALGEBRA_ITER_MAX
 #define ALGEBRA_ITER_MAX 25E3

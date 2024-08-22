@@ -42,8 +42,8 @@ namespace pacs {
             starts.emplace_back(starts[j - 1] + mesh.elements[j - 1].dofs());
 
         // Quadrature nodes.
-        auto [nodes_1d, weights_1d] = quadrature_1d(mesh.quadrature);
-        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(mesh.quadrature);
+        auto [nodes_1d, weights_1d] = quadrature_1d(GAUSS_ORDER);
+        auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(GAUSS_ORDER);
 
         // Neighbours.
         std::vector<std::vector<std::array<int, 3>>> neighbours = mesh.neighbours;

@@ -75,9 +75,6 @@ namespace pacs {
         // Penalty coefficient.
         Real penalty = 10.0;
 
-        // Quadrature nodes.
-        std::size_t quadrature;
-
         // Entries for the solution.
         std::size_t entries;
 

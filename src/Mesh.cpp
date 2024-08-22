@@ -44,8 +44,7 @@ namespace pacs {
         for(const auto &element: this->elements)
             entries += element.element.points.size();
 
-        this->quadrature = 21; // Arbitrary.
-        this->entries = entries * this->quadrature * this->quadrature;
+        this->entries = entries * GAUSS_ORDER * GAUSS_ORDER;
     }
 
     /**
@@ -64,7 +63,7 @@ namespace pacs {
      * @param mesh 
      */
     Mesh::Mesh(const Mesh &mesh):
-    domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{std::vector<Vector<Real>>(mesh.max_simplices)}, quadrature{mesh.quadrature}, entries{mesh.entries} {}
+    domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{std::vector<Vector<Real>>(mesh.max_simplices)}, entries{mesh.entries} {}
 
     /**
      * @brief Copy operator.
@@ -78,7 +77,6 @@ namespace pacs {
         this->neighbours = mesh.neighbours;
         this->areas = mesh.areas;
         this->max_simplices = std::vector<Vector<Real>>(mesh.max_simplices);
-        this->quadrature = mesh.quadrature;
         this->entries = mesh.entries;
 
         return *this;

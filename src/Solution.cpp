@@ -29,7 +29,7 @@ namespace pacs {
     x{mesh.entries}, y{mesh.entries}, numerical{mesh.entries}, exact{mesh.entries} {
 
         // Number of quadrature nodes.
-        std::size_t degree = mesh.quadrature;
+        std::size_t degree = GAUSS_ORDER;
 
         // Quadrature nodes.
         auto [nodes_x_2d, nodes_y_2d, weights_2d] = quadrature_2d(degree);

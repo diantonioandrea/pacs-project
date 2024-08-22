@@ -28,7 +28,7 @@ namespace pacs {
     Vector<Real> modal(const Mesh &mesh, const Functor &function) {
 
         // Number of quadrature nodes.
-        std::size_t degree = mesh.quadrature;
+        std::size_t degree = GAUSS_ORDER;
 
         // Coefficients.
         Vector<Real> coefficients{mesh.dofs()};
