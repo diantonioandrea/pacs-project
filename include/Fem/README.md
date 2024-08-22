@@ -1,9 +1,5 @@
 # `include/Fem/`
 
-## Introduction
-
-This directory contains the implementation of FEM-related components for the project.
-
 ## Classes and structs
 
 ### [`include/Fem/Functor.hpp`](./Functor.hpp)

@@ -1,9 +1,5 @@
 # `include/Algebra/`
 
-## Introduction
-
-This directory contains the implementation of algebra-related components for the project.
-
 ## Structs
 
 ### [`inlcude/Algebra/Vector.hpp`](./Vector.hpp)

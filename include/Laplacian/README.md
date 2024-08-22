@@ -1,9 +1,5 @@
 # `include/Laplacian/`
 
-## Introduction
-
-This directory contains the implementation of Laplacian-related components for the project.
-
 ## Classes and structs
 
 ### [`include/Laplacian/Errors.hpp`](./Errors.hpp)

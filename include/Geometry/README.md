@@ -1,9 +1,5 @@
 # `include/Geometry/`
 
-## Introduction
-
-This directory contains the implementation of geometry-related components for the project.
-
 ## Classes and structs
 
 ### [`include/Geometry/Shapes.hpp`](./Shapes.hpp)
