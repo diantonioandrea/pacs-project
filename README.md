@@ -34,11 +34,11 @@ This repository presents an implementation of the hp-adaptive discontinuous GalÃ
 The key components are as follows:
 
 - `include/`: Holds definitions for the structures and methods utilized in the repository.
-    - [`include/Algebra/`](./include/Algebra/README.md): Structures and methods for vectors, matrices and linear solvers.
-    - [`include/Geometry/`](./include/Geometry/README.md): Tools for working with polygons and meshes.
-    - [`include/Fem/`](./include/Fem/README.md): Finite element structures and methods.
-    - [`include/Laplacian/`](./include/Laplacian/README.md): Implementation details for the Poisson problem.
-    - [`include/Statistics/`](): Statistics related tools.
+    - [`include/Algebra/`](./include/Algebra/): Structures and methods for vectors, matrices and linear solvers.
+    - [`include/Geometry/`](./include/Geometry/): Tools for working with polygons and meshes.
+    - [`include/Fem/`](./include/Fem/): Finite element structures and methods.
+    - [`include/Laplacian/`](./include/Laplacian/): Implementation details for the Poisson problem.
+    - [`include/Statistics/`](./include/Statistics/): Statistics related tools.
 - `src/`: Contains the primary implementations for the repositoryâ€™s structures and methods.
 - `data/`: Includes sample meshes for simple domains.
 - `domains/`: Stores scripts for generating sample meshes.
