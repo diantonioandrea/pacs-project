@@ -20,7 +20,7 @@ namespace pacs {
      * @param index 
      * @return Vector<Real> 
      */
-    Vector<Real> penalty(const Mesh &mesh, const std::size_t &index) {
+    Vector<Real> penalty(const Mesh &mesh, const std::size_t &index, const Real &coefficient) {
         
         // Element.
         Element element = mesh.elements[index];
@@ -45,7 +45,7 @@ namespace pacs {
         Vector<Real> inverse = area / areas;
 
         // Coefficients.
-        Real penalty_coefficient = mesh.penalty * (element.degree * element.degree);
+        Real penalty_coefficient = coefficient * (element.degree * element.degree);
         Vector<Real> penalty_dirichlet = penalty_coefficient * inverse * sizes / area;
 
         // Penalty evaluation.

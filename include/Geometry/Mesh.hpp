@@ -72,9 +72,6 @@ namespace pacs {
         std::vector<Real> areas;
         std::vector<Vector<Real>> max_simplices;
 
-        // Penalty coefficient.
-        Real penalty = 10.0;
-
         // Entries for the solution.
         std::size_t entries;
 

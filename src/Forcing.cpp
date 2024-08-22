@@ -20,7 +20,7 @@ namespace pacs {
      * @param mesh 
      * @return Vector<Real> 
      */
-    Vector<Real> forcing(const Mesh &mesh, const Functor &source, const Functor &dirichlet) {
+    Vector<Real> forcing(const Mesh &mesh, const Functor &source, const Functor &dirichlet, const Real &penalty_coefficient) {
 
         #ifndef NVERBOSE
         std::cout << "Computing the forcing term." << std::endl;
@@ -134,7 +134,7 @@ namespace pacs {
             std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
 
             // Penalties.
-            Vector<Real> penalties = penalty(mesh, j);
+            Vector<Real> penalties = penalty(mesh, j, penalty_coefficient);
 
             // Edges.
             std::vector<Segment> edges{polygon.edges()};

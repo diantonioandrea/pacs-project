@@ -20,7 +20,7 @@ namespace pacs {
      * @param mesh 
      * @return Sparse<Real> 
      */
-    std::array<Sparse<Real>, 3> laplacian(const Mesh &mesh) {
+    std::array<Sparse<Real>, 3> laplacian(const Mesh &mesh, const Real &penalty_coefficient) {
 
         #ifndef NVERBOSE
         std::cout << "Computing the laplacian matrix." << std::endl;
@@ -155,7 +155,7 @@ namespace pacs {
             std::vector<Matrix<Real>> local_SAN;
 
             // Penalties.
-            Vector<Real> penalties = penalty(mesh, j);
+            Vector<Real> penalties = penalty(mesh, j, penalty_coefficient);
 
             // Edges.
             std::vector<Segment> edges{polygon.edges()};
@@ -167,9 +167,9 @@ namespace pacs {
                 auto [edge, neighbour, n_edge] = element_neighbours[k];
 
                 // Edge geometry.
-                Segment segment{edges[k]}; // Mesh's edges to be fixed. [!]
+                Segment segment{edges[k]};
 
-                // Edge's normal. Check the order. [!]
+                // Edge's normal.
                 Vector<Real> edge_vector{2};
 
                 edge_vector[0] = segment[1][0] - segment[0][0];

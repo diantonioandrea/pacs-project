@@ -19,7 +19,7 @@ namespace pacs {
 
     // Laplacian matrix.
 
-    std::array<Sparse<Real>, 3> laplacian(const Mesh &);
+    std::array<Sparse<Real>, 3> laplacian(const Mesh &, const Real &penalty_coefficient = 10.0);
 
     // Blocks.
 

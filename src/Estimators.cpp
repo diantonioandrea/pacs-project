@@ -24,7 +24,7 @@ namespace pacs {
      * @param source 
      * @param dirichlet 
      */
-    Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient):
+    Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient, const Real &penalty_coefficient):
     estimates{mesh.elements.size()}, fits{mesh.elements.size()} {
         
         #ifndef NVERBOSE
@@ -153,7 +153,7 @@ namespace pacs {
             std::vector<std::array<int, 3>> element_neighbours = neighbours[j];
 
             // Penalties.
-            Vector<Real> penalties = penalty(mesh, j);
+            Vector<Real> penalties = penalty(mesh, j, penalty_coefficient);
 
             // Edges.
             std::vector<Segment> edges{polygon.edges()};

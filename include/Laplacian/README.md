@@ -20,7 +20,7 @@ struct Estimator {};
 
 ```cpp
 // Matrices.
-std::array<Sparse<Real>, 3> laplacian(const Mesh &);
+std::array<Sparse<Real>, 3> laplacian(const Mesh &, const Real &penalty_coefficient = 10.0);
 
 // Blocks.
 std::vector<std::array<std::vector<std::size_t>, 2>> block_mass(const Mesh &);
@@ -29,7 +29,7 @@ std::vector<std::array<std::vector<std::size_t>, 2>> block_mass(const Mesh &);
 ### [`include/Laplacian/Forcing.hpp`](./Forcing.hpp)
 
 ```cpp
-Vector<Real> forcing(const Mesh &, const Functor &, const Functor &dirichlet = Functor{});
+Vector<Real> forcing(const Mesh &, const Functor &, const Functor &dirichlet = Functor{}, const Real &penalty_coefficient = 10.0);
 ```
 
 ### [`include/Laplacian/Refine.hpp`](./Refine.hpp)

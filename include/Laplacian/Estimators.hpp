@@ -39,7 +39,7 @@ namespace pacs {
 
         // CONSTRUCTORS.
 
-        Estimator(const Mesh &, const Sparse<Real> &, const Vector<Real> &, const Functor &, const Functor &dirichlet = Functor{}, const TwoFunctor &dirichlet_gradient = TwoFunctor{});
+        Estimator(const Mesh &, const Sparse<Real> &, const Vector<Real> &, const Functor &, const Functor &dirichlet = Functor{}, const TwoFunctor &dirichlet_gradient = TwoFunctor{}, const Real &penalty_coefficient = 10.0);
 
         // OUTPUT.
 

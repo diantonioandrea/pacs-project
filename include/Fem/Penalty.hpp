@@ -19,7 +19,7 @@ namespace pacs {
 
     // Penalty coefficients.
     
-    Vector<Real> penalty(const Mesh &, const std::size_t &);
+    Vector<Real> penalty(const Mesh &, const std::size_t &, const Real &);
 
 }
 
