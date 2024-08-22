@@ -18,11 +18,6 @@
 
 #include <vector>
 
-// Quadrature tolerance.
-#ifndef QUADRATURE_TOLERANCE
-#define QUADRATURE_TOLERANCE 5E-16
-#endif
-
 namespace pacs {
 
     // Gauss-Legendre quadrature nodes.

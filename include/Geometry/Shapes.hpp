@@ -17,11 +17,6 @@
 #include <vector>
 #include <array>
 
-// Geometry tolerance.
-#ifndef GEOMETRY_TOLERANCE
-#define GEOMETRY_TOLERANCE 1E-10
-#endif
-
 namespace pacs {
     
     // Point, implemented under src/Point.cpp

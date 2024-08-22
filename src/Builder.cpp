@@ -301,7 +301,7 @@ namespace pacs {
         // Relaxation, Lloyd's algorithm.
         std::vector<Point> centroids(diagram.size(), Point{0.0, 0.0});
 
-        for(std::size_t j = 0; j < LLOYD_MAX_ITER; ++j) {
+        for(std::size_t j = 0; j < LLOYD_ITER_MAX; ++j) {
 
             // Update.
             Real residual = 0.0;

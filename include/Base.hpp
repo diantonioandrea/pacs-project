@@ -8,8 +8,8 @@
  * 
  */
 
-#ifndef TYPE_PACS
-#define TYPE_PACS
+#ifndef BASE_PACS
+#define BASE_PACS
 
 // Concepts.
 #include <concepts>
@@ -21,10 +21,53 @@
 #include <complex>
 #include <cmath>
 
+
+// TOLERANCES.
+
 // Zero tolerance.
 #ifndef TOLERANCE
 #define TOLERANCE 1E-20
 #endif
+
+// Geometry tolerance.
+#ifndef GEOMETRY_TOLERANCE
+#define GEOMETRY_TOLERANCE 1E-10
+#endif
+
+// Quadrature tolerance.
+#ifndef QUADRATURE_TOLERANCE
+#define QUADRATURE_TOLERANCE 5E-16
+#endif
+
+// Collapse (mesh_diagram) tolerance.
+#ifndef COLLAPSE_TOLERANCE
+#define COLLAPSE_TOLERANCE 1E-1
+#endif
+
+// Lloyd tolerance.
+#ifndef LLOYD_TOLERANCE
+#define LLOYD_TOLERANCE 1E-4
+#endif
+
+
+// CONSTANTS.
+
+// Algebra iterations limit.
+#ifndef ALGEBRA_ITER_MAX
+#define ALGEBRA_ITER_MAX 25E3
+#endif
+
+#ifndef LLOYD_ITER_MAX
+#define LLOYD_ITER_MAX 2E2
+#endif
+
+// Algebra m limit.
+#ifndef ALGEBRA_M_MAX
+#define ALGEBRA_M_MAX 25E1
+#endif
+
+
+// PARALLELISM.
 
 // STL Parallelism.
 #ifdef PARALLEL
@@ -33,10 +76,13 @@
 #define POLICY std::execution::par_unseq
 #endif
 
-// // OpenMP Parallelism.
-// #ifdef _OPENMP
-// #include <omp.h>
-// #endif
+// OpenMP Parallelism.
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+
+// BASE TYPES, ALIASES AND CONCEPTS.
 
 namespace pacs {
 
