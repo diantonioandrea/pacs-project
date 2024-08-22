@@ -37,7 +37,7 @@ The key components are as follows:
     - [`include/Algebra/`](./include/Algebra/README.md): Structures and methods for vectors, matrices and linear solvers.
     - [`include/Geometry/`](./include/Geometry/README.md): Tools for working with polygons and meshes.
     - `include/Fem/`: Finite element structures and methods.
-    - `include/Laplacian/`: Implementation details for the Poisson problem.
+    - [`include/Laplacian/`](./include/Laplacian/README.md): Implementation details for the Poisson problem.
     - `include/Statistics/`: Statistics related tools.
 - `src/`: Contains the primary implementations for the repository’s structures and methods.
 - `data/`: Includes sample meshes for simple domains.
