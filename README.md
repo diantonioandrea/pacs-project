@@ -20,6 +20,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Solving the Poisson Problem](#solving-the-poisson-problem)
     - [Mesh Refinement](#mesh-refinement)
 - [**Notes to the Reader**](#notes-to-the-reader)
+    - [On the Adaptation from **lymph**](#on-the-adaptation-from-lymph)
     - [On the Implementation of Basic Objects](#on-the-implementation-of-basic-objects)
     - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
@@ -295,6 +296,10 @@ mesh_refine(mesh, estimator);
 ### On the Implementation of Basic Objects
 
 This repository implements basic objects such as vectors and matrices, which are also found in many other libraries. Additionally, it includes a polygonal mesher, though it may not be as powerful as existing alternatives. The decision to develop these components from scratch was driven by a desire to minimize dependencies and to create a project that I could truly call my own, showcasing what I learned during the course.
+
+### On the Adaptation from **lymph**
+
+The implementation of the Laplacian problem and FEM tools in this project was adapted from the [**lymph**](https://lymph.bitbucket.io) library.
 
 ### On the Custom Laplacian Solver
 
