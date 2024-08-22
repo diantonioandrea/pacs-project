@@ -6,7 +6,7 @@ This directory contains the implementation of geometry-related components for th
 
 ## Classes and structs
 
-### [include/Geometry/Shapes.hpp](./Shapes.hpp)
+### [`include/Geometry/Shapes.hpp`](./Shapes.hpp)
 
 ```cpp
 class Point {};
@@ -15,7 +15,7 @@ class Segment {};
 struct Polygon {};
 ```
 
-### [include/Geometry/Mesh.hpp](./Mesh.hpp)
+### [`include/Geometry/Mesh.hpp`](./Mesh.hpp)
 
 ```cpp
 struct Element {};
@@ -24,7 +24,7 @@ struct Mesh {};
 
 ## Methods
 
-### [include/Geometry/Shapes.hpp](./Shapes.hpp)
+### [`include/Geometry/Shapes.hpp`](./Shapes.hpp)
 
 ```cpp
 // Distances.
@@ -49,7 +49,7 @@ std::vector<Point> reflections(const Polygon &, const Point &);
 Polygon reduce(const Polygon &, const Line &, const Point &);
 ```
 
-### [include/Geometry/Voronoi.hpp](./Voronoi.hpp)
+### [`include/Geometry/Voronoi.hpp`](./Voronoi.hpp)
 
 ```cpp
 // Voronoi.
@@ -62,7 +62,7 @@ std::vector<Polygon> triangulate(const Polygon &);
 std::vector<Polygon> triangulate(const std::vector<Polygon> &);
 ```
 
-### [include/Geometry/Mesh.hpp](./Mesh.hpp)
+### [`include/Geometry/Mesh.hpp`](./Mesh.hpp)
 
 ```cpp
 // Diagrams.
