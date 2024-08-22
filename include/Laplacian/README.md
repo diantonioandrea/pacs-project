@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This directory contains the implementation of algebra-related components for the project.
+This directory contains the implementation of Laplacian-related components for the project.
 
 ## Classes and structs
 
