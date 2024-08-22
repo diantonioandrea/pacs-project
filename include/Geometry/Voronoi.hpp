@@ -11,7 +11,7 @@
 #ifndef VORONOI_PACS
 #define VORONOI_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 
 #include "Shapes.hpp"
 

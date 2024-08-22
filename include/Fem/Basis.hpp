@@ -11,7 +11,7 @@
 #ifndef BASIS_PACS
 #define BASIS_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 #include <Geometry.hpp>
 

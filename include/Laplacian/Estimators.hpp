@@ -11,7 +11,7 @@
 #ifndef ESTIMATORS_PACS
 #define ESTIMATORS_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Fem.hpp>
 #include <Algebra.hpp>
 #include <Geometry.hpp>

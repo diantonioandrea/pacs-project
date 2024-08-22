@@ -11,7 +11,7 @@
 #ifndef LAP_SOLVERS_PACS
 #define LAP_SOLVERS_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 
 #include "Laplacian.hpp"

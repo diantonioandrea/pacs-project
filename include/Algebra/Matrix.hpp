@@ -12,7 +12,7 @@
 #define MATRIX_PACS
 
 // Type.
-#include <Type.hpp>
+#include <Base.hpp>
 
 #include "Vector.hpp"
 

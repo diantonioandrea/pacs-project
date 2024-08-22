@@ -11,7 +11,7 @@
 #ifndef FUNCTOR_PACS
 #define FUNCTOR_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 
 namespace pacs {

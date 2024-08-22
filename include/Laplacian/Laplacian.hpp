@@ -11,7 +11,7 @@
 #ifndef LAPLACIAN_MATRIX__PACS
 #define LAPLACIAN_MATRIX__PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 #include <Geometry.hpp>
 

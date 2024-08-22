@@ -11,7 +11,7 @@
 #ifndef REFINE_PACS
 #define REFINE_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Geometry.hpp>
 
 #include "Estimators.hpp"

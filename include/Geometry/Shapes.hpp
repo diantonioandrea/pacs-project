@@ -11,7 +11,7 @@
 #ifndef SHAPES_PACS
 #define SHAPES_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 
 #include <iostream>
 #include <vector>

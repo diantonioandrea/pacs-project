@@ -11,7 +11,7 @@
 #ifndef MESH_PACS
 #define MESH_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 
 #include "Shapes.hpp"

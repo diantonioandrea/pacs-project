@@ -11,7 +11,7 @@
 #ifndef SPARSE_PACS
 #define SPARSE_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 
 #include "Vector.hpp"
 #include "Matrix.hpp"

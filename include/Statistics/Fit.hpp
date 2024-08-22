@@ -11,7 +11,7 @@
 #ifndef FIT_PACS
 #define FIT_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Algebra.hpp>
 
 namespace pacs {

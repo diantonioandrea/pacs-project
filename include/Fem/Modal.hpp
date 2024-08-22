@@ -11,7 +11,7 @@
 #ifndef MODAL_PACS
 #define MODAL_PACS
 
-#include <Type.hpp>
+#include <Base.hpp>
 #include <Geometry.hpp>
 #include <Algebra.hpp>
 

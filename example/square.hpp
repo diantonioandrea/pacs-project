@@ -9,7 +9,7 @@
  */
 
 // Type.
-#include <Type.hpp>
+#include <Base.hpp>
 
 // Math.
 #include <cmath>
