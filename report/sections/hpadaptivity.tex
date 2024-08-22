@@ -140,6 +140,22 @@ Tests with an initial polynomial degree of $k_0 = 3$ exhibit an exponential erro
 \end{figure}
 
 \newpage
+\subsection{\textit{h-refinement} versus \textit{hp-refinement}}
+
+\subsubsection{Errors}
+
+\begin{figure}[!ht]
+    \begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/square_hvhp_25@1_hpvd.tex}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\input{tikz/lshape_hvhp_25@1_hpvd.tex}
+	\end{subfigure}
+    \caption{DG error versus $DOFs^{1/2}$ (left) and $DOFs^{1/3}$ (right) on a sequence of \textit{h-adaptively} (black) and \textit{hp-adaptively} (blue) refined meshes over a square (left) and an L-shaped domain (right). $k_0 = 1$, $N_0 = 25$.}
+\end{figure}
+
+\newpage
 \subsection{A code snippet}
 
 Here's a snippet to illustrate the \textit{hp-adaptive} mesh refinement from the user's perspective:
