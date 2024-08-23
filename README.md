@@ -28,7 +28,9 @@ _The hp-Adaptive Discontinuous Galërkin Method_
 
 ## Introduction
 
-This repository presents an implementation of the hp-adaptive discontinuous Galërkin method applied to the Poisson problem.
+This repository presents an implementation of the _hp-adaptive_ discontinuous Galërkin method applied to the Poisson problem.
+
+Refer to the [report](#compiling-the-report) for a detailed explanation of the background and results related to this project.
 
 ## Overview
 
