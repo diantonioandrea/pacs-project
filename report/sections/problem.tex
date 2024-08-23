@@ -11,7 +11,7 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The goal is to find $u \in C^
     \end{cases}
 \end{gather}
 
-\subsection{Deriving the Weak Formulation}
+\subsection{The weak formulation}
 
 The goal is to find $u \in \{v \in V : v \vert_{\partial \Omega} = g \}$ such that, for any $f \in V^*$, the following equation is satisfied:
 
@@ -27,7 +27,7 @@ where $\boa{\cdot}{\cdot}: V \times V \rightarrow \mathbb{R}$ is a bilinear form
 
 This weak formulation serves as the foundation for numerical approximation methods, such as the Discontinuous Galërkin method.
 
-\subsection{Interior Penalty DG Method}
+\subsection{Interior penalty DG method}
 
 The Interior Penalty DG method is chosen for solving elliptic partial differential equations like the Poisson problem due to its flexibility in handling complex geometries and its capability to manage discontinuities in the solution. Specifically, a symmetric interior penalty method is employed, which balances stability and accuracy by introducing penalty terms to enforce continuity between elements. This symmetric variant ensures coercivity and consistency, leading to improved stability properties.
 
@@ -64,7 +64,7 @@ Dirichlet boundary conditions are enforced by penalization:
 
 This approach ensures a consistent treatment of boundary conditions within the DG framework.
 
-\subsection{Polynomial Basis}
+\subsection{Polynomial basis}
 
 Let $\left\{ \phi_i \right\}_{i = 1}^N$ denote a basis for the space $V^k_h$. The approximate solution can be expressed as:
 
