@@ -66,7 +66,7 @@ git clone git@github.com:diantonioandrea/pacs-project.git
 
 ### Compilation and Execution
 
-The code is written to work with the C++ standard library. It has an optional dependency on _OpenMP_. The `Makefile` is designed to check for the presence of modules or a custom installation of _OpenMP_ using the definition of `$(OpenMP)` set to `/path/to/libomp`.
+The code is written to work with the C++ standard library. It has an optional dependency on [_OpenMP_](https://www.openmp.org). The `Makefile` is designed to check for the presence of modules or a custom installation of _OpenMP_ using the definition of `$(OpenMP)` set to `/path/to/libomp`.
 
 Compile everything[^compilation] with:
 
