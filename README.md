@@ -52,6 +52,8 @@ The key components are as follows:
 - `templates/`: Contains TikZ templates.
 - `report/`: Contains the LaTeX report on the project.
 
+Every directory under `include/` has a `README.md` that lists the classes, structures, and methods introduced in that particular category.
+
 ## Setup
 
 ### Cloning the Repository
