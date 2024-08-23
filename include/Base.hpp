@@ -71,6 +71,15 @@
 #define ALGEBRA_M_MAX 25E1
 #endif
 
+// Tests limits.
+#ifndef TESTS_MAX
+#define TESTS_MAX 1E2
+#endif
+
+#ifndef DOFS_MAX
+#define DOFS_MAX 3E4
+#endif
+
 
 // PARALLELISM.
 

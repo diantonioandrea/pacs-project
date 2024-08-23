@@ -57,11 +57,8 @@ int main(int argc, char **argv) {
     // Mesh.
     pacs::Mesh mesh{domain, diagram, degree};
 
-    // Tests.
-    std::size_t tests = 100;
-
     // Test.
-    for(std::size_t index = 0; index < tests; ++index) {
+    for(std::size_t index = 0; index < TESTS_MAX; ++index) {
 
         // Verbosity.
         std::cout << "\nSTARTING DEGREE: " << degree << "\nINDEX: " << index << "\n" << std::endl;
@@ -96,7 +93,7 @@ int main(int argc, char **argv) {
         output << "Residual: " << pacs::norm(laplacian * numerical - forcing) << std::endl;
 
         // Exit.
-        if(error.dofs > 25E3)
+        if(error.dofs > DOFS_MAX)
             break;
 
         // Estimator.
