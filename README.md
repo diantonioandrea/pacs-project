@@ -22,6 +22,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
 - [**Notes to the Reader**](#notes-to-the-reader)
     - [On the Implementation of Basic Objects](#on-the-implementation-of-basic-objects)
     - [On the Adaptation from **lymph**](#on-the-adaptation-from-lymph)
+    - [On the Examples Structure](#on-the-examples-structure)
     - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
@@ -304,6 +305,10 @@ This repository implements basic objects such as vectors and matrices, which are
 ### On the Adaptation from **lymph**
 
 The implementation of the Laplacian problem and FEM tools in this project was adapted from the [**lymph**](https://lymph.bitbucket.io) library.
+
+### On the Examples Structure
+
+All the examples have the same structure, and they may seem quite repetitive and superfluous. There is no a priori reason to treat every single example as a different file, given the source code similarities despite the different functions. However, this approach makes each example easy to comprehend and does not pose an issue since examples do not need to be maintained, which again wouldn't be difficult thanks to modern IDEs and editors' capabilities.
 
 ### On the Custom Laplacian Solver
 
