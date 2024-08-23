@@ -1,0 +1,148 @@
+\documentclass{beamer}
+
+\usepackage{xcolor-solarized}
+\color{solarized-base02}
+
+\usetheme{Copenhagen}
+\usecolortheme{seahorse} % Temporary.
+
+% \usecolortheme[named=solarized-blue]{structure}
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+\newcommand{\presentationtitle}{The \textit{hp-Adaptive} Discontinuous Galërkin Method}
+\newcommand{\accentcolor}{solarized-blue}
+\newcommand{\urlcolor}{\accentcolor}
+
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+
+% Sets and spaces.
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\RT}{\mathbb{R}^2}
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\PK}[1]{\mathbb{P}_{#1}}
+
+\newcommand{\LT}{\mathscr{L}^2}
+\newcommand{\HO}{\mathscr{H}^1}
+
+\newcommand{\Tau}{\mathcal{T}}
+\newcommand{\F}{\mathcal{F}}
+
+% Vectors and operators.
+\newcommand{\Vector}[1]{\bm{#1}}
+\newcommand{\Operator}[1]{\textcolor{solarized-cyan}{#1}}
+
+% Matrices.
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\MA}{\mathcal{A}}
+\newcommand{\VB}{\mathcal{B}}
+
+% Gradient and divergence.
+\newcommand{\grad}{\Vector{\nabla}}
+\newcommand{\diver}{\text{div }}
+
+% Span.
+\newcommand{\Span}[1]{\text{span} \left\{ #1 \right\}}
+
+% Bilinear operators.
+\newcommand{\boa}[2]{\Operator{a}(#1, #2)}
+
+% Redefinition.
+\newcommand{\Exists}{\exists ~}
+\newcommand{\Forall}{\forall ~}
+
+% % Theorems.
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{lemma}{Lemma}[section]
+% \newtheorem{proposition}{Proposition}[section]
+
+% \newtheorem*{theorem*}{Theorem}
+
+\usepackage{courier}
+\usepackage{listings}
+
+\lstdefinestyle{default}{
+	basicstyle=\ttfamily\color{solarized-base01},
+	breakatwhitespace=false,
+	breaklines=true,
+	keepspaces=true,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=2
+}
+
+\lstdefinestyle{cpp}{ % C++
+	commentstyle=\color{solarized-green},
+	keywordstyle=\color{solarized-blue},
+	stringstyle=\color{solarized-orange},
+	basicstyle=\ttfamily\color{solarized-base02},
+	numberstyle=\ttfamily\color{solarized-base01},
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	showspaces=false,
+	language=c++,
+	showstringspaces=false,
+	showtabs=false,
+	numbers=left,
+	tabsize=4
+}
+
+\lstset{style=default}
+
+\usepackage{graphicx}
+\graphicspath{{gallery/}}
+
+% Plots.
+\usepackage{subcaption}
+
+% TikZ.
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% \usepackage{hyperref}
+% \hypersetup{
+% 	linktocpage=true,
+% 	colorlinks=true,
+% 	linkcolor=\accentcolor,
+% 	urlcolor=\urlcolor,
+% 	citecolor=\accentcolor,
+% 	pdftitle={\presentationtitle},
+% 	pdfpagemode=FullScreen,
+% 	pdfauthor={Andrea Di Antonio}
+% }
+
+\title{\presentationtitle}
+\subtitle{Advanced Programming for Scientific Computing}
+\author[Andrea Di Antonio]{Andrea Di Antonio \\ Supervised by Professors Paola F. Antonietti and Marco Verani} % Useless warning.
+\date{Exam session of September 10th, 2024 \\ Academic Year 2023-24}
+
+\begin{document}
+
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    \section[]{Introduction}
+    \input{sections/problem.tex}
+
+\end{document}

@@ -28,6 +28,7 @@ report/output
 
 # Latex.
 report/*.pdf
+presentation/*.pdf
 **/*.aux
 **/*.lof
 **/*.log
@@ -43,6 +44,8 @@ report/*.pdf
 **/*.bbl
 **/*.bcf
 **/*.blg
+**/*.nav
+**/*.snm
 **/*-blx.aux
 **/*-blx.bib
 **/*.run.xml

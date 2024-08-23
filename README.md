@@ -11,6 +11,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [**Compilation and Execution**](#compilation-and-execution)
         - [Compilation Flags](#compilation-flags)
     - [**Compiling the Report**](#compiling-the-report)
+    - [Compiling the Presentation](#compiling-the-presentation)
 - [Using the Reporitory](#using-the-repository)
     - [Domains](#domains)
     - [**Examples**](#examples)
@@ -112,6 +113,15 @@ The report for the project can be compiled by:
 
 ```bash
 cd report
+make
+```
+
+### Compiling the Presentation
+
+The presentation for the project can be compiled by:
+
+```bash
+cd presentation
 make
 ```
 
