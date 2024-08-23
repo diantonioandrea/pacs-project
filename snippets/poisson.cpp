@@ -14,19 +14,18 @@
 using namespace pacs;
 
 // Exact solution.
-inline Real exact(const Real &x, const Real &y) {
-    return std::sin(2 * M_PI * x) * std::cos(2 * M_PI * y);
-}
+inline Real exact(const Real &x, const Real &y) { return std::sin(2 * M_PI * x) * std::cos(2 * M_PI * y); }
+
+// Exact solution gradient.
+inline Real exact_x(const Real &x, const Real &y) { return 2 * M_PI * std::cos(2 * M_PI * x) * std::cos(2 * M_PI * y); }
+
+inline Real exact_y(const Real &x, const Real &y) { return -2 * M_PI * std::sin(2 * M_PI * x) * std::sin(2 * M_PI * y); }
 
 // Source.
-Real source(const Real &x, const Real &y) {
-    return 8.0 * M_PI * M_PI * exact(x, y);
-}
+inline Real source(const Real &x, const Real &y) { return 8.0 * M_PI * M_PI * exact(x, y); }
 
 // Dirichlet BC.
-inline Real dirichlet(const Real &x, const Real &y) {
-    return exact(x, y);
-}
+inline Real dirichlet(const Real &x, const Real &y) { return exact(x, y); }
 
 int main() {
 
@@ -38,15 +37,11 @@ int main() {
 
     Mesh mesh{{{a, b, c, d}}, mesh_diagram("data/square/square_30.poly")};
 
-    // Matrices.
+    // Matrices and forcing term.
     auto [M, A, DGA] = laplacian(mesh);
-
-    // Forcing term.
     Vector<Real> B = forcing(mesh, source, dirichlet);
 
-    // Numerical solution.
+    // Numerical solution and errors.
     Vector<Real> num = solve(A, B);
-
-    // Errors.
     Error error{mesh, {M, DGA}, num, exact, {exact_x, exact_y}};
 }
