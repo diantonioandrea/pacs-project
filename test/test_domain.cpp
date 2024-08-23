@@ -26,7 +26,7 @@ int main() {
     pacs::Polygon domain{{a, b, c, d, e, f}};
     
     // Constructing a mesh.
-    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 100, false, true)};
+    pacs::Mesh mesh{domain, pacs::mesh_diagram(domain, 100, true)};
 
     // Mesh output.
     mesh.write("output/mesh.poly");

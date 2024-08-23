@@ -62,7 +62,7 @@ std::vector<Polygon> triangulate(const std::vector<Polygon> &);
 
 ```cpp
 // Diagrams.
-std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &uniform = false, const bool &reflect = false);
+std::vector<Polygon> mesh_diagram(const Polygon &, const std::size_t &, const bool &reflect = false, const bool &uniform = false);
 std::vector<Polygon> mesh_diagram(const std::string &);
 std::vector<Polygon> mesh_relax(const Polygon &, const std::vector<Polygon> &, const bool &reflect = false);
 

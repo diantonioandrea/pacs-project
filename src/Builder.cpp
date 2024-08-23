@@ -26,7 +26,7 @@ namespace pacs {
      * @param cells 
      * @return std::vector<Polygon> 
      */
-    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &uniform, const bool &reflect) {
+    std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &reflect, const bool &uniform) {
         
         #ifndef NVERBOSE
         std::cout << "Generating a diagram for: " << domain << std::endl;
