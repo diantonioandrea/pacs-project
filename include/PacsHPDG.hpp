@@ -1,5 +1,5 @@
 /**
- * @file Pacs.hpp
+ * @file PacsHPDG.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
  * @brief 
  * @date 2024-08-24
@@ -8,8 +8,8 @@
  * 
  */
 
-#ifndef PACS_PACS
-#define PACS_PACS
+#ifndef PACSHPDG
+#define PACSHPDG
 
 // Main headers.
 #include <Base.hpp>

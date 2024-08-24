@@ -8,7 +8,7 @@
  * 
  */
 
-#include <Pacs.hpp>
+#include <PacsHPDG.hpp>
 
 #include <cassert>
 #include <string>

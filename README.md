@@ -213,7 +213,7 @@ Scripts are divided into the following categories based on their function:
 
 ## Using the Code
 
-To use the code, include `<Pacs.hpp>` which provides all necessary tools.
+To use the code, include `<PacsHPDG.hpp>` which provides all necessary tools.
 
 ### Mesh Generation
 
