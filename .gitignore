@@ -46,6 +46,7 @@ presentation/*.pdf
 **/*.blg
 **/*.nav
 **/*.snm
+**/*.vrb
 **/*-blx.aux
 **/*-blx.bib
 **/*.run.xml

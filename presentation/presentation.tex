@@ -1,12 +1,20 @@
-\documentclass{beamer}
+\documentclass[10pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Bibliography.
+\usepackage[backend=biber, style=ieee]{biblatex}
+\addbibresource{../report/bibliography/refs.bib}
 
 \usepackage{xcolor-solarized}
 \color{solarized-base02}
 
 \usetheme{Copenhagen}
-\usecolortheme{seahorse} % Temporary.
+\useinnertheme{circles}
 
-% \usecolortheme[named=solarized-blue]{structure}
+\usecolortheme{seahorse} % Double color theme.
+\usecolortheme[named=solarized-blue]{structure}
 
 \AtBeginSection[]
 {
@@ -99,14 +107,13 @@
 	language=c++,
 	showstringspaces=false,
 	showtabs=false,
-	numbers=left,
 	tabsize=4
 }
 
 \lstset{style=default}
 
 \usepackage{graphicx}
-\graphicspath{{gallery/}}
+\graphicspath{{../report/gallery/}}
 
 % Plots.
 \usepackage{subcaption}
@@ -116,25 +123,17 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-
-% \usepackage{hyperref}
-% \hypersetup{
-% 	linktocpage=true,
-% 	colorlinks=true,
-% 	linkcolor=\accentcolor,
-% 	urlcolor=\urlcolor,
-% 	citecolor=\accentcolor,
-% 	pdftitle={\presentationtitle},
-% 	pdfpagemode=FullScreen,
-% 	pdfauthor={Andrea Di Antonio}
-% }
+\usepackage{hyperref}
+\hypersetup{
+	pdftitle={\presentationtitle},
+	pdfpagemode=FullScreen,
+	pdfauthor={Andrea Di Antonio}
+}
 
 \title{\presentationtitle}
 \subtitle{Advanced Programming for Scientific Computing}
-\author[Andrea Di Antonio]{Andrea Di Antonio \\ Supervised by Professors Paola F. Antonietti and Marco Verani} % Useless warning.
-\date{Exam session of September 10th, 2024 \\ Academic Year 2023-24}
+\author[Andrea Di Antonio]{Andrea Di Antonio \\ Supervised by Professors Paola F. Antonietti and Marco Verani} % I should NOT use "\\" here.
+\date{Exam session of September 10, 2024 \\ Academic Year 2023-24}
 
 \begin{document}
 
@@ -142,7 +141,13 @@
         \titlepage
     \end{frame}
 
-    \section[]{Introduction}
+    \section{Introduction}
     \input{sections/problem.tex}
+
+	\section{Polygonal Meshes}
+	\input{sections/meshes.tex}
+
+	\section{References}
+	\input{sections/references.tex}
 
 \end{document}
