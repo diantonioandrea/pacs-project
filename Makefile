@@ -93,7 +93,7 @@ $(LIBRARY): $(OBJECTS)
 	@echo "Archiving the library to $(LIBRARY)"
 	@ar rcs $(LIBRARY) $(OBJECTS)
 
-ifeq ($(shell find . -name "*.a"), $(LIBRARY)) # Available only after compilation.
+ifeq ($(shell find . -wholename $(LIBRARY)), $(LIBRARY)) # Available only after compilation.
 install: # Manual spacing for consistency between platforms.
 	@echo "Installing the library"
 	@echo "    Includes under $(INCLUDE_DESTINATION)"
