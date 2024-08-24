@@ -724,13 +724,30 @@ namespace pacs {
         // Solution.
         Vector<T> x{A.columns};
 
+        // Linear systems.
+        std::vector<Matrix<T>> As;
+        std::vector<Vector<T>> xs, bs;
+
         #ifndef NVERBOSE
         std::cout << "Solving a linear system with DB." << std::endl;
         #endif
 
-        // Local solutions.
+        // Initialization.
         for(const auto &[rows, columns]: blocks) {
-            x(rows, solve(A(rows, columns), b(columns)));
+            As.emplace_back(A(rows, columns));
+            bs.emplace_back(b(columns));
+            xs.emplace_back(Vector<T>{rows.size()});
+        }
+
+        // Local solutions.
+        #pragma omp parallel for
+        for(std::size_t j = 0; j < blocks.size(); ++j)
+            xs[j] = solve(As[j], bs[j]);
+
+        // Writing.
+        for(std::size_t j = 0; j < blocks.size(); ++j) {
+            auto [rows, colums] = blocks[j];
+            x(rows, xs[j]);
         }
 
         #ifndef NVERBOSE
