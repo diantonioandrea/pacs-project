@@ -71,9 +71,9 @@ HEADERS += ./include/PacsHPDG/Fem/*.hpp
 HEADERS += ./include/PacsHPDG/Laplacian/*.hpp
 HEADERS += ./include/PacsHPDG/Statistics/*.hpp
 
-EXAMPLE_EXECS = $(subst example/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
-EXAMPLE_OBJECTS = $(subst example/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
-HEADERS += ./example/*.hpp
+EXAMPLE_EXECS = $(subst examples/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find examples -name "*.cpp")))
+EXAMPLE_OBJECTS = $(subst examples/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find examples -name "*.cpp")))
+HEADERS += ./examples/*.hpp
 
 DOMAIN_EXECS = $(subst domains/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find domains -name "*.cpp")))
 DOMAIN_OBJECTS = $(subst domains/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find domains -name "*.cpp")))
@@ -117,11 +117,11 @@ $(TEST_RUN): $(TEST_EXECS)
 	@echo "Executing $(EXEC_DIR)/$@ and redirecting the output to $(OUTPUT_DIR)/$@.txt"
 	@$(EXEC_DIR)/$@.out > $(OUTPUT_DIR)/$@.txt
 
-$(TEST_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
+$(TEST_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
+$(TEST_OBJECTS): $(OBJECT_DIR)/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -129,11 +129,11 @@ $(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 examples: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(EXAMPLE_EXECS)
 	@echo "Compiled examples!"
 
-$(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
+$(EXAMPLE_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS) $(OBJECT_DIR)
+$(EXAMPLE_OBJECTS): $(OBJECT_DIR)/%.o: examples/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -141,16 +141,16 @@ $(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS) $(OBJECT_DIR)
 domains: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(DOMAIN_EXECS)
 	@echo "Compiled domains!"
 
-$(DOMAIN_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
+$(DOMAIN_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
+	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(DOMAIN_OBJECTS): objects/%.o: domains/%.cpp $(HEADERS) $(OBJECT_DIR)
+$(DOMAIN_OBJECTS): $(OBJECT_DIR)/%.o: domains/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Objects.
-$(OBJECTS): ./objects/%.o: src/%.cpp $(HEADERS) $(OBJECT_DIR)
+$(OBJECTS): ./$(OBJECT_DIR)/%.o: src/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 

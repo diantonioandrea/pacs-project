@@ -40,22 +40,22 @@ Refer to the [report](#compiling-the-report) for a detailed explanation of the b
 The key components are as follows:
 
 - `include/`: Holds definitions for the structures and methods utilized in the repository.
-    - [`include/Algebra/`](./include/Algebra/): Structures and methods for vectors, matrices and linear solvers.
-    - [`include/Geometry/`](./include/Geometry/): Tools for working with polygons and meshes.
-    - [`include/Fem/`](./include/Fem/): Finite element structures and methods.
-    - [`include/Laplacian/`](./include/Laplacian/): Implementation details for the Poisson problem.
-    - [`include/Statistics/`](./include/Statistics/): Statistics related tools.
+    - [`include/PacsHPDG/Algebra/`](./include/PacsHPDG/Algebra/): Structures and methods for vectors, matrices and linear solvers.
+    - [`include/PacsHPDG/Geometry/`](./include/PacsHPDG/Geometry/): Tools for working with polygons and meshes.
+    - [`include/PacsHPDG/Fem/`](./include/PacsHPDG/Fem/): Finite element structures and methods.
+    - [`include/PacsHPDG/Laplacian/`](./include/PacsHPDG/Laplacian/): Implementation details for the Poisson problem.
+    - [`include/PacsHPDG/Statistics/`](./include/PacsHPDG/Statistics/): Statistics related tools.
 - `src/`: Contains the primary implementations for the repository’s structures and methods.
 - `data/`: Includes sample meshes for simple domains.
 - `domains/`: Stores scripts for generating sample meshes.
-- `example/`: Provides the main examples for using the repository.
+- `examples/`: Provides the main examples for using the repository.
 - `snippets/`: Simpler examples for the report.
 - `test/`: Contains scripts for testing fundamental features.
 - `scripts/`: Contains Python scripts for meshes, solutions and errors visualization.
 - `templates/`: Contains TikZ templates.
 - `report/`: Contains the LaTeX report on the project.
 
-Every directory under `include/` has a `README.md` that lists the classes, structures, and methods introduced in that particular category.
+Every directory under `include/PacsHPDG/` has a `README.md` that lists the classes, structures, and methods introduced in that particular category.
 
 ## Setup
 
