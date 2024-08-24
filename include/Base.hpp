@@ -80,8 +80,8 @@
 
 // STL Parallelism.
 #ifdef PARALLEL
-#include <tbb/tbb.h>
 #include <execution>
+#include <tbb/tbb.h>
 #define POLICY std::execution::par_unseq
 #endif
 
