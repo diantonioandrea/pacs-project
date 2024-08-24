@@ -55,7 +55,8 @@ LIB_DIR = ./lib
 EXEC_DIR = ./executables
 
 # Library.
-LIBRARY = $(LIB_DIR)/libPacsHPDG.a
+LIBRARY_NAME = PacsHPDG
+LIBRARY = $(LIB_DIR)/lib$(LIBRARY_NAME).a
 INCLUDE_DESTINATION = $(HOME)/include
 LIB_DESTINATION = $(HOME)/lib
 
@@ -96,8 +97,9 @@ $(LIBRARY): $(OBJECTS)
 ifeq ($(shell find . -wholename $(LIBRARY)), $(LIBRARY)) # Available only after compilation.
 install: # Manual spacing for consistency between platforms.
 	@echo "Installing the library"
-	@echo "    Includes under $(INCLUDE_DESTINATION)"
-	@echo "    Lib under $(LIB_DESTINATION)"
+	@echo "    - Includes under $(INCLUDE_DESTINATION)"
+	@echo "    - Lib under $(LIB_DESTINATION)"
+	@echo "Remember: -I$(INCLUDE_DESTINATION) -L$(LIB_DESTINATION) -l$(LIBRARY_NAME)"
 
 	@mkdir -p $(INCLUDE_DESTINATION)
 	@mkdir -p $(LIB_DESTINATION)
