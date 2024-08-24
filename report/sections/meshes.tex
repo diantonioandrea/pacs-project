@@ -18,7 +18,7 @@ The mesh-building strategy, adapted from \cite{Talischi2012}, involves the follo
     \item Refine the mesh by adjusting point positions to minimize element distortion. Lloyd's algorithm iteratively relocates points to achieve a more regular mesh, reducing irregularities and improving mesh quality.
     \item Remove or adjust very small edges to enhance mesh quality and stability. This step addresses elements that are too small, which could negatively impact the mesh's performance and accuracy.
     \item Analyze the connectivity and arrangement of mesh elements to ensure proper structure. This evaluation ensures that the mesh elements are appropriately connected and organized.
-    \item Calculate properties such as element areas and the largest simplices.
+    \item Calculate properties such as element areas and the largest simplices\footnote{Necessary for the evaluation of the penalization coefficients.}.
 \end{enumerate}
 
 The \lstinline{mesh_diagram} function plays a crucial role in this process. It requires:
