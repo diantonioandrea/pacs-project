@@ -11,9 +11,9 @@
 #ifndef PENALTY_PACS
 #define PENALTY_PACS
 
-#include <Base.hpp>
-#include <Algebra.hpp>
-#include <Geometry.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
+#include "../Geometry.hpp"
 
 namespace pacs {
 

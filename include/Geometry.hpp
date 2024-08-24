@@ -12,12 +12,12 @@
 #define GEOMETRY_PACS
 
 // Shapes.
-#include <Geometry/Shapes.hpp>
+#include "./Geometry/Shapes.hpp"
 
 // Voronoi.
-#include <Geometry/Voronoi.hpp>
+#include "./Geometry/Voronoi.hpp"
 
 // Mesh.
-#include <Geometry/Mesh.hpp>
+#include "./Geometry/Mesh.hpp"
 
 #endif

@@ -11,10 +11,10 @@
 #ifndef REFINE_PACS
 #define REFINE_PACS
 
-#include <Base.hpp>
-#include <Geometry.hpp>
+#include "../Base.hpp"
+#include "../Geometry.hpp"
 
-#include "Estimators.hpp"
+#include "./Estimators.hpp"
 
 namespace pacs {
 

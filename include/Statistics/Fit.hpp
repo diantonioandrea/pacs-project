@@ -11,8 +11,8 @@
 #ifndef FIT_PACS
 #define FIT_PACS
 
-#include <Base.hpp>
-#include <Algebra.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
 
 namespace pacs {
 

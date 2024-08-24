@@ -12,21 +12,21 @@
 #define LAPLACIAN_PACS
 
 // Laplacian matrix.
-#include <Laplacian/Laplacian.hpp>
+#include "./Laplacian/Laplacian.hpp"
 
 // Forcing term.
-#include <Laplacian/Forcing.hpp>
+#include "./Laplacian/Forcing.hpp"
 
 // Errors evaluation.
-#include <Laplacian/Errors.hpp>
+#include "./Laplacian/Errors.hpp"
 
 // Estimators.
-#include <Laplacian/Estimators.hpp>
+#include "./Laplacian/Estimators.hpp"
 
 // Refine.
-#include <Laplacian/Refine.hpp>
+#include "./Laplacian/Refine.hpp"
 
 // Solver.
-#include <Laplacian/Solvers.hpp>
+#include "./Laplacian/Solvers.hpp"
 
 #endif

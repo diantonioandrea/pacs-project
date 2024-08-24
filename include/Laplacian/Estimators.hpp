@@ -11,10 +11,10 @@
 #ifndef ESTIMATORS_PACS
 #define ESTIMATORS_PACS
 
-#include <Base.hpp>
-#include <Fem.hpp>
-#include <Algebra.hpp>
-#include <Geometry.hpp>
+#include "../Base.hpp"
+#include "../Fem.hpp"
+#include "../Algebra.hpp"
+#include "../Geometry.hpp"
 
 #include <iostream>
 #include <array>

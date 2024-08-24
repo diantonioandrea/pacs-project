@@ -11,10 +11,9 @@
 #ifndef QUADRATURE_PACS
 #define QUADRATURE_PACS
 
-#include <Base.hpp>
-
-#include <Algebra.hpp>
-#include <Geometry.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
+#include "../Geometry.hpp"
 
 #include <vector>
 

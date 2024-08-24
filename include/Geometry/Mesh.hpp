@@ -11,11 +11,10 @@
 #ifndef MESH_PACS
 #define MESH_PACS
 
-#include <Base.hpp>
-#include <Algebra.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
 
-#include "Shapes.hpp"
-#include "Shapes.hpp"
+#include "./Shapes.hpp"
 
 #include <vector>
 #include <array>

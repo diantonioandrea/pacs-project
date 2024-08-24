@@ -11,10 +11,10 @@
 #ifndef SPARSE_PACS
 #define SPARSE_PACS
 
-#include <Base.hpp>
+#include "../Base.hpp"
 
-#include "Vector.hpp"
-#include "Matrix.hpp"
+#include "./Vector.hpp"
+#include "./Matrix.hpp"
 
 #include <iostream>
 #include <cassert>

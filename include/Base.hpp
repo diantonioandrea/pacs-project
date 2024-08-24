@@ -11,13 +11,8 @@
 #ifndef BASE_PACS
 #define BASE_PACS
 
-// Concepts.
 #include <concepts>
-
-// Containers.
 #include <vector>
-
-// Math.
 #include <complex>
 #include <cmath>
 

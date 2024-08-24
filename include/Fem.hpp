@@ -12,24 +12,24 @@
 #define FEM_PACS
 
 // Legendre polynomials.
-#include <Fem/Legendre.hpp>
+#include "./Fem/Legendre.hpp"
 
 // Quadrature.
-#include <Fem/Quadrature.hpp>
+#include "./Fem/Quadrature.hpp"
 
 // Basis functions.
-#include <Fem/Basis.hpp>
+#include "./Fem/Basis.hpp"
 
 // Functors.
-#include <Fem/Functor.hpp>
+#include "./Fem/Functor.hpp"
 
 // Modal coefficients.
-#include <Fem/Modal.hpp>
+#include "./Fem/Modal.hpp"
 
 // Penalty coefficients.
-#include <Fem/Penalty.hpp>
+#include "./Fem/Penalty.hpp"
 
 // Solution methods.
-#include <Fem/Solution.hpp>
+#include "./Fem/Solution.hpp"
 
 #endif

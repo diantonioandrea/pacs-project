@@ -11,11 +11,11 @@
 #ifndef SOLUTION_PACS
 #define SOLUTION_PACS
 
-#include <Base.hpp>
-#include <Geometry.hpp>
-#include <Algebra.hpp>
+#include "../Base.hpp"
+#include "../Geometry.hpp"
+#include "../Algebra.hpp"
 
-#include "Functor.hpp"
+#include "./Functor.hpp"
 
 #include <string>
 

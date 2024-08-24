@@ -12,17 +12,17 @@
 #define ALGEBRA_PACS
 
 // Vectors.
-#include <Algebra/Vector.hpp>
-#include <Algebra/Methods/Vector.hpp>
+#include "./Algebra/Vector.hpp"
+#include "./Algebra/Methods/Vector.hpp"
 
 // Matrices.
-#include <Algebra/Matrix.hpp>
-#include <Algebra/Methods/Matrix.hpp>
+#include "./Algebra/Matrix.hpp"
+#include "./Algebra/Methods/Matrix.hpp"
 
 // Sparse matrices.
-#include <Algebra/Sparse.hpp>
+#include "./Algebra/Sparse.hpp"
 
 // Solvers.
-#include <Algebra/Solvers.hpp>
+#include "./Algebra/Solvers.hpp"
 
 #endif

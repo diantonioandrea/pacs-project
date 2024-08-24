@@ -11,10 +11,10 @@
 #ifndef LAP_SOLVERS_PACS
 #define LAP_SOLVERS_PACS
 
-#include <Base.hpp>
-#include <Algebra.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
 
-#include "Laplacian.hpp"
+#include "./Laplacian.hpp"
 
 namespace pacs {
 

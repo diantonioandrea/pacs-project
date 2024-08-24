@@ -11,9 +11,9 @@
 #ifndef VORONOI_PACS
 #define VORONOI_PACS
 
-#include <Base.hpp>
+#include "../Base.hpp"
 
-#include "Shapes.hpp"
+#include "./Shapes.hpp"
 
 #include <vector>
 

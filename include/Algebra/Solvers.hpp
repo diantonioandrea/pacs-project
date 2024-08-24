@@ -11,13 +11,13 @@
 #ifndef SOLVERS_PACS
 #define SOLVERS_PACS
 
-#include "Vector.hpp"
-#include "Matrix.hpp"
-#include "Sparse.hpp"
+#include "./Vector.hpp"
+#include "./Matrix.hpp"
+#include "./Sparse.hpp"
 
-#include "Methods/Vector.hpp"
-#include "Methods/Matrix.hpp"
-#include "Methods/Sparse.hpp"
+#include "./Methods/Vector.hpp"
+#include "./Methods/Matrix.hpp"
+#include "./Methods/Sparse.hpp"
 
 namespace pacs {
 

@@ -11,8 +11,8 @@
 #ifndef LEGENDRE_PACS
 #define LEGENDRE_PACS
 
-#include <Base.hpp>
-#include <Algebra.hpp>
+#include "../Base.hpp"
+#include "../Algebra.hpp"
 
 namespace pacs {
 
