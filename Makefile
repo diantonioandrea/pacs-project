@@ -1,4 +1,4 @@
-.PHONY: all lib tests examples domains testrun clean distclean
+.PHONY: all lib install tests examples domains testrun clean distclean
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include -O2 -fno-unsafe-math-optimizations -fno-fast-math
 
 ifeq ($(shell uname),Darwin) # Apple's clang.
@@ -54,10 +54,13 @@ OBJECT_DIR = ./objects
 LIB_DIR = ./lib
 EXEC_DIR = ./executables
 
+# Library.
+LIBRARY = $(LIB_DIR)/libPacsHPDG.a
+INCLUDE_DESTINATION = $(HOME)/include
+LIB_DESTINATION = $(HOME)/lib
+
 # Files.
 OBJECTS = $(subst src/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
-
-LIBRARY = $(LIB_DIR)/libPacsHPDG.a
 
 HEADERS = ./include/*.hpp # Recompilation purposes.
 HEADERS += ./include/PacsHPDG/*.hpp
@@ -89,6 +92,19 @@ $(LIBRARY): $(OBJECTS)
 	@mkdir -p $(LIB_DIR)
 	@echo "Archiving the library to $(LIBRARY)"
 	@ar rcs $(LIBRARY) $(OBJECTS)
+
+ifeq ($(shell find . -name "*.a"), $(LIBRARY)) # Available only after compilation.
+install: # Manual spacing for consistency between platforms.
+	@echo "Installing the library"
+	@echo "    Includes under $(INCLUDE_DESTINATION)"
+	@echo "    Lib under $(LIB_DESTINATION)"
+
+	@mkdir -p $(INCLUDE_DESTINATION)
+	@mkdir -p $(LIB_DESTINATION)
+
+	@cp -r ./include/* $(INCLUDE_DESTINATION)/
+	@cp $(LIBRARY) $(LIB_DESTINATION)/
+endif
 
 # Test.
 tests: $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_EXECS)

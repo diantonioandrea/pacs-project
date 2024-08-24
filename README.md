@@ -116,6 +116,12 @@ The code can also be compiled into the static library `PacsHPDG` under `./lib` b
 make lib
 ```
 
+which can be installed locally under `~` by:
+
+```bash
+make install
+```
+
 ### Compiling the Report
 
 The report for the project can be compiled by:
