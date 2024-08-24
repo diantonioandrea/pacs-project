@@ -778,7 +778,7 @@ namespace pacs {
         std::cout << "Computing the DI preconditioner." << std::endl;
         #endif
 
-        // Precondiyioning matrix.
+        // Preconditioning matrix.
         return static_cast<T>(1) / A.diagonal();
     }
 
@@ -793,7 +793,7 @@ namespace pacs {
     template<NumericType T>
     Sparse<T> _dbi(const Sparse<T> &A, const std::vector<std::array<std::vector<std::size_t>, 2>> &blocks) {
         
-        // Precondiyioning matrix.
+        // Preconditioning matrix.
         Sparse<T> M{A.rows, A.columns};
 
         #ifndef NVERBOSE
