@@ -8,7 +8,7 @@
  * 
  */
 
-#include <Laplacian.hpp>
+#include <Pacs.hpp>
 
 namespace pacs {
 

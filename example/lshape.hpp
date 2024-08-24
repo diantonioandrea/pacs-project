@@ -8,10 +8,8 @@
  * 
  */
 
-// Type.
-#include <Base.hpp>
+#include <Pacs.hpp>
 
-// Math.
 #include <cmath>
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES

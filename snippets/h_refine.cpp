@@ -8,9 +8,7 @@
  * 
  */
 
-#include <Geometry.hpp>
-#include <Laplacian.hpp>
-#include <Fem.hpp>
+#include <Pacs.hpp>
 using namespace pacs;
 
 // Exact solution and source.

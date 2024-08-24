@@ -8,7 +8,7 @@
  * 
  */
 
-#include <Algebra.hpp>
+#include <Pacs.hpp>
 
 #include <iostream>
 

@@ -8,9 +8,7 @@
  * 
  */
 
-#include <Algebra.hpp>
-#include <Fem.hpp>
-#include <Laplacian.hpp>
+#include <Pacs.hpp>
 
 namespace pacs {
 
