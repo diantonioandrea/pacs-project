@@ -20,7 +20,7 @@ CPPFLAGS += -DNSOLUTIONS
 
 # PARALLEL COMPUTING.
 
-# # Parallel computing using STL and modules. Disabled by default.
+# # Parallel computing using STL with modules. Disabled by default.
 # ifneq ($(mkTbbLib),)
 # CPPFLAGS += -DPARALLEL
 # CXXFLAGS += -I$(mkTbbInc)

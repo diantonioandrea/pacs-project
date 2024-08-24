@@ -26,6 +26,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [On the Adaptation from **lymph**](#on-the-adaptation-from-lymph)
     - [On the Examples Structure](#on-the-examples-structure)
     - [On the Custom Laplacian Solver](#on-the-custom-laplacian-solver)
+    - [On Parallelism](#on-parallelism)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
 
@@ -337,3 +338,7 @@ All the examples have the same structure, and they may seem quite repetitive and
 All the adaptive examples use `pacs::lapsolver` instead of a manual `pacs::solve`. This is a wrapper for `GMRES` with a `DBI`[^dbi] preconditioner, which is particularly useful given the ill-conditioning that _hp-adaptive_ methods suffer from.
 
 [^dbi]: A generic name for a Block-Jacobi preconditioner.
+
+### On Parallelism
+
+Parallelism through the STL plays a secondary role, primarily utilized for common operations involving standard containers. In contrast, parallelism via _OpenMP_ is fundamental, significantly boosting the performance of the polygonal mesher, the `DB` solver, and the `DBI` preconditioner.
