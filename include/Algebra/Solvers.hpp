@@ -800,11 +800,14 @@ namespace pacs {
         std::cout << "Computing the DBI preconditioner." << std::endl;
         #endif
 
-        // Pre-allocating space for inverses.
+        // Initialization.
+        std::vector<Matrix<T>> As;
         std::vector<Matrix<T>> inverses;
 
-        for(const auto &[rows, columns]: blocks)
+        for(const auto &[rows, columns]: blocks) {
+            As.emplace_back(A(rows, columns));
             inverses.emplace_back(Matrix<T>{rows.size(), columns.size()});
+        }
 
         // Computing blocks.
         #pragma omp parallel for
@@ -818,7 +821,7 @@ namespace pacs {
             #endif
 
             // Inverting blocks.
-            inverses[j] = solve(A(rows, columns), identity<T>(rows.size()));
+            inverses[j] = solve(As[j], identity<T>(rows.size()));
         }
 
         // Building M.
