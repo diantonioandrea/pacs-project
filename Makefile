@@ -75,10 +75,10 @@ OBJECT_DIR = ./objects
 EXEC_DIR = ./executables
 
 # All.
-all: tests examples domains $(OUTPUT_DIR)
+all: tests examples domains
 
 # Test.
-tests: $(OBJECT_DIR) $(EXEC_DIR) $(TEST_EXECS)
+tests: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_EXECS)
 	@echo "Compiled tests!"
 
 testrun: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
@@ -97,7 +97,7 @@ $(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Examples.
-examples: $(OBJECT_DIR) $(EXEC_DIR) $(EXAMPLE_EXECS)
+examples: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(EXAMPLE_EXECS)
 	@echo "Compiled examples!"
 
 $(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
@@ -109,7 +109,7 @@ $(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS)
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Domains.
-domains: $(OBJECT_DIR) $(EXEC_DIR) $(DOMAIN_EXECS)
+domains: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(DOMAIN_EXECS)
 	@echo "Compiled domains!"
 
 $(DOMAIN_EXECS): executables/%.out: objects/%.o $(OBJECTS) 
