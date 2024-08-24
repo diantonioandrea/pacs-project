@@ -59,12 +59,14 @@ OBJECTS = $(subst src/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find src -name "*.
 
 LIBRARY = $(LIB_DIR)/libPacsHPDG.a
 
-HEADERS = ./include/*.hpp
-HEADERS += ./include/Algebra/*.hpp
-HEADERS += ./include/Algebra/Methods/*.hpp
-HEADERS += ./include/Geometry/*.hpp
-HEADERS += ./include/Fem/*.hpp
-HEADERS += ./include/Laplacian/*.hpp
+HEADERS = ./include/*.hpp # Recompilation purposes.
+HEADERS += ./include/PacsHPDG/*.hpp
+HEADERS += ./include/PacsHPDG/Algebra/*.hpp
+HEADERS += ./include/PacsHPDG/Algebra/Methods/*.hpp
+HEADERS += ./include/PacsHPDG/Geometry/*.hpp
+HEADERS += ./include/PacsHPDG/Fem/*.hpp
+HEADERS += ./include/PacsHPDG/Laplacian/*.hpp
+HEADERS += ./include/PacsHPDG/Statistics/*.hpp
 
 EXAMPLE_EXECS = $(subst example/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
 EXAMPLE_OBJECTS = $(subst example/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))

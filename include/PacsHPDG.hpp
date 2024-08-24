@@ -12,11 +12,11 @@
 #define PACSHPDG
 
 // Main headers.
-#include "./Base.hpp"
-#include "./Algebra.hpp"
-#include "./Geometry.hpp"
-#include "./Fem.hpp"
-#include "./Laplacian.hpp"
-#include "./Statistics.hpp"
+#include "./PacsHPDG/Base.hpp"
+#include "./PacsHPDG/Algebra.hpp"
+#include "./PacsHPDG/Geometry.hpp"
+#include "./PacsHPDG/Fem.hpp"
+#include "./PacsHPDG/Laplacian.hpp"
+#include "./PacsHPDG/Statistics.hpp"
 
 #endif
