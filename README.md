@@ -10,6 +10,7 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [Cloning the Repository](#cloning-the-repository)
     - [**Compilation and Execution**](#compilation-and-execution)
         - [Compilation Flags](#compilation-flags)
+    - [Compiling the Code into a Library](#compiling-the-code-into-a-library)
     - [**Compiling the Report**](#compiling-the-report)
     - [Compiling the Presentation](#compiling-the-presentation)
 - [Using the Reporitory](#using-the-repository)
@@ -106,6 +107,14 @@ The code uses the following custom compilation flags:
 
 - `-DNVERBOSE`: Disables verbose output.
 - `-DNSOLUTIONS`: Disables solution output.
+
+### Compiling the Code into a Library
+
+The code can also be compiled into the static library `PacsHPDG` under `./lib` by:
+
+```bash
+make lib
+```
 
 ### Compiling the Report
 

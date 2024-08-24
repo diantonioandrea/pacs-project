@@ -1,4 +1,4 @@
-.PHONY: all tests examples domains testrun clean distclean
+.PHONY: all lib tests examples domains testrun clean distclean
 CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include -O2 -fno-unsafe-math-optimizations -fno-fast-math
 
 ifeq ($(shell uname),Darwin) # Apple's clang.
@@ -48,8 +48,16 @@ endif
 endif
 
 
+# Directories.
+OUTPUT_DIR = ./output
+OBJECT_DIR = ./objects
+LIB_DIR = ./lib
+EXEC_DIR = ./executables
+
 # Files.
-OBJECTS = $(subst src/,objects/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
+OBJECTS = $(subst src/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find src -name "*.cpp")))
+
+LIBRARY = $(LIB_DIR)/libPacsHPDG.a
 
 HEADERS = ./include/*.hpp
 HEADERS += ./include/Algebra/*.hpp
@@ -58,30 +66,33 @@ HEADERS += ./include/Geometry/*.hpp
 HEADERS += ./include/Fem/*.hpp
 HEADERS += ./include/Laplacian/*.hpp
 
-EXAMPLE_EXECS = $(subst example/,executables/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
-EXAMPLE_OBJECTS = $(subst example/,objects/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
+EXAMPLE_EXECS = $(subst example/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find example -name "*.cpp")))
+EXAMPLE_OBJECTS = $(subst example/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find example -name "*.cpp")))
 HEADERS += ./example/*.hpp
 
-DOMAIN_EXECS = $(subst domains/,executables/,$(subst .cpp,.out,$(shell find domains -name "*.cpp")))
-DOMAIN_OBJECTS = $(subst domains/,objects/,$(subst .cpp,.o,$(shell find domains -name "*.cpp")))
+DOMAIN_EXECS = $(subst domains/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find domains -name "*.cpp")))
+DOMAIN_OBJECTS = $(subst domains/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find domains -name "*.cpp")))
 
 TEST_RUN = $(subst .cpp,,$(shell ls ./test))
-TEST_EXECS = $(subst test/,executables/,$(subst .cpp,.out,$(shell find test -name "*.cpp")))
-TEST_OBJECTS = $(subst test/,objects/,$(subst .cpp,.o,$(shell find test -name "*.cpp")))
-
-# Directories.
-OUTPUT_DIR = ./output
-OBJECT_DIR = ./objects
-EXEC_DIR = ./executables
+TEST_EXECS = $(subst test/,$(EXEC_DIR)/,$(subst .cpp,.out,$(shell find test -name "*.cpp")))
+TEST_OBJECTS = $(subst test/,$(OBJECT_DIR)/,$(subst .cpp,.o,$(shell find test -name "*.cpp")))
 
 # All.
 all: tests examples domains
 
+# Library.
+lib: $(LIBRARY)
+
+$(LIBRARY): $(OBJECTS)
+	@mkdir -p $(LIB_DIR)
+	@echo "Archiving the library to $(LIBRARY)"
+	@ar rcs $(LIBRARY) $(OBJECTS)
+
 # Test.
-tests: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_EXECS)
+tests: $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_EXECS)
 	@echo "Compiled tests!"
 
-testrun: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
+testrun: $(EXEC_DIR) $(OUTPUT_DIR) $(TEST_RUN) 
 	@echo "Run tests!"
 
 $(TEST_RUN): $(TEST_EXECS)
@@ -92,7 +103,7 @@ $(TEST_EXECS): executables/%.out: objects/%.o $(OBJECTS)
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS)
+$(TEST_OBJECTS): objects/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -104,7 +115,7 @@ $(EXAMPLE_EXECS): executables/%.out: objects/%.o $(OBJECTS)
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS)
+$(EXAMPLE_OBJECTS): objects/%.o: example/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -116,12 +127,12 @@ $(DOMAIN_EXECS): executables/%.out: objects/%.o $(OBJECTS)
 	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst objects/,,$<) and base objects to $@"; else echo "Linking $(subst objects/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
 	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
 
-$(DOMAIN_OBJECTS): objects/%.o: domains/%.cpp $(HEADERS)
+$(DOMAIN_OBJECTS): objects/%.o: domains/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 # Objects.
-$(OBJECTS): ./objects/%.o: src/%.cpp $(HEADERS)
+$(OBJECTS): ./objects/%.o: src/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
 	@$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
@@ -142,4 +153,5 @@ clean:
 	@$(RM) -r $(OUTPUT_DIR)
 
 distclean: clean
+	@$(RM) -r $(LIB_DIR)
 	@$(RM) -r $(EXEC_DIR)

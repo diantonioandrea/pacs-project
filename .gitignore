@@ -5,6 +5,7 @@ report/output
 # C++
 **/*.o
 **/*.out
+lib
 
 # Makefile's output.
 **/executables
