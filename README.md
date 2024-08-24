@@ -213,9 +213,9 @@ Scripts are divided into the following categories based on their function:
 
 ## Using the Code
 
-### Mesh Generation
+To use the code, include `<Pacs.hpp>` which provides all necessary tools.
 
-To generate a mesh, include `<Geometry.hpp>` which provides all necessary tools.
+### Mesh Generation
 
 Start by defining a domain using points:
 
@@ -255,10 +255,7 @@ std::vector<pacs::Polygon> diagram = pacs::mesh_diagram(domain, 100, reflect=tru
 
 ### Solving the Poisson Problem
 
-To solve the Poisson problem, ensure you have included `<Fem.hpp>` and `<Laplacian.hpp>` for necessary functionalities.
-
 First, build the Laplacian matrix from your mesh[^laplacian][^real]:
-
 
 [^laplacian]: `laplacian` also builds some other matrices used for error evaluation.
 [^real]: `pacs::Real` wraps `long double`.
