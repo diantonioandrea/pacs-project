@@ -1,7 +1,11 @@
 \documentclass[12pt, twoside]{article}
 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
 % Bibliography.
-\usepackage{cite}
+\usepackage{biblatex}
+\addbibresource{bibliography/refs.bib}
 
 \newcommand{\reporttitle}{The \textit{hp-Adaptive} Discontinuous Galërkin Method}
 \newcommand{\accentcolor}{solarized-blue}
@@ -112,9 +116,6 @@
 \usepackage{xcolor-solarized}
 \color{solarized-base02}
 
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-
 \usepackage[a4paper]{geometry}
 \geometry{
 	inner=20mm,
@@ -202,7 +203,6 @@
 
 	\newpage
 	\addcontentsline{toc}{section}{References}
-	\bibliography{bibliography/refs.bib}
-	\bibliographystyle{siam}
+	\printbibliography
 
 \end{document}
