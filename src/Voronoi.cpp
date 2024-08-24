@@ -70,36 +70,22 @@ namespace pacs {
             box = Polygon{{a, b, c, d}};
         }
 
-        #ifndef NVERBOSE
-        std::cout << "\t\tVoronoi: [";
-        #endif
+        // Cells initialization.
+        cells.resize(points.size(), box);
 
+        #pragma omp parallel for
         for(std::size_t j = 0; j < points.size(); ++j) {
-            Point point{points[j]};
-            Polygon cell = box;
-
             for(std::size_t k = 0; k < points.size(); ++k) {
                 if(k == j)
                     continue;
 
-                cell = reduce(cell, bisector(point, points[k]), point);
+                cells[j] = reduce(cells[j], bisector(points[j], points[k]), points[j]);
             }
 
             if(reflect)
                 for(const auto &reflection: reflection_points[j])
-                    cell = reduce(cell, bisector(point, reflection), point);
-
-            cells.emplace_back(cell);
-
-            #ifndef NVERBOSE
-            if((j + 1) % (points.size() / 20) == 0)
-                std::cout << "-" << std::flush;
-            #endif
+                    cells[j] = reduce(cells[j], bisector(points[j], reflection), points[j]);
         }
-
-        #ifndef NVERBOSE
-        std::cout << "]" << std::endl;
-        #endif
 
         return cells;
     }
