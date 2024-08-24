@@ -1,5 +1,5 @@
 .PHONY: all lib install tests examples domains testrun clean distclean
-CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -O2 -fPIC -I./include -O2 -fno-unsafe-math-optimizations -fno-fast-math
+CXXFLAGS = -Wall -Wno-sign-compare -pedantic -std=c++20 -march=native -fPIC -I./include -O2 -fno-unsafe-math-optimizations -fno-fast-math
 
 ifeq ($(shell uname),Darwin) # Apple's clang.
 CXXFLAGS += -ffp-model=precise
