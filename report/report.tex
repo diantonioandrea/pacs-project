@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 
 % Bibliography.
-\usepackage{biblatex}
+\usepackage[style=ieee]{biblatex}
 \addbibresource{bibliography/refs.bib}
 
 \newcommand{\reporttitle}{The \textit{hp-Adaptive} Discontinuous Galërkin Method}
@@ -154,7 +154,7 @@
 
 \title{\reporttitle}
 \author{Andrea Di Antonio\footnote{UniMiB: 858798, PoliMi: 10655477.} \\ Supervised by Professors Paola F. Antonietti and Marco Verani}
-\date{Exam session of September 10th, 2024 \\ Academic Year 2023-24}
+\date{Exam session of September 10, 2024 \\ Academic Year 2023-24}
 
 \setcounter{tocdepth}{3}
 
@@ -204,5 +204,15 @@
 	\newpage
 	\addcontentsline{toc}{section}{References}
 	\printbibliography
+
+	\newpage
+	
+	\vspace*{\fill}
+	\begin{center}
+		Compiled on \today.
+	\end{center}
+	\vspace*{\fill}
+
+	\thispagestyle{empty}
 
 \end{document}
