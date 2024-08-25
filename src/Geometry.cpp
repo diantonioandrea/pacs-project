@@ -19,8 +19,8 @@ namespace pacs {
     /**
      * @brief Returns the distance between two Points.
      * 
-     * @param p 
-     * @param q 
+     * @param p Point.
+     * @param q Point.
      * @return Real 
      */
     Real distance(const Point &p, const Point &q) {
@@ -33,8 +33,8 @@ namespace pacs {
     /**
      * @brief Returns the distance between a Point and a Line.
      * 
-     * @param point 
-     * @param line 
+     * @param point Point.
+     * @param line Line.
      * @return Real 
      */
     Real distance(const Point &point, const Line &line) {
@@ -76,8 +76,8 @@ namespace pacs {
     /**
      * @brief Finds the bisector given two Points.
      * 
-     * @param p 
-     * @param q 
+     * @param p Point.
+     * @param q Point.
      * @return Line 
      */
     Line bisector(const Point &p, const Point &q) {
@@ -109,8 +109,8 @@ namespace pacs {
     /**
      * @brief Returns the intersection between two Lines.
      * 
-     * @param s 
-     * @param r 
+     * @param s Line.
+     * @param r Line.
      * @return std::vector<Point> 
      */
     std::vector<Point> intersections(const Line &s, const Line &r) {
@@ -166,8 +166,8 @@ namespace pacs {
     /**
      * @brief Returns the intersection between a Line and a Segment.
      * 
-     * @param line 
-     * @param segment 
+     * @param line Line.
+     * @param segment Segment.
      * @return std::vector<Point> 
      */
     std::vector<Point> intersections(const Line &line, const Segment &segment) {
@@ -183,8 +183,8 @@ namespace pacs {
     /**
      * @brief Returns the intersection(s) between a line and a Polygon.
      * 
-     * @param line 
-     * @param polygon 
+     * @param line Line.
+     * @param polygon Polygon.
      * @return std::vector<Point> 
      */
     std::vector<Point> intersections(const Line &line, const Polygon &polygon) {
@@ -215,8 +215,8 @@ namespace pacs {
     /**
      * @brief Returns the normal with respect to a Line and passing through a point.
      * 
-     * @param line 
-     * @param point 
+     * @param line Line.
+     * @param point Point.
      * @return Line 
      */
     Line normal(const Line &line, const Point &point) {
@@ -238,8 +238,8 @@ namespace pacs {
     /**
      * @brief Returns the normal with respect to a Segment and passing through a point.
      * 
-     * @param segment 
-     * @param point 
+     * @param segment Segment.
+     * @param point Point.
      * @return Line 
      */
     Line normal(const Segment &segment, const Point &point) {
@@ -249,8 +249,8 @@ namespace pacs {
     /**
      * @brief Polygon collapse over a vertex.
      * 
-     * @param polygon 
-     * @param point 
+     * @param polygon Polygon.
+     * @param point Point.
      * @return Polygon 
      */
     Polygon collapse(const Polygon &polygon, const Point &point) {
@@ -273,8 +273,8 @@ namespace pacs {
     /**
      * @brief Polygon collape over an edge.
      * 
-     * @param polygon 
-     * @param segment 
+     * @param polygon Polygon.
+     * @param segment Segment.
      * @return Polygon 
      */
     Polygon collapse(const Polygon &polygon, const Segment &segment) {
@@ -310,8 +310,8 @@ namespace pacs {
     /**
      * @brief Returns the reflection(s) of a Point with respect to a Polygon.
      * 
-     * @param polygon 
-     * @param point 
+     * @param polygon Polygon.
+     * @param point Point.
      * @return Point 
      */
     std::vector<Point> reflections(const Polygon &polygon, const Point &point) {
@@ -350,9 +350,9 @@ namespace pacs {
     /**
      * @brief Reduce a Polygon cutted by a Line. Picks the part which contains the argument Point.
      * 
-     * @param polygon 
-     * @param line 
-     * @param point 
+     * @param polygon Polygon.
+     * @param line Line.
+     * @param point Point.
      * @return Polygon 
      */
     Polygon reduce(const Polygon &polygon, const Line &line, const Point &point) {
@@ -446,7 +446,7 @@ namespace std {
     /**
      * @brief Return the norm of a Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return Real 
      */
     pacs::Real abs(const pacs::Point &point) {
@@ -456,7 +456,7 @@ namespace std {
     /**
      * @brief Return the length of a Segment.
      * 
-     * @param segment 
+     * @param segment Segment.
      * @return Real 
      */
     pacs::Real abs(const pacs::Segment &segment) {

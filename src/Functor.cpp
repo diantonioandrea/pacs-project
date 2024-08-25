@@ -25,7 +25,7 @@ namespace pacs {
     /**
      * @brief Construct a new Functor from a given Function.
      * 
-     * @param function 
+     * @param function Function.
      */
     Functor::Functor(const Function &function): function{function} {}
 
@@ -34,8 +34,8 @@ namespace pacs {
     /**
      * @brief Evaluates the function over a given point.
      * 
-     * @param x 
-     * @param y 
+     * @param x Coordinate.
+     * @param y Coordinate.
      * @return Real 
      */
     Real Functor::operator ()(const Real &x, const Real &y) const {
@@ -45,8 +45,8 @@ namespace pacs {
     /**
      * @brief Evaluates the function over a given vector of points.
      * 
-     * @param x 
-     * @param y 
+     * @param x Vector of coordinates.
+     * @param y Vector of coordinates.
      * @return Vector<Real> 
      */
     Vector<Real> Functor::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {
@@ -75,8 +75,8 @@ namespace pacs {
     /**
      * @brief Construct a new TwoFunctor from two given Function.
      * 
-     * @param first 
-     * @param second 
+     * @param first Function.
+     * @param second Function.
      */
     TwoFunctor::TwoFunctor(const Function &first, const Function &second): first{first}, second{second} {}
 
@@ -85,8 +85,8 @@ namespace pacs {
     /**
      * @brief Evaluates the functions over a given point.
      * 
-     * @param x 
-     * @param y 
+     * @param x Coordinate.
+     * @param y Coordinate.
      * @return Vector<Real> 
      */
     std::array<Real, 2> TwoFunctor::operator ()(const Real &x, const Real &y) const {
@@ -96,8 +96,8 @@ namespace pacs {
     /**
      * @brief Evaluates the function over a given vector of points.
      * 
-     * @param x 
-     * @param y 
+     * @param x Vector of coordinates.
+     * @param y Vector of coordinates.
      * @return std::array<Vector<Real>, 2> 
      */
     std::array<Vector<Real>, 2> TwoFunctor::operator ()(const Vector<Real> &x, const Vector<Real> &y) const {

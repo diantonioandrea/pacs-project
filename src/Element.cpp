@@ -19,17 +19,17 @@ namespace pacs {
     /**
      * @brief Constructs a new Element from given nodes and edges.
      * 
-     * @param nodes 
-     * @param edges 
+     * @param nodes Element's vertices.
+     * @param edges Element's edges.
      */
     Element::Element(const Polygon &element): element{element}, nodes{element.points}, edges{element.edges()}, degree{1} {}
 
     /**
      * @brief Construct a new Element:: Element object
      * 
-     * @param nodes 
-     * @param edges 
-     * @param degree 
+     * @param nodes Element's vertices.
+     * @param edges Element's edges
+     * @param degree Element's degree.
      */
     Element::Element(const Polygon &element, const std::size_t &degree): element{element}, nodes{element.points}, edges{element.edges()}, degree{degree} {}
 

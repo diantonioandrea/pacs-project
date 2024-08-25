@@ -20,29 +20,29 @@ namespace pacs {
     /**
      * @brief Constructs a new Point from given x and y.
      * 
-     * @param x 
-     * @param y 
+     * @param x Coordinate.
+     * @param y Coordinate.
      */
     Point::Point(const Real &x, const Real &y): x{x}, y{y} {}
 
     /**
      * @brief Constructs a new Point from an array of coordinates.
      * 
-     * @param xy 
+     * @param xy Coordinates.
      */
     Point::Point(const std::array<Real, 2> &xy): x{xy[0]}, y{xy[1]} {}
 
     /**
      * @brief Copy constructor.
      * 
-     * @param point 
+     * @param point Point.
      */
     Point::Point(const Point &point): x{point.x}, y{point.y} {}
 
     /**
      * @brief Copy operator.
      * 
-     * @param point 
+     * @param point Point.
      * @return Point& 
      */
     Point &Point::operator =(const Point &point) {
@@ -57,7 +57,7 @@ namespace pacs {
     /**
      * @brief Const subscript operator.
      * 
-     * @param j 
+     * @param j Index.
      * @return Real 
      */
     Real Point::operator [](const std::size_t &j) const {
@@ -71,7 +71,7 @@ namespace pacs {
     /**
      * @brief Subscript operator.
      * 
-     * @param j 
+     * @param j Index.
      * @return Real 
      */
     Real &Point::operator [](const std::size_t &j) {
@@ -87,7 +87,7 @@ namespace pacs {
     /**
      * @brief Point == Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -98,7 +98,7 @@ namespace pacs {
     /**
      * @brief Point != Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -111,7 +111,7 @@ namespace pacs {
     /**
      * @brief Point scalar product.
      * 
-     * @param scalar 
+     * @param scalar Scalar.
      * @return Point 
      */
     Point Point::operator *(const Real &scalar) const {
@@ -121,8 +121,8 @@ namespace pacs {
     /**
      * @brief Friend Point scalar product.
      * 
-     * @param scalar 
-     * @param point 
+     * @param scalar Scalar.
+     * @param point Point.
      * @return Point 
      */
     Point operator *(const Real &scalar, const Point &point) {
@@ -132,7 +132,7 @@ namespace pacs {
     /**
      * @brief Point scalar product and assignation.
      * 
-     * @param scalar 
+     @param scalar Scalar.
      * @return Point& 
      */
     Point &Point::operator *=(const Real &scalar) {
@@ -145,7 +145,7 @@ namespace pacs {
     /**
      * @brief Point sum.
      * 
-     * @param point 
+     * @param point Point.
      * @return Point 
      */
     Point Point::operator +(const Point &point) const {
@@ -155,7 +155,7 @@ namespace pacs {
     /**
      * @brief Point sum and assignation.
      * 
-     * @param point 
+     * @param point Point.
      * @return Point& 
      */
     Point &Point::operator +=(const Point &point) {
@@ -168,7 +168,7 @@ namespace pacs {
     /**
      * @brief Point difference.
      * 
-     * @param point 
+     * @param point Point.
      * @return Point 
      */
     Point Point::operator -(const Point &point) const {
@@ -178,7 +178,7 @@ namespace pacs {
     /**
      * @brief Point difference and assignation.
      * 
-     * @param point 
+     * @param point Point.
      * @return Point& 
      */
     Point &Point::operator -=(const Point &point) {
@@ -194,7 +194,7 @@ namespace pacs {
      * @brief Point output.
      * 
      * @param ost 
-     * @param point 
+     * @param point Point.
      * @return std::ostream& 
      */
     std::ostream &operator <<(std::ostream &ost, const Point &point) {

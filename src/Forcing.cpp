@@ -15,7 +15,8 @@ namespace pacs {
     /**
      * @brief Assemblies the RHS.
      * 
-     * @param mesh 
+     * @param mesh Mesh.
+     * @param penalty_coefficient Penalty coefficient.
      * @return Vector<Real> 
      */
     Vector<Real> forcing(const Mesh &mesh, const Functor &source, const Functor &dirichlet, const Real &penalty_coefficient) {

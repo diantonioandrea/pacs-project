@@ -15,8 +15,9 @@ namespace pacs {
     /**
      * @brief Returns the matrix for the Laplacian operator.
      * 
-     * @param mesh 
-     * @return Sparse<Real> 
+     * @param mesh Mesh.
+     * @param penalty_coefficient Penalty coefficient.
+     * @return std::array<Sparse<Real>, 3> 
      */
     std::array<Sparse<Real>, 3> laplacian(const Mesh &mesh, const Real &penalty_coefficient) {
 
@@ -287,7 +288,7 @@ namespace pacs {
     /**
      * @brief Extrapolates blocks (indices) based on mass structure.
      * 
-     * @param mesh 
+     * @param mesh Mesh.
      * @return std::vector<std::array<std::vector<std::size_t>, 2>> 
      */
     std::vector<std::array<std::vector<std::size_t>, 2>> block_mass(const Mesh &mesh) {

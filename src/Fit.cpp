@@ -17,9 +17,9 @@ namespace pacs {
     /**
      * @brief Polynomial fit.
      * 
-     * @param x 
-     * @param y 
-     * @param p 
+     * @param x X.
+     * @param y Y.
+     * @param p Algorithm order.
      * @return Vector<Real> 
      */
     Vector<Real> polyfit(const Vector<Real> &x, const Vector<Real> &y, const std::size_t &p) {

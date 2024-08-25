@@ -22,8 +22,8 @@ namespace pacs {
     /**
      * @brief Returns a mesh diagram of a given domain.
      * 
-     * @param domain 
-     * @param cells 
+     * @param domain Polygonal domain.
+     * @param cells Number of cells.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> mesh_diagram(const Polygon &domain, const std::size_t &cells, const bool &reflect, const bool &uniform) {
@@ -245,7 +245,7 @@ namespace pacs {
     /**
      * @brief Reads a diagram from a file.
      * 
-     * @param filename 
+     * @param filename Filename.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> mesh_diagram(const std::string &filename) {
@@ -290,8 +290,8 @@ namespace pacs {
     /**
      * @brief Relaxes a diagram through Lloyd's algorithm.
      * 
-     * @param domain 
-     * @param elements 
+     * @param domain Polygonal domain.
+     * @param elements Polygonal cells.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> mesh_relax(const Polygon &domain, const std::vector<Polygon> &elements, const bool &reflect) {
@@ -336,8 +336,8 @@ namespace pacs {
     /**
      * @brief Refines specified elements' size for a mesh.
      * 
-     * @param mesh 
-     * @param mask 
+     * @param mesh Mesh.
+     * @param mask Mask.
      */
     void mesh_refine_size(Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
@@ -435,8 +435,8 @@ namespace pacs {
     /**
      * @brief Refines specified elements' degree for a mesh.
      * 
-     * @param mesh 
-     * @param mask 
+     * @param mesh Mesh.
+     * @param mask Mask.
      */
     void mesh_refine_degree(Mesh &mesh, const Mask &mask) {
         #ifndef NDEBUG // Integrity check.
@@ -465,9 +465,8 @@ namespace pacs {
     /**
      * @brief Returns the vector of Elements inside a mesh.
      * 
-     * @param mesh 
-     * @param nodes 
-     * @param edges 
+     * @param diagram Polygonal diagrams.
+     * @param degrees Elements' degrees.
      * @return std::vector<Element> 
      */
     std::vector<Element> mesh_elements(const std::vector<Polygon> &diagram, const std::vector<std::size_t> &degrees) {
@@ -490,8 +489,8 @@ namespace pacs {
     /**
      * @brief Returns the neighbouring structure.
      * 
-     * @param domain 
-     * @param elements 
+     * @param domain Polygonal domain.
+     * @param elements Elements.
      * @return std::vector<std::vector<std::array<int, 3>>> 
      */
     std::vector<std::vector<std::array<int, 3>>> mesh_neighbours(const Polygon &domain, const std::vector<Element> &elements) {
@@ -549,7 +548,7 @@ namespace pacs {
     /**
      * @brief Returns a vector of the elements' areas.
      * 
-     * @param polygons 
+     * @param polygons Polygonal cells.
      * @return std::vector<Real> 
      */
     std::vector<Real> mesh_areas(const std::vector<Polygon> &polygons) {
@@ -568,7 +567,7 @@ namespace pacs {
     /**
      * @brief Returns a vector of the biggest simplices area for every element's edge.
      * 
-     * @param polygons 
+     * @param polygons Polygonal cells.
      * @return std::vector<Vector<Real>> 
      */
     std::vector<Vector<Real>> mesh_max_simplices(const std::vector<Polygon> &polygons) {

@@ -20,23 +20,23 @@ namespace pacs {
     /**
      * @brief Constructs a new Line from given a, b and c.
      * 
-     * @param a 
-     * @param b 
-     * @param c 
+     * @param a Parameter.
+     * @param b Parameter.
+     * @param c Parameter.
      */
     Line::Line(const Real &a, const Real &b, const Real &c): a{a}, b{b}, c{c} {}
 
     /**
      * @brief Constructs a new Line from an array of parameters.
      * 
-     * @param abc 
+     * @param abc Parameters.
      */
     Line::Line(const std::array<Real, 3> &abc): a{abc[0]}, b{abc[1]}, c{abc[2]} {}
 
     /**
      * @brief Copy constructor.
      * 
-     * @param line 
+     * @param line Line.
      */
     Line::Line(const Line &line): a{line.a}, b{line.b}, c{line.c} {}
 
@@ -45,7 +45,7 @@ namespace pacs {
     /**
      * @brief Returns the j-th parameter.
      * 
-     * @param j 
+     * @param j Index.
      * @return Real 
      */
     Real Line::operator [](const std::size_t &j) const {
@@ -59,7 +59,7 @@ namespace pacs {
     /**
      * @brief Returns the first coordinate of a Line's point given the second one.
      * 
-     * @param y 
+     * @param y Coordinate.
      * @return Real 
      */
     Real Line::x(const Real &y) const {
@@ -73,7 +73,7 @@ namespace pacs {
     /**
      * @brief Returns the second coordinate of a Line's point given the first one.
      * 
-     * @param x 
+     * @param x Coordinate.
      * @return Real 
      */
     Real Line::y(const Real &x) const {
@@ -89,7 +89,7 @@ namespace pacs {
     /**
      * @brief Line == Line.
      * 
-     * @param line 
+     * @param line Line.
      * @return true 
      * @return false 
      */
@@ -104,7 +104,7 @@ namespace pacs {
     /**
      * @brief Line < Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -128,7 +128,7 @@ namespace pacs {
     /**
      * @brief Line <= Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -139,7 +139,7 @@ namespace pacs {
     /**
      * @brief Line > Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -150,7 +150,7 @@ namespace pacs {
     /**
      * @brief Line >= Point.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -161,8 +161,8 @@ namespace pacs {
     /**
      * @brief Point < Line.
      * 
-     * @param point 
-     * @param line 
+     * @param point Point.
+     * @param line Line.
      * @return true 
      * @return false 
      */
@@ -173,8 +173,8 @@ namespace pacs {
     /**
      * @brief Point <= Line.
      * 
-     * @param point 
-     * @param line 
+     * @param point Point.
+     * @param line Line.
      * @return true 
      * @return false 
      */
@@ -185,8 +185,8 @@ namespace pacs {
     /**
      * @brief Point > Line.
      * 
-     * @param point 
-     * @param line 
+     * @param point Point.
+     * @param line Line.
      * @return true 
      * @return false 
      */
@@ -197,8 +197,8 @@ namespace pacs {
     /**
      * @brief Point >= Line.
      * 
-     * @param point 
-     * @param line 
+     * @param point Point.
+     * @param line Line.
      * @return true 
      * @return false 
      */
@@ -211,7 +211,7 @@ namespace pacs {
     /**
      * @brief Checks whether a Point is contained inside the Line.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -234,7 +234,7 @@ namespace pacs {
      * @brief Line output.
      * 
      * @param ost 
-     * @param line 
+     * @param line Line.
      * @return std::ostream& 
      */
     std::ostream &operator <<(std::ostream &ost, const Line &line) {

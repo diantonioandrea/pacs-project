@@ -15,10 +15,10 @@ namespace pacs {
     /**
      * @brief Custom Laplacian solver.
      * 
-     * @param mesh 
-     * @param A 
-     * @param b 
-     * @param TOL 
+     * @param mesh Mesh.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param TOL Tolerance.
      * @return Vector<Real> 
      */
     Vector<Real> lapsolver(const Mesh &mesh, const Sparse<Real> &A, const Vector<Real> &b, const Real &TOL) {

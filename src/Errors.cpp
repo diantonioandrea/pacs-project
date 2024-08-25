@@ -17,10 +17,10 @@ namespace pacs {
     /**
      * @brief Constructs a new Error structure.
      * 
-     * @param mesh 
-     * @param matrices 
-     * @param numerical 
-     * @param exact 
+     * @param mesh Mesh.
+     * @param matrices Needed matrices (A, M).
+     * @param numerical Numerical solution.
+     * @param exact Exact solution.
      */
     Error::Error(const Mesh &mesh, const std::array<Sparse<Real>, 2> &matrices, const Vector<Real> &numerical, const Functor &exact, const TwoFunctor &exact_gradient):
     elements{mesh.elements.size()}, l2_errors{mesh.elements.size()}, h1_errors{mesh.elements.size()} {

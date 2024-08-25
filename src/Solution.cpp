@@ -20,9 +20,9 @@ namespace pacs {
     /**
      * @brief Constructs a new Solution structure.
      * 
-     * @param mesh 
-     * @param numerical 
-     * @param exact 
+     * @param mesh Mesh.
+     * @param numerical Numerical solution.
+     * @param exact Exact solution.
      */
     Solution::Solution(const Mesh &mesh, const Vector<Real> &numerical, const Functor &exact):
     x{mesh.entries}, y{mesh.entries}, numerical{mesh.entries}, exact{mesh.entries} {
@@ -127,7 +127,7 @@ namespace pacs {
     /**
      * @brief Outputs the solution to a file.
      * 
-     * @param filename 
+     * @param filename Filename.
      */
     void Solution::write(const std::string &filename) {
         // File loading.

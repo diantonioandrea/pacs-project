@@ -15,8 +15,8 @@ namespace pacs {
     /**
      * @brief hp-Adaptively refine a mesh.
      * 
-     * @param mesh 
-     * @param estimator 
+     * @param mesh Mesh.
+     * @param estimator Estimator.
      * @param refine Refinement percentage.
      * @param speed Solution's smoothness.
      */

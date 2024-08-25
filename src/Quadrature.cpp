@@ -21,9 +21,9 @@ namespace pacs {
     /**
      * @brief Returns the Gauss-Legendre nodes and weights of a given order over a given interval [a, b].
      * 
-     * @param a 
-     * @param b 
-     * @param order 
+     * @param a Start.
+     * @param b End.
+     * @param order Algorithm order.
      * @return std::vector<Vector<Real>> 
      */
     std::array<Vector<Real>, 2> gauss_legendre(const Real &a, const Real &b, const std::size_t &order) {
@@ -100,7 +100,7 @@ namespace pacs {
     /**
      * @brief Returns the Gauss-Legendre quadrature nodes and weights of a given order over the reference interval [0, 1].
      * 
-     * @param order 
+     * @param order Algorithm order.
      * @return std::vector<Vector<Real>> 
      */
     std::array<Vector<Real>, 2> quadrature_1d(const std::size_t &order) {
@@ -112,7 +112,7 @@ namespace pacs {
     /**
      * @brief Returns the Gauss-Legendre quadrature nodes and weights of a given order over the reference set [-1, 1] x [-1, 1].
      * 
-     * @param order 
+     * @param order Algorithm order.
      * @return std::array<Vector<Real>, 3> 
      */
     std::array<Vector<Real>, 3> quadrature_2d(const std::size_t &order) {

@@ -20,8 +20,8 @@ namespace pacs {
     /**
      * @brief Returns the modal coefficients of a function.
      * 
-     * @param mesh 
-     * @param function 
+     * @param mesh Mesh.
+     * @param function Function.
      * @return Vector<Real> 
      */
     Vector<Real> modal(const Mesh &mesh, const Functor &function) {

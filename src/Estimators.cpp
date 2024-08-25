@@ -15,11 +15,11 @@ namespace pacs {
     /**
      * @brief Construct a new Estimator structure.
      * 
-     * @param mesh 
-     * @param numerical 
-     * @param forcing 
-     * @param source 
-     * @param dirichlet 
+     * @param mesh Mesh.
+     * @param numerical Numerical solution.
+     * @param forcing RHS.
+     * @param source Source.
+     * @param dirichlet Dirichlet BC.
      */
     Estimator::Estimator(const Mesh &mesh, const Sparse<Real> &mass, const Vector<Real> &numerical, const Functor &source, const Functor &dirichlet, const TwoFunctor &dirichlet_gradient, const Real &penalty_coefficient):
     estimates{mesh.elements.size()}, fits{mesh.elements.size()} {

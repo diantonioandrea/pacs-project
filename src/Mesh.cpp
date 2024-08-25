@@ -23,8 +23,8 @@ namespace pacs {
     /**
      * @brief Constructs a new Mesh from a given domain, diagram and degrees vector.
      * 
-     * @param domain 
-     * @param diagram 
+     * @param domain Polygonal domain.
+     * @param diagram Polygonal diagram.
      */
     Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::vector<std::size_t> &degrees): domain{domain} {
 
@@ -50,9 +50,9 @@ namespace pacs {
     /**
      * @brief Constructs a new Mesh from a given domain, diagram and uniform degree.
      * 
-     * @param domain 
-     * @param diagram 
-     * @param degree 
+     * @param domain Polygonal domain.
+     * @param diagram Polygonal diagram.
+     * @param degree Degree.
      */
     Mesh::Mesh(const Polygon &domain, const std::vector<Polygon> &diagram, const std::size_t &degree): 
     Mesh(domain, diagram, std::vector<std::size_t>(diagram.size(), degree)) {}
@@ -60,7 +60,7 @@ namespace pacs {
     /**
      * @brief Copy constructor.
      * 
-     * @param mesh 
+     * @param mesh Mesh.
      */
     Mesh::Mesh(const Mesh &mesh):
     domain{mesh.domain}, elements{mesh.elements}, neighbours{mesh.neighbours}, areas{mesh.areas}, max_simplices{std::vector<Vector<Real>>(mesh.max_simplices)}, entries{mesh.entries} {}
@@ -68,7 +68,7 @@ namespace pacs {
     /**
      * @brief Copy operator.
      * 
-     * @param mesh 
+     * @param mesh Mesh.
      * @return Mesh& 
      */
     Mesh &Mesh::operator =(const Mesh &mesh) {
@@ -87,7 +87,7 @@ namespace pacs {
     /**
      * @brief Returns the j-th element's polygon.
      * 
-     * @param j 
+     * @param j Index.
      * @return Polygon 
      */
     Polygon Mesh::element(const std::size_t &j) const {
@@ -119,7 +119,7 @@ namespace pacs {
     /**
      * @brief Outputs the mesh to a polyplot.py readable file.
      * 
-     * @param filename 
+     * @param filename Filename.
      */
     void Mesh::write(const std::string &filename, const bool &degrees) {
         // File loading.

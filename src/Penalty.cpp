@@ -15,8 +15,8 @@ namespace pacs {
     /**
      * @brief Returns the penalty coefficients for a given element. "Max" policy.
      * 
-     * @param mesh 
-     * @param index 
+     * @param mesh Mesh.
+     * @param index Element's index.
      * @return Vector<Real> 
      */
     Vector<Real> penalty(const Mesh &mesh, const std::size_t &index, const Real &coefficient) {

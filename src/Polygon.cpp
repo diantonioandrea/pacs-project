@@ -22,7 +22,7 @@ namespace pacs {
     /**
      * @brief Constructs a new Polygon from a given vector of points.
      * 
-     * @param points 
+     * @param points Points.
      */
     Polygon::Polygon(const std::vector<Point> &points): points{points} {
         #ifndef NDEBUG // Integrity check.
@@ -37,14 +37,14 @@ namespace pacs {
     /**
      * @brief Copy constructor.
      * 
-     * @param polygon 
+     * @param polygon Polygon.
      */
     Polygon::Polygon(const Polygon &polygon): points{polygon.points} {}
 
     /**
      * @brief Copy operator.
      * 
-     * @param polygon 
+     * @param polygon Polygon.
      * @return Polygon& 
      */
     Polygon &Polygon::operator =(const Polygon &polygon) {
@@ -74,7 +74,7 @@ namespace pacs {
     /**
      * @brief Checks whether a point is contained inside the Polygon. Does not count Points over the perimeter.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -98,6 +98,7 @@ namespace pacs {
     /**
      * @brief Checks whether a segment is contained inside the Polygon's perimeter.
      * 
+     * @param segment Segment.
      * @return true 
      * @return false 
      */

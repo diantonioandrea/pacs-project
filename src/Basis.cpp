@@ -17,9 +17,9 @@ namespace pacs {
     /**
      * @brief Returns the nodal evaluation of a given element's basis.
      * 
-     * @param mesh 
-     * @param index 
-     * @param nodes 
+     * @param mesh Mesh.
+     * @param index Element's index.
+     * @param nodes Nodes coordinates.
      * @return std::array<Vector<Real>, 3> 
      */
     std::array<Matrix<Real>, 3> basis_2d(const Mesh &mesh, const std::size_t &index, const std::array<Vector<Real>, 2> &nodes) {
@@ -131,9 +131,9 @@ namespace pacs {
     /**
      * @brief Returns the nodal evaluation of a given element's basis' laplacian.
      * 
-     * @param mesh 
-     * @param index 
-     * @param nodes 
+     * @param mesh Mesh.
+     * @param index Element's index.
+     * @param nodes Nodes coordinates.
      * @return Matrix<Real>
      */
     Matrix<Real> lap_basis_2d(const Mesh &mesh, const std::size_t &index, const std::array<Vector<Real>, 2> &nodes) {

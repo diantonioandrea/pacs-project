@@ -24,8 +24,8 @@ namespace pacs {
     /**
      * @brief Constructs a new Segment from a given a and b.
      * 
-     * @param a 
-     * @param b 
+     * @param a Point.
+     * @param b Point.
      */
     Segment::Segment(const Point &a, const Point &b): a{a}, b{b} {
         #ifndef NDEBUG // Integrity check.
@@ -36,7 +36,7 @@ namespace pacs {
     /**
      * @brief Constructs a new Segment from a given array of points.
      * 
-     * @param ab 
+     * @param ab Points.
      */
     Segment::Segment(const std::array<Point, 2> &ab): a{ab[0]}, b{ab[1]} {
         #ifndef NDEBUG // Integrity check.
@@ -47,7 +47,7 @@ namespace pacs {
     /**
      * @brief Copy constructor.
      * 
-     * @param segment 
+     * @param segment Segment.
      */
     Segment::Segment(const Segment &segment): a{segment.a}, b{segment.b} {}
 
@@ -56,7 +56,7 @@ namespace pacs {
     /**
      * @brief Returns the j-th extreme.
      * 
-     * @param j 
+     * @param j Index.
      * @return Point 
      */
     Point Segment::operator [](const std::size_t &j) const {
@@ -69,7 +69,13 @@ namespace pacs {
 
     // COMPARISONS
 
-
+    /**
+     * @brief Segment == Segment.
+     * 
+     * @param segment Segment.
+     * @return true 
+     * @return false 
+     */
     bool Segment::operator ==(const Segment &segment) const {
         return ((this->a == segment.a) && (this->b == segment.b)) || ((this->a == segment.b) && (this->b == segment.a));
     }
@@ -102,7 +108,7 @@ namespace pacs {
     /**
      * @brief Checks whether a Point is contained inside the Segment.
      * 
-     * @param point 
+     * @param point Point.
      * @return true 
      * @return false 
      */
@@ -149,12 +155,26 @@ namespace pacs {
         return (this->b[0] <= point[0]) && (point[0] <= this->a[0]) && (this->b[1] <= point[1]) && (point[1] <= this->a[1]);
     }
 
+    /**
+     * @brief Checks whether a Segment is contained inside the Segment.
+     * 
+     * @param segment Segment.
+     * @return true 
+     * @return false 
+     */
     bool Segment::contains(const Segment &segment) const {
         return this->contains(segment.a) && this->contains(segment.b);
     }
 
     // OUTPUT.
 
+    /**
+     * @brief Segment output.
+     * 
+     * @param ost 
+     * @param segment 
+     * @return std::ostream& 
+     */
     std::ostream &operator <<(std::ostream &ost, const Segment &segment) {
         return ost << "[" << segment.a << ", " << segment.b << "]";
     }

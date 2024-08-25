@@ -17,8 +17,8 @@ namespace pacs {
     /**
      * @brief Binomial coefficient.
      * 
-     * @param n 
-     * @param m 
+     * @param n Number.
+     * @param m Number.
      * @return std::size_t 
      */
     std::size_t binomial(const std::size_t &n, const std::size_t &k) {
@@ -32,8 +32,8 @@ namespace pacs {
     /**
      * @brief Returns the evaluation of a given order Legendre polynomial over x.
      * 
-     * @param x 
-     * @param order 
+     * @param x Coordinate.
+     * @param order Polynomial order.
      * @return Vector<Real> 
      */
     Vector<Real> legendre(const Vector<Real> &x, const std::size_t &order) {
@@ -93,8 +93,8 @@ namespace pacs {
     /**
      * @brief Returns the evaluation of the derivative of a given order Legendre polynomial over x.
      * 
-     * @param x 
-     * @param order 
+     * @param x Coordinate.
+     * @param order Polynomial order.
      * @return Vector<Real> 
      */
     Vector<Real> grad_legendre(const Vector<Real> &x, const std::size_t &order) {
@@ -150,8 +150,8 @@ namespace pacs {
     /**
      * @brief Returns the evaluation of the second derivative of a given order Legendre polynomial over x.
      * 
-     * @param x 
-     * @param order 
+     * @param x Coordinate.
+     * @param order Polynomial order.
      * @return Vector<Real> 
      */
     Vector<Real> lap_legendre(const Vector<Real> &x, const std::size_t &order) {

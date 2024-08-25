@@ -22,9 +22,9 @@ namespace pacs {
     /**
      * @brief Returns the Voronoi diagram of a vector of points inside a bounded domain.
      * 
-     * @param domain 
-     * @param points 
-     * @param reflect 
+     * @param domain Polygonal domain.
+     * @param points Points.
+     * @param reflect Reflection flag.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> voronoi(const Polygon &domain, const std::vector<Point> &points, const bool &reflect) {
@@ -93,9 +93,9 @@ namespace pacs {
     /**
      * @brief Returns the Voronoi diagram of a random number of points inside a bounded domain.
      * 
-     * @param domain 
-     * @param cells 
-     * @param reflect 
+     * @param domain Polygonal domain.
+     * @param cells Number of points.
+     * @param reflect Reflection flag.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> voronoi_random(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
@@ -130,7 +130,9 @@ namespace pacs {
     /**
      * @brief Returns the Voronoi diagram of uniformely distributes points inside a bounded domain.
      * 
-     * @param reflect 
+     * @param domain Polygonal domain.
+     * @param cells Number of points.
+     * @param reflect Reflection flag.
      * @return std::vector<Polygon> 
      */
     std::vector<Polygon> voronoi_uniform(const Polygon &domain, const std::size_t &cells, const bool &reflect) {
@@ -181,6 +183,12 @@ namespace pacs {
 
     // TRIANGLES.
 
+    /**
+     * @brief Triangulates a polygon.
+     * 
+     * @param polygon Polygon.
+     * @return std::vector<Polygon> 
+     */
     std::vector<Polygon> triangulate(const Polygon &polygon) {
         std::vector<Polygon> triangles;
         Point centroid = polygon.centroid();
@@ -192,7 +200,13 @@ namespace pacs {
 
         return triangles;
     }
-
+    
+    /**
+     * @brief Triangulates many polygons.
+     * 
+     * @param polygons Polygons.
+     * @return std::vector<Polygon> 
+     */
     std::vector<Polygon> triangulate(const std::vector<Polygon> &polygons) {
         std::vector<Polygon> triangles;
 
