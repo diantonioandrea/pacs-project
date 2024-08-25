@@ -19,3 +19,5 @@ clean:
 	@$(RM) -r *.bbl
 	@$(RM) -r *.nav
 	@$(RM) -r *.snm
+	@$(RM) -r *.xml
+	@$(RM) -r *.vrb
