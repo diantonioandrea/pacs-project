@@ -10,11 +10,13 @@
 \usepackage{xcolor-solarized}
 \color{solarized-base02}
 
-\usetheme{Copenhagen}
+% Beamer.
+\usetheme{metropolis}
 \useinnertheme{circles}
 
 \usecolortheme{seahorse} % Double color theme.
 \usecolortheme[named=solarized-blue]{structure}
+\setbeamercolor{background canvas}{bg=white}
 
 \AtBeginSection[]
 {
@@ -139,7 +141,7 @@
 
     \begin{frame}
         \titlepage
-    \end{frame}
+    \end{frame} % Error on title.
 
     \section{Introduction}
     \input{sections/problem.tex}
@@ -147,7 +149,6 @@
 	\section{Polygonal Meshes}
 	\input{sections/meshes.tex}
 
-	\section{References}
 	\input{sections/references.tex}
 
 \end{document}
