@@ -1,20 +1,20 @@
-# `include/Algebra/`
+# `include/PacsHPDG/Algebra/`
 
 ## Structs
 
-### [`include/Algebra/Vector.hpp`](./Vector.hpp)
+### [`include/PacsHPDG/Algebra/Vector.hpp`](./Vector.hpp)
 
 ```cpp
 template<NumericType T> struct Vector {};
 ```
 
-### [`include/Algebra/Matrix.hpp`](./Matrix.hpp)
+### [`include/PacsHPDG/Algebra/Matrix.hpp`](./Matrix.hpp)
 
 ```cpp
 template<NumericType T> struct Matrix {};
 ```
 
-### [`include/Algebra/Sparse.hpp`](./Sparse.hpp)
+### [`include/PacsHPDG/Algebra/Sparse.hpp`](./Sparse.hpp)
 
 ```cpp
 template<NumericType T> struct Sparse {};
@@ -22,7 +22,7 @@ template<NumericType T> struct Sparse {};
 
 ## Methods
 
-### [`include/Algebra/Solvers.hpp`](./Solvers.hpp)
+### [`include/PacsHPDG/Algebra/Solvers.hpp`](./Solvers.hpp)
 
 ```cpp
 // Solvers and preconditioners (enums).
@@ -60,7 +60,7 @@ template<NumericType T> Sparse<T> _di(const Sparse<T> &);
 template<NumericType T> Sparse<T> _dbi(const Sparse<T> &, const std::vector<std::array<std::vector<std::size_t>, 2>> &);
 ```
 
-### [`include/Algebra/Methods/Vector.hpp`](./Methods/Vector.hpp)
+### [`include/PacsHPDG/Algebra/Methods/Vector.hpp`](./Methods/Vector.hpp)
 
 ```cpp
 // Math.
@@ -79,7 +79,7 @@ template<NumericType T> Mask highest(const Vector<T> &, const std::size_t &);
 template<NumericType T> Mask lowest(const Vector<T> &, const std::size_t &);
 ```
 
-### [`include/Algebra/Methods/Matrix.hpp`](./Methods/Matrix.hpp)
+### [`include/PacsHPDG/Algebra/Methods/Matrix.hpp`](./Methods/Matrix.hpp)
 
 ```cpp
 // Math.
@@ -92,7 +92,7 @@ template<NumericType T> T mtrace(const Matrix<T> &);
 template<NumericType T> Vector<T> squash(const Matrix<T> &);
 ```
 
-### [`include/Algebra/Methods/Sparse.hpp`](./Methods/Sparse.hpp)
+### [`include/PacsHPDG/Algebra/Methods/Sparse.hpp`](./Methods/Sparse.hpp)
 
 ```cpp
 // Math.
