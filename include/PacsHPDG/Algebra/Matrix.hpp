@@ -44,8 +44,8 @@ namespace pacs {
         /**
          * @brief Constructs a new empty Matrix.
          * 
-         * @param rows 
-         * @param columns 
+         * @param rows Rows.
+         * @param columns Columns.
          */
         inline Matrix(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns}, elements(rows * columns, static_cast<T>(0)) {
             #ifndef NDEBUG // Integrity check.
@@ -56,8 +56,8 @@ namespace pacs {
         /**
          * @brief Constructs a new Matrix from a given std::vector.
          * 
-         * @param rows 
-         * @param columns 
+         * @param rows Rows.
+         * @param columns Columns.
          * @param elements 
          */
         inline Matrix(const std::size_t &rows, const std::size_t &columns, const std::vector<T> &elements): rows{rows}, columns{columns}, elements(elements.begin(), elements.end()) {
@@ -70,14 +70,14 @@ namespace pacs {
         /**
          * @brief Copy constructor.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          */
         inline Matrix(const Matrix &matrix): rows{matrix.rows}, columns{matrix.columns}, elements(matrix.elements.begin(), matrix.elements.end()) {}
         
         /**
          * @brief Copy operator.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix& 
          */
         inline Matrix &operator =(const Matrix &matrix) {
@@ -99,8 +99,8 @@ namespace pacs {
         /**
          * @brief Const call operator, returns the (i, j)-th element.
          * 
-         * @param j 
-         * @param k 
+         * @param j Index.
+         * @param k Index.
          * @return T 
          */
         inline T operator ()(const std::size_t &j, const std::size_t &k) const {
@@ -114,8 +114,8 @@ namespace pacs {
         /**
          * @brief Call operator, returns a reference to the (i, j)-th element.
          * 
-         * @param j 
-         * @param k 
+         * @param j Index.
+         * @param k Index.
          * @return T& 
          */
         inline T &operator ()(const std::size_t &j, const std::size_t &k) {
@@ -129,7 +129,7 @@ namespace pacs {
         /**
          * @brief Returns the j-th row as a Vector.
          * 
-         * @param j 
+         * @param j Index.
          * @return Vector<T> 
          */
         Vector<T> row(const std::size_t j) const {
@@ -151,8 +151,8 @@ namespace pacs {
         /**
          * @brief Sets the j-th row to the given scalar.
          * 
-         * @param j 
-         * @param scalar 
+         * @param j Index.
+         * @param scalar Scalar.
          */
         void row(const std::size_t j, const T &scalar) {
             #ifndef NDEBUG // Integrity check.
@@ -169,8 +169,8 @@ namespace pacs {
         /**
          * @brief Sets the j-th row to the given Vector.
          * 
-         * @param j 
-         * @param vector 
+         * @param j Index.
+         * @param vector Vector.
          */
         void row(const std::size_t j, const Vector<T> &vector) {
             #ifndef NDEBUG // Integrity check.
@@ -188,7 +188,7 @@ namespace pacs {
         /**
          * @brief Returns the k-th column as a Vector.
          * 
-         * @param jk
+         * @param k Index.
          * @return Vector<T> 
          */
         Vector<T> column(const std::size_t &k) const {
@@ -207,8 +207,8 @@ namespace pacs {
         /**
          * @brief Sets the k-th column to the given scalar.
          * 
-         * @param k 
-         * @param scalar 
+         * @param k Index.
+         * @param scalar Scalar.
          */
         void column(const std::size_t &k, const T &scalar) {
             #ifndef NDEBUG // Integrity check.
@@ -222,8 +222,8 @@ namespace pacs {
         /**
          * @brief Sets the k-th column to the given vector.
          * 
-         * @param k 
-         * @param vector 
+         * @param k Index.
+         * @param vector Vector.
          */
         void column(const std::size_t &k, const Vector<T> &vector) {
             #ifndef NDEBUG // Integrity check.
@@ -251,8 +251,8 @@ namespace pacs {
         /**
          * @brief Returns the reshaped Matrix.
          * 
-         * @param rows 
-         * @param columns 
+         * @param rows Rows.
+         * @param columns Columns.
          * @return Matrix 
          */
         inline Matrix reshape(const std::size_t &rows, const std::size_t &columns) const {
@@ -367,7 +367,7 @@ namespace pacs {
         /**
          * @brief Matrix scalar product.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Matrix 
          */
         Matrix operator *(const T &scalar) const {
@@ -385,8 +385,8 @@ namespace pacs {
         /**
          * @brief Friend Matrix scalar product.
          * 
-         * @param scalar 
-         * @param matrix 
+         * @param scalar Scalar.
+         * @param matrix Matrix.
          * @return Matrix 
          */
         friend Matrix operator *(const T &scalar, const Matrix &matrix) {
@@ -404,7 +404,7 @@ namespace pacs {
         /**
          * @brief Matrix scalar product and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Matrix& 
          */
         Matrix &operator *=(const T scalar) {
@@ -420,7 +420,7 @@ namespace pacs {
         /**
          * @brief Matrix scalar division.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Matrix 
          */
         Matrix operator /(const T &scalar) const {
@@ -438,7 +438,7 @@ namespace pacs {
         /**
          * @brief Matrix scalar division and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Matrix& 
          */
         Matrix &operator /=(const T scalar) {
@@ -454,7 +454,7 @@ namespace pacs {
         /**
          * @brief Matrix sum.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix 
          */
         Matrix operator +(const Matrix &matrix) const {
@@ -476,7 +476,7 @@ namespace pacs {
         /**
          * @brief Matrix sum and assignation.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix& 
          */
         Matrix &operator +=(const Matrix &matrix) {
@@ -496,7 +496,7 @@ namespace pacs {
         /**
          * @brief Matrix difference.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix 
          */
         Matrix operator -(const Matrix &matrix) const {
@@ -518,7 +518,7 @@ namespace pacs {
         /**
          * @brief Matrix difference and assignation.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix& 
          */
         Matrix &operator -=(const Matrix &matrix) {
@@ -538,7 +538,7 @@ namespace pacs {
         /**
          * @brief Matrix * Vector product.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector<T> 
          */
         Vector<T> operator *(const Vector<T> &vector) const {
@@ -561,8 +561,8 @@ namespace pacs {
         /**
          * @brief Friend Vector * Matrix product.
          * 
-         * @param vector 
-         * @param matrix 
+         * @param vector Vector.
+         * @param matrix Matrix.
          * @return Vector<T> 
          */
         friend Vector<T> operator *(const Vector<T> &vector, const Matrix &matrix) {
@@ -582,7 +582,7 @@ namespace pacs {
         /**
          * @brief Matrix * Matrix product.
          * 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return Matrix 
          */
         Matrix operator *(const Matrix &matrix) const {
@@ -606,7 +606,7 @@ namespace pacs {
          * @brief Matrix output.
          * 
          * @param ost 
-         * @param matrix 
+         * @param matrix Matrix.
          * @return std::ostream& 
          */
         friend std::ostream &operator <<(std::ostream &ost, const Matrix &matrix) {

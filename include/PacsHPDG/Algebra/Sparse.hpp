@@ -54,8 +54,8 @@ namespace pacs {
         /**
          * @brief Constructs a new empty Sparse matrix.
          * 
-         * @param rows 
-         * @param columns 
+         * @param rows Rows.
+         * @param columns Columns.
          */
         Sparse(const std::size_t &rows, const std::size_t &columns): rows{rows}, columns{columns} {
             #ifndef NDEBUG // Integrity check.
@@ -66,9 +66,9 @@ namespace pacs {
         /**
          * @brief Constructs a new Sparse matrix from a given std::map.
          * 
-         * @param rows 
-         * @param columns 
-         * @param elements 
+         * @param rows Rows.
+         * @param columns Columns.
+         * @param elements Elements.
          */
         Sparse(const std::size_t &rows, const std::size_t &columns, const std::map<std::array<std::size_t, 2>, T> &elements): rows{rows}, columns{columns}, elements{elements} {
             #ifndef NDEBUG // Integrity checks.
@@ -83,9 +83,9 @@ namespace pacs {
         /**
          * @brief Constructs a new Sparse matrix from given inner, outer and values vectors.
          *
-         * @param rows
-         * @param columns
-         * @param elements
+         * @param rows Rows.
+         * @param columns Columns.
+         * @param elements Elements.
          */
         Sparse(const std::size_t &rows, const std::size_t &columns, const std::vector<std::size_t> &inner, const std::vector<std::size_t> &outer, const std::vector<T> &values):
         rows{rows}, columns{columns}, compressed{true}, inner{inner}, outer{outer}, values{values} {
@@ -111,7 +111,7 @@ namespace pacs {
         /**
          * @brief Copy constructor.
          *
-         * @param sparse
+         * @param sparse Sparse matrix.
          */
         Sparse(const Sparse &sparse): rows{sparse.rows}, columns{sparse.columns}, compressed{sparse.compressed} {
             if(!(sparse.compressed))
@@ -130,7 +130,7 @@ namespace pacs {
         /**
          * @brief Copy operator.
          *
-         * @param sparse
+         * @param sparse Sparse matrix.
          * @return Sparse&
          */
         Sparse &operator =(const Sparse &sparse) {
@@ -186,8 +186,8 @@ namespace pacs {
         /**
          * @brief Const call operator, returns the (i, j)-th element if present.
          *
-         * @param j
-         * @param k
+         * @param j Index.
+         * @param k Index.
          * @return T
          */
         T operator ()(const std::size_t &j, const std::size_t &k) const {
@@ -211,8 +211,8 @@ namespace pacs {
         /**
          * @brief Const call operator, returns a sub-matrix.
          * 
-         * @param J 
-         * @param K 
+         * @param J Indices.
+         * @param K Indices.
          * @return Matrix<T> 
          */
         Matrix<T> operator ()(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K) const {
@@ -236,9 +236,9 @@ namespace pacs {
         /**
          * @brief Inserts a new element.
          * 
-         * @param j 
-         * @param k 
-         * @param element 
+         * @param j Index.
+         * @param k Index.
+         * @param element Element.
          */
         void insert(const std::size_t &j, const std::size_t &k, const T &element) {
             #ifndef NDEBUG // Integrity check.
@@ -253,9 +253,9 @@ namespace pacs {
         /**
          * @brief Inserts a new matrix of elements.
          * 
-         * @param j 
-         * @param k 
-         * @param elements 
+         * @param J Indices.
+         * @param K Indices.
+         * @param elements Matrix.
          */
         void insert(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
             #ifndef NDEBUG // Integrity checks.
@@ -279,9 +279,9 @@ namespace pacs {
         /**
          * @brief Adds a new element. Slower than an insert for simple creation.
          * 
-         * @param j 
-         * @param k 
-         * @param element 
+         * @param j Index,
+         * @param k Index,
+         * @param element Element.
          */
         void add(const std::size_t &j, const std::size_t &k, const T &element) {
             #ifndef NDEBUG // Integrity check.
@@ -300,9 +300,9 @@ namespace pacs {
         /**
          * @brief Adds a new matrix of elements.
          * 
-         * @param j 
-         * @param k 
-         * @param elements 
+         * @param J Indices.
+         * @param K Indices.
+         * @param elements Matrix.
          */
         void add(const std::vector<std::size_t> &J, const std::vector<std::size_t> &K, const Matrix<T> &elements) {
             #ifndef NDEBUG // Integrity checks.
@@ -330,7 +330,7 @@ namespace pacs {
         /**
          * @brief Returns the j-th row as a Vector.
          * 
-         * @param j 
+         * @param j Index.
          * @return Vector<T> 
          */
         Vector<T> row(const std::size_t &j) const {
@@ -358,8 +358,8 @@ namespace pacs {
         /**
          * @brief Sets the j-th row to the given scalar.
          * 
-         * @param j 
-         * @param scalar 
+         * @param j Index.
+         * @param scalar Scalar.
          */
         void row(const std::size_t &j, const T &scalar) {
             #ifndef NDEBUG // Integrity check.
@@ -377,8 +377,8 @@ namespace pacs {
         /**
          * @brief Sets the j-th row to the given Vector.
          * 
-         * @param j 
-         * @param vector 
+         * @param j Index.
+         * @param vector Vector.
          */
         void row(const std::size_t &j, const Vector<T> &vector) {
             #ifndef NDEBUG // Integrity check.
@@ -394,7 +394,7 @@ namespace pacs {
         /**
          * @brief Return the k-th column as a Vector.
          * 
-         * @param k 
+         * @param k Index.
          * @return Vector<T> 
          */
         Vector<T> column(const std::size_t &k) const {
@@ -423,8 +423,8 @@ namespace pacs {
         /**
          * @brief Sets the k-th column to the given scalar.
          * 
-         * @param k 
-         * @param scalar 
+         * @param k Index.
+         * @param scalar Scalar.
          */
         void column(const std::size_t &k, const T &scalar) {
             #ifndef NDEBUG // Integrity check.
@@ -442,8 +442,8 @@ namespace pacs {
         /**
          * @brief Sets the k-th column to the given Vector.
          * 
-         * @param k 
-         * @param vector 
+         * @param k Index.
+         * @param vector Vector.
          */
         void column(const std::size_t &k, const Vector<T> &vector) {
             #ifndef NDEBUG // Integrity check.
@@ -461,8 +461,8 @@ namespace pacs {
         /**
          * @brief Returns the reshaped Sparse matrix.
          * 
-         * @param rows 
-         * @param columns 
+         * @param rows Rows.
+         * @param columns Columns.
          * @return Sparse 
          */
         Sparse reshape(const std::size_t &rows, const std::size_t &columns) const {
@@ -883,7 +883,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix sum.
          * 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return Sparse 
          */
         Sparse operator +(const Sparse &sparse) const {
@@ -916,7 +916,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix sum and assignation.
          * 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return Sparse& 
          */
         Sparse &operator +=(const Sparse &sparse) {
@@ -947,7 +947,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix difference.
          * 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return Sparse 
          */
         Sparse operator -(const Sparse &sparse) const {
@@ -980,7 +980,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix difference and assignation.
          * 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return Sparse& 
          */
         Sparse &operator -=(const Sparse &sparse) {
@@ -1011,7 +1011,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix scalar product.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Sparse 
          */
         Sparse operator *(const T &scalar) const {
@@ -1030,8 +1030,8 @@ namespace pacs {
         /**
          * @brief Friend Sparse matrix scalar product.
          * 
-         * @param scalar 
-         * @param sparse 
+         * @param scalar Scalar.
+         * @param sparse Sparse matrix.
          * @return Sparse 
          */
         friend Sparse operator *(const T &scalar, const Sparse &sparse) {
@@ -1050,7 +1050,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix scalar product and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Sparse& 
          */
         Sparse &operator *=(const T &scalar) {
@@ -1067,7 +1067,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix scalar division.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Sparse 
          */
         Sparse operator /(const T &scalar) const {
@@ -1086,8 +1086,8 @@ namespace pacs {
         /**
          * @brief Friend Sparse matrix scalar division.
          * 
-         * @param scalar 
-         * @param sparse 
+         * @param scalar Scalar.
+         * @param sparse Sparse matrix.
          * @return Sparse 
          */
         friend Sparse operator /(const T &scalar, const Sparse &sparse) {
@@ -1106,7 +1106,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix scalar division and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Sparse& 
          */
         Sparse &operator /=(const T &scalar) {
@@ -1123,7 +1123,7 @@ namespace pacs {
         /**
          * @brief Sparse matrix * Vector product.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector<T> 
          */
         Vector<T> operator *(const Vector<T> &vector) const {
@@ -1148,7 +1148,7 @@ namespace pacs {
          * @brief Sparse Matrix * Sparse Matrix.
          * Manual construction of the result matrix as performance oriented.
          * 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return Sparse 
          */
         Sparse operator *(const Sparse &sparse) const {
@@ -1198,7 +1198,7 @@ namespace pacs {
          * @brief Sparse matrix output.
          * 
          * @param ost 
-         * @param sparse 
+         * @param sparse Sparse matrix.
          * @return std::ostream& 
          */
         friend std::ostream &operator <<(std::ostream &ost, const Sparse &sparse) {

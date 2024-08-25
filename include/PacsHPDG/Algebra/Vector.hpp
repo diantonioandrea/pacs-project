@@ -41,7 +41,7 @@ namespace pacs {
         /**
          * @brief Constructs a new empty Vector.
          * 
-         * @param length 
+         * @param length Length.
          */
         Vector(const std::size_t &length): length{length}, elements(length, static_cast<T>(0)) {
             #ifndef NDEBUG // Integrity check.
@@ -52,8 +52,8 @@ namespace pacs {
         /**
          * @brief Constructs a new homogeneous Vector.
          * 
-         * @param length 
-         * @param value 
+         * @param length Length.
+         * @param value Scalar.
          */
         Vector(const std::size_t &length, const T &value): length{length}, elements(length, value) {
             #ifndef NDEBUG // Integrity check.
@@ -64,8 +64,8 @@ namespace pacs {
         /**
          * @brief Constructs a new Vector from a given std::vector.
          * 
-         * @param length 
-         * @param elements 
+         * @param length Length.
+         * @param elements Elements.
          */
         Vector(const std::size_t &length, const std::vector<T> &elements): length{length}, elements(elements.begin(), elements.end()) {
             #ifndef NDEBUG // Integrity check.
@@ -77,14 +77,14 @@ namespace pacs {
         /**
          * @brief Copy constructor.
          * 
-         * @param vector 
+         * @param vector Vector.
          */
         Vector(const Vector &vector): length{vector.length}, elements(vector.elements.begin(), vector.elements.end()) {}
         
         /**
          * @brief Copy operator.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector& 
          */
         Vector &operator =(const Vector &vector) {
@@ -104,7 +104,7 @@ namespace pacs {
         /**
          * @brief Scalar copy operator.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector& 
          */
         Vector &operator =(const T &scalar) {
@@ -133,7 +133,7 @@ namespace pacs {
         /**
          * @brief Const subscript operator, returns the j-th element.
          * 
-         * @param j 
+         * @param j Index.
          * @return T 
          */
         inline T operator [](const std::size_t &j) const {
@@ -147,7 +147,7 @@ namespace pacs {
         /**
          * @brief Subscript operator, returns a reference to the j-th element.
          * 
-         * @param j 
+         * @param j Index.
          * @return T& 
          */
         inline T &operator [](const std::size_t &j) {
@@ -161,7 +161,7 @@ namespace pacs {
         /**
          * @brief Returns the [j, k) range.
          * 
-         * @param j 
+         * @param j Index.
          * @param k 
          * @return Vector 
          */
@@ -187,7 +187,7 @@ namespace pacs {
         /**
          * @brief Returns the [j, end) range.
          * 
-         * @param j 
+         * @param j Index.
          * @return Vector 
          */
         Vector operator ()(const std::size_t &j) const {
@@ -206,7 +206,7 @@ namespace pacs {
         /**
          * @brief Returns a sub-Vector given a std::vector of indices.
          * 
-         * @param indices 
+         * @param indices Indices.
          * @return Vector 
          */
         Vector operator ()(const std::vector<std::size_t> &indices) const {
@@ -226,7 +226,7 @@ namespace pacs {
         /**
          * @brief Returns a sub-Vector given a Mask.
          * 
-         * @param mask 
+         * @param mask Mask.
          * @return Vector 
          */
         Vector operator ()(const Mask &mask) const {
@@ -246,8 +246,8 @@ namespace pacs {
         /**
          * @brief Sets a sub-Vector given a std::vector of indices and a Vector of values.
          * 
-         * @param indices 
-         * @param values 
+         * @param indices Indices.
+         * @param values Values.
          * @return Vector 
          */
         void operator ()(const std::vector<std::size_t> &indices, const Vector &values) {
@@ -266,6 +266,7 @@ namespace pacs {
         /**
          * @brief Vector < Scalar.
          * 
+         * scalar Scalar.
          */
         Mask operator <(const T &scalar) const {
             Mask mask(this->length, false);
@@ -282,6 +283,7 @@ namespace pacs {
         /**
          * @brief Vector > Scalar.
          * 
+         * @param scalar Scalar.
          */
         Mask operator >(const T &scalar) const {
             Mask mask(this->length, false);
@@ -298,7 +300,7 @@ namespace pacs {
         /**
          * @brief Vector < Vector.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Mask 
          */
         Mask operator <(const Vector &vector) const {
@@ -320,7 +322,7 @@ namespace pacs {
         /**
          * @brief Vector > Vector.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Mask 
          */
         Mask operator >(const Vector &vector) const {
@@ -370,7 +372,7 @@ namespace pacs {
         /**
          * @brief Scalar product.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector 
          */
         Vector operator *(const T &scalar) const {
@@ -388,8 +390,8 @@ namespace pacs {
         /**
          * @brief Friend scalar product.
          * 
-         * @param scalar 
-         * @param vector 
+         * @param scalar Scalar.
+         * @param vector Vector.
          * @return Vector 
          */
         friend Vector operator *(const T &scalar, const Vector &vector) {
@@ -407,7 +409,7 @@ namespace pacs {
         /**
          * @brief Scalar product and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector& 
          */
         Vector &operator *=(const T &scalar) {
@@ -423,7 +425,7 @@ namespace pacs {
         /**
          * @brief Scalar division.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector 
          */
         Vector operator /(const T &scalar) const {
@@ -441,8 +443,8 @@ namespace pacs {
         /**
          * @brief Friend scalar division.
          * 
-         * @param scalar 
-         * @param vector 
+         * @param scalar Scalar.
+         * @param vector Vector.
          * @return Vector 
          */
         friend Vector operator /(const T &scalar, const Vector &vector) {
@@ -460,7 +462,7 @@ namespace pacs {
         /**
          * @brief Scalar division and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector& 
          */
         Vector &operator /=(const T &scalar) {
@@ -476,7 +478,7 @@ namespace pacs {
         /**
          * @brief Vector sum.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector 
          */
         Vector operator +(const Vector &vector) const {
@@ -498,7 +500,7 @@ namespace pacs {
         /**
          * @brief Vector sum and assignation.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector& 
          */
         Vector &operator +=(const Vector &vector) {
@@ -518,7 +520,7 @@ namespace pacs {
         /**
          * @brief Scalar "sum".
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector 
          */
         Vector operator +(const T &scalar) const {
@@ -536,8 +538,8 @@ namespace pacs {
         /**
          * @brief Friend scalar "sum".
          * 
-         * @param scalar 
-         * @param vector 
+         * @param scalar Scalar.
+         * @param vector Vector.
          * @return Vector 
          */
         friend Vector operator +(const T &scalar, const Vector &vector) {
@@ -555,7 +557,7 @@ namespace pacs {
         /**
          * @brief Scalar "sum" and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector& 
          */
         Vector &operator +=(const T &scalar) {
@@ -571,7 +573,7 @@ namespace pacs {
         /**
          * @brief Vector difference.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector 
          */
         Vector operator -(const Vector &vector) const {
@@ -593,7 +595,7 @@ namespace pacs {
         /**
          * @brief Vector difference and assignation.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return Vector& 
          */
         Vector &operator -=(const Vector &vector) {
@@ -613,7 +615,7 @@ namespace pacs {
         /**
          * @brief Scalar "difference".
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector 
          */
         Vector operator -(const T &scalar) const {
@@ -631,8 +633,8 @@ namespace pacs {
         /**
          * @brief Friend scalar "difference".
          * 
-         * @param scalar 
-         * @param vector 
+         * @param scalar Scalar.
+         * @param vector Vector.
          * @return Vector 
          */
         friend Vector operator -(const T &scalar, const Vector &vector) {
@@ -650,7 +652,7 @@ namespace pacs {
         /**
          * @brief Scalar "difference" and assignation.
          * 
-         * @param scalar 
+         * @param scalar Scalar.
          * @return Vector& 
          */
         Vector &operator -=(const T &scalar) {
@@ -666,7 +668,7 @@ namespace pacs {
         /**
          * @brief Vector element-wise product.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return T 
          */
         Vector operator *(const Vector &vector) const {
@@ -688,7 +690,7 @@ namespace pacs {
         /**
          * @brief Vector element-wise product and assignation.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return T 
          */
         Vector &operator *=(const Vector &vector) {
@@ -708,7 +710,7 @@ namespace pacs {
         /**
          * @brief Vector element-wise division.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return T 
          */
         Vector operator /(const Vector &vector) const {
@@ -730,7 +732,7 @@ namespace pacs {
         /**
          * @brief Vector element-wise division and assignation.
          * 
-         * @param vector 
+         * @param vector Vector.
          * @return T 
          */
         Vector &operator /=(const Vector &vector) {
@@ -753,7 +755,7 @@ namespace pacs {
          * @brief Vector output.
          * 
          * @param ost 
-         * @param vector 
+         * @param vector Vector.
          * @return std::ostream& 
          */
         friend std::ostream &operator <<(std::ostream &ost, const Vector &vector) {

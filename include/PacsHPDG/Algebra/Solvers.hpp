@@ -56,10 +56,10 @@ namespace pacs {
     /**
      * @brief Directly solves a linear system Ax = b.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param S 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param S Solver.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -81,9 +81,10 @@ namespace pacs {
     /**
      * @brief Directly solves a linear system Ax = B.
      * 
-     * @tparam T 
-     * @param A 
-     * @param B 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param B Matrix.
+     * @param S Solver.
      * @return Matrix<T> 
      */
     template<NumericType T>
@@ -105,10 +106,10 @@ namespace pacs {
     /**
      * @brief Solves a sparse linear system Ax = b.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param S 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param S Solver.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -133,13 +134,13 @@ namespace pacs {
     /**
      * @brief Solves a (left) preconditioned sparse linear system Ax = b.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
      * @param blocks 
-     * @param S 
-     * @param P 
-     * @param TOL 
+     * @param S Solver.
+     * @param P Preconditioner.
+     * @param TOL Tolerance.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -169,11 +170,11 @@ namespace pacs {
     /**
      * @brief Directly solves a sparse linear system Ax = b.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param blocks 
-     * @param S 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param blocks Blocks.
+     * @param S Solver.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -194,7 +195,9 @@ namespace pacs {
     /**
      * @brief LU solver. No verbosity.
      * 
-     * @param vector 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -233,9 +236,9 @@ namespace pacs {
     /**
      * @brief LU Matrix solver. No verbosity.
      * 
-     * @tparam T 
-     * @param A 
-     * @param B 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param B Matrix.
      * @return Matrix<T> 
      */
     template<NumericType T>
@@ -284,7 +287,9 @@ namespace pacs {
     /**
      * @brief QR solver. No verbosity.
      * 
-     * @param vector 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -312,9 +317,9 @@ namespace pacs {
     /**
      * @brief QR Matrix solver. No verbosity.
      * 
-     * @tparam T 
-     * @param A 
-     * @param B 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param B Matrix.
      * @return Matrix<T> 
      */
     template<NumericType T>
@@ -352,10 +357,10 @@ namespace pacs {
     /**
      * @brief Guessless restarted GMRES.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param TOL 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param TOL Tolerance.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -366,11 +371,11 @@ namespace pacs {
     /**
      * @brief Restarted GMRES.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param guess 
-     * @param TOL 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param guess Vector.
+     * @param TOL Tolerance.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -519,10 +524,10 @@ namespace pacs {
     /**
      * @brief Conjugate Gradient.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param TOL 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param TOL Tolerance.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -601,10 +606,10 @@ namespace pacs {
     /**
      * @brief Biconjugate Gradient Stabilized method.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param TOL 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param TOL Tolerance.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -712,10 +717,10 @@ namespace pacs {
     /**
      * @brief Diagonal block method.
      * 
-     * @tparam T 
-     * @param A 
-     * @param b 
-     * @param blocks 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param b Vector.
+     * @param blocks Blocks.
      * @return Vector<T> 
      */
     template<NumericType T>
@@ -767,8 +772,8 @@ namespace pacs {
     /**
      * @brief Diagonal Inverse preconditioner.
      * 
-     * @tparam T 
-     * @param A 
+     * @tparam T Numeric type.
+     * @param A Matrix.
      * @return Sparse<T> 
      */
     template<NumericType T>
@@ -785,9 +790,9 @@ namespace pacs {
     /**
      * @brief Diagonal Block Inverse preconditioner.
      * 
-     * @tparam T 
-     * @param A 
-     * @param blocks 
+     * @tparam T Numeric type.
+     * @param A Matrix.
+     * @param blocks Blocks.
      * @return Sparse<T> 
      */
     template<NumericType T>
