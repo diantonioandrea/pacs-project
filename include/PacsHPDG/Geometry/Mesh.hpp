@@ -76,7 +76,7 @@ namespace pacs {
 
         // CONSTRUCTORS.
 
-        Mesh(const Polygon &, const std::vector<Polygon> &, const std::vector<std::size_t> &degrees);
+        Mesh(const Polygon &, const std::vector<Polygon> &, const std::vector<std::size_t> &);
         Mesh(const Polygon &, const std::vector<Polygon> &, const std::size_t &degree = 1);
         Mesh(const Mesh &);
 
