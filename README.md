@@ -2,9 +2,16 @@
 
 _The hp-Adaptive Discontinuous Galërkin Method_
 
+## Introduction
+
+This repository provides an implementation of the _hp-adaptive_ discontinuous Galërkin method for the Poisson problem, serving as the foundation for the _PacsHPDG_ library.
+
+:warning: Refer to the [report](#compiling-the-report) for a detailed explanation of the background and results related to this project.
+
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Setup](#setup)
     - [Cloning the Repository](#cloning-the-repository)
@@ -29,12 +36,6 @@ _The hp-Adaptive Discontinuous Galërkin Method_
     - [On Parallelism](#on-parallelism)
 
 :warning: Make sure to take a look at [Notes to the Reader](#notes-to-the-reader) as they provide insight into some design choices about the code.
-
-## Introduction
-
-This repository provides an implementation of the _hp-adaptive_ discontinuous Galërkin method for the Poisson problem, serving as the foundation for the _PacsHPDG_ library.
-
-Refer to the [report](#compiling-the-report) for a detailed explanation of the background and results related to this project.
 
 ## Overview
 
