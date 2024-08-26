@@ -61,21 +61,21 @@ The following shows the error trends for the $\LT$ and $DG$ errors over sequence
 \end{figure}
 
 \newpage
-\subsection{Pathological solutions}
+\subsection{Low-regularity solutions}
 
-Tests over a sequence of uniform meshes, using pathological functions as exact solutions, highlight the need for an adaptive algorithm.
+Tests over a sequence of uniform meshes, using low-regularity functions as exact solutions, highlight the need for an adaptive algorithm.
 
-\cite{Antonietti2013} The pathological function for the square domain is:
+\cite{Antonietti2013} The low-regularity function for the square domain is:
 
-\begin{gather} \label{pathological_square}
+\begin{gather} \label{low-regularity_square}
     u(x, y) = \frac{1 - e^{-100x}}{1 - e^{-100}} \sin(\pi y) (1 - x),
 \end{gather}
 
 which exhibits a strong boundary layer along the line $x = 0$.
 
-For the L-shaped domain, the pathological function is:
+For the L-shaped domain, the low-regularity function is:
 
-\begin{gather} \label{pathological_lshape}
+\begin{gather} \label{low-regularity_lshape}
     u(\rho, \theta) = \rho^{2 / 3} \sin\left(\frac{2 \theta}{3}\right),
 \end{gather}
 
@@ -86,7 +86,7 @@ Error trends are discussed in the following sections.
 \newpage
 \subsubsection{Errors}
 
-Despite being a smooth function, the pathological solution over the square domain achieves the expected convergence rate, albeit at a slower pace.
+Being a smooth function, the low-regularity solution over the square domain achieves the expected convergence rate, albeit at a slower pace.
 
 \begin{figure}[!ht]
     \input{tikz/square_2_evs.tex}
@@ -96,7 +96,7 @@ Despite being a smooth function, the pathological solution over the square domai
 
 \newpage
 
-Due to its nature, the pathological solution on the L-shaped domain does not reach the expected convergence rate. The expected convergence rate, given its Sobolev regularity, is:
+Due to its nature, the low-regularity solution on the L-shaped domain does not reach the expected convergence rate. The expected convergence rate, given its Sobolev regularity, is:
 
 \begin{gather}
     \lVert u - u^k_h \rVert_{DG} \approx h^{2/3}.

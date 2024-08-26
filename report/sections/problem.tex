@@ -13,9 +13,9 @@ Consider the domain $\Omega \subset \mathbb{R}^2$. The goal is to find $u \in C^
 
 \subsection{The weak formulation}
 
-The goal is to find $u \in \{v \in V : v \vert_{\partial \Omega} = g \}$ such that, for any $f \in V^*$, the following equation is satisfied:
+The goal is to find $u \in V = \HO_g$ such that, for any $f \in V^*$, the following equation is satisfied:
 
-\begin{gather} \label{weak_stokes}
+\begin{gather}
     \boa{u}{v} = \langle f, v \rangle \quad \Forall v \in V,
 \end{gather}
 
@@ -50,7 +50,8 @@ The bilinear form $\boa{\cdot}{\cdot}$ includes terms to account for discontinui
         \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h \, d \omega \\
         &- \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d \sigma  \\
         &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} \, d \sigma \\
-        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d \sigma \quad \Forall v^k_h, w^k_h \in V^k_h.
+        &+ \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d \sigma \\
+        &= \Operator{v}(v^k_h, w^k_h) - \Operator{i}(v^k_h, w^k_h) - \Operator{i}(w^k_h, v^k_h) + \Operator{s}(v^k_h, w^k_h) \quad \Forall v^k_h, w^k_h \in V^k_h.
     \end{split}
 \end{align}
 
