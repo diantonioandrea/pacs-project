@@ -134,14 +134,18 @@ cd report
 make
 ```
 
+Ensure that [_latexmk_](https://ctan.org/pkg/latexmk/) is installed.
+
 ### Compiling the Presentation
 
-The presentation for the project can be compiled by:
+Similarly, the presentation for the project can be compiled by:
 
 ```bash
 cd presentation
 make
 ```
+
+Again, ensure that _latexmk_ is installed.
 
 ## Using the Repository
 
