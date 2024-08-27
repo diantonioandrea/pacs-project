@@ -206,11 +206,15 @@ Category _1_ requires the user to specify the polynomial degree. An example comm
 ./executables/square.out 3
 ```
 
+which solves the Poisson problem on a sequence of uniformly refined square meshes with $k = 3$.
+
 Categories _2, ..., 5_ require the user to specify the polynomial degree and optionally a starting mesh identified by its elements. Meshes are stored under `data/square/` or `data/lshape/`. An example command is:
 
 ```bash
-./executables/square_h.out 3 250
+./executables/lshape_h.out 3 250
 ```
+
+which solves the Poisson problem on a sequence of _h-adaptively_ refined L-shaped meshes with $k = 3$ and $N_0 = 250$.
 
 The polynomial degree specified for _hp-adaptively_ refined meshes is treated as the starting degree.
 
