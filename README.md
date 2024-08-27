@@ -194,11 +194,13 @@ Examples are divided into the following categories based on their domains and me
 4. _h-adaptively_ refined meshes with _a posteriori_ estimates:
     - `square_eh.cpp` Square domain, non-smooth solution.
     - `lshape_eh.cpp` L-shaped domain, non-smooth solution.
-5. _hp-adaptively_ refined meshes with _a posteriori_ estimates:
+5. _hp-adaptively_ refined meshes with _a posteriori_ estimates:[^hp]
     - `square_hp.cpp` Square domain, non-smooth solution.
     - `lshape_hp.cpp` L-shaped domain, non-smooth solution.
 
 [^solutions]: Smooth and non-smooth solutions are discussed in the report.
+
+[^hp]: The polynomial degree specified for _hp-adaptively_ refined meshes is treated as the starting degree.
 
 Category _1_ requires the user to specify the polynomial degree. An example command is:
 
@@ -216,7 +218,7 @@ Categories _2, ..., 5_ require the user to specify the polynomial degree and opt
 
 which solves the Poisson problem on a sequence of _h-adaptively_ refined L-shaped meshes with $k = 3$ and $N_0 = 250$.
 
-The polynomial degree specified for _hp-adaptively_ refined meshes is treated as the starting degree.
+:warning: These examples contribute to the graphs presented in the report.
 
 ### Scripts
 
