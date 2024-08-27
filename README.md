@@ -213,10 +213,10 @@ which solves the Poisson problem on a sequence of uniformly refined square meshe
 Categories _2, ..., 5_ require the user to specify the polynomial degree and optionally a starting mesh identified by its elements. Meshes are stored under `data/square/` or `data/lshape/`. An example command is:
 
 ```bash
-./executables/lshape_h.out 3 250
+./executables/square_h.out 3 250
 ```
 
-which solves the Poisson problem on a sequence of _h-adaptively_ refined L-shaped meshes with $k = 3$ and $N_0 = 250$.
+which solves the Poisson problem on a sequence of _h-adaptively_ refined square meshes with $k = 3$ and $N_0 = 250$.
 
 :warning: These examples contribute to the graphs presented in the report.
 
