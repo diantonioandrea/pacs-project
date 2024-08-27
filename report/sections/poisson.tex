@@ -8,7 +8,7 @@ The \lstinline{forcing} function constructs the forcing term by evaluating \eqre
 
 On adaptively refined meshes, $\kappa(\MA)$ rapidly grows, necessitating the use of a preconditioner within the custom solver \lstinline{lapsolver}.
 
-Let $\MM$ and $\MA_{DG}$ be the mass and $DG$ matrices. The $L^2$ and $DG$ errors are then evaluated by first computing the modal coefficients $\Vector{\upsilon}_m$ for the exact solution $u$ and solving $\MM \Vector{u} = \Vector{\upsilon}_m$ using the \lstinline{DB}\footnote{Block diagonal algorithm.} algorithm. Thus, the error vector is $\Vector{e} = \Vector{\upsilon} - \Vector{\upsilon}^k_h$. Hence:
+Let $\MM$ and $(\mathcal{V}_{DG} + \mathcal{S}_{DG})$ be the mass and $DG$ matrices. The $L^2$ and $DG$ errors are then evaluated by first computing the modal coefficients $\Vector{\upsilon}_m$ for the exact solution $u$ and solving $\MM \Vector{u} = \Vector{\upsilon}_m$ using the \lstinline{DB}\footnote{Block diagonal algorithm.} algorithm. Thus, the error vector is $\Vector{e} = \Vector{\upsilon} - \Vector{\upsilon}^k_h$. Hence:
 
 \begin{gather}
     \lVert u - u^k_h \rVert_{\LT(\Omega)} = \sqrt{\Vector{e}^\intercal \MM \Vector{e}}, \\
