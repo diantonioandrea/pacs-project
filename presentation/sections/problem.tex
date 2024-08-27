@@ -47,11 +47,10 @@
     \begin{align}
         \begin{split}
             \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \nabla v^k_h \cdot \nabla w^k_h \, d\omega - \sum_{F \in \F} \int_F \{\!\!\{ \nabla w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
-            &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \nabla v^k_h \}\!\!\} \, d\sigma + \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d\sigma.
+            &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \nabla v^k_h \}\!\!\} \, d\sigma + \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
+            &= \Operator{v}(v^k_h, w^k_h) - \Operator{i}(v^k_h, w^k_h) - \Operator{i}(w^k_h, v^k_h) + \Operator{s}(v^k_h, w^k_h).
         \end{split}
     \end{align}
-
-    where \(\gamma\) is the penalty parameter ensuring stability.
 \end{frame}
 
 \begin{frame}

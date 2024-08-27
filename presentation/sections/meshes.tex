@@ -12,20 +12,19 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Mesh-building strategy}
+    \frametitle{Mesh-Building Strategy}
 
-    The mesh-building strategy involves the following steps:
+    The mesh-building strategy follows these steps:
 
     \begin{enumerate}
-        \item Generate a Voronoi diagram to partition the domain into regions based on point locations.
-        \item Refine the mesh by adjusting point positions to minimize element distortion.
-        \item Remove or adjust very small edges to enhance mesh quality and stability.
-        \item Analyze the connectivity and arrangement of mesh elements to ensure proper structure.
-        \item Calculate properties such as element areas and the largest simplices.
+        \item Voronoi diagram generation,
+        \item Diagram relaxation,
+        \item Small edge collapse,
+        \item Element connectivity analysis,
+        \item Property evaluation.
     \end{enumerate}
 
-    This is made possible through a comprehensive implementation of the necessary analytic geometry, such as operations between lines and polygons.
-
+    This process is facilitated by a thorough implementation of analytic geometry operations, including those involving lines and polygons.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -115,7 +114,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Using the repository}
+    \frametitle{A repository snippet}
 
     Building a mesh over a square or L-shaped domain is as simple as calling one of the two scripts provided with the repository.
 
