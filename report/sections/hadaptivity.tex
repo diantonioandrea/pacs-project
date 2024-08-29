@@ -11,15 +11,15 @@ The strategy of choice can be outlined as follows:
     \item For polygons with $N_e > 4$, the refiner adds $N_e$ new nodes at the midpoints of the segments connecting the polygon's centroid to the midpoints of its edges. The refiner then connects these points to form quadrilaterals along the polygon's edges and creates a new smaller polygon by connecting all the new internal nodes.
 \end{enumerate}
 
-Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error. Let $\gamma$ be this percentage, the elements $K$ to be refined are those such that:
+Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error. Let $\sigma$ be this percentage, the elements $K$ to be refined are those such that:
 
 \begin{gather}
-	\eta_K > \gamma \eta_{M},
+	\eta_K > \sigma \eta_{M},
 \end{gather}
 
 where $\eta_K$ is the local error and $\eta_M$ is the highest error.
 
-Error trends and refined meshes are presented in the following sections. For all examples shown, $\gamma = 75\%$.
+Error trends and refined meshes are presented in the following sections. For all examples shown, $\sigma = 75\%$.
 
 \newpage
 \subsubsection{Errors}
