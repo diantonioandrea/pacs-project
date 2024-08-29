@@ -1,3 +1,5 @@
+// clang-format off
+
 /**
  * @file Voronoi.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
@@ -22,7 +24,7 @@
 #endif
 
 #ifndef GEOMETRY_PADDING
-#define GEOMETRY_PADDING 5E-2
+#define GEOMETRY_PADDING 5E-2 // better use constexpr than cpp macros
 #endif
 
 namespace pacs {
