@@ -11,15 +11,15 @@ The strategy of choice can be outlined as follows:
     \item For polygons with $N_e > 4$, the refiner adds $N_e$ new nodes at the midpoints of the segments connecting the polygon's centroid to the midpoints of its edges. The refiner then connects these points to form quadrilaterals along the polygon's edges and creates a new smaller polygon by connecting all the new internal nodes.
 \end{enumerate}
 
-Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error. Let $\sigma$ be this percentage, the elements $K$ to be refined are those such that:
+Refinement occurs by setting a refinement percentage and marking all elements where the local error exceeds that percentage of the highest error. Let $\gamma$ be this percentage, the elements $K$ to be refined are those such that:
 
 \begin{gather}
-	\eta_K > \sigma \eta_{M},
+	\eta_K > \gamma \eta_{M},
 \end{gather}
 
 where $\eta_K$ is the local error and $\eta_M$ is the highest error.
 
-Error trends and refined meshes are presented in the following sections. For all examples shown, $\sigma = 75\%$.
+Error trends and refined meshes are presented in the following sections. For all examples shown, $\gamma = 75\%$.
 
 \newpage
 \subsubsection{Errors}
@@ -143,14 +143,14 @@ is the local data oscillation. Each term is given by:
 \begin{align}
 	R_{K, E} &= \lVert h (\bar{f} + \Delta u^k_h) \rVert_{\LT(K)}, \\
 	R_{K, N} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{n} \rrbracket \rVert_{\LT(\partial K)}, \\
-	R^2_{K, J} &= \lVert \sigma^{1/2} \llbracket u^k_h \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \sigma^{1/2} (u^k_h - \bar{g}) \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \\
-	R^2_{K, T} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{e} \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \sigma^{1/2} \grad (u^k_h - \bar{g}) \cdot \Vector{e} \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \\
+	R^2_{K, J} &= \lVert \gamma^{1/2} \llbracket u^k_h \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} (u^k_h - \bar{g}) \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \\
+	R^2_{K, T} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{e} \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} \grad (u^k_h - \bar{g}) \cdot \Vector{e} \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \\
 	O_{K, E} &= \lVert h (f - \bar{f}) \rVert_{\LT(K)}, \\
-	O_{K, J} &= \lVert \sigma^{1/2} (g - \bar{g}) \rVert_{\LT(\partial K \cap \partial \Omega)}, \\
+	O_{K, J} &= \lVert \gamma^{1/2} (g - \bar{g}) \rVert_{\LT(\partial K \cap \partial \Omega)}, \\
 	O_{K, T} &= \lVert h^{1/2} \grad (g - \bar{g}) \cdot \Vector{e} \rVert_{\LT(\partial K \cap \partial \Omega)}.
 \end{align}
 
-Here, $h$ represents the element size, $\sigma$ denotes the penalty coefficient for a given edge, and $\Vector{e}$ represents the unit vector along a given edge for tangent gradients.
+Here, $h$ represents the element size, $\gamma$ denotes the penalty coefficient for a given edge, and $\Vector{e}$ represents the unit vector along a given edge for tangent gradients.
 
 \newpage
 \subsubsection{Errors}
