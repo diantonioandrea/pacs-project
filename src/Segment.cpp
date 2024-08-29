@@ -1,13 +1,20 @@
 /**
  * @file Segment.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
- * @brief 
+ * @brief
  * @date 2024-05-04
- * 
+ *
  * @copyright Copyright (c) 2024
- * 
+ *
  */
-
+// clang-format off
+/*
+Handling geometric predicates is tricky and sometimes one wants to use the maximal precision to avoid issues.
+To this aim, some libraries may be of help such as:
+- CGAL (https://www.cgal.org/)
+- Shewchuk's predicates (http://www.cs.cmu.edu/~quake/robust.html)
+- Predicates for computational geometry (http://www.cs.cmu.edu/~quake/robust.html)
+*/
 #include <PacsHPDG.hpp>
 
 #include <cassert>

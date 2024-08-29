@@ -1,3 +1,4 @@
+// clang-format off
 /**
  * @file Voronoi.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
@@ -48,6 +49,7 @@ namespace pacs {
             Real x_min = xy_min[0], y_min = xy_min[1];
             Real x_max = xy_max[0], y_max = xy_max[1];
             
+            // std library provides std::minmax_element
             for(const auto &reflection: reflection_points)
                 for(const auto &point: reflection) {
                     x_min = (point[0] < x_min) ? point[0] : x_min;

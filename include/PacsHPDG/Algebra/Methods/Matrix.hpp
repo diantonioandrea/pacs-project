@@ -1,3 +1,4 @@
+// clang-format off
 /**
  * @file Matrix<T>.hpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
@@ -11,6 +12,7 @@
 #ifndef MATRIX_METHODS_PACS
 #define MATRIX_METHODS_PACS
 
+#include <array> // std::array needs it
 #include "../Matrix.hpp"
 
 namespace pacs {

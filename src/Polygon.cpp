@@ -1,3 +1,4 @@
+// clang-format off
 /**
  * @file Polygon.cpp
  * @author Andrea Di Antonio (github.com/diantonioandrea)
@@ -29,6 +30,7 @@ namespace pacs {
         assert(points.size() > 2);
 
         for(std::size_t j = 0; j < points.size(); ++j)
+        // you could have used std::any_of
             for(std::size_t k = j + 1; k < points.size(); ++k)
                 assert(points[j] != points[k]);
         #endif
@@ -62,6 +64,10 @@ namespace pacs {
      */
     std::vector<Segment> Polygon::edges() const {
         std::vector<Segment> edges;
+
+        // more elegant but equivalent
+        //for(std::size_t j = 0; j < this->points.size(); ++j)
+        //    edges.emplace_back(this->points[j], this->points[(j + 1)%this->points.size()]);
 
         for(std::size_t j = 0; j < this->points.size() - 1; ++j)
             edges.emplace_back(this->points[j], this->points[j + 1]);
