@@ -40,7 +40,12 @@ CXXFLAGS += -fopenmp
 LDFLAGS += -L$(mkToolchainPrefix)/lib
 LDLIBS += -lgomp
 else
+ifneq ($(shell g++ --version | grep GCC),) # Parallel computing using GCC's default OpenMP.
+CXXFLAGS += -fopenmp
+LDLIBS += -lgomp
+else
 CXXFLAGS += -Wno-unknown-pragmas
+endif
 endif
 endif
 
@@ -117,8 +122,8 @@ $(TEST_RUN): $(TEST_EXECS)
 	@$(EXEC_DIR)/$@.out > $(OUTPUT_DIR)/$@.txt
 
 $(TEST_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
-	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+	@if [ "$(LDLIBS) $(LDFLAGS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDLIBS) $(LDFLAGS)"; fi
+	@$(CXX) $(LDLIBS) $(LDFLAGS) $^ -o $@
 
 $(TEST_OBJECTS): $(OBJECT_DIR)/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
@@ -126,11 +131,12 @@ $(TEST_OBJECTS): $(OBJECT_DIR)/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 
 # Examples.
 examples: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(EXAMPLE_EXECS)
+	@echo $(CC)
 	@echo "Compiled examples!"
 
 $(EXAMPLE_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
-	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+	@if [ "$(LDLIBS) $(LDFLAGS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDLIBS) $(LDFLAGS)"; fi
+	@$(CXX) $(LDLIBS) $(LDFLAGS) $^ -o $@
 
 $(EXAMPLE_OBJECTS): $(OBJECT_DIR)/%.o: examples/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
@@ -141,8 +147,8 @@ domains: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(DOMAIN_EXECS)
 	@echo "Compiled domains!"
 
 $(DOMAIN_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
-	@if [ "$(LDFLAGS) $(LDLIBS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDFLAGS) $(LDLIBS)"; fi
-	@$(CXX) $(LDFLAGS) $(LDLIBS) $^ -o $@
+	@if [ "$(LDLIBS) $(LDFLAGS)" = " " ]; then echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@"; else echo "Linking $(subst $(OBJECT_DIR)/,,$<) and base objects to $@ with: $(LDLIBS) $(LDFLAGS)"; fi
+	@$(CXX) $(LDLIBS) $(LDFLAGS) $^ -o $@
 
 $(DOMAIN_OBJECTS): $(OBJECT_DIR)/%.o: domains/%.cpp $(HEADERS) $(OBJECT_DIR)
 	@echo "Compiling $< using $(CXX) with: $(CXXFLAGS) $(CPPFLAGS)"
