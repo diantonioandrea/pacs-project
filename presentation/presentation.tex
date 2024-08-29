@@ -20,9 +20,9 @@
 
 \AtBeginSection[]
 {
-  \begin{frame}
+  \begin{frame}{ToC}
     \frametitle{Contents}
-    \tableofcontents[currentsection]
+    \tableofcontents[sectionstyle=show/hide,subsectionstyle=show/show/hide]
   \end{frame}
 }
 
@@ -143,6 +143,11 @@
         \titlepage
     \end{frame} % Warning on title.
 
+	\begin{frame}{ToC}
+		\frametitle{Contents}
+		\tableofcontents[hideallsubsections]
+	\end{frame}
+
     \section{Introduction}
     \input{sections/problem.tex}
 
@@ -151,6 +156,11 @@
 
 	\section{Solving the Poisson Problem}
 	\input{sections/poisson.tex}
+
+	\section{Implementing \textit{h-Adaptivity} and \textit{hp-Adaptivity}}
+	\input{sections/adaptivity.tex}
+
+	% \section{Numerical Tests}
 
 	% References.
 	\begin{frame}[allowframebreaks]
