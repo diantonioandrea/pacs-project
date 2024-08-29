@@ -32,11 +32,13 @@ CPPFLAGS += -DNSOLUTIONS
 ifneq ($(OpenMP),) # $(OpenMP) set to /path/to/libomp.
 ifeq ($(shell uname),Darwin) # Apple's clang.
 CXXFLAGS += -Xclang
+LDLIBS += -lomp
+else
+LDLIBS += -lgomp
 endif
 CXXFLAGS += -fopenmp
 CPPFLAGS += -I$(OpenMP)/include
 LDFLAGS += -L$(OpenMP)/lib
-LDLIBS += -lomp
 else
 ifneq ($(mkPrefix),) # Parallel computing using OpenMP with modules.
 CXXFLAGS += -fopenmp
