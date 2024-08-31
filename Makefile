@@ -131,7 +131,6 @@ $(TEST_OBJECTS): $(OBJECT_DIR)/%.o: test/%.cpp $(HEADERS) $(OBJECT_DIR)
 
 # Examples.
 examples: $(OBJECT_DIR) $(EXEC_DIR) $(OUTPUT_DIR) $(EXAMPLE_EXECS)
-	@echo $(CC)
 	@echo "Compiled examples!"
 
 $(EXAMPLE_EXECS): executables/%.out: $(OBJECT_DIR)/%.o $(OBJECTS) 
