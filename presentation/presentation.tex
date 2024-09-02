@@ -1,4 +1,4 @@
-\documentclass[10pt]{beamer}
+\documentclass[8pt, compress]{beamer}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -13,6 +13,7 @@
 % Beamer.
 \usetheme{metropolis}
 \useinnertheme{circles}
+\useoutertheme{infolines}
 
 \usecolortheme{seahorse} % Double color theme.
 \usecolortheme[named=solarized-blue]{structure}
@@ -27,6 +28,7 @@
 }
 
 \newcommand{\presentationtitle}{The \textit{hp-Adaptive} Discontinuous Galërkin Method}
+\newcommand{\presentationshorttitle}{The \textit{hp}-DG Method}
 \newcommand{\accentcolor}{solarized-blue}
 \newcommand{\urlcolor}{\accentcolor}
 
@@ -132,10 +134,10 @@
 	pdfauthor={Andrea Di Antonio}
 }
 
-\title{\presentationtitle}
+\title[\presentationshorttitle]{\presentationtitle}
 \subtitle{Advanced Programming for Scientific Computing}
 \author[Andrea Di Antonio]{Andrea Di Antonio \\ Supervised by Professors Paola F. Antonietti and Marco Verani} % I should NOT use "\\" here.
-\date{Exam session of September 10, 2024 \\ Academic Year 2023-24}
+\date[September 10, 2024]{Exam session of September 10, 2024 \\ Academic Year 2023-24}
 
 \begin{document}
 
