@@ -1,0 +1,35 @@
+% Errors v Size template for TikZ.
+
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{tikzpicture}[scale=.6]
+\begin{loglogaxis}[
+    xlabel={$h$},
+    legend pos=north west,
+]
+
+\addplot[solarized-base02, mark=*] coordinates {(0.13307,0.0129373) (0.106989,0.00691892) (0.0713092,0.00333505) (0.0511671,0.0011295) (0.0378115,0.000395856) (0.0253431,0.000109201) (0.0205266,3.37306e-05)};
+\addlegendentry{$\LT$ Error}
+
+\addplot[solarized-base02, dashed] coordinates {(0.13307,0.05957672373397235) (0.0205266,3.37306e-05)};
+\addlegendentry{$\mathcal{O}(h^{4})$}
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.45\textwidth}
+\begin{tikzpicture}[scale=.6]
+\begin{loglogaxis}[
+    xlabel={$h$},
+    legend pos=north west,
+]
+
+\addplot[solarized-base02, mark=*] coordinates {(0.13307,5.22824) (0.106989,3.45593) (0.0713092,2.29411) (0.0511671,1.08811) (0.0378115,0.495229) (0.0253431,0.194102) (0.0205266,0.0764724)};
+\addlegendentry{$DG$ Error}
+
+\addplot[solarized-base02, dashed] coordinates {(0.13307,20.83503013128883) (0.0205266,0.0764724)};
+\addlegendentry{$\mathcal{O}(h^{3})$}
+
+\end{loglogaxis}
+\end{tikzpicture}
+\end{subfigure}

@@ -21,7 +21,7 @@
 
 \begin{frame}[fragile]
     \frametitle{Errors}
-    \framesubtitle{Square domain}
+    \framesubtitle{Square domain, smooth solution}
 
     \lstinline{./executables/square_smooth.out 3}
 
@@ -33,13 +33,37 @@
 
 \begin{frame}[fragile]
     \frametitle{Errors}
-    \framesubtitle{L-shaped domain}
+    \framesubtitle{L-shaped domain, smooth solution}
 
     \lstinline{./executables/lshape_smooth.out 3}
 
     \begin{figure}[!ht]
         \input{tikz/lshape_s_3_evs.tex}
         \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Square domain, low-regularity solution}
+
+    \lstinline{./executables/square.out 3}
+
+    \begin{figure}[!ht]
+        \input{tikz/square_3_evs.tex}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 3$, $N \in \{125, 250, \dots, 8000\}$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{L-shaped domain, low-regularity solution}
+
+    \lstinline{./executables/lshape.out 3}
+
+    \begin{figure}[!ht]
+        \input{tikz/lshape_3_evs.tex}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 3$, $N \in \{125, 250, \dots, 8000\}$.}
     \end{figure}
 \end{frame}
 
@@ -65,4 +89,148 @@
 
 \subsection{Uniform Refinement Versus \textit{h-Adaptive} Refinement}
 
-\subsection{\textit{h-adaptive} Refinement Versus \textit{hp-Adaptive} Refinement}
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Both domains, $\LT$ errors}
+
+    \lstinline{./executables/square_h.out 3 125}
+    \lstinline{./executables/lshape_h.out 3 125}
+
+    \begin{figure}[!ht]
+        \input{tikz/both_3_evd.tex}
+        \caption{$DG$ errors versus $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over a square domain (left) and an L-shaped domain (right). $k = 3$, $N_0 = 125$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Meshes}
+
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_h_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_h_10.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_h_20.pdf}
+        \caption{Square mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+    \end{figure}
+    
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_h_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_h_10.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_h_20.pdf}
+        \caption{L-shaped mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Both domains, $\HO$ errors}
+
+    \lstinline{./executables/square_gh.out 3 125}
+    \lstinline{./executables/lshape_gh.out 3 125}
+
+    \begin{figure}[!ht]
+        \input{tikz/both_g3_evd.tex}
+        \caption{$DG$ errors versus $DOFs$ comparison between adaptively refined meshes and a sequence of uniform meshes over a square domain (left) and an L-shaped domain (right). $k = 3$, $N_0 = 125$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Meshes}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_gh_5.pdf}
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_gh_10.pdf}
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_gh_20.pdf}
+    \caption{Square mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_gh_5.pdf}
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_gh_10.pdf}
+    \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_gh_20.pdf}
+    \caption{L-shaped mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Both domains, estimator}
+
+    \lstinline{./executables/square_eh.out 3 125}
+    \lstinline{./executables/lshape_eh.out 3 125}
+
+    \begin{figure}[!ht]
+        \input{tikz/both_e3_evd.tex}
+        \caption{$DG$ errors versus $DOFs$ comparison between adaptively refined meshes over a square domain (left) and an L-shaped domain (right). $k = 3$, $N_0 = 125$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Meshes}
+
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_eh_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_eh_10.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_eh_20.pdf}
+        \caption{Square mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+    \end{figure}
+    
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_eh_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_eh_10.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_eh_20.pdf}
+        \caption{L-shaped mesh after 5, 10, and 20 refinements, $N_0 = 125$.}
+    \end{figure}
+\end{frame}
+
+\subsection{\textit{hp-Adaptive} Refinement}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Both domains}
+
+    \lstinline{./executables/square_hp.out 1 25}
+    \lstinline{./executables/lshape_hp.out 1 25}
+
+    \begin{figure}[!ht]
+        \input{tikz/both_hp1_hpvd.tex}
+        \caption{$DG$ error versus $DOFs^{1/2}$ (left) and $DOFs^{1/3}$ (right) on a sequence of \textit{hp-adaptively} refined meshes over a square domain (left) and an L-shaped domain (right). $k_0 = 1$, $N_0 = 25$.}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Meshes}
+
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_hp_1_2.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_hp_1_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/square_hp_1_10.pdf}
+        \caption{Square mesh after 2, 5, and 10 refinements, $k_0 = 1$ and $N_0 = 25$.}
+    \end{figure}
+    
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_hp_1_5.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_hp_1_10.pdf}
+        \includegraphics[trim=1cm 0.5cm 1cm 0.5cm, clip, width=0.275\textwidth]{meshes/adaptive/lshape_hp_1_15.pdf}
+        \caption{L-shaped mesh after 5, 10, and 15 refinements, $k_0 = 1$ and $N_0 = 25$}
+    \end{figure}
+\end{frame}
+
+\subsection{\textit{h-Adaptive} Refinement Versus \textit{hp-Adaptive} Refinement}
+
+\begin{frame}[fragile]
+    \frametitle{Errors}
+    \framesubtitle{Both domains}
+
+    \begin{figure}[!ht]
+        \input{tikz/both_hp_hpvd.tex}
+        \caption{$DG$ error versus $DOFs^{1/2}$ (left) and $DOFs^{1/3}$ (right) on sequences of \textit{h-adaptively} (black) and \textit{hp-adaptively} (blue) refined meshes over a square (left) and an L-shaped domain (right). $k_0 = 1$, $N_0 = 25$.}
+    \end{figure}
+\end{frame}
