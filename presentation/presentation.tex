@@ -19,11 +19,13 @@
 \usecolortheme[named=solarized-blue]{structure}
 \setbeamercolor{background canvas}{bg=white}
 
+\setbeamersize{text margin left=15mm, text margin right=15mm}
+
 \AtBeginSection[]
 {
   \begin{frame}{ToC}
     \frametitle{Contents}
-    \tableofcontents[sectionstyle=show/hide,subsectionstyle=show/show/hide]
+	\tableofcontents[sectionstyle=show/hide,subsectionstyle=show/show/hide]
   \end{frame}
 }
 
@@ -75,13 +77,6 @@
 % Redefinition.
 \newcommand{\Exists}{\exists ~}
 \newcommand{\Forall}{\forall ~}
-
-% % Theorems.
-% \newtheorem{theorem}{Theorem}[section]
-% \newtheorem{lemma}{Lemma}[section]
-% \newtheorem{proposition}{Proposition}[section]
-
-% \newtheorem*{theorem*}{Theorem}
 
 \usepackage{courier}
 \usepackage{listings}
@@ -166,10 +161,15 @@
 	\input{sections/tests.tex}
 
 	% References.
+	\section*{References}
 	\begin{frame}[allowframebreaks]
 		\nocite{*}
 		\printbibliography
 	\end{frame}
+
+	% Appendix.
+	\section{Appendix}
+	\input{sections/appendix.tex}
 
 	% Compiled on.
 	\begin{frame}

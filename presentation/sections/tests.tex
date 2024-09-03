@@ -23,7 +23,9 @@
     \frametitle{Errors}
     \framesubtitle{Square domain, smooth solution}
 
-    \lstinline{./executables/square_smooth.out 3}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square_smooth.out 3}
+    \end{description}    
 
     \begin{figure}[!ht]
         \input{tikz/square_s_3_evs.tex}
@@ -32,10 +34,11 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{L-shaped domain, smooth solution}
+    \frametitle{Errors: uniform refinement}
 
-    \lstinline{./executables/lshape_smooth.out 3}
+    \begin{description}
+        \item[L-shaped domain] \lstinline{./executables/lshape_smooth.out 3}
+    \end{description}
 
     \begin{figure}[!ht]
         \input{tikz/lshape_s_3_evs.tex}
@@ -44,10 +47,11 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Square domain, low-regularity solution}
+    \frametitle{Errors: uniform refinement}
 
-    \lstinline{./executables/square.out 3}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square.out 3}
+    \end{description}    
 
     \begin{figure}[!ht]
         \input{tikz/square_3_evs.tex}
@@ -56,10 +60,11 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{L-shaped domain, low-regularity solution}
+    \frametitle{Errors: uniform refinement}
 
-    \lstinline{./executables/lshape.out 3}
+    \begin{description}
+        \item[L-shaped domain] \lstinline{./executables/lshape.out 3}
+    \end{description}    
 
     \begin{figure}[!ht]
         \input{tikz/lshape_3_evs.tex}
@@ -90,12 +95,12 @@
 \subsection{Uniform Refinement Versus \textit{h-Adaptive} Refinement}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Both domains, $\LT$ errors}
+    \frametitle{Errors: \textit{h-adaptive} refinement, uniform versus $\LT$}
 
-    \lstinline{./executables/square_h.out 3 125}
-    
-    \lstinline{./executables/lshape_h.out 3 125}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square_h.out 3 125}
+        \item[L-shaped domain] \lstinline{./executables/lshape_h.out 3 125}
+    \end{description}
 
     \begin{figure}[!ht]
         \input{tikz/both_3_evd.tex}
@@ -124,12 +129,12 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Both domains, $\HO$ errors}
+    \frametitle{Errors: \textit{h-adaptive} refinement, uniform versus $\HO$}
 
-    \lstinline{./executables/square_gh.out 3 125}
-
-    \lstinline{./executables/lshape_gh.out 3 125}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square_gh.out 3 125}
+        \item[L-shaped domain] \lstinline{./executables/lshape_gh.out 3 125}
+    \end{description}
 
     \begin{figure}[!ht]
         \input{tikz/both_g3_evd.tex}
@@ -158,12 +163,12 @@
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Both domains, estimator}
+    \frametitle{Errors: \textit{h-adaptive} refinement, $\HO$ versus estimator}
 
-    \lstinline{./executables/square_eh.out 3 125}
-
-    \lstinline{./executables/lshape_eh.out 3 125}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square_eh.out 3 125}
+        \item[L-shaped domain] \lstinline{./executables/lshape_eh.out 3 125}
+    \end{description}
 
     \begin{figure}[!ht]
         \input{tikz/both_e3_evd.tex}
@@ -194,12 +199,12 @@
 \subsection{\textit{hp-Adaptive} Refinement}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Both domains}
+    \frametitle{Errors: \textit{hp-adaptive} refinement}
 
-    \lstinline{./executables/square_hp.out 1 25}
-
-    \lstinline{./executables/lshape_hp.out 1 25}
+    \begin{description}
+        \item[Square domain] \lstinline{./executables/square_hp.out 1 25}
+        \item[L-shaped domain] \lstinline{./executables/lshape_hp.out 1 25}
+    \end{description}
 
     \begin{figure}[!ht]
         \input{tikz/both_hp1_hpvd.tex}
@@ -230,8 +235,7 @@
 \subsection{\textit{h-Adaptive} Refinement Versus \textit{hp-Adaptive} Refinement}
 
 \begin{frame}[fragile]
-    \frametitle{Errors}
-    \framesubtitle{Both domains}
+    \frametitle{Errors: \textit{h-adaptive} refinement versus \textit{hp-adaptive} refinement}
 
     \begin{figure}[!ht]
         \input{tikz/both_hp_hpvd.tex}
