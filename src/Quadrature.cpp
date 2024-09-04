@@ -44,8 +44,6 @@ namespace pacs {
         for(std::size_t j = 0; j < compute; ++j)
             evaluation[j] = std::cos(M_PI * (static_cast<Real>(j) + 0.75) / (static_cast<Real>(order) + 0.5));
 
-        // std::cout << evaluation << std::endl;
-
         // Error.
         Vector<Real> error_vector{compute, 1.0 + QUADRATURE_TOLERANCE};
         Real error = 1.0 + QUADRATURE_TOLERANCE;
