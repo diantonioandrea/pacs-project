@@ -1,17 +1,6 @@
 \subsection{Building a mesh}
 
 \begin{frame}
-    \frametitle{Examples}
-
-    \begin{figure}[!ht]
-        \centering
-        \includegraphics[trim=2cm 0.5cm 2cm 0.5cm, clip, width=0.40\textwidth]{meshes/uniform/square_1000.pdf}
-        \includegraphics[trim=2cm 0.5cm 2cm 0.5cm, clip, width=0.40\textwidth]{meshes/uniform/lshape_1000.pdf}
-        \caption{Square and L-shaped meshes over polygonal domains with $N = 1000$ elements.}
-    \end{figure}
-\end{frame}
-
-\begin{frame}
     \frametitle{Mesh-Building Strategy}
 
     The mesh-building strategy follows these steps:
@@ -90,7 +79,7 @@
 
 \end{frame}
 
-\subsection{Code examples}
+\subsection{Examples}
 
 \begin{frame}[fragile]
     \frametitle{A code snippet}
@@ -128,6 +117,12 @@
 
     \begin{lstlisting}
     ./executables/square_domain.out 250
+    \end{lstlisting}
+
+    Use \lstinline{polyplot} to show the newly created mesh:
+
+    \begin{lstlisting}
+    ./scripts/polyplot.py output/square_250.poly
     \end{lstlisting}
 
 \end{frame}
