@@ -1,76 +1,162 @@
-\subsection{The Poisson Problem and its Weak Formulation}
+% \subsection{The Poisson Problem and its Weak Formulation}
 
-\begin{frame}
-    \frametitle{The Poisson Problem}
+% \begin{frame}
+%     \frametitle{The Poisson Problem}
 
-    Given a domain $\Omega \subset \mathbb{R}^2$, the Poisson problem is defined as finding \( u \in C^2(\Omega) \) such that, for any source function \( f \in C(\Omega) \) and boundary condition \( g \in C^2(\partial \Omega) \), the following holds:
+%     Given a domain $\Omega \subset \mathbb{R}^2$, the Poisson problem is defined as finding \( u \in C^2(\Omega) \) such that, for any source function \( f \in C(\Omega) \) and boundary condition \( g \in C^2(\partial \Omega) \), the following holds:
 
-    \begin{gather}
-        \begin{cases} \label{strong_poisson}
-            - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
-            u = g & \Forall \Vector{x} \in \partial \Omega.
-        \end{cases}
-    \end{gather}
-\end{frame}
+%     \begin{gather}
+%         \begin{cases} \label{strong_poisson}
+%             - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
+%             u = g & \Forall \Vector{x} \in \partial \Omega.
+%         \end{cases}
+%     \end{gather}
+% \end{frame}
 
-\begin{frame}
-    \frametitle{The Weak Formulation}
+% \begin{frame}
+%     \frametitle{The Weak Formulation}
 
-    To find \( u \in \{v \in V : v \vert_{\partial \Omega} = g \} \), such that for any \( f \in V^* \), the following equation is satisfied:
+%     To find \( u \in \{v \in V : v \vert_{\partial \Omega} = g \} \), such that for any \( f \in V^* \), the following equation is satisfied:
 
-    \begin{gather}
-        \boa{u}{v} = \langle f, v \rangle \quad \text{for all } v \in V,
-    \end{gather}
+%     \begin{gather}
+%         \boa{u}{v} = \langle f, v \rangle \quad \text{for all } v \in V,
+%     \end{gather}
 
-    where the bilinear form \( \boa{\cdot}{\cdot} \) is defined as:
+%     where the bilinear form \( \boa{\cdot}{\cdot} \) is defined as:
 
-    \begin{gather}
-        \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v \, d\omega, \label{a}
-    \end{gather}
+%     \begin{gather}
+%         \boa{u}{v} = \int_{\Omega} \grad u \cdot \grad v \, d\omega, \label{a}
+%     \end{gather}
 
-    This weak formulation is the foundation for numerical approximation methods like the Discontinuous Galërkin (DG) method.
-\end{frame}
+%     This weak formulation is the foundation for numerical approximation methods like the Discontinuous Galërkin (DG) method.
+% \end{frame}
 
-\subsection{An Interior Penalty DG Method and a Polynomial Basis}
+% \subsection{An Interior Penalty DG Method and a Polynomial Basis}
 
-\begin{frame}
-    \frametitle{Interior Penalty DG Method}
+% \begin{frame}
+%     \frametitle{Interior Penalty DG Method}
 
-    For solving the problem, we use a symmetric interior penalty method. The goal is to find \( u^k_h \in V^k_h \) such that:
+%     For solving the problem, we use a symmetric interior penalty method. The goal is to find \( u^k_h \in V^k_h \) such that:
 
-    \begin{gather}
-        \boa{u^k_h}{v^k_h} = \langle f, v^k_h \rangle \quad \Forall v^k_h \in V^k_h.
-    \end{gather}
+%     \begin{gather}
+%         \boa{u^k_h}{v^k_h} = \langle f, v^k_h \rangle \quad \Forall v^k_h \in V^k_h.
+%     \end{gather}
 
-    The bilinear form \( \boa{\cdot}{\cdot} \) includes terms to account for discontinuities between elements, and is defined as:
+%     The bilinear form \( \boa{\cdot}{\cdot} \) includes terms to account for discontinuities between elements, and is defined as:
 
-    \begin{align}
-        \begin{split}
-            \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \nabla v^k_h \cdot \nabla w^k_h \, d\omega - \sum_{F \in \F} \int_F \{\!\!\{ \nabla w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
-            &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \nabla v^k_h \}\!\!\} \, d\sigma + \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
-            &= \Operator{v}(v^k_h, w^k_h) - \Operator{i}(v^k_h, w^k_h) - \Operator{i}(w^k_h, v^k_h) + \Operator{s}(v^k_h, w^k_h).
-        \end{split}
-    \end{align}
-\end{frame}
+%     \begin{align}
+%         \begin{split}
+%             \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \nabla v^k_h \cdot \nabla w^k_h \, d\omega - \sum_{F \in \F} \int_F \{\!\!\{ \nabla w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
+%             &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \nabla v^k_h \}\!\!\} \, d\sigma + \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d\sigma \\
+%             &= \Operator{v}(v^k_h, w^k_h) - \Operator{i}(v^k_h, w^k_h) - \Operator{i}(w^k_h, v^k_h) + \Operator{s}(v^k_h, w^k_h).
+%         \end{split}
+%     \end{align}
+% \end{frame}
 
-\begin{frame}
-    \frametitle{Polynomial Basis}
+% \begin{frame}
+%     \frametitle{Polynomial Basis}
 
-    Let \( \{ \phi_i \}_{i = 1}^N \) denote a basis for the space \( V^k_h \). The goal is to find \( \mathbf{\upsilon} \in \mathbb{R}^N \) such that:
+%     Let \( \{ \phi_i \}_{i = 1}^N \) denote a basis for the space \( V^k_h \). The goal is to find \( \mathbf{\upsilon} \in \mathbb{R}^N \) such that:
 
-    \begin{gather}
-        \MA \mathbf{\upsilon} = \VB,
-    \end{gather}
+%     \begin{gather}
+%         \MA \mathbf{\upsilon} = \VB,
+%     \end{gather}
     
-    where \( \MA \in \mathbb{R}^{N \times N} \) and \( \VB \in \mathbb{R}^N \) are defined as:
+%     where \( \MA \in \mathbb{R}^{N \times N} \) and \( \VB \in \mathbb{R}^N \) are defined as:
 
-    \begin{align}
-        \MA_{ij} &= \boa{\phi_i}{\phi_j}, \\
-        \VB_i &= \langle f, \phi_i \rangle.
-    \end{align}
+%     \begin{align}
+%         \MA_{ij} &= \boa{\phi_i}{\phi_j}, \\
+%         \VB_i &= \langle f, \phi_i \rangle.
+%     \end{align}
 
-    Legendre polynomials are used as the basis functions for \( V^k_h \) due to their orthogonality and numerical properties.
-\end{frame}
+%     Legendre polynomials are used as the basis functions for \( V^k_h \) due to their orthogonality and numerical properties.
+% \end{frame}
+
+
+
+% \subsection{\textit{h-Adaptivity}}
+
+% \begin{frame}
+%     \frametitle{\textit{h-Adaptivity}}
+
+%     The need for \textit{h-adaptivity} arises from the inefficiency encountered when solving the Poisson problem over sequences of uniform meshes, especially when dealing with low-regularity exact solutions.
+
+%     To implement \textit{h-adaptivity}, the first step is to evaluate the $\LT$ error on each element and then refine the element with the highest error according to a specific refinement strategy.    
+
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{Refinement strategy}
+
+%     \begin{enumerate}
+%         \item For polygons with $N_e \leq 4$, the refiner adds a single node at the polygon's centroid.
+%         \item For polygons with $N_e > 4$, the refiner adds $N_e$ new nodes at the midpoints of the segments connecting the polygon's centroid to the midpoints of its edges.
+%     \end{enumerate}
+
+%     The elements $K$ to be refined are chosen in the following way:
+
+%     \begin{gather}
+%         \eta_K > \sigma \eta_{M},
+%     \end{gather}
+
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{\textit{A posteriori} error estimator}
+
+%     The second step in implementing \textit{h-adaptivity} is to define an \textit{a posteriori} error estimator, which enables the identification of elements that need refinement without requiring any information about the exact solution.
+
+%     One possible approach considers the following upper bound on the error:
+
+%     \begin{gather}
+%         \lVert u - u^k_h \rVert_{\LT(\Omega)} \leq C_{ub} \sum_{K \in \Tau_h} (R_K^2 + O_K^2),
+%     \end{gather}
+
+%     where $R_K^2 = R_{K, E}^2 + R_{K, N}^2 + R_{K, J}^2 + R_{K, T}^2$ is the local estimator and $O_K^2 = O_{K, E}^2 + O_{K, J}^2 + O_{K, T}^2$ is the local data oscillation.
+
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{\textit{A posteriori} error estimator}
+
+%     Each term is given by:
+
+%     \begin{align}
+%         R_{K, E} &= \lVert h (\bar{f} + \Delta u^k_h) \rVert_{\LT(K)},\notag \\
+%         R_{K, N} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{n} \rrbracket \rVert_{\LT(\partial K)},\notag \\
+%         R^2_{K, J} &= \lVert \gamma^{1/2} \llbracket u^k_h \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} (u^k_h - \bar{g}) \rVert^2_{\LT(\partial K \cap \partial \Omega)},\notag \\
+%         R^2_{K, T} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{e} \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} \grad (u^k_h - \bar{g}) \cdot \Vector{e} \rVert^2_{\LT(\partial K \cap \partial \Omega)},\notag \\
+%         O_{K, E} &= \lVert h (f - \bar{f}) \rVert_{\LT(K)},\notag \\
+%         O_{K, J} &= \lVert \gamma^{1/2} (g - \bar{g}) \rVert_{\LT(\partial K \cap \partial \Omega)},\notag \\
+%         O_{K, T} &= \lVert h^{1/2} \grad (g - \bar{g}) \cdot \Vector{e} \rVert_{\LT(\partial K \cap \partial \Omega)}. \notag
+%     \end{align}
+
+% \end{frame}
+
+% \subsection{\textit{hp-Adaptivity}}
+
+% \begin{frame}
+%     \frametitle{\textit{hp-Adaptivity}}
+
+%     The next and final step is to implement \textit{p-adaptive} refinement using a test of analyticity.
+
+%     Since the solution is represented by the coefficients of Legendre polynomials, analyticity can be assessed by evaluating their rate of decay. Assuming smoothness for $u^k_{h, K}$, the following holds:
+
+%     \begin{gather}
+%         \Exists a_K, b_K \in \R : c_{ij} \approx a_K e^{-b_K (i + j)}.
+%     \end{gather}
+
+%     The elements $K$ to be refined are chosen in the following way:
+
+%     \begin{gather}
+%         \eta_K^2 > \sigma \bar{\eta}^2,
+%     \end{gather}
+
+%     The value of $b_K$ lets us decide whether to \textit{h-refine} or \textit{p-refine} an element.
+
+% \end{frame}
+
+
 
 \subsection{Quadrature}
 

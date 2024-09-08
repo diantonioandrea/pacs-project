@@ -17,6 +17,29 @@
     \end{description}
 \end{frame}
 
+\begin{frame}
+    \frametitle{Expected error rates}
+
+    \begin{description}
+        \item[Uniform refinement]
+            \begin{gather}
+                \lVert u - u_h^k \rVert_{DG} \approx h^{k}
+            \end{gather}
+        \item[\textit{h-Adaptive} refinement]
+            \begin{gather}
+                \lVert u - u_h^k \rVert_{DG} \approx DOFs^{k/2}
+            \end{gather}
+        \item[\textit{hp-Adaptive} refinement] for the square domain.
+            \begin{gather}
+                \lVert u - u_h^k \rVert_{DG} \approx e^{-C ~ DOFs^{k/2}}
+            \end{gather}
+        \item[\textit{hp-Adaptive} refinement] for the L-shaped domain.
+            \begin{gather}
+                \lVert u - u_h^k \rVert_{DG} \approx e^{-C ~ DOFs^{k/3}}
+            \end{gather}
+    \end{description}
+\end{frame}
+
 \subsection{Uniform Refinement}
 
 \begin{frame}[fragile]
@@ -29,7 +52,7 @@
 
     \begin{figure}[!ht]
         \input{tikz/square_s_3_evs.tex}
-        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. Smooth solution. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
     \end{figure}
 \end{frame}
 
@@ -42,7 +65,7 @@
 
     \begin{figure}[!ht]
         \input{tikz/lshape_s_3_evs.tex}
-        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. Smooth solution. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
     \end{figure}
 \end{frame}
 
@@ -55,7 +78,7 @@
 
     \begin{figure}[!ht]
         \input{tikz/square_3_evs.tex}
-        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. $k = 3$, $N \in \{125, 250, \dots, 8000\}$.}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over a square domain. Low-regularity solution. $k = 3$, $N \in \{125, 250, \dots, 4000\}$.}
     \end{figure}
 \end{frame}
 
@@ -68,7 +91,7 @@
 
     \begin{figure}[!ht]
         \input{tikz/lshape_3_evs.tex}
-        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. $k = 3$, $N \in \{125, 250, \dots, 8000\}$.}
+        \caption{$\LT$ and $DG$ errors versus mesh size on a sequence of uniform meshes over an L-shaped domain. Low-regularity solution. $k = 3$, $N \in \{125, 250, \dots, 8000\}$.}
     \end{figure}
 \end{frame}
 
