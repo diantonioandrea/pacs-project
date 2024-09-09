@@ -3,54 +3,45 @@
 \begin{frame}[fragile]
     \frametitle{\textit{h-Adaptivity}}
 
-    To implement \textit{h-adaptivity}, the first step is to evaluate the $\LT$ error on each element.
-
-    The elements $K$ to be refined are selected as follows:
-
-    \begin{gather}
-        \eta_K > \sigma \eta_{M},
-    \end{gather}
-
-\end{frame}
-
-\begin{frame}[fragile]
-    \frametitle{Refinement}
-
-    The function \lstinline{mesh_refine_size} refines the mesh elements based on the local errors according to a specific refinement strategy.
-
-    \begin{lstlisting}[style=cpp]
-    void mesh_refine_size(
-        Mesh &, 
-        const Mask &);
-    \end{lstlisting}
+    \begin{description}
+        \item[Error evaluation] To implement \textit{h-adaptivity}, the first step is to evaluate the error on each element, initially using the exact error, and then applying an \textit{a-posteriori} error estimator.
+        \item[Marking] The elements $K$ to be refined are then selected as follows:
+            \begin{gather}
+                \eta_K > \sigma \eta_{M},
+            \end{gather}
+        \item[Refinement] The function \lstinline{mesh_refine_size} refines the mesh elements based on the local errors according to a specific refinement strategy.
+        \begin{lstlisting}[style=cpp]
+        void mesh_refine_size(
+            Mesh &, 
+            const Mask &);
+        \end{lstlisting}
+    \end{description}
 
 \end{frame}
 
 \subsection{\textit{hp-Adaptivity}}
 
-\begin{frame}
+\begin{frame}[fragile]
     \frametitle{\textit{hp-Adaptivity}}
 
-    The next and final step is to implement \textit{p-adaptive} refinement using a test of analyticity.
-
-    Analyticity can be assessed by evaluating the rate of decay of Legendre coefficients. Assuming smoothness for $u^k_{h, K}$, the following relationship holds:
-
-    \begin{gather}
-        \Exists a_K, b_K \in \R : c_{ij} \approx a_K e^{-b_K (i + j)}.
-    \end{gather}
-
-    The elements $K$ to be refined are selected as follows:
-
-    \begin{gather}
-        \eta_K^2 > \sigma \bar{\eta}^2,
-    \end{gather}
+    \begin{description}
+        \item[Error evaluation] The next and final step is to implement \textit{p-adaptive} refinement using a test of analyticity. Analyticity can be assessed by evaluating the rate of decay of Legendre coefficients. Assuming smoothness for $u^k_{h, K}$, the following relationship holds:
+        \begin{gather}
+            \Exists a_K, b_K \in \R : c_{ij} \approx a_K e^{-b_K (i + j)}.
+        \end{gather}
+        \item[Marking] The elements $K$ to be refined are selected as follows:
+        \begin{gather}
+            \eta_K^2 > \sigma \bar{\eta}^2,
+        \end{gather}
+    \end{description}
 
 \end{frame}
 
 \begin{frame}[fragile]
-    \frametitle{Refinement}
+    \frametitle{\textit{hp-Adaptivity}}
 
-    The function \lstinline{mesh_refine} refines the mesh elements based on local errors, according to a specified refinement strategy.
+    \begin{description}
+        \item[Refinement] The function \lstinline{mesh_refine} refines the mesh elements based on local errors, according to a specified refinement strategy.
 
     \begin{lstlisting}[style=cpp]
     void mesh_refine(
@@ -63,6 +54,7 @@
         Mesh &, 
         const Mask &);
     \end{lstlisting}
+    \end{description}
 
 \end{frame}
 
