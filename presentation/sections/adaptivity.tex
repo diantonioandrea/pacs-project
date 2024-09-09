@@ -27,7 +27,7 @@ void mesh_refine_size(
     \begin{description}
         \item[Error evaluation] The next and final step is to implement \textit{p-adaptive} refinement using a test of analyticity. Analyticity can be assessed by evaluating the rate of decay of Legendre coefficients. Assuming smoothness for $u^k_{h, K}$, the following relationship holds:
         \begin{gather}
-            \Exists a_K, b_K \in \R : c_{ij} \approx a_K e^{-b_K (i + j)}. \notag
+            \Exists a_K, b_K \in \R : c_{ij} \approx a_K e^{-b_K (i + j)}.
         \end{gather}
         \item[Marking] The elements $K$ to be refined are selected as follows:
         \begin{gather}
