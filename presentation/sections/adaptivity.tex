@@ -41,7 +41,7 @@
     \frametitle{\textit{hp-Adaptivity}}
 
     \begin{description}
-        \item[Refinement] The function \lstinline{mesh_refine} refines the mesh elements based on local errors, according to a specified refinement strategy.
+        \item[Refinement] The function \lstinline{mesh_refine} refines the mesh elements based on local errors and analyticity, choosing between \textit{h-refinement} and \textit{p-refinement}.
 
     \begin{lstlisting}[style=cpp]
     void mesh_refine(
