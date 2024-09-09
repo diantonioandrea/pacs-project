@@ -39,7 +39,7 @@
 \begin{frame}[fragile]
     \frametitle{\lstinline{Mesh}}
 
-    \lstinline{struct Mesh} requires a polygonal domain, a diagram, and information on the elements' degrees.
+    \lstinline{Mesh} requires a polygonal domain, a diagram, and information on the elements' degrees.
 
     \begin{lstlisting}[style=cpp]
     Mesh(
@@ -51,6 +51,10 @@
         const Polygon &, 
         const std::vector<Polygon> &, 
         const std::size_t &degree = 1);
+
+    Element(
+        const Polygon &, 
+        const std::size_t &);
     \end{lstlisting}
 
 \end{frame}
@@ -66,9 +70,9 @@
         const std::vector<std::size_t> &);
 
     std::vector<std::vector<std::array<int, 3>>> 
-    mesh_neighbours(
-        const Polygon &, 
-        const std::vector<Element> &);
+        mesh_neighbours(
+            const Polygon &, 
+            const std::vector<Element> &);
 
     std::vector<Real> mesh_areas(
         const std::vector<Polygon> &);

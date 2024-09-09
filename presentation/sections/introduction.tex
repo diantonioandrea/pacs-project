@@ -3,16 +3,17 @@
 \begin{frame}
     \frametitle{The Poisson Problem}
 
-    Given a domain $\Omega \subset \mathbb{R}^2$, the Poisson problem is defined as finding \( u \in C^2(\Omega) \) such that, for any source function \( f \in C(\Omega) \) and boundary condition \( g \in C^2(\partial \Omega) \), the following holds:
+    \begin{description}
+        \item[Problem] Given a domain $\Omega \subset \mathbb{R}^2$, the Poisson problem is defined as finding \( u \in C^2(\Omega) \) such that, for any source function \( f \in C(\Omega) \) and boundary condition \( g \in C^2(\partial \Omega) \), the following holds:
 
-    \begin{gather}
-        \begin{cases} \label{strong_poisson}
-            - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
-            u = g & \Forall \Vector{x} \in \partial \Omega.
-        \end{cases}
-    \end{gather}
-
-    The goal is to implement a \textit{hp-adaptive} $DG$ method for the solution of this problem.
+        \begin{gather}
+            \begin{cases} \notag
+                - \Delta u = f & \Forall \Vector{x} \in \Omega, \\
+                u = g & \Forall \Vector{x} \in \partial \Omega.
+            \end{cases}
+        \end{gather}
+        \item[Goal] Implement a \textit{hp-adaptive} $DG$ method for the solution of this problem.
+    \end{description}
 
     For theoretical and background details see the project report.
 \end{frame}
