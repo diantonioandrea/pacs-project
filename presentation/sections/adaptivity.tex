@@ -10,11 +10,11 @@
                 \eta_K > \sigma \eta_{M}, \notag
             \end{gather}
         \item[Refinement] The function \lstinline{mesh_refine_size} refines the mesh elements based on the local errors according to a specific refinement strategy.
-        \begin{lstlisting}[style=cpp]
-        void mesh_refine_size(
-            Mesh &, 
-            const Mask &);
-        \end{lstlisting}
+\begin{lstlisting}[style=cpp]
+void mesh_refine_size(
+    Mesh &, 
+    const Mask &);
+\end{lstlisting}
     \end{description}
 
 \end{frame}
@@ -43,17 +43,17 @@
     \begin{description}
         \item[Refinement] The function \lstinline{mesh_refine} refines the mesh elements based on local errors and analyticity, choosing between \textit{h-refinement} and \textit{p-refinement}.
 
-    \begin{lstlisting}[style=cpp]
-    void mesh_refine(
-        Mesh &, 
-        const Estimator &, 
-        const Real &refine = 0.75, 
-        const Real &speed = 1.0);
+\begin{lstlisting}[style=cpp]
+void mesh_refine(
+    Mesh &, 
+    const Estimator &, 
+    const Real &refine = 0.75, 
+    const Real &speed = 1.0);
 
-    void mesh_refine_degree(
-        Mesh &, 
-        const Mask &);
-    \end{lstlisting}
+void mesh_refine_degree(
+    Mesh &, 
+    const Mask &);
+\end{lstlisting}
     \end{description}
 
 \end{frame}
@@ -65,18 +65,16 @@
 
     Estimates are computed using the \lstinline{Estimators} class, instantiated as follows:
 
-    \begin{lstlisting}[style=cpp]
-    Estimator(
-        const Mesh &, 
-        const Sparse<Real> &, 
-        const Vector<Real> &, 
-        const Functor &, 
-        const Functor &dirichlet
-            = Functor{}, 
-        const TwoFunctor &dirichlet_gradient
-            = TwoFunctor{}, 
-        const Real &penalty_coefficient = 10.0);
-    \end{lstlisting}
+\begin{lstlisting}[style=cpp]
+Estimator(
+    const Mesh &, 
+    const Sparse<Real> &, 
+    const Vector<Real> &, 
+    const Functor &, 
+    const Functor &dirichlet = Functor{}, 
+    const TwoFunctor &dirichlet_gradient = TwoFunctor{}, 
+    const Real &penalty_coefficient = 10.0);
+\end{lstlisting}
 
 \end{frame}
 
@@ -87,16 +85,16 @@
 
     The steps to \textit{hp-refine} a mesh are outlined as follows:
 
-    \begin{lstlisting}[style=cpp]
-    [...]
+\begin{lstlisting}[style=cpp]
+[...]
 
-    auto [M, A, DGA] = laplacian(mesh);
-    Vector<Real> B = forcing(mesh, source);
+auto [M, A, DGA] = laplacian(mesh);
+Vector<Real> B = forcing(mesh, source);
 
-    Vector<Real> numerical = lapsolver(mesh, A, B);
-    Estimator est{mesh, M, numerical, source};
+Vector<Real> numerical = lapsolver(mesh, A, B);
+Estimator est{mesh, M, numerical, source};
 
-    mesh_refine(mesh, est);
-    \end{lstlisting}
+mesh_refine(mesh, est);
+\end{lstlisting}
 
 \end{frame}
