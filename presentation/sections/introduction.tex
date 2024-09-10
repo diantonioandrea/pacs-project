@@ -4,7 +4,7 @@
     \frametitle{The Poisson Problem}
 
     \begin{description}
-        \item[Problem] Given a domain $\Omega \subset \mathbb{R}^2$, the Poisson problem is defined as finding \( u \in C^2(\Omega) \) such that, for any source function \( f \in C(\Omega) \) and boundary condition \( g \in C^2(\partial \Omega) \), the following holds:
+        \item[Problem] Find $u \in C^2(\Omega) \subset \mathbb{R}^2$ such that, for any source function $f \in C(\Omega)$ and boundary condition $g \in C^2(\partial \Omega)$, the following holds:
 
         \begin{gather}
             \begin{cases} \notag
@@ -12,8 +12,26 @@
                 u = g & \Forall \Vector{x} \in \partial \Omega.
             \end{cases}
         \end{gather}
+        \item[Weak formulation] Find $ u^k_h \in V^k_h $ such that:
+
+        \begin{gather}
+            \boa{u^k_h}{v^k_h} = \langle f, v^k_h \rangle \quad \Forall v^k_h \in V^k_h. \notag
+        \end{gather}
+
         \item[Goal] Implement a \textit{hp-adaptive} $DG$ method for the solution of this problem.
     \end{description}
 
-    For theoretical and background details see the project report.
+\end{frame}
+
+\begin{frame}
+    \frametitle{The bilinear form $\boa{\cdot}{\cdot}$}
+
+    \begin{align} 
+        \begin{split} \notag
+            \boa{v^k_h}{w^k_h} &= \sum_{K \in \Tau_h} \int_K \grad v^k_h \cdot \grad w^k_h \, d \omega - \sum_{F \in \F} \int_F \{\!\!\{ \grad w^k_h \}\!\!\} \cdot \llbracket v^k_h \rrbracket \, d \sigma  \\
+            &- \sum_{F \in \F} \int_F \llbracket w^k_h \rrbracket \cdot \{\!\!\{ \grad v^k_h \}\!\!\} \, d \sigma + \sum_{F \in \F} \int_F \gamma \llbracket w^k_h \rrbracket \cdot \llbracket v^k_h \rrbracket \, d \sigma \\
+            &= \Operator{v}(v^k_h, w^k_h) - \Operator{i}(v^k_h, w^k_h) - \Operator{i}(w^k_h, v^k_h) + \Operator{s}(v^k_h, w^k_h) \quad \Forall v^k_h, w^k_h \in V^k_h.
+        \end{split}
+    \end{align}
+    
 \end{frame}

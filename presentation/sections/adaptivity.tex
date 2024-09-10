@@ -63,7 +63,7 @@ void mesh_refine_degree(
 \begin{frame}[fragile]
     \frametitle{Estimates}
 
-    Estimates are computed using the \lstinline{Estimators} class, instantiated as follows:
+    Estimates are computed using the \lstinline{Estimator} class, instantiated as follows:
 
 \begin{lstlisting}[style=cpp]
 Estimator(
@@ -75,6 +75,24 @@ Estimator(
     const TwoFunctor &dirichlet_gradient = TwoFunctor{}, 
     const Real &penalty_coefficient = 10.0);
 \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Estimates}
+
+    \begin{align}
+        \eta_K^2 &= R_K^2 + O_K^2 \\
+        &= R_{K, E}^2 + R_{K, N}^2 + R_{K, J}^2 + R_{K, T}^2 + O_{K, E}^2 + O_{K, J}^2 + O_{K, T}^2.
+    \end{align}
+
+    \begin{align}
+        R_{K, E} &= \lVert h (\bar{f} + \Delta u^k_h) \rVert_{\LT(K)}, \quad R_{K, N} = \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{n} \rrbracket \rVert_{\LT(\partial K)}, \notag \\
+        R^2_{K, J} &= \lVert \gamma^{1/2} \llbracket u^k_h \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} (u^k_h - \bar{g}) \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \notag \\
+        R^2_{K, T} &= \lVert h^{1/2} \llbracket \grad u^k_h \cdot \Vector{e} \rrbracket \rVert^2_{\LT(\partial K \cap \Gamma_{i})} + \lVert \gamma^{1/2} \grad (u^k_h - \bar{g}) \cdot \Vector{e} \rVert^2_{\LT(\partial K \cap \partial \Omega)}, \notag \\
+        O_{K, E} &= \lVert h (f - \bar{f}) \rVert_{\LT(K)}, \quad O_{K, J} = \lVert \gamma^{1/2} (g - \bar{g}) \rVert_{\LT(\partial K \cap \partial \Omega)}, \notag \\
+        O_{K, T} &= \lVert h^{1/2} \grad (g - \bar{g}) \cdot \Vector{e} \rVert_{\LT(\partial K \cap \partial \Omega)}. \notag
+    \end{align}
 
 \end{frame}
 
